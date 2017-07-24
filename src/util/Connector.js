@@ -1,0 +1,37 @@
+import { isExist } from './Util';
+
+
+class Connector {
+  constructor() {
+    this.store = undefined;
+  }
+
+  connect(store) {
+    this.store = store;
+    this.afterConnected();
+  }
+
+  afterConnected() {}
+
+  isConnect() {
+    return isExist(this.store);
+  }
+
+  getDispatch() {
+    this.throwIfNotConnected();
+    return this.store.dispatch;
+  }
+
+  getState() {
+    this.throwIfNotConnected();
+    return this.store.getState();
+  }
+
+  throwIfNotConnected(message) {
+    if (!this.isConnect()) {
+      throw new Error(message || `${this.constructor.name}에 Store를 연결해주세요.`);
+    }
+  }
+}
+
+export default Connector;
