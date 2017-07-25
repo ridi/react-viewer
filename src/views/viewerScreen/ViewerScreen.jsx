@@ -25,7 +25,6 @@ class ViewerScreen extends Component {
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount();
     this.props.onUnmount && this.props.onUnmount();
   }
 

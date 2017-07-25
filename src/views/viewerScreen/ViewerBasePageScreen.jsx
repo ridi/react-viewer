@@ -22,6 +22,7 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
+import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi'
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -40,7 +41,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount();
     this.removeScrollEvent();
   }
 
@@ -80,14 +80,14 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   preventScrollEvent(ref) {
-    super.preventScrollEvent(ref);
+    preventScrollEvent(ref);
     if (isExist(ref)) {
       window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
     }
   }
 
   removeScrollEvent(ref) {
-    super.removeScrollEvent(ref);
+    removeScrollEvent(ref);
     if (isExist(ref)) {
       window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
     }

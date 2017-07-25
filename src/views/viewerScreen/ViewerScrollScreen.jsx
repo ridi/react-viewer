@@ -23,7 +23,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   componentWillUnmount() {
-    super.componentWillUnmount();
     this.removeScrollEvent();
   }
 

@@ -12,7 +12,7 @@ const _preventDefault = e => e.preventDefault();
 
 
 export const preventScrollEvent = ref => {
-  this.removeScrollEvent(ref);
+  removeScrollEvent(ref);
   if (isExist(ref)) {
     ref.addEventListener(DOMEventConstants.SCROLL, _preventDefault, { passive: false });
     ref.addEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault, { passive: false });

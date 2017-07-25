@@ -2,11 +2,11 @@
 
 module.exports = {
   entry: {
-    index: `${__dirname}/src/views/viewerScreen/ViewerScreen.jsx`
+    index: `${__dirname}/src/index.js`,
   },
   output: {
     path: `${__dirname}/lib/`,
-    filename: 'index.js',
+    filename: '[name].js',
     library: 'shared-components',
     libraryTarget: 'umd',
   },
@@ -27,5 +27,23 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx']
-  }
+  },
+  externals: [
+    {
+      react: {
+        root: 'React',
+        commonjs2: 'react',
+        commonjs: 'react',
+        amd: 'react',
+      }
+    },
+    {
+      'react-dom': {
+        root: 'ReactDOM',
+        commonjs2: 'react-dom',
+        commonjs: 'react-dom',
+        amd: 'react-dom',
+      }
+    },
+  ]
 };
