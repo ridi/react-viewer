@@ -1,5 +1,6 @@
 import ViewerScreen from './views/viewerScreen/ViewerScreen';
 import {
+  actions,
   calculatedPageViewer,
   initializeViewerScreen,
   onViewerScreenScrolled,
@@ -25,7 +26,7 @@ import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
 import ViewerHelper from './util/viewerScreen/ViewerHelper';
 
-const actions = {
+const actionGenerators = {
   calculatedPageViewer,
   initializeViewerScreen,
   onViewerScreenScrolled,
@@ -53,6 +54,7 @@ export default ViewerScreen;
 
 export {
   actions,
+  actionGenerators,
   selectors,
   reducers,
   PageCalculator,
