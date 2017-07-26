@@ -1,6 +1,6 @@
 {
   "name": "ridi-viewer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "Apache-2.0",
   "description": "ridi-viewer",
   "main": "lib/index.js",
@@ -8,6 +8,10 @@
     "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/**",
     "build": "webpack"
   },
+  "repository": {
+    "type": "git",
+	"url": "https://github.com/ridi/ridi-webviewer"
+  }
   "dependencies": {
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
