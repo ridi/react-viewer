@@ -1,8 +1,8 @@
 {
-  "name": "ridi-viewer",
-  "version": "0.1.1",
+  "name": "ridi-webviewer",
+  "version": "0.1.0",
   "license": "Apache-2.0",
-  "description": "ridi-viewer",
+  "description": "ridi-webviewer",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/**",
