@@ -1,8 +1,8 @@
 {
-  "name": "ridi-webviewer",
+  "name": "react-ridi-webviewer",
   "version": "0.1.2",
-  "license": "Apache-2.0",
-  "description": "ridi-webviewer",
+  "license": "MIT",
+  "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/**",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-	"url": "https://github.com/ridi/ridi-webviewer"
+	"url": "https://github.com/ridi/react-ridi-webviewer"
   },
   "dependencies": {
     "react": "^15.4.1",
