@@ -17,6 +17,13 @@ class PageCalculator extends Connector {
     this._option = updateObject(this._option, option);
   }
 
+  isEndingPage(page, totalPage) {
+    if (this._option.containExtraPage > 0) {
+      return page === totalPage;
+    }
+    return false;
+  }
+
   updatePagination() {
     const { getState, dispatch } = this.store;
     const width = screenWidth();

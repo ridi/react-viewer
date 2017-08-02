@@ -103,7 +103,8 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
     movePageViewer(nextPage);
 
-    if (nextPage === totalPage) {
+
+    if (PageCalculator.isEndingPage(nextPage, totalPage)) {
       showCommentArea();
     }
   }
