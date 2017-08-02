@@ -1,4 +1,5 @@
-
+# react-ridi-webviewer
+[![npm version](https://img.shields.io/npm/v/react-ridi-webviewer.svg)](https://www.npmjs.com/package/react-ridi-webviewer)
 
 ## Installation
 ```
