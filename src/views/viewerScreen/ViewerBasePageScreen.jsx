@@ -113,8 +113,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     const { onMoveWrongDirection, bindingType, movePageViewer, pageViewPagination } = this.props;
     const { currentPage } = pageViewPagination;
     const nextPage = currentPage - 1;
-    if (nextPage <= 0 && bindingType === BindingType.RIGHT) {
-      onMoveWrongDirection && onMoveWrongDirection();
+    if (nextPage <= 0) {
+      if (bindingType === BindingType.RIGHT) {
+        onMoveWrongDirection && onMoveWrongDirection();
+      }
       return;
     }
     movePageViewer(nextPage);
