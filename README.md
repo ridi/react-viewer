@@ -8,9 +8,9 @@ npm install @ridi/react-webviewer
 
 ## How to use
 
-Add `ridi-webviewer` reducer into your reducers.
+Add `@ridi/react-webviewer` reducer into your reducers.
 ```js
-import { reducers as viewerScreen } from 'ridi-webviewer';
+import { reducers as viewerScreen } from '@ridi/react-webviewer';
 import { combineReducers } from 'redux';
 
 const appReducer = combineReducers({
@@ -23,7 +23,7 @@ const appReducer = combineReducers({
 Connect `ViewerHelper`, `PageCalculator` with redux store.
 ```js
 import { createStore } from 'redux';
-import { ViewerHelper, PageCalculator } from 'ridi-webviewer';
+import { ViewerHelper, PageCalculator } from '@ridi/react-webviewer';
 
 const store = createStore( ... );
 ViewerHelper.connect(store);
@@ -33,7 +33,7 @@ PageCalculator.connect(store);
 Put `ViewerScreen` component into your component.
 ```js
 import React, { Component } from 'react';
-import ViewerScreen from 'ridi-webviewer';
+import ViewerScreen from '@ridi/react-webviewer';
 
 export default ViewerPage extends Component {
     render() {
@@ -44,7 +44,7 @@ export default ViewerPage extends Component {
 
 Dispatch `renderSpine` action.
 ```js
-import { renderSpine } from 'ridi-webviewer';
+import { renderSpine } from '@ridi/react-webviewer';
 
 ...
 const index = 0;
