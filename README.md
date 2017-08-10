@@ -1,4 +1,6 @@
 # react-webviewer
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/react-webviewer.svg)](https://greenkeeper.io/)
 [![npm version](https://img.shields.io/npm/v/@ridi/react-webviewer.svg)](https://www.npmjs.com/package/@ridi/react-webviewer)
 
 ## Installation
