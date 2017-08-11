@@ -25,6 +25,9 @@ import {
 import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
 import ViewerHelper from './util/viewerScreen/ViewerHelper';
+import { ContentType, BindingType, AvailableViewerType } from './constants/ContentConstants';
+import { ViewerThemeType, ViewerBodyThemeColorType, ViewerFontType, ViewerType, ViewerSpinType, ViewerComicSpinType } from './constants/ViewerScreenConstants';
+
 
 const actionGenerators = {
   calculatedPageViewer,
@@ -60,6 +63,7 @@ export {
   PageCalculator,
   ViewerHelper,
 
+  // actions
   calculatedPageViewer,
   initializeViewerScreen,
   onViewerScreenScrolled,
@@ -70,6 +74,7 @@ export {
   updateSpineMetaData,
   renderSpine,
 
+  // selectors
   selectSpines,
   selectContentType,
   selectViewerType,
@@ -79,4 +84,15 @@ export {
   selectIsFullScreen,
   selectIsLoadingCompleted,
   selectViewerScreenSettings,
+
+  // constants
+  ContentType,
+  BindingType,
+  AvailableViewerType,
+  ViewerThemeType,
+  ViewerBodyThemeColorType,
+  ViewerFontType,
+  ViewerType,
+  ViewerSpinType,
+  ViewerComicSpinType,
 };
