@@ -65,9 +65,15 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   onScrollHandle(e) {
-    const { viewerScreenScrolled } = this.props;
     e.preventDefault();
     e.stopPropagation();
+
+    const { ignoreScroll, viewerScreenScrolled } = this.props;
+
+    if (ignoreScroll) {
+      return;
+    }
+
     viewerScreenScrolled();
   }
 
@@ -128,6 +134,7 @@ ViewerScrollScreen.propTypes = {
   viewerScreenScrolled: PropTypes.func,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
+  ignoreScroll: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => ({

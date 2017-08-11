@@ -82,6 +82,7 @@ class ViewerScreen extends Component {
         onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
         footer={this.props.footer}
         fontDomain={this.props.fontDomain}
+        ignoreScroll={this.props.ignoreScroll}
       />
     );
   }
@@ -101,6 +102,7 @@ ViewerScreen.propTypes = {
   onMoveWrongDirection: PropTypes.func,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
+  ignoreScroll: PropTypes.bool,
 };
 
 const mapStateToProps = (state, ownProps) => ({
