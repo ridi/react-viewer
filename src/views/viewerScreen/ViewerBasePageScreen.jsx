@@ -11,7 +11,7 @@ import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import PageTouchable from './PageTouchable';
 import { PageContents, Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
-import Thread from '../../lib/Thread';
+import AsyncTask from '../../util/AsyncTask';
 import {
   selectBindingType,
   selectContentType,
@@ -23,7 +23,7 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi'
+import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -70,7 +70,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   updatePagination() {
-    new Thread(() => {
+    new AsyncTask(() => {
       document.body.scrollTop = 0;
       PageCalculator.updatePagination();
     }).start(300);
@@ -225,7 +225,6 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
-  saveScrollPosition: scrollPosition => dispatch(saveViewerScrollPosition(scrollPosition)),
   movePageViewer: number => dispatch(movePageViewerAction(number)),
   showCommentArea: () => {
     const { isDisableComment = false } = ownProps;
