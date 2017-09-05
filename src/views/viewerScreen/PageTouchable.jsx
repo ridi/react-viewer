@@ -64,6 +64,9 @@ PageTouchable.propTypes = {
   onMiddleTouched: PropTypes.func,
   contentType: PropTypes.number,
   footer: PropTypes.node,
+  isEndingScreen: PropTypes.bool,
+  isFullScreen: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 const mapStateToProps = (state, ownProps) => ({

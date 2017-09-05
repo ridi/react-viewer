@@ -1,30 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { ScrollScreen, SizingWrapper } from '../../styled/viewerScreen/ViewerScreen.styled';
 
 
-export default class ScrollTouchable extends Component {
-  render() {
-    const { children, onTouched, contentType, footer } = this.props;
+const ScrollTouchable = props => {
+  const { children, onTouched, contentType, footer } = props;
 
-    return (
-      <ScrollScreen
-        onClick={e => {
-          e.preventDefault();
-          e.stopPropagation();
-          onTouched();
-        }}
+  return (
+    <ScrollScreen
+      onClick={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        onTouched();
+      }}
+    >
+      <SizingWrapper
+        contentType={contentType}
       >
-        <SizingWrapper
-          contentType={contentType}
-        >
-          {children}
-        </SizingWrapper>
-        {footer}
-      </ScrollScreen>
-    );
-  }
-}
+        {children}
+      </SizingWrapper>
+      {footer}
+    </ScrollScreen>
+  );
+};
 
 ScrollTouchable.propTypes = {
   children: PropTypes.node,
@@ -35,3 +33,5 @@ ScrollTouchable.propTypes = {
 ScrollTouchable.defaultProps = {
   footer: null
 };
+
+export default ScrollTouchable;

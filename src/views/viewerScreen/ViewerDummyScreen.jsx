@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { preventScrollEvent } from '../../util/CommonUi';
 
 
@@ -18,3 +19,7 @@ export default class ViewerDummyScreen extends Component {
     );
   }
 }
+
+ViewerDummyScreen.propTypes = {
+  children: PropTypes.node
+};
