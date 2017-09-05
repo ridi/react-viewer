@@ -142,7 +142,7 @@ const ViewerContents = styled.section`
     text-align: center;
     img {
       padding: 0;
-      width: ${props => getComicWidth(props.comicWidthLevel)}%;
+      width: ${props => `${getComicWidth(props.comicWidthLevel)}%`};
     }
   }
 
@@ -166,7 +166,7 @@ const ViewerContents = styled.section`
     padding: 8px;
   }
   
-  ${props => props.contentType === ContentType.WEB_NOVEL ? novelStyleMixin : ''}
+  ${props => (props.contentType === ContentType.WEB_NOVEL ? novelStyleMixin : '')}
 `;
 ViewerContents.defaultProps = {
   contentType: ContentType.WEB_NOVEL,
@@ -202,7 +202,7 @@ const PageContents = ViewerContents.extend`
       img {
         width: auto;
         height: auto;
-        max-width: ${props => getComicWidth(props.comicWidthLevel)}%;
+        max-width: ${props => `${getComicWidth(props.comicWidthLevel)}%`};
         max-height: ${props => getComicWidth(props.comicWidthLevel)}vh;
       }
     }
@@ -243,7 +243,7 @@ const ScrollScreen = ViewerScreen.extend`
 // language=SCSS prefix=dummy{ suffix=}
 const ScrollContents = ViewerContents.extend`
   article {
-    padding: ${props => props.contentType === ContentType.WEB_NOVEL ? getNovelPadding(props.paddingLevel) : getComicPadding(props.paddingLevel)};
+    padding: ${props => (props.contentType === ContentType.WEB_NOVEL ? getNovelPadding(props.paddingLevel) : getComicPadding(props.paddingLevel))};
   }
   img  {
     padding: 15px;

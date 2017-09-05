@@ -10,6 +10,13 @@ export const isScrolledToBottom = () => BrowserWrapper.scrollTop() >= BrowserWra
 
 const _preventDefault = e => e.preventDefault();
 
+export const removeScrollEvent = ref => {
+  if (isExist(ref)) {
+    ref.removeEventListener(DOMEventConstants.SCROLL, _preventDefault);
+    ref.removeEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault);
+    ref.removeEventListener(DOMEventConstants.MOUSE_WHEEL, _preventDefault);
+  }
+};
 
 export const preventScrollEvent = ref => {
   removeScrollEvent(ref);
@@ -17,14 +24,6 @@ export const preventScrollEvent = ref => {
     ref.addEventListener(DOMEventConstants.SCROLL, _preventDefault, { passive: false });
     ref.addEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault, { passive: false });
     ref.addEventListener(DOMEventConstants.MOUSE_WHEEL, _preventDefault);
-  }
-};
-
-export const removeScrollEvent = ref => {
-  if (isExist(ref)) {
-    ref.removeEventListener(DOMEventConstants.SCROLL, _preventDefault);
-    ref.removeEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault);
-    ref.removeEventListener(DOMEventConstants.MOUSE_WHEEL, _preventDefault);
   }
 };
 

@@ -13,6 +13,7 @@ import {
   selectViewerScreenSettings,
   selectViewerType
 } from '../../redux/viewerScreen/ViewerScreen.selector';
+import { isExist } from '../../util/Util';
 
 
 class ViewerScreen extends Component {
@@ -22,19 +23,17 @@ class ViewerScreen extends Component {
   }
 
   componentDidMount() {
-    this.props.onMount && this.props.onMount();
+    const { onMount } = this.props;
+    if (isExist(onMount)) {
+      onMount();
+    }
   }
 
   componentWillUnmount() {
-    this.props.onUnmount && this.props.onUnmount();
-  }
-
-  moveNextPage() {
-    this.screen && this.screen.moveNextPage();
-  }
-
-  movePrevPage() {
-    this.screen && this.screen.movePrevPage();
+    const { onUnmount } = this.props;
+    if (isExist(onUnmount)) {
+      onUnmount();
+    }
   }
 
   getScreen() {
@@ -51,6 +50,18 @@ class ViewerScreen extends Component {
         return this.renderPageView();
       default:
         return this.renderWithSetting();
+    }
+  }
+
+  moveNextPage() {
+    if (isExist(this.screen)) {
+      this.screen.moveNextPage();
+    }
+  }
+
+  movePrevPage() {
+    if (isExist(this.screen)) {
+      this.screen.movePrevPage();
     }
   }
 
@@ -104,6 +115,10 @@ ViewerScreen.propTypes = {
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
+  isLoadingCompleted: PropTypes.bool,
+  viewerScreenSettings: PropTypes.object,
+  viewerType: PropTypes.oneOf(ViewerType.toList()),
+  contentType: PropTypes.oneOf(ContentType.toList()),
 };
 
 const mapStateToProps = (state, ownProps) => ({
