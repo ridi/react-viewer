@@ -4,6 +4,22 @@ export function isExist(object) {
   return object !== undefined && object !== null;
 }
 
+export function isEmpty(object) {
+  if (!isExist(object)) {
+    return true;
+  }
+
+  if (typeof object === 'string' || object instanceof String) {
+    return object.trim() === '';
+  }
+
+  if (Array.isArray(object)) {
+    return object.length === 0;
+  }
+
+  return false;
+}
+
 export function isArray(arr) {
   return Array.isArray(arr);
 }
