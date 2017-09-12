@@ -5,8 +5,8 @@ module.exports = {
     index: `${__dirname}/src/index.jsx`,
   },
   output: {
-    path: `${__dirname}/`,
-    filename: '[name].js',
+    path: `${__dirname}`,
+    filename: 'dist/js/[name].js',
   },
   module: {
     loaders: [
