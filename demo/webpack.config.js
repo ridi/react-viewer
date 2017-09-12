@@ -6,7 +6,7 @@ module.exports = {
   },
   output: {
     path: `${__dirname}`,
-    filename: 'dist/js/[name].js',
+    filename: 'resources/js/[name].js',
   },
   module: {
     loaders: [
@@ -20,10 +20,13 @@ module.exports = {
             ['transform-proto-to-assign']
           ]
         }
+      }, {
+        test: /\.json$/,
+        loader: 'json-loader'
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.json']
   }
 };

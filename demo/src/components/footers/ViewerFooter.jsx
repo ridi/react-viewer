@@ -6,7 +6,7 @@ import {
   selectViewerScreenSettings,
   selectIsLoadingCompleted,
 } from '../../../../lib/index';
-import { onToggleViewerSetting } from '../../redux/ViewerUi.action';
+import { onToggleViewerSetting } from '../../redux/Viewer.action';
 import ViewerPageFooterToolbar from './ViewerPageFooterToolbar';
 import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
 import { ContentType } from '../../../../src/constants/ContentConstants';
@@ -93,10 +93,10 @@ const mapStateToProps = (state, ownProps) => {
   const { isVisibleSettingPopup } = ui;
   const isLoadingCompleted = selectIsLoadingCompleted(state);
   const isLoaded = content && episode && isLoadingCompleted;
-  const isPrevEpisodeAvailable = isLoaded && episode.volume > 1;
-  const isNextEpisodeAvailable = isLoaded && content.last_episode.volume > episode.volume;
-  const prevEpisodeUrl = isPrevEpisodeAvailable ? '/react-webviewer/' : '';
-  const nextEpisodeUrl = isNextEpisodeAvailable ? '/react-webviewer/' : '';
+  const isPrevEpisodeAvailable = isLoaded;
+  const isNextEpisodeAvailable = isLoaded;
+  const prevEpisodeUrl = '';
+  const nextEpisodeUrl = '';
 
   return {
     isFullScreen: selectIsFullScreen(state),

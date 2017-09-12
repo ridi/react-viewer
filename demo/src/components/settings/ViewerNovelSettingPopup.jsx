@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { viewerScreenSettingChanged } from '../../../../lib/index';
 import ThemeSetting from './ThemeSetting';
-import { updateViewerSettings as updateViewerSettingsAction } from '../../redux/ViewerUi.action';
+import { updateViewerSettings as updateViewerSettingsAction } from '../../redux/Viewer.action';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import FontSetting from './FontSetting';
 import NovelSpineSetting from './NovelSpineSetting';

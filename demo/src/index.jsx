@@ -9,13 +9,18 @@ import {
   selectViewerScreenSettings,
   selectIsFullScreen,
   selectIsLoadingCompleted,
+  updateSpineMetaData as updateSpineMetaDataAction,
+  ViewerHelper,
+  PageCalculator,
 } from '../../lib/index';
 import viewer from './redux/Viewer.reducer';
-import { ContentType } from '../../src/constants/ContentConstants';
+import { ContentType, BindingType } from '../../src/constants/ContentConstants';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerDummyBody from './components/bodies/ViewerDummyBody';
 import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
+import ContentsData from './contents.json';
+import { requestLoadEpisode } from './redux/Viewer.action';
 
 
 const rootReducer = combineReducers({
@@ -26,9 +31,17 @@ const rootReducer = combineReducers({
 const enhancer = applyMiddleware(thunk);
 
 const store = createStore(rootReducer, {}, enhancer);
-
+ViewerHelper.connect(store);
+PageCalculator.connect(store);
 
 class DemoViewer extends Component {
+  componentWillMount() {
+    const { content, episode, requestViewerData, updateSpineMetaData } = this.props;
+
+    updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
+    requestViewerData(content.id, episode.id);
+  }
+
   contentTypeClassName() {
     const { content } = this.props;
     switch (content.content_type) {
@@ -63,7 +76,7 @@ class DemoViewer extends Component {
       >
         <ViewerHeader
           title={content.title}
-          isVisible={isFullScreen || isVisibleSettingPopup}
+          isVisible={!isFullScreen || isVisibleSettingPopup}
         />
         {isLoadingCompleted ?
           <ViewerBody
@@ -87,6 +100,9 @@ DemoViewer.propTypes = {
   viewerScreenSettings: PropTypes.object,
   isFullScreen: PropTypes.bool.isRequired,
   isVisibleSettingPopup: PropTypes.bool.isRequired,
+  isLoadingCompleted: PropTypes.bool.isRequired,
+  requestViewerData: PropTypes.func.isRequired,
+  updateSpineMetaData: PropTypes.func.isRequired,
 };
 
 DemoViewer.defaultProps = {
@@ -106,19 +122,25 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
+  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) => dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
 });
-
 
 const DemoViewerPage = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DemoViewer);
 
+
+const { contents, episodes } = ContentsData;
+const content = contents[Math.floor(Math.random() * contents.length)];
+const episode = episodes[content.id];
+
 ReactDOM.render(
   <Provider store={store}>
     <DemoViewerPage
-      content={Resources.content}
-      episode={Resources.episode}
+      content={content}
+      episode={episode}
     />
   </Provider>,
   document.getElementById('app')

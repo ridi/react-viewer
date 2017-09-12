@@ -4,7 +4,7 @@ import Loading from '../loadings/Loading';
 
 
 const ViewerDummyBody = props => (
-  <ViewerScreen fontDomain="https://ridi.github.io/react-webviewer/fonts/">
+  <ViewerScreen fontDomain="resources/fonts/">
     <Loading />
   </ViewerScreen>
 );

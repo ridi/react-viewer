@@ -71,9 +71,13 @@ ViewerPageFooterToolbar.propTypes = {
     totalPage: PropTypes.number,
     readProcess: PropTypes.number,
   }).isRequired,
+  isDisableComment: PropTypes.bool,
   movePageViewer: PropTypes.func.isRequired,
   showCommentArea: PropTypes.func.isRequired,
-  isDisableComment: PropTypes.bool.isRequired,
+};
+
+ViewerPageFooterToolbar.defaultProps = {
+  isDisableComment: false,
 };
 
 const mapStateToProps = (state, ownProps) => ({

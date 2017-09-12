@@ -9,7 +9,7 @@ const ViewerBody = ({ content, episode }) => (
     content={content}
     episode={episode}
     footer={<ViewerScreenFooter content={content} episode={episode} />}
-    fontDomain="https://ridi.github.io/react-webviewer/fonts/"
+    fontDomain="resources/fonts/"
   />
 );
 

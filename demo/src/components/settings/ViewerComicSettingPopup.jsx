@@ -7,7 +7,7 @@ import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
 import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
-import { updateViewerSettings as updateViewerSettingsAction } from '../../redux/ViewerUi.action';
+import { updateViewerSettings as updateViewerSettingsAction } from '../../redux/Viewer.action';
 
 
 class ViewerComicSettingPopup extends Component {
