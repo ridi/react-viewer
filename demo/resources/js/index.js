@@ -43351,18 +43351,8 @@ exports.default = Renderer;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-
-var isGhPages = function isGhPages() {
-  return window.location.href.indexOf('ridicorp.com') > -1;
-};
-
-var getUrl = function getUrl(relativeUrl) {
-  return isGhPages() ? 'https://ridi.github.io/react-webviewer/demo/' + relativeUrl : relativeUrl;
-};
-
-var getJson = exports.getJson = function getJson(relativeUrl) {
-  return fetch(getUrl(relativeUrl)).then(function (resp) {
+var getJson = exports.getJson = function getJson(url) {
+  return fetch(url).then(function (resp) {
     return resp.json();
   });
 };
