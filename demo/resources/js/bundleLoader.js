@@ -23,7 +23,7 @@ const currentVersion = getQueryParam('ver');
 const currentBundle = currentVersion == null ? 'index.js' : `${currentVersion}.index.js`;
 
 // step 1. load bundle js
-loadJs(`/resources/js/${currentBundle}`);
+loadJs(`./resources/js/${currentBundle}`);
 
 // step 2. add change event listener to bundles drop down
 bundlesDropdown.addEventListener('change', () => {
@@ -37,7 +37,7 @@ bundlesDropdown.addEventListener('change', () => {
 });
 
 // step 3. load bundle list to drop down
-fetch('/resources/js/bundles.json')
+fetch('./resources/js/bundles.json')
   .then(resp => resp.json())
   .then(({ bundles }) => {
     bundles.forEach(bundle => {
