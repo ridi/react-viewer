@@ -1,5 +1,6 @@
 import Renderer from '../utils/Renderer';
 import { renderSpine } from '../../../lib/index';
+import { getJson } from '../utils/Api';
 
 
 export const ViewerUiActions = {
@@ -21,15 +22,15 @@ export const updateViewerSettings = changedSetting => (dispatch, getState) => {
 };
 
 export const requestLoadEpisodeEpub = (spine, index) => (dispatch, getState) => {
-  fetch(spine).then(resp => resp.json()).then(({ value }) => {
+  getJson(spine).then(({ value }) => {
     const spineHtml = Renderer.generateSpineHtml(index, value);
     dispatch(renderSpine(index, spineHtml));
   });
 };
 
 export const requestLoadEpisode = (contentId, episodeId) => (dispatch, getState) => {
-  const spineUrl = `/resources/contents/${contentId}/${episodeId}/spine.json`;
-  fetch(spineUrl).then(resp => resp.json()).then(({ spines }) => {
+  const spineUrl = `./resources/contents/${contentId}/${episodeId}/spine.json`;
+  getJson(spineUrl).then(({ spines }) => {
     spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));
   });
 };
