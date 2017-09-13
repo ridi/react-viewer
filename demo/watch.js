@@ -12,4 +12,5 @@ const server = new WebpackDevServer(compiler, {
   }
 });
 
-server.listen(8000, '0.0.0.0', () => console.log('server started'));
+const port = 8000;
+server.listen(port, '0.0.0.0', () => console.log(`dev server started on port ${port}`));

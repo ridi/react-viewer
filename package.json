@@ -6,6 +6,7 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/** --rulesdir .",
+    "watch": "node watch.js",
     "build": "webpack"
   },
   "repository": {
