@@ -117,20 +117,20 @@ const ViewerContents = styled.section`
     font-style: normal;
     font-weight: normal;
     src: ${props =>
-      `url('${props.fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
+    `url('${props.fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
       url('${props.fontDomain}KoPubBatangMedium.woff') format('woff'), 
       url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`
-    }
+}
   }
   @font-face {
     font-family: 'kopub_dotum';
     font-style: normal;
     font-weight: normal;
     src: ${props =>
-      `url('${props.fontDomain}KoPubDotumMedium.woff2') format('woff2'),
+    `url('${props.fontDomain}KoPubDotumMedium.woff2') format('woff2'),
       url('${props.fontDomain}KoPubDotumMedium.woff') format('woff'),
       url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`
-    }
+}
   }
   
   * {
