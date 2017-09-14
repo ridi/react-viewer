@@ -2,153 +2,41 @@
   "contents": [
     {
       "id": 1,
-        "brand": "울트라미디어",
-        "title": "태평양 고래사나이",
-        "sub_title": "능력있는 '거창'은 귀국해서 한 여자에게 사기를 당해 무일푼이 되는데..!",
-        "description": "여섯 분야의 박사학위를 가지고 있으며 8개 국어에 능통한 ‘거창’은 외국 여자와 결혼을 하고 싶어 하지만, 그의 아버지는 이를 반대하다 못해 ‘거창’을 한국 여자와 결혼시키기 위해 함께 귀국까지 한다.\r\n\r\n이에 ‘거창’은 한국에서나마 몰래 아버지를 벗어나지만, 하필 한 여자에게 사기를 당하면서 무일푼 한국생활이 시작되는데···.",
-        "publication_right": "ⓒ 김기백",
-        "authors": [
-          {
-            "id": 3238,
-            "name": "김기백",
-            "description": ""
-          }
-        ],
-        "main_category": {
-          "name": "드라마",
-          "is_opened": true,
-          "is_selectable": true
-        },
-        "isbn": "979-11-5853-381-6",
-        "content_type": 10,
-        "binding_type": 0,
-        "viewer_type": 0,
-        "age_rating": 1,
-        "is_completed": true,
-        "is_opened": true,
-        "opened_date": "2017-08-21T18:46:41+09:00",
-        "is_sale_stop": false,
-        "price": {
-          "id": 5475,
-          "is_ownable": true,
-          "is_rentable": true,
-          "wait_then_free_coupon": null,
-          "wait_then_free_time": null,
-          "wait_then_free_forbidden_last_count": 10,
-          "own_price": 10,
-          "rent_price": 3,
-          "rent_term": 1,
-          "free_rent_episode_count": 1,
-          "free_rent_voucher_count": 0
-        },
-        "cover_url": "https://media2.ridistory.com/cached/contents/5603/cover/8ee33f9cc9554de0aa960ed1077d6d58.jpg",
-        "cover_wide_url": "https://media.ridistory.com/cached/w/540/h/337/contents/5603/cover/5d52f5094c1e485e91f89169e243b3c2.jpg",
-        "thumb_wide_url": "https://media.ridistory.com/cached/w/288/h/180/contents/5603/thumb/3d807d0ab53e4bb1929b8fad61b1bc4a.jpg",
-        "thumb_square_url": "https://media.ridistory.com/cached/w/300/h/300/contents/5603/thumb/9afddec027a14205aca754a8d39a3159.jpg",
-        "movie_url": "",
-        "movie_small_thumb_url": "",
-        "movie_thumb_url": "",
-        "episodes_count": 9,
-        "last_episode": {
-          "id": 494217,
-          "content_id": 5603,
-          "title": "9화",
-          "volume": 9,
-          "is_opened": true,
-          "opened_date": "2017-08-18T15:38:13+09:00",
-          "is_sale_stop": false,
-          "is_free_rent": false,
-          "author_comment": ""
-        },
-        "read_count": 1,
-        "is_recently_updated": false,
-        "eval_score_avg": 0
+      "title": "태평양 고래사나이",
+      "content_type": 10,
+      "binding_type": 0,
+      "viewer_type": 0,
+      "last_episode": {
+        "id": 494217,
+        "content_id": 1,
+        "title": "9화",
+        "volume": 9
+      }
     },
     {
       "id": 2,
-        "brand": "울트라미디어",
-        "title": "무정",
-        "sub_title": "능력있는 '거창'은 귀국해서 한 여자에게 사기를 당해 무일푼이 되는데..!",
-        "description": "여섯 분야의 박사학위를 가지고 있으며 8개 국어에 능통한 ‘거창’은 외국 여자와 결혼을 하고 싶어 하지만, 그의 아버지는 이를 반대하다 못해 ‘거창’을 한국 여자와 결혼시키기 위해 함께 귀국까지 한다.\r\n\r\n이에 ‘거창’은 한국에서나마 몰래 아버지를 벗어나지만, 하필 한 여자에게 사기를 당하면서 무일푼 한국생활이 시작되는데···.",
-        "publication_right": "ⓒ 김기백",
-        "authors": [
-          {
-            "id": 3239,
-            "name": "이광수",
-            "description": ""
-          }
-        ],
-        "main_category": {
-          "name": "드라마",
-          "is_opened": true,
-          "is_selectable": true
-        },
-        "isbn": "979-11-5853-381-6",
-        "content_type": 10,
-        "binding_type": 0,
-        "viewer_type": 0,
-        "age_rating": 1,
-        "is_completed": true,
-        "is_opened": true,
-        "opened_date": "2017-08-21T18:46:41+09:00",
-        "is_sale_stop": false,
-        "price": {
-          "id": 5475,
-          "is_ownable": true,
-          "is_rentable": true,
-          "wait_then_free_coupon": null,
-          "wait_then_free_time": null,
-          "wait_then_free_forbidden_last_count": 10,
-          "own_price": 10,
-          "rent_price": 3,
-          "rent_term": 1,
-          "free_rent_episode_count": 1,
-          "free_rent_voucher_count": 0
-        },
-        "cover_url": "https://media2.ridistory.com/cached/contents/5603/cover/8ee33f9cc9554de0aa960ed1077d6d58.jpg",
-        "cover_wide_url": "https://media.ridistory.com/cached/w/540/h/337/contents/5603/cover/5d52f5094c1e485e91f89169e243b3c2.jpg",
-        "thumb_wide_url": "https://media.ridistory.com/cached/w/288/h/180/contents/5603/thumb/3d807d0ab53e4bb1929b8fad61b1bc4a.jpg",
-        "thumb_square_url": "https://media.ridistory.com/cached/w/300/h/300/contents/5603/thumb/9afddec027a14205aca754a8d39a3159.jpg",
-        "movie_url": "",
-        "movie_small_thumb_url": "",
-        "movie_thumb_url": "",
-        "episodes_count": 9,
-        "last_episode": {
-          "id": 494217,
-          "content_id": 5603,
-          "title": "9화",
-          "volume": 9,
-          "is_opened": true,
-          "opened_date": "2017-08-18T15:38:13+09:00",
-          "is_sale_stop": false,
-          "is_free_rent": false,
-          "author_comment": ""
-        },
-        "read_count": 1,
-        "is_recently_updated": false,
-        "eval_score_avg": 0
+      "title": "무정",
+      "content_type": 10,
+      "binding_type": 0,
+      "viewer_type": 0,
+      "last_episode": {
+        "id": 494218,
+        "content_id": 2,
+        "title": "9화",
+        "volume": 9
+      }
     }
   ],
   "episodes": {
     "1": {
       "id": 1,
       "content_id": 1,
-      "author_comment": "",
-      "is_free_rent": false,
-      "is_opened": true,
-      "is_sale_stop": false,
-      "opened_date": "2017-088-18T15:38:14+09:00",
       "title": "1화",
       "volume": 1
     },
     "2": {
       "id": 2,
       "content_id": 2,
-      "author_comment": "",
-      "is_free_rent": false,
-      "is_opened": true,
-      "is_sale_stop": false,
-      "opened_date": "2017-088-18T15:38:14+09:00",
       "title": "1화",
       "volume": 1
     }
