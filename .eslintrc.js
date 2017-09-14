@@ -23,6 +23,7 @@ module.exports = {
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
 
     // Allow in RIDI Story
+    "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "arrow-parens": ["error", "as-needed"],
     "import/prefer-default-export": 0, // 상수 추가시 관리하기 어렵다.
