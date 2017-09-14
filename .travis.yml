@@ -4,5 +4,9 @@ node_js:
   - '7'
 before_install:
   - npm i -g npm
+before_script:
+  - ll
+  - pwd
+
 script:
-  - npm run lint
+  - cd /home/travis/build/ridi/react-webviewer && npm run lint
