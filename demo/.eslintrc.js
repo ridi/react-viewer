@@ -39,13 +39,6 @@ module.exports = {
     // Redux
     "global-require": 0, // configureStore작성시에 module.export가 필요해서 품
     "import/no-extraneous-dependencies": 0, // devDependence에 있어도 임포트가능 devTools때문에 품
-
-    //todo delete
-    "quote-props": 0,
-    "quotes": 0,
-    "no-useless-escape": 0,
-    "max-len": [0, 140],
-
   },
   "env": {
     "browser": true,

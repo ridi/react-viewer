@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 import styled, { css } from 'styled-components';
 import { svgIcons } from '../SvgIcons.styled';
 import { STATUS_BAR_HEIGHT, NAV_BAR_HEIGHT } from '../../constants/StyledConstants';
@@ -49,7 +50,7 @@ const getNovelPadding = level => {
 };
 const getComicPadding = level => '0';
 const getComicWidth = level => (Number(level) * 10) + 40;
-const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? `600px` : `none`);
+const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? '600px' : 'none');
 
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerScreen = styled.div`
@@ -253,7 +254,7 @@ ScrollContents.defaultProps = {
   contentType: ContentType.WEB_NOVEL,
   fontSizeUnit: 15,
   fontSizeLevel: 4,
-  fontFamily: "dotum",
+  fontFamily: 'dotum',
   lineHeight: 1.70,
   paddingLevel: 3,
   comicWidthLevel: 6,
