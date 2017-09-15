@@ -54,9 +54,10 @@ const build = webpackConfig => new Promise((resolve, reject) => {
 const renameDemoBundleWithVersion = ver =>
   fs.rename('./demo/resources/js/index.js', `./demo/resources/js/${ver}.index.js`)
     .then(() => {
-      const { bundles } = require('./demo/resources/js/bundles.json');
-      bundles.push(`${ver}.index.js`);
-      return fs.writeJson('./demo/resources/js/bundles.json', { bundles });
+      const bundlesJson = require('./demo/resources/js/bundles.json');
+      bundlesJson.bundles.push(`${ver}.index.js`);
+      bundlesJson.latestVersion = ver;
+      return fs.writeJson('./demo/resources/js/bundles.json', bundlesJson);
     });
 
 const npmPublish = tag => exec(`npm publish --tag ${tag}`);

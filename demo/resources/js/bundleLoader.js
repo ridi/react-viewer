@@ -39,11 +39,13 @@ bundlesDropdown.addEventListener('change', () => {
 // step 3. load bundle list to drop down
 fetch('./resources/js/bundles.json')
   .then(resp => resp.json())
-  .then(({ bundles }) => {
+  .then(({ latestVersion, bundles }) => {
     bundles.forEach(bundle => {
+      const optionText = bundle === 'index.js' ? `(latest)index.${latestVersion}.js` : 'index.js';
+
       const bundleOption = createElement('option', {
         value: bundle,
-        innerText: bundle,
+        innerText: optionText,
         selected: currentBundle === bundle,
       });
       bundlesDropdown.appendChild(bundleOption);
