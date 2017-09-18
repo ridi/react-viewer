@@ -23,6 +23,7 @@ module.exports = {
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
 
     // Allow in RIDI Story
+    "jsx-a11y/href-no-hash": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "arrow-parens": ["error", "as-needed"],
     "import/prefer-default-export": 0, // 상수 추가시 관리하기 어렵다.
@@ -38,13 +39,6 @@ module.exports = {
     // Redux
     "global-require": 0, // configureStore작성시에 module.export가 필요해서 품
     "import/no-extraneous-dependencies": 0, // devDependence에 있어도 임포트가능 devTools때문에 품
-
-    //todo delete
-    "quote-props": 0,
-    "quotes": 0,
-    "no-useless-escape": 0,
-    "max-len": [0, 140],
-
   },
   "env": {
     "browser": true,

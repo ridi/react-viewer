@@ -26,7 +26,14 @@ import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
 import ViewerHelper from './util/viewerScreen/ViewerHelper';
 import { ContentType, BindingType, AvailableViewerType } from './constants/ContentConstants';
-import { ViewerThemeType, ViewerBodyThemeColorType, ViewerFontType, ViewerType, ViewerSpinType, ViewerComicSpinType } from './constants/ViewerScreenConstants';
+import {
+  ViewerThemeType,
+  ViewerBodyThemeColorType,
+  ViewerFontType,
+  ViewerType,
+  ViewerSpinType,
+  ViewerComicSpinType
+} from './constants/ViewerScreenConstants';
 
 
 const actionGenerators = {
