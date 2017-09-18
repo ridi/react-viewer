@@ -5,7 +5,7 @@
   "description": "React-Redux based comics viewer demo page",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/** --rulesdir .",
+    "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/ --rulesdir .",
     "build": "webpack"
   },
   "repository": {

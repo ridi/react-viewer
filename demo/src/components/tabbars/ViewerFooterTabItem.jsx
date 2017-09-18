@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SvgIcons from '../icons/SvgIcons';
-import { isExist } from '../../../../src/util/Util'
+import { isExist } from '../../../../src/util/Util';
 
 
 export default class ViewerFooterTabItem extends Component {

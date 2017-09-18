@@ -15,7 +15,8 @@ const ExternalLink = props => {
           return;
         }
         redirect(to);
-      }} {...restProps}
+      }}
+      {...restProps}
     >
       {props.children}
     </a>

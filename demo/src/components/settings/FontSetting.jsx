@@ -63,4 +63,3 @@ export default connect(
   mapStateToProps,
 )(FontSetting);
 
-

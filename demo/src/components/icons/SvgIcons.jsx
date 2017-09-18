@@ -14,8 +14,8 @@ const SvgIcons = ({ svgClass, svgColor, svgName }) => (
 );
 
 SvgIcons.propTypes = {
-  svgClass: PropTypes.string,
-  svgColor: PropTypes.string,
+  svgClass: PropTypes.string.isRequired,
+  svgColor: PropTypes.string.isRequired,
   svgName: PropTypes.string.isRequired,
 };
 

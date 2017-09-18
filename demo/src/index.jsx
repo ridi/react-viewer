@@ -123,7 +123,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
-  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) => dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
+  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) =>
+    dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
 });
 
 const DemoViewerPage = connect(
