@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 import styled from 'styled-components';
 import SvgIconConstants from '../constants/SvgIconConstants';
 
