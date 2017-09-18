@@ -21,6 +21,7 @@ import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
 import ContentsData from './contents.json';
 import { requestLoadEpisode } from './redux/Viewer.action';
+import { IconsSprite } from './components/icons/IconsSprite';
 
 
 const rootReducer = combineReducers({
@@ -89,6 +90,7 @@ class DemoViewer extends Component {
           content={content}
           episode={episode}
         />
+        <IconsSprite />
       </section>
     );
   }

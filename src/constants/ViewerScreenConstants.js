@@ -1,7 +1,6 @@
 import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
-
 const _ViewerThemeType = {
   WHITE: 'white_theme',
   IOS_SEPIA: 'ios_sepia_theme',
@@ -112,7 +111,7 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
 });
 
 const _ViewerComicSpinType = {
-  CONTENT_WIDTH: 'content_width'
+  CONTENT_WIDTH: 'width'
 };
 
 export const ViewerComicSpinType = makeConstants(updateObject(_ViewerComicSpinType, {

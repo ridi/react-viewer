@@ -14,13 +14,14 @@ const SvgIcons = ({ svgClass, svgColor, svgName }) => (
 );
 
 SvgIcons.propTypes = {
-  svgClass: PropTypes.string.isRequired,
-  svgColor: PropTypes.string.isRequired,
+  svgClass: PropTypes.string,
+  svgColor: PropTypes.string,
   svgName: PropTypes.string.isRequired,
 };
 
-SvgIcons.defulatProps = {
-  svgClass: ''
+SvgIcons.defaultProps = {
+  svgClass: '',
+  svgColor: '',
 };
 
 export default SvgIcons;
