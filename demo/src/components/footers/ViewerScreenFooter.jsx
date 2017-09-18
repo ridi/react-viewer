@@ -65,18 +65,9 @@ class ViewerScreenFooter extends Component {
           </button>
         </div>
         <div className="viewer_bottom_button_wrapper">
-          {isNextEpisodeAvailable ? (
-            <ExternalLink
-              className="cui_button_blue_46 bottom_button"
-              to={nextEpisodeUrl}
-            >
-              다음편 보기
-            </ExternalLink>
-          ) : (
-            <div className="last_button_wrapper">
-              <p className="last_episode_text">마지막 에피소드 입니다.</p>
-            </div>
-          )}
+          <div className="last_button_wrapper">
+            <p className="last_episode_text">마지막 에피소드 입니다.</p>
+          </div>
           {this.checkIsPageView() ? (
             <button
               className="move_prev_page_button"
