@@ -8,7 +8,7 @@ import {
 } from '../../../../lib/index';
 import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
 import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
-import { isEmpty, isExist } from '../../../../src/util/Util';
+import { isExist } from '../../../../src/util/Util';
 import SvgIcons from '../icons/SvgIcons';
 
 

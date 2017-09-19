@@ -5,7 +5,7 @@ import App from '../../../modules/Reader.js/src/android/App';
 import EPub from '../../../modules/Reader.js/src/android/EPub';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
 import { selectViewerReadPosition, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
-import ViewerType from '../../constants/DOMEventConstants';
+import { ViewerType } from '../../constants/ViewerScreenConstants';
 
 const EMPTY_POSITION = '-1#-1';
 const DETECTION_TYPE = 'bottom'; // bottom or up
@@ -21,6 +21,7 @@ class ReadPositionHelper extends Connector {
 
   setScreenElement(screen) {
     if (isExist(screen)) {
+      console.log('setScreenElement', screen);
       const state = this.store.getState();
       const viewerScreenSettings = selectViewerScreenSettings(state);
 
@@ -35,7 +36,6 @@ class ReadPositionHelper extends Connector {
       this._epub = EPub;
       this._epub.setTextAndImageNodes(this._screen);
       this._epub.setDebugNodeLocation(isDebug);
-      // `getNodeLocationOfCurrentPage` 불릴 때 찾은 위치를 표시해줌
     }
   }
 
@@ -50,6 +50,7 @@ class ReadPositionHelper extends Connector {
   dispatchChangedReadPosition() {
     const { dispatch, getState } = this.store;
     const readPosition = this.getNodeLocation();
+    console.log('dispatchChagneReadPosition', readPosition) ;
     const originPosition = selectViewerReadPosition(getState());
     //  readPosition reducer에 저장
     if (readPosition !== EMPTY_POSITION && readPosition !== originPosition) {

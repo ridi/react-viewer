@@ -98,7 +98,7 @@ class ViewerScreen extends Component {
         ref={screen => {
           this.screen = screen && screen.getWrappedInstance();
         }}
-        screenRef={el => ReadPositionHelper.setScreenElement(el)}
+        screenRef={el => { ReadPositionHelper.setScreenElement(el); }}
         onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
         footer={this.props.footer}
         fontDomain={this.props.fontDomain}

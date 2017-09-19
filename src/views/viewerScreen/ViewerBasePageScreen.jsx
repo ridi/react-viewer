@@ -201,7 +201,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
             className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
-            innerRef={pages => { this.preventScrollEvent(pages); }}
+            innerRef={pages => {
+              this.onScreenRef(pages);
+              this.preventScrollEvent(pages);
+            }}
           />
         </PageContents>
       </PageTouchable>
