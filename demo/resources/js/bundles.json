@@ -1,6 +1,1 @@
-{
-  "bundles": [
-    "index.js"
-  ],
-  "latestVersion": "0.1.5"
-}
+{"bundles":["index.js","0.1.6.index.js"],"latestVersion":"0.1.6"}
