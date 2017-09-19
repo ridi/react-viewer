@@ -4,6 +4,11 @@ import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.actio
 import App from '../../../modules/Reader.js/src/android/App';
 import EPub from '../../../modules/Reader.js/src/android/EPub';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
+import { selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
+import ViewerType from '../../constants/DOMEventConstants';
+
+const EMPTY_POSITION = '-1#-1';
+const DETECTION_TYPE = 'bottom'; // bottom or up
 
 class ReadPositionHelper extends Connector {
   constructor() {
@@ -15,14 +20,16 @@ class ReadPositionHelper extends Connector {
 
   setScreenElement(screen) {
     if (isExist(screen)) {
+      const state = this.store.getState();
+      const viewerScreenSettings = selectViewerScreenSettings(state);
+
       this._screen = screen;
       const width = screenWidth();
       const height = screenHeight();
-      // fixme check
-      const scrollMode = false; // (viewerScreenSettings.viewerType === ViewerType.SCROLL);
+      const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
 
       // FIXME Do not use directly window, document
-      window.app = new App(width, height, false, scrollMode, 0);
+      window.app = new App(width, height, false, scrollMode);
 
       this._epub = EPub;
       this._epub.setTextAndImageNodes(this._screen);
@@ -30,16 +37,18 @@ class ReadPositionHelper extends Connector {
     }
   }
 
-
   getNodeLocation() {
-    return this.epub.getNodeLocationOfCurrentPage('bottom'); // nodeIndex#wordIndex (못 찾을 경우 -1#-1)
+    if (!isExist(this._epub)) {
+      return EMPTY_POSITION;
+    }
+    return this._epub.getNodeLocationOfCurrentPage(DETECTION_TYPE); // nodeIndex#wordIndex (못 찾을 경우 -1#-1)
   }
 
-  dispatchReadPosition() {
-    const { getState, dispatch } = this.store;
+  dispatchChangedReadPosition() {
+    const { dispatch } = this.store;
     const readPosition = this.getNodeLocation();
     //  readPosition reducer에 저장
-    if (readPosition !== '-1#-1') {
+    if (readPosition !== EMPTY_POSITION) {
       dispatch(changedReadPosition(readPosition));
     }
   }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import {
@@ -12,6 +13,7 @@ import {
   updateSpineMetaData as updateSpineMetaDataAction,
   ViewerHelper,
   PageCalculator,
+  ReadPositionHelper,
 } from '../../lib/index';
 import viewer from './redux/Viewer.reducer';
 import { ContentType, BindingType } from '../../src/constants/ContentConstants';
@@ -29,11 +31,17 @@ const rootReducer = combineReducers({
   viewerScreen,
 });
 
-const enhancer = applyMiddleware(thunk);
+
+const enhancer = composeWithDevTools(
+  applyMiddleware(
+    thunk
+  ),
+);
 
 const store = createStore(rootReducer, {}, enhancer);
 ViewerHelper.connect(store);
 PageCalculator.connect(store);
+ReadPositionHelper.connect(store);
 
 class DemoViewer extends Component {
   componentWillMount() {

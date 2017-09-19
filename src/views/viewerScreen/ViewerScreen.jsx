@@ -31,7 +31,7 @@ class ViewerScreen extends Component {
   }
 
   componentDidUpdate() {
-    ReadPositionHelper.dispatchReadPosition();
+    ReadPositionHelper.dispatchChangedReadPosition();
   }
 
   componentWillUnmount() {

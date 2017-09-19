@@ -23,14 +23,15 @@ const appReducer = combineReducers({
 });
 ```
 
-Connect `ViewerHelper`, `PageCalculator` with redux store.
+Connect `ViewerHelper`, `PageCalculator`, `ReadPositionHelper` with redux store.
 ```js
 import { createStore } from 'redux';
-import { ViewerHelper, PageCalculator } from '@ridi/react-webviewer';
+import { ViewerHelper, PageCalculator, ReadPositionHelper } from '@ridi/react-webviewer';
 
 const store = createStore( ... );
 ViewerHelper.connect(store);
 PageCalculator.connect(store);
+ReadPositionHelper.connect(store);
 ```
 
 Put `ViewerScreen` component into your component.

@@ -25,6 +25,7 @@ import {
 import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
 import ViewerHelper from './util/viewerScreen/ViewerHelper';
+import ReadPositionHelper from './util/viewerScreen/ReadPositionHelper';
 import { ContentType, BindingType, AvailableViewerType } from './constants/ContentConstants';
 import {
   ViewerThemeType,
@@ -69,6 +70,7 @@ export {
   reducers,
   PageCalculator,
   ViewerHelper,
+  ReadPositionHelper,
 
   // actions
   calculatedPageViewer,

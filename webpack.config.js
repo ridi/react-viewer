@@ -26,7 +26,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx', '.es6']
   },
   externals: {
     'react': 'react',
