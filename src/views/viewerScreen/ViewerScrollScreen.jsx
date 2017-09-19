@@ -16,6 +16,7 @@ import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
+import { isExist } from '../../util/Util';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
@@ -79,6 +80,13 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     viewerScreenScrolled();
   }
 
+  onScreenRef(ref) {
+    const { screenRef } = this.props;
+    if (isExist(screenRef)) {
+      screenRef(ref);
+    }
+  }
+
   render() {
     const {
       contentType,
@@ -122,6 +130,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         >
           <div
             dangerouslySetInnerHTML={{ __html: viewData }}
+            ref={screen => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
         </ScrollContents>
@@ -137,6 +146,7 @@ ViewerScrollScreen.propTypes = {
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
+  screenRef: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({

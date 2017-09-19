@@ -24,6 +24,7 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
+import { setScrollTop } from '../../util/BrowserWrapper';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -48,7 +49,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   componentWillReceiveProps(nextProps) {
     const nextPage = nextProps.pageViewPagination.currentPage;
     if (nextPage !== this.props.pageViewPagination.currentPage) {
-      document.body.scrollTop = 0;
+      setScrollTop(0);
       this.updatePagination();
     }
     if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
@@ -71,7 +72,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 
   updatePagination() {
     new AsyncTask(() => {
-      document.body.scrollTop = 0;
+      setScrollTop(0);
       PageCalculator.updatePagination();
     }).start(300);
   }
@@ -121,6 +122,13 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
+  }
+
+  onScreenRef(ref) {
+    const { screenRef } = this.props;
+    if (isExist(screenRef)) {
+      screenRef(ref);
+    }
   }
 
   onLeftTouched() {
@@ -210,6 +218,7 @@ ViewerBasePageScreen.propTypes = {
   showCommentArea: PropTypes.func,
   isDisableComment: PropTypes.bool,
   footer: PropTypes.node,
+  screenRef: PropTypes.func,
   fontDomain: PropTypes.string,
 };
 

@@ -18,7 +18,7 @@ module.exports = {
         query: {
           presets: ['es2015', 'react'],
           plugins: [
-            ['transform-es2015-classes', { 'loose': true }],
+            ['transform-es2015-classes', { loose: true }],
             ['transform-proto-to-assign']
           ]
         }
