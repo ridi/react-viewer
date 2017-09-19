@@ -47,6 +47,7 @@ class DemoViewer extends Component {
   componentWillMount() {
     const { content, episode, requestViewerData, updateSpineMetaData } = this.props;
 
+    ReadPositionHelper.setDebugMode(true);
     updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
     requestViewerData(content.id, episode.id);
   }

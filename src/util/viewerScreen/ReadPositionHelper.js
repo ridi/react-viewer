@@ -9,7 +9,6 @@ import { ViewerType } from '../../constants/ViewerScreenConstants';
 
 const EMPTY_POSITION = '-1#-1';
 const DETECTION_TYPE = 'bottom'; // bottom or up
-const isDebug = true;
 
 class ReadPositionHelper extends Connector {
   constructor() {
@@ -17,6 +16,7 @@ class ReadPositionHelper extends Connector {
     this._screen = null;
     this._calculateTimer = null;
     this._epub = null;
+    this._isDebug = false;
   }
 
   setScreenElement(screen) {
@@ -31,12 +31,26 @@ class ReadPositionHelper extends Connector {
       const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
 
       // FIXME Do not use directly window, document
-      window.app = new App(width, height, false, scrollMode);
+      window.app = new App(width, height, false, scrollMode, 0, this._screen);
 
       this._epub = EPub;
       this._epub.setTextAndImageNodes(this._screen);
-      this._epub.setDebugNodeLocation(isDebug);
+      this.setDebugMode();
     }
+  }
+
+  setDebugMode(debugMode = this._isDebug) {
+    this._isDebug = debugMode;
+    if (isExist(this._epub)) {
+      this._epub.setDebugNodeLocation(this._isDebug);
+    }
+  }
+
+  getOffsetByNodeLocation(location) {
+    if (isExist(this._epub)) {
+      return this._epub.getOffsetFromNodeLocation(location);
+    }
+    return null;
   }
 
   getNodeLocation() {
@@ -50,7 +64,6 @@ class ReadPositionHelper extends Connector {
   dispatchChangedReadPosition() {
     const { dispatch, getState } = this.store;
     const readPosition = this.getNodeLocation();
-    console.log('dispatchChagneReadPosition', readPosition) ;
     const originPosition = selectViewerReadPosition(getState());
     //  readPosition reducer에 저장
     if (readPosition !== EMPTY_POSITION && readPosition !== originPosition) {
