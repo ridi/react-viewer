@@ -1,11 +1,12 @@
 import Connector from '../Connector';
 import { isExist } from '../Util';
 import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.action';
-import App from '../../../modules/Reader.js/src/android/App';
-import EPub from '../../../modules/Reader.js/src/android/EPub';
+import Reader from '../../../modules/Reader.js/src/android/Reader';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
 import { selectViewerReadPosition, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
+import Context from '../../../modules/Reader.js/src/android/Context';
+import Util from '../../../modules/Reader.js/src/android/Util';
 
 const EMPTY_POSITION = '-1#-1';
 const DETECTION_TYPE = 'bottom'; // bottom or up
@@ -15,7 +16,8 @@ class ReadPositionHelper extends Connector {
     super();
     this._screen = null;
     this._calculateTimer = null;
-    this._epub = null;
+    this._reader = null;
+    this._context = null;
     this._isDebug = false;
   }
 
@@ -31,34 +33,33 @@ class ReadPositionHelper extends Connector {
       const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
 
       // FIXME Do not use directly window, document
-      window.app = new App(width, height, false, scrollMode, 0, this._screen);
-
-      this._epub = EPub;
-      this._epub.setTextAndImageNodes(this._screen);
+      const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
+      this._context = new Context(width, height, columnGap, false, scrollMode);
+      this._reader = new Reader(this._screen, this._context, 0);
       this.setDebugMode();
     }
   }
 
   setDebugMode(debugMode = this._isDebug) {
     this._isDebug = debugMode;
-    if (isExist(this._epub)) {
-      this._epub.setDebugNodeLocation(this._isDebug);
+    if (isExist(this._reader)) {
+      this._reader.debugNodeLocation = this._isDebug;
     }
   }
 
   getOffsetByNodeLocation(location) {
-    if (isExist(this._epub)) {
-      return this._epub.getOffsetFromNodeLocation(location);
+    if (isExist(this._reader)) {
+      return this._reader.getOffsetFromNodeLocation(location);
     }
     return null;
   }
 
   getNodeLocation() {
-    if (!isExist(this._epub)) {
+    if (!isExist(this._reader)) {
       return EMPTY_POSITION;
     }
     // nodeIndex#wordIndex (if couldn't find returns -1#-1)
-    return this._epub.getNodeLocationOfCurrentPage(DETECTION_TYPE);
+    return this._reader.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
 
   dispatchChangedReadPosition() {
