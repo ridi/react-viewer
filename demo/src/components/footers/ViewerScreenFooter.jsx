@@ -9,18 +9,20 @@ import {
 import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
 import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
 import { isEmpty, isExist } from '../../../../src/util/Util';
-import ExternalLink from '../links/ExternalLink';
 import SvgIcons from '../icons/SvgIcons';
 
 
 class ViewerScreenFooter extends Component {
   onClickShowComments() {
+    /* eslint-disable no-alert */
     alert('not available in demo page');
   }
 
   checkIsPageView() {
     const { content, viewerScreenSettings } = this.props;
-    return ((content.viewer_type === AvailableViewerType.BOTH) && (viewerScreenSettings.viewerType === ViewerType.PAGE)) || (content.viewer_type === AvailableViewerType.PAGE);
+    return ((content.viewer_type === AvailableViewerType.BOTH)
+      && (viewerScreenSettings.viewerType === ViewerType.PAGE))
+      || (content.viewer_type === AvailableViewerType.PAGE);
   }
 
   renderBestComments() {

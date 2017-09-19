@@ -4,11 +4,12 @@ import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.actio
 import App from '../../../modules/Reader.js/src/android/App';
 import EPub from '../../../modules/Reader.js/src/android/EPub';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
-import { selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
+import { selectViewerReadPosition, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
 import ViewerType from '../../constants/DOMEventConstants';
 
 const EMPTY_POSITION = '-1#-1';
 const DETECTION_TYPE = 'bottom'; // bottom or up
+const isDebug = true;
 
 class ReadPositionHelper extends Connector {
   constructor() {
@@ -33,7 +34,8 @@ class ReadPositionHelper extends Connector {
 
       this._epub = EPub;
       this._epub.setTextAndImageNodes(this._screen);
-      this._epub.setDebugNodeLocation(true); // `getNodeLocationOfCurrentPage` 불릴 때 찾은 위치를 표시해줌
+      this._epub.setDebugNodeLocation(isDebug);
+      // `getNodeLocationOfCurrentPage` 불릴 때 찾은 위치를 표시해줌
     }
   }
 
@@ -41,14 +43,16 @@ class ReadPositionHelper extends Connector {
     if (!isExist(this._epub)) {
       return EMPTY_POSITION;
     }
-    return this._epub.getNodeLocationOfCurrentPage(DETECTION_TYPE); // nodeIndex#wordIndex (못 찾을 경우 -1#-1)
+    // nodeIndex#wordIndex (if couldn't find returns -1#-1)
+    return this._epub.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
 
   dispatchChangedReadPosition() {
-    const { dispatch } = this.store;
+    const { dispatch, getState } = this.store;
     const readPosition = this.getNodeLocation();
+    const originPosition = selectViewerReadPosition(getState());
     //  readPosition reducer에 저장
-    if (readPosition !== EMPTY_POSITION) {
+    if (readPosition !== EMPTY_POSITION && readPosition !== originPosition) {
       dispatch(changedReadPosition(readPosition));
     }
   }

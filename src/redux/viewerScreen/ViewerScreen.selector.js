@@ -50,3 +50,8 @@ export const selectViewerScreenSettings = createSelector(
   [getViewerScreen],
   viewerScreen => nullSafeGet(viewerScreen, path.viewerScreenSettings(), {})
 );
+
+export const selectViewerReadPosition = createSelector(
+  [getViewerScreen],
+  viewerScreen => nullSafeGet(viewerScreen, path.readPosition(), '-1#-1')
+);

@@ -56,12 +56,16 @@ const renderSpine = (state, action) => new ReducerBuilder(state)
   .set(path.isLoadingCompleted(), true)
   .build();
 
+const changedReadPosition = (state, action) => new ReducerBuilder(state)
+  .set(path.readPosition(), action.position)
+  .build();
 
 export default createReducer(initialState, {
   [actions.INITIALIZE_VIEWER_SCREEN]: initializeViewerScreen,
   [actions.TOUCH_VIEWER_SCREEN]: onScreenTouched,
   [actions.SCROLLED_VIEWER_SCREEN]: onScreenScrolled,
   [actions.CALCULATED_PAGE_VIEWER]: calculatedPageViewer,
+  [actions.CHANGED_READ_POSITION]: changedReadPosition,
   [actions.MOVE_PAGE_VIEWER]: movePageViewer,
   [actions.SHOW_ENDING_SCREEN]: showEndingScreen,
   [actions.VIEWER_SCREEN_SETTING_CHANGED]: viewerScreenSettingChanged,
