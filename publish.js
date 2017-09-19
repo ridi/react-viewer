@@ -60,7 +60,7 @@ const renameDemoBundleWithVersion = ver =>
       return fs.writeJson('./demo/resources/js/bundles.json', bundlesJson);
     });
 
-const npmPublish = tag => exec(`npm publish --tag ${tag}`);
+const npmPublish = () => exec('npm publish');
 
 const gitCheckout = branch => exec(`git checkout ${branch}`);
 
@@ -80,7 +80,7 @@ checkPreconditions()
   .then(() => renameDemoBundleWithVersion(version))
   .then(() => {
     console.log('npm publish...');
-    return npmPublish(version);
+    return npmPublish();
   })
   .then(() => {
     console.log('prepare gh-pages...');
