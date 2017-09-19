@@ -76,7 +76,7 @@ checkPreconditions()
     console.log('building demo...');
     return build(demoWebpackConfig);
   })
-  .then(() => gitCommitAndPush('bundle update'))
+  .then(() => gitCommitAndPush('"bundle update"'))
   .then(() => renameDemoBundleWithVersion(version))
   .then(() => {
     console.log('npm publish...');
