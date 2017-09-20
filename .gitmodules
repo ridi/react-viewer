@@ -1,5 +1,3 @@
 [submodule "modules/Reader.js"]
 	path = modules/Reader.js
 	url = git@github.com:ridi/Reader.js.git
-[Reader "js"]
-	branch = refactoring
