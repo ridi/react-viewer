@@ -13,6 +13,7 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
+import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
@@ -78,6 +79,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     }
 
     viewerScreenScrolled();
+    ReadPositionHelper.dispatchChangedReadPosition();
   }
 
   onScreenRef(ref) {

@@ -1,4 +1,4 @@
-
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -14,7 +14,7 @@ module.exports = {
     loaders: [
       {
         loader: 'babel-loader',
-        include: `${__dirname}/src/`,
+        include: [`${__dirname}/src/`, `${__dirname}/modules/`],
         query: {
           presets: ['es2015', 'react'],
           plugins: [
@@ -25,6 +25,20 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      comments: false,
+      mangle: true,
+      minimize: true,
+      compress: {
+        warnings: false,
+      },
+    })
+  ],
   resolve: {
     extensions: ['.js', '.jsx', '.es6']
   },

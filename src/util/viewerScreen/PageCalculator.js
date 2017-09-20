@@ -1,5 +1,4 @@
 import Connector from '../Connector';
-import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { calculatedPageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
 import { screenWidth } from '../BrowserWrapper';
 import { updateObject } from '../Util';
@@ -32,13 +31,8 @@ class PageCalculator extends Connector {
     if (this._option.containExtraPage > 0) {
       totalPage += 1;
     }
-    const pageViewPagination = selectPageViewPagination(getState());
-    const { readProcess } = pageViewPagination;
-    const currentPage = readProcess === 0 ? 1 : Math.round(totalPage * readProcess);
 
     const newPage = {
-      currentPage,
-      readProcess,
       totalPage,
     };
 

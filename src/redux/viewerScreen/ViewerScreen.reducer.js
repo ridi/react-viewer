@@ -2,8 +2,8 @@ import path, { initialState } from './ViewerScreen.path';
 import createReducer from '../../util/Reducer';
 import { actions } from './ViewerScreen.action';
 import ReducerBuilder from '../../util/ReducerBuilder';
-import { cloneObject, nullSafeGet, updateObject } from '../../util/Util';
-import { isScrolledToTop, isScrolledToBottom } from '../../util/CommonUi';
+import { cloneObject, updateObject } from '../../util/Util';
+import { isScrolledToBottom, isScrolledToTop } from '../../util/CommonUi';
 
 
 const initializeViewerScreen = (state, action) => {
@@ -22,19 +22,14 @@ const onScreenScrolled = state => new ReducerBuilder(state)
   .build();
 
 const calculatedPageViewer = (state, action) => new ReducerBuilder(state)
-  .set(path.pageViewPagination(), action.page)
+  .set(path.pageViewTotalPage(), action.page.totalPage)
   .build();
 
-const movePageViewer = (state, action) => {
-  const totalPage = nullSafeGet(state, path.pageViewTotalPage(), 1);
-
-  return new ReducerBuilder(state)
-    .set(path.isEndingScreen(), false)
-    .set(path.isFullScreen(), true)
-    .set(path.pageViewCurrentPage(), action.number)
-    .set(path.pageViewReadProcess(), action.number / totalPage)
-    .build();
-};
+const movePageViewer = (state, action) => new ReducerBuilder(state)
+  .set(path.isEndingScreen(), false)
+  .set(path.isFullScreen(), true)
+  .set(path.pageViewCurrentPage(), action.number)
+  .build();
 
 const showEndingScreen = state => new ReducerBuilder(state)
   .set(path.isEndingScreen(), true)

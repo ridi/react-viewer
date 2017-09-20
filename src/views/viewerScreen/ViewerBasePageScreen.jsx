@@ -8,6 +8,7 @@ import {
 import { BindingType } from '../../constants/ContentConstants';
 import { isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
+import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
 import { PageContents, Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
@@ -74,7 +75,8 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     new AsyncTask(() => {
       setScrollTop(0);
       PageCalculator.updatePagination();
-    }).start(300);
+      ReadPositionHelper.dispatchChangedReadPosition();
+    }).start(0);
   }
 
   resizeViewer(width) {

@@ -30,10 +30,6 @@ class ViewerScreen extends Component {
     }
   }
 
-  componentDidUpdate() {
-    ReadPositionHelper.dispatchChangedReadPosition();
-  }
-
   componentWillUnmount() {
     const { onUnmount } = this.props;
     if (isExist(onUnmount)) {

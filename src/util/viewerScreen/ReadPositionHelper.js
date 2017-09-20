@@ -15,7 +15,6 @@ class ReadPositionHelper extends Connector {
   constructor() {
     super();
     this._screen = null;
-    this._calculateTimer = null;
     this._reader = null;
     this._context = null;
     this._isDebug = false;
@@ -23,7 +22,6 @@ class ReadPositionHelper extends Connector {
 
   setScreenElement(screen) {
     if (isExist(screen)) {
-      console.log('setScreenElement', screen);
       const state = this.store.getState();
       const viewerScreenSettings = selectViewerScreenSettings(state);
 
@@ -35,11 +33,7 @@ class ReadPositionHelper extends Connector {
       // FIXME Do not use directly window, document
       const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
       this._context = new Context(width, height, columnGap, false, scrollMode);
-      if (this._reader) {
-        this._reader.changeContext(this._context);
-      } else {
-        this._reader = new Reader(this._screen, this._context, 0);
-      }
+      this._reader = new Reader(this._screen, this._context, 0);
       this.setDebugMode();
     }
   }
@@ -72,12 +66,12 @@ class ReadPositionHelper extends Connector {
     }
   }
 
-  dispatchChangedReadPosition() {
+  dispatchChangedReadPosition(nodeLocation = this.getNodeLocation()) {
     const { dispatch, getState } = this.store;
-    const readPosition = this.getNodeLocation();
+    const readPosition = nodeLocation;
     const originPosition = selectViewerReadPosition(getState());
     //  readPosition reducer에 저장
-    if (readPosition !== EMPTY_POSITION && readPosition !== originPosition) {
+    if (isExist(readPosition) && readPosition !== EMPTY_POSITION && readPosition !== originPosition) {
       dispatch(changedReadPosition(readPosition));
     }
   }
