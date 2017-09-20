@@ -35,7 +35,11 @@ class ReadPositionHelper extends Connector {
       // FIXME Do not use directly window, document
       const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
       this._context = new Context(width, height, columnGap, false, scrollMode);
-      this._reader = new Reader(this._screen, this._context, 0);
+      if (this._reader) {
+        this._reader.changeContext(this._context);
+      } else {
+        this._reader = new Reader(this._screen, this._context, 0);
+      }
       this.setDebugMode();
     }
   }
@@ -49,7 +53,7 @@ class ReadPositionHelper extends Connector {
 
   getOffsetByNodeLocation(location) {
     if (isExist(this._reader)) {
-      return this._reader.getOffsetFromNodeLocation(location);
+      return this._reader.getOffsetFromNodeLocation(location, DETECTION_TYPE);
     }
     return null;
   }
