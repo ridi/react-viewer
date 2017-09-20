@@ -39,6 +39,7 @@ class ViewerScreen extends Component {
     if (isExist(onUnmount)) {
       onUnmount();
     }
+    ReadPositionHelper.unmountReader();
   }
 
   getScreen() {
