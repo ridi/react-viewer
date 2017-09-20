@@ -66,6 +66,12 @@ class ReadPositionHelper extends Connector {
     return this._reader.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
 
+  unmountReader() {
+    if (isExist(this._reader)) {
+      this._reader.removeScrollListenerIfNeeded();
+    }
+  }
+
   dispatchChangedReadPosition() {
     const { dispatch, getState } = this.store;
     const readPosition = this.getNodeLocation();
