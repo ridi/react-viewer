@@ -30,7 +30,6 @@ class ReadPositionHelper extends Connector {
       const height = screenHeight();
       const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
 
-      // FIXME Do not use directly window, document
       const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
       this._context = new Context(width, height, columnGap, false, scrollMode);
       this._reader = new Reader(this._screen, this._context, 0);
