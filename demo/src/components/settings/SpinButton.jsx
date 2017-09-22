@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SvgIcons from '../icons/SvgIcons'
+import SvgIcons from '../icons/SvgIcons';
 
 
 export default class SpinButton extends React.Component {
@@ -55,7 +55,9 @@ export default class SpinButton extends React.Component {
                 className="spin_button minus_button"
                 disabled={this.state.value === this.props.min}
                 onClick={this.handleMinus}
-                ref={c => (this.minusButton = c)}
+                ref={c => {
+                  this.minusButton = c;
+                }}
               >
                 <SvgIcons
                   svgName="svg_minus_1"
@@ -70,7 +72,9 @@ export default class SpinButton extends React.Component {
                 className="spin_button plus_button"
                 disabled={this.state.value === this.props.max}
                 onClick={this.handlePlus}
-                ref={c => (this.plusButton = c)}
+                ref={c => {
+                  this.plusButton = c;
+                }}
               >
                 <SvgIcons
                   svgName="svg_plus_1"
@@ -95,6 +99,6 @@ SpinButton.propTypes = {
   onChange: PropTypes.func
 };
 
-SpinButton.propTypes = {
+SpinButton.defaultProps = {
   onChange: () => {},
 };

@@ -5,6 +5,7 @@ export const initialState = {
     isVisibleSettingPopup: false,
     viewerSettings: {},
   },
+
 };
 
 export default {

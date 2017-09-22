@@ -2,7 +2,8 @@ const webpack = require('webpack');
 const process = require('process');
 const webpackConfig = require('./webpack.config.js');
 
-const compiler = webpack(webpackConfig);
+const compiler = webpack(Object.assign(webpackConfig, { plugins: [] }));
+
 const watching = compiler.watch({}, (err, stats) => {
   err && console.error(err);
 });

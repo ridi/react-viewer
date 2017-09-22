@@ -8,6 +8,7 @@ import {
 import { BindingType } from '../../constants/ContentConstants';
 import { isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
+import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
 import { PageContents, Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
@@ -24,6 +25,7 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
+import { setScrollTop } from '../../util/BrowserWrapper';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -48,7 +50,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   componentWillReceiveProps(nextProps) {
     const nextPage = nextProps.pageViewPagination.currentPage;
     if (nextPage !== this.props.pageViewPagination.currentPage) {
-      document.body.scrollTop = 0;
+      setScrollTop(0);
       this.updatePagination();
     }
     if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
@@ -71,9 +73,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 
   updatePagination() {
     new AsyncTask(() => {
-      document.body.scrollTop = 0;
+      setScrollTop(0);
       PageCalculator.updatePagination();
-    }).start(300);
+      ReadPositionHelper.dispatchChangedReadPosition();
+    }).start(0);
   }
 
   resizeViewer(width) {
@@ -121,6 +124,13 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
+  }
+
+  onScreenRef(ref) {
+    const { screenRef } = this.props;
+    if (isExist(screenRef)) {
+      screenRef(ref);
+    }
   }
 
   onLeftTouched() {
@@ -193,7 +203,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
             className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
-            innerRef={pages => { this.preventScrollEvent(pages); }}
+            innerRef={pages => {
+              this.onScreenRef(pages);
+              this.preventScrollEvent(pages);
+            }}
           />
         </PageContents>
       </PageTouchable>
@@ -210,6 +223,7 @@ ViewerBasePageScreen.propTypes = {
   showCommentArea: PropTypes.func,
   isDisableComment: PropTypes.bool,
   footer: PropTypes.node,
+  screenRef: PropTypes.func,
   fontDomain: PropTypes.string,
 };
 

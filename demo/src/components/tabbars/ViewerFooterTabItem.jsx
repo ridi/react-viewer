@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SvgIcons from '../icons/SvgIcons';
-import { isExist } from '../../../../src/util/Util'
+import { isExist } from '../../../../src/util/Util';
 
 
 export default class ViewerFooterTabItem extends Component {
   constructor() {
     super();
+    this.colorList = {
+      normal: '#868a8e',
+      active: '#0282da'
+    };
     this.iconList = {
       android: {
         list: {
@@ -47,6 +51,19 @@ export default class ViewerFooterTabItem extends Component {
     };
   }
 
+  getColor() {
+    const { icon, isSelected } = this.props;
+
+    if (!isExist(icon)) {
+      return '';
+    }
+
+    if (isSelected) {
+      return this.colorList.active;
+    }
+    return this.colorList.normal;
+  }
+
   getIconName() {
     const { icon, isSelected } = this.props;
 
@@ -78,6 +95,7 @@ export default class ViewerFooterTabItem extends Component {
             <SvgIcons
               svgName={this.getIconName()}
               svgClass={`viewer_footer_tabitem_icon ${this.getIconName()}`}
+              svgColor={this.getColor()}
             />
             <span className="viewer_footer_tabitem_title">{title}</span>
           </div>

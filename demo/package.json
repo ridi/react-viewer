@@ -5,7 +5,7 @@
   "description": "React-Redux based comics viewer demo page",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/** --rulesdir .",
+    "lint": "eslint --fix --ext .js,.jsx,.es6 ./src/ --rulesdir .",
     "build": "webpack"
   },
   "repository": {
@@ -41,7 +41,7 @@
     "redux-devtools": "^3.3.2",
     "redux-devtools-dispatch": "^2.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",
-    "redux-devtools-extension": "^2.13.0",
+    "redux-devtools-extension": "^2.13.2",
     "redux-devtools-inspector": "^0.11.0",
     "redux-devtools-log-monitor": "^1.2.0",
     "redux-devtools-multiple-monitors": "^1.0.1",

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import {
@@ -12,6 +13,7 @@ import {
   updateSpineMetaData as updateSpineMetaDataAction,
   ViewerHelper,
   PageCalculator,
+  ReadPositionHelper,
 } from '../../lib/index';
 import viewer from './redux/Viewer.reducer';
 import { ContentType, BindingType } from '../../src/constants/ContentConstants';
@@ -21,6 +23,7 @@ import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
 import ContentsData from './contents.json';
 import { requestLoadEpisode } from './redux/Viewer.action';
+import { IconsSprite } from './components/icons/IconsSprite';
 
 
 const rootReducer = combineReducers({
@@ -28,16 +31,23 @@ const rootReducer = combineReducers({
   viewerScreen,
 });
 
-const enhancer = applyMiddleware(thunk);
+
+const enhancer = composeWithDevTools(
+  applyMiddleware(
+    thunk
+  ),
+);
 
 const store = createStore(rootReducer, {}, enhancer);
 ViewerHelper.connect(store);
 PageCalculator.connect(store);
+ReadPositionHelper.connect(store);
 
 class DemoViewer extends Component {
   componentWillMount() {
     const { content, episode, requestViewerData, updateSpineMetaData } = this.props;
 
+    ReadPositionHelper.setDebugMode(true);
     updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
     requestViewerData(content.id, episode.id);
   }
@@ -89,6 +99,7 @@ class DemoViewer extends Component {
           content={content}
           episode={episode}
         />
+        <IconsSprite />
       </section>
     );
   }
@@ -123,7 +134,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
-  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) => dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
+  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) =>
+    dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
 });
 
 const DemoViewerPage = connect(

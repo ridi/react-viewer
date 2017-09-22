@@ -19,8 +19,9 @@ SvgIcons.propTypes = {
   svgName: PropTypes.string.isRequired,
 };
 
-SvgIcons.defulatProps = {
-  svgClass: ''
+SvgIcons.defaultProps = {
+  svgClass: '',
+  svgColor: '',
 };
 
 export default SvgIcons;
