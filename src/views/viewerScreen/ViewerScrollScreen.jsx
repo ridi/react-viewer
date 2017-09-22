@@ -21,6 +21,11 @@ import { isExist } from '../../util/Util';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
+  constructor() {
+    super();
+    this.lastScrolledDate = new Date();
+  }
+
   componentDidMount() {
     this.addScrollEvent();
     this.changeErrorImage();
@@ -77,7 +82,11 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     if (ignoreScroll) {
       return;
     }
-
+    const newDate = new Date();
+    if (newDate - this.lastScrolledDate < 100) {
+      return;
+    }
+    this.lastScrolledDate = newDate;
     viewerScreenScrolled();
     ReadPositionHelper.dispatchChangedReadPosition();
   }
