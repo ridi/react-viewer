@@ -38,7 +38,7 @@ class EventDispatcher {
     const interval = this.intervalMap[type];
     const lastDispatchedDate = this.lastDistpatchedDateMap[type];
     const isReadyToDispatch = this._checkDispachable(lastDispatchedDate, interval);
-    if (!isExist(listener) && !isReadyToDispatch) {
+    if (!isExist(listener) || !isReadyToDispatch) {
       return;
     }
     listener(e);
