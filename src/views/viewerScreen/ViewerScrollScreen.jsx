@@ -9,6 +9,7 @@ import {
   selectContentType,
   selectIsLoadingCompleted,
   selectSpines,
+  selectViewerReadPosition,
   selectViewerScreenSettings
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
@@ -19,6 +20,7 @@ import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewe
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { isExist } from '../../util/Util';
 import EventDispatcher from '../../util/EventDispatcher';
+import { setScrollTop } from '../../util/BrowserWrapper';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
@@ -28,8 +30,22 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   componentDidMount() {
+    this.restoreScrollOffset();
     this.addScrollEvent();
     this.changeErrorImage();
+  }
+
+  restoreScrollOffset() {
+    const { readPosition } = this.props;
+
+    if (readPosition === '-1#-1' || !isExist(readPosition)) {
+      return;
+    }
+
+    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
+    if (isExist(offset)) {
+      setScrollTop(offset);
+    }
   }
 
   componentWillUnmount() {
@@ -150,6 +166,7 @@ ViewerScrollScreen.propTypes = {
   viewerScreenSettings: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   viewerScreenScrolled: PropTypes.func,
+  readPosition: PropTypes.string,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
@@ -161,11 +178,14 @@ const mapStateToProps = (state, ownProps) => ({
   contentType: selectContentType(state),
   viewerScreenSettings: selectViewerScreenSettings(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
+  readPosition: selectViewerReadPosition(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
-  viewerScreenScrolled: () => dispatch(onViewerScreenScrolled()),
+  viewerScreenScrolled: () => {
+    dispatch(onViewerScreenScrolled());
+  },
 });
 
 export default connect(

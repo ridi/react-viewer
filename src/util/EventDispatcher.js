@@ -18,7 +18,7 @@ class EventDispatcher {
   }
 
   removeEventListener(event) {
-    const func = this.listenerMap(event);
+    const func = this.listenerMap[event];
     if (!isExist(func)) {
       return;
     }
