@@ -18,6 +18,7 @@ import ViewerBaseScreen from './ViewerBaseScreen';
 import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { isExist } from '../../util/Util';
+import EventDispatcher from '../../util/EventDispatcher';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
@@ -63,12 +64,12 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   addScrollEvent() {
     // ayon: 어째서인지 컴포넌트에 스크롤 이벤트를 걸면 걸리지 않는다.
     this.viewerScrollCallback = e => this.onScrollHandle(e);
-    document.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
+    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, 100);
   }
 
   removeScrollEvent() {
     if (this.viewerScrollCallback) {
-      document.removeEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
+      EventDispatcher.removeEventListener(DOMEventConstants.SCROLL);
       this.viewerScrollCallback = undefined;
     }
   }
@@ -82,11 +83,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     if (ignoreScroll) {
       return;
     }
-    const newDate = new Date();
-    if (newDate - this.lastScrolledDate < 100) {
-      return;
-    }
-    this.lastScrolledDate = newDate;
     viewerScreenScrolled();
     ReadPositionHelper.dispatchChangedReadPosition();
   }
