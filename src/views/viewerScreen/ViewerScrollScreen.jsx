@@ -183,9 +183,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
-  viewerScreenScrolled: () => {
-    dispatch(onViewerScreenScrolled());
-  },
+  viewerScreenScrolled: () => dispatch(onViewerScreenScrolled()),
 });
 
 export default connect(
