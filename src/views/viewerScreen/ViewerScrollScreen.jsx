@@ -21,6 +21,7 @@ import DOMEventConstants from '../../constants/DOMEventConstants';
 import { isExist } from '../../util/Util';
 import EventDispatcher from '../../util/EventDispatcher';
 import { setScrollTop } from '../../util/BrowserWrapper';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
@@ -75,7 +76,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   addScrollEvent() {
     // ayon: 어째서인지 컴포넌트에 스크롤 이벤트를 걸면 걸리지 않는다.
     this.viewerScrollCallback = e => this.onScrollHandle(e);
-    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, 100);
+    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, DOMEventDelayConstants.SCROLL);
   }
 
   removeScrollEvent() {
