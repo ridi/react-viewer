@@ -44,7 +44,7 @@ class ReadPositionHelper extends Connector {
   }
 
   getOffsetByNodeLocation(location) {
-    if (isExist(this._reader)) {
+    if (isExist(this._reader) && isExist(location) && location !== VIEWER_EMPTY_READ_POSITION) {
       return this._reader.getOffsetFromNodeLocation(location, DETECTION_TYPE);
     }
     return null;
