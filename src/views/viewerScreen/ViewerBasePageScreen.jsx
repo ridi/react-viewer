@@ -20,6 +20,7 @@ import {
   selectIsLoadingCompleted,
   selectPageViewPagination,
   selectSpines,
+  selectViewerReadPosition,
   selectViewerScreenSettings
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import ViewerBaseScreen from './ViewerBaseScreen';
@@ -39,8 +40,23 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     if (isEndingScreen) {
       return;
     }
+
+    this.restorePageOffset();
     this.updatePagination();
     this.changeErrorImage();
+  }
+
+  restorePageOffset() {
+    const { readPosition, movePageViewer } = this.props;
+
+    if (this.checkEmptyPosition()) {
+      return;
+    }
+
+    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
+    if (isExist(offset)) {
+      movePageViewer(offset + 1);
+    }
   }
 
   componentWillUnmount() {
@@ -72,10 +88,15 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   updatePagination() {
+    const { pageViewPagination } = this.props;
+    const { currentPage, totalPage } = pageViewPagination;
+    const lastPage = totalPage - 1;
     new AsyncTask(() => {
       setScrollTop(0);
       PageCalculator.updatePagination();
-      ReadPositionHelper.dispatchChangedReadPosition();
+      if (currentPage !== lastPage) {
+        ReadPositionHelper.dispatchChangedReadPosition();
+      }
     }).start(0);
   }
 
@@ -106,7 +127,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
-
 
     if (PageCalculator.isEndingPage(nextPage, totalPage)) {
       showCommentArea();
@@ -196,7 +216,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
           comicWidthLevel={contentWidthLevel}
           paddingLevel={paddingLevel}
           contentType={contentType}
-          innerRef={pages => { this.preventScrollEvent(pages); }}
+          innerRef={pages => {
+            this.preventScrollEvent(pages);
+          }}
           fontDomain={fontDomain}
         >
           <Pages
@@ -216,6 +238,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 
 ViewerBasePageScreen.propTypes = {
   onMoveWrongDirection: PropTypes.func,
+  readPosition: PropTypes.string,
   isEndingScreen: PropTypes.bool,
   pageViewPagination: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
@@ -235,6 +258,7 @@ const mapStateToProps = (state, ownProps) => ({
   spines: selectSpines(state),
   isEndingScreen: selectIsEndingScreen(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
+  readPosition: selectViewerReadPosition(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

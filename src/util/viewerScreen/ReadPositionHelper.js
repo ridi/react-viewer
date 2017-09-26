@@ -4,11 +4,10 @@ import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.actio
 import Reader from '../../../modules/Reader.js/src/android/Reader';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
 import { selectViewerReadPosition, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { ViewerType } from '../../constants/ViewerScreenConstants';
+import { VIEWER_EMPTY_READ_POSITION, ViewerType } from '../../constants/ViewerScreenConstants';
 import Context from '../../../modules/Reader.js/src/android/Context';
 import Util from '../../../modules/Reader.js/src/android/Util';
 
-const EMPTY_POSITION = '-1#-1';
 const DETECTION_TYPE = 'bottom'; // bottom or up
 
 class ReadPositionHelper extends Connector {
@@ -53,7 +52,7 @@ class ReadPositionHelper extends Connector {
 
   getNodeLocation() {
     if (!isExist(this._reader)) {
-      return EMPTY_POSITION;
+      return VIEWER_EMPTY_READ_POSITION;
     }
     // nodeIndex#wordIndex (if couldn't find returns -1#-1)
     return this._reader.getNodeLocationOfCurrentPage(DETECTION_TYPE);
@@ -70,7 +69,7 @@ class ReadPositionHelper extends Connector {
     const readPosition = nodeLocation;
     const originPosition = selectViewerReadPosition(getState());
     //  readPosition reducer에 저장
-    if (isExist(readPosition) && readPosition !== EMPTY_POSITION && readPosition !== originPosition) {
+    if (isExist(readPosition) && readPosition !== VIEWER_EMPTY_READ_POSITION && readPosition !== originPosition) {
       dispatch(changedReadPosition(readPosition));
     }
   }

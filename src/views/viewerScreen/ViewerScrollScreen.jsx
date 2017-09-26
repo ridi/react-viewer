@@ -9,6 +9,7 @@ import {
   selectContentType,
   selectIsLoadingCompleted,
   selectSpines,
+  selectViewerReadPosition,
   selectViewerScreenSettings
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
@@ -18,17 +19,29 @@ import ViewerBaseScreen from './ViewerBaseScreen';
 import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { isExist } from '../../util/Util';
+import EventDispatcher from '../../util/EventDispatcher';
+import { setScrollTop } from '../../util/BrowserWrapper';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
-  constructor() {
-    super();
-    this.lastScrolledDate = new Date();
-  }
-
   componentDidMount() {
+    this.restoreScrollOffset();
     this.addScrollEvent();
     this.changeErrorImage();
+  }
+
+  restoreScrollOffset() {
+    const { readPosition } = this.props;
+
+    if (this.checkEmptyPosition()) {
+      return;
+    }
+
+    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
+    if (isExist(offset)) {
+      setScrollTop(offset);
+    }
   }
 
   componentWillUnmount() {
@@ -63,12 +76,12 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   addScrollEvent() {
     // ayon: 어째서인지 컴포넌트에 스크롤 이벤트를 걸면 걸리지 않는다.
     this.viewerScrollCallback = e => this.onScrollHandle(e);
-    document.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
+    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, DOMEventDelayConstants.SCROLL);
   }
 
   removeScrollEvent() {
     if (this.viewerScrollCallback) {
-      document.removeEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
+      EventDispatcher.removeEventListener(DOMEventConstants.SCROLL);
       this.viewerScrollCallback = undefined;
     }
   }
@@ -82,11 +95,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     if (ignoreScroll) {
       return;
     }
-    const newDate = new Date();
-    if (newDate - this.lastScrolledDate < 100) {
-      return;
-    }
-    this.lastScrolledDate = newDate;
     viewerScreenScrolled();
     ReadPositionHelper.dispatchChangedReadPosition();
   }
@@ -154,6 +162,7 @@ ViewerScrollScreen.propTypes = {
   viewerScreenSettings: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   viewerScreenScrolled: PropTypes.func,
+  readPosition: PropTypes.string,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
@@ -165,6 +174,7 @@ const mapStateToProps = (state, ownProps) => ({
   contentType: selectContentType(state),
   viewerScreenSettings: selectViewerScreenSettings(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
+  readPosition: selectViewerReadPosition(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
