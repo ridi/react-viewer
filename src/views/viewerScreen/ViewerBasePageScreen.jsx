@@ -49,7 +49,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   restorePageOffset() {
     const { readPosition, movePageViewer } = this.props;
 
-    if (readPosition === '-1#-1' || !isExist(readPosition)) {
+    if (this.checkEmptyPosition()) {
       return;
     }
 

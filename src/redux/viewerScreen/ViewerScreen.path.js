@@ -1,5 +1,5 @@
 import { AvailableViewerType, BindingType, ContentType } from '../../constants/ContentConstants';
-import { ViewerFontType, ViewerThemeType, ViewerType } from '../../constants/ViewerScreenConstants';
+import { VIEWER_EMPTY_READ_POSITION, ViewerFontType, ViewerThemeType, ViewerType } from '../../constants/ViewerScreenConstants';
 
 
 export const initialState = {
@@ -7,7 +7,7 @@ export const initialState = {
   contentType: ContentType.WEB_NOVEL,
   viewerType: AvailableViewerType.SCROLL,
   bindingType: BindingType.LEFT,
-  readPosition: '-1#-1',
+  readPosition: VIEWER_EMPTY_READ_POSITION,
   isLoadingCompleted: false,
   isEndingScreen: false,
   isFullScreen: false,

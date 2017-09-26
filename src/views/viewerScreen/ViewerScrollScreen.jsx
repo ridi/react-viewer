@@ -24,11 +24,6 @@ import { setScrollTop } from '../../util/BrowserWrapper';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
-  constructor() {
-    super();
-    this.lastScrolledDate = new Date();
-  }
-
   componentDidMount() {
     this.restoreScrollOffset();
     this.addScrollEvent();
@@ -38,7 +33,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   restoreScrollOffset() {
     const { readPosition } = this.props;
 
-    if (readPosition === '-1#-1' || !isExist(readPosition)) {
+    if (this.checkEmptyPosition()) {
       return;
     }
 
