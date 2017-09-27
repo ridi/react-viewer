@@ -55,6 +55,12 @@ class ViewerScreen extends Component {
     }
   }
 
+  restorePosition() {
+    if (isExist(this.screen)) {
+      this.screen.restorePosition();
+    }
+  }
+
   moveNextPage() {
     if (isExist(this.screen)) {
       this.screen.moveNextPage();

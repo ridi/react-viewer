@@ -26,12 +26,12 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
-    this.restoreScrollOffset();
+    this.restorePosition();
     this.addScrollEvent();
     this.changeErrorImage();
   }
 
-  restoreScrollOffset() {
+  restorePosition() {
     const { readPosition } = this.props;
 
     if (this.checkEmptyPosition()) {
