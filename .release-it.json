@@ -1,5 +1,9 @@
 {
   "src": {
     "beforeStartCommand": "node release.js check-preconditions"
+  },
+  "buildCommand": "node release.js build",
+  "dist": {
+    "afterReleaseCommand": "node release.js released"
   }
 }
