@@ -54,6 +54,7 @@ const renameDemoBundleWithVersion = ver =>
     .then(() => {
       const bundlesJson = require('./demo/resources/js/bundles.json');
       bundlesJson.bundles.push(`${ver}.index.js`);
+      bundlesJson.bundles = [...new Set([...bundlesJson.bundles])];
       bundlesJson.latestVersion = ver;
       return fs.writeJson('./demo/resources/js/bundles.json', bundlesJson);
     });
