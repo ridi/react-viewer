@@ -29,8 +29,8 @@ const checkPreconditions = () => getGitBranch()
     return getGitTag();
   })
   .then(tag => {
-    if (tag.replace('v', '') !== version) {
-      throw new Error('version and git tag is not equals');
+    if (tag.replace('v', '') === version) {
+      throw new Error('new version number required');
     }
     return npm(name);
   })
