@@ -41,12 +41,12 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
 
-    this.restorePageOffset();
+    this.restorePosition();
     this.updatePagination();
     this.changeErrorImage();
   }
 
-  restorePageOffset() {
+  restorePosition() {
     const { readPosition, movePageViewer } = this.props;
 
     if (this.checkEmptyPosition()) {
