@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint --fix --ext .js,.jsx,es6 ./src/, ./demo/src/ --rulesdir .",
     "watch": "node watch.js",
-    "publish": "node publish.js",
+    "publish": "release-it",
     "build": "webpack"
   },
   "repository": {
