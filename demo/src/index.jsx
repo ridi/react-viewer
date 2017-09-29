@@ -21,7 +21,7 @@ import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerDummyBody from './components/bodies/ViewerDummyBody';
 import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
-import ContentsData from './contents.json';
+import ContentsData from '../resources/contents/contents.json';
 import { requestLoadEpisode } from './redux/Viewer.action';
 import { IconsSprite } from './components/icons/IconsSprite';
 
@@ -145,7 +145,11 @@ const DemoViewerPage = connect(
 
 
 const { contents, episodes } = ContentsData;
-const content = contents[Math.floor(Math.random() * contents.length)];
+const queryParam = new URLSearchParams(window.location.search);
+
+const contentId = queryParam.get('contentId');
+const selected = contents.filter(content => content.id.toString() === contentId);
+const content = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
 const episode = episodes[content.id];
 
 ReactDOM.render(
