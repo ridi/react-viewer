@@ -1,12 +1,15 @@
+const git = require('git-rev');
 const fs = require('fs-extra');
 const webpack = require('webpack');
-const process = require('child_process');
-const git = require('git-rev');
 const npm = require('package-json');
 const viewerWebpackConfig = require('./webpack.config.js');
 const demoWebpackConfig = require('./demo/webpack.config.js');
 const { version, name } = require('./package.json');
 
+const exitWithErrorMsg = msg => {
+  console.error(msg);
+  process.exit(1);
+};
 
 const exec = cmd => new Promise((resolve, reject) => {
   process.exec(cmd, (err, stdout, stderr) => {
@@ -19,24 +22,19 @@ const exec = cmd => new Promise((resolve, reject) => {
 });
 
 const getGitBranch = () => new Promise((resolve, reject) => git.branch(branch => resolve(branch)));
-const getGitTag = () => new Promise((resolve, reject) => git.tag(tag => resolve(tag)));
+const gitCheckout = branch => exec(`git checkout ${branch}`);
+const gitCommitAndPush = commitMsg => exec(`git add . --all && git commit -m ${commitMsg} && git push`);
 
 const checkPreconditions = () => getGitBranch()
   .then(branch => {
     if (branch !== 'master') {
-      throw new Error('branch must be master');
-    }
-    return getGitTag();
-  })
-  .then(tag => {
-    if (tag.replace('v', '') !== version) {
-      throw new Error('version and git tag is not equals');
+      exitWithErrorMsg('branch must be master');
     }
     return npm(name);
   })
   .then(packageInfo => {
     if (version === packageInfo.version) {
-      throw new Error(`version ${version} already published`);
+      exitWithErrorMsg(`version ${version} already published`);
     }
   });
 
@@ -56,38 +54,39 @@ const renameDemoBundleWithVersion = ver =>
     .then(() => {
       const bundlesJson = require('./demo/resources/js/bundles.json');
       bundlesJson.bundles.push(`${ver}.index.js`);
+      bundlesJson.bundles = [...new Set([...bundlesJson.bundles])];
       bundlesJson.latestVersion = ver;
       return fs.writeJson('./demo/resources/js/bundles.json', bundlesJson);
     });
 
-const npmPublish = () => exec('npm publish');
 
-const gitCheckout = branch => exec(`git checkout ${branch}`);
+const args = process.argv.slice(2);
+const commands = {
+  CHECK_PRECONDITIONS: 'check-preconditions',
+  BUILD: 'build',
+  RELEASED: 'released',
+};
 
-const gitCommitAndPush = commitMsg => exec(`git add . --all && git commit -m ${commitMsg} && git push`);
+if (args == null || args.length === 0) {
+  exitWithErrorMsg('args required for release.js');
+}
 
+const execArgs = arg => {
+  if (arg === commands.CHECK_PRECONDITIONS) {
+    return checkPreconditions();
+  } else if (arg === commands.BUILD) {
+    return build(viewerWebpackConfig)
+      .then(() => build(demoWebpackConfig))
+      .then(() => renameDemoBundleWithVersion(version));
+  } else if (arg === commands.RELEASED) {
+    return gitCheckout('gh-pages')
+      .then(() => gitCheckout('master ./demo/index.html'))
+      .then(() => gitCheckout('master ./demo/resources/js/*'))
+      .then(() => gitCommitAndPush(`version update ${version}`))
+      .then(() => gitCheckout('master'));
+  }
+  return Promise.reject('invalid args');
+};
 
-checkPreconditions()
-  .then(() => {
-    console.log('building viewer...');
-    return build(viewerWebpackConfig);
-  })
-  .then(() => {
-    console.log('building demo...');
-    return build(demoWebpackConfig);
-  })
-  .then(() => gitCommitAndPush('"bundle update"'))
-  .then(() => renameDemoBundleWithVersion(version))
-  .then(() => {
-    console.log('npm publish...');
-    return npmPublish();
-  })
-  .then(() => {
-    console.log('prepare gh-pages...');
-    return gitCheckout('gh-pages');
-  })
-  .then(() => gitCheckout('master ./demo/index.html'))
-  .then(() => gitCheckout('master ./demo/resources/js/*'))
-  .then(() => gitCommitAndPush(`version update ${version}`))
-  .then(() => gitCheckout('master'))
-  .catch(err => console.error(err));
+execArgs(args[0])
+  .catch(err => exitWithErrorMsg(err));
