@@ -8,7 +8,7 @@ import { VIEWER_EMPTY_READ_POSITION, ViewerType } from '../../constants/ViewerSc
 import Context from '../../../modules/Reader.js/src/android/Context';
 import Util from '../../../modules/Reader.js/src/android/Util';
 
-const DETECTION_TYPE = 'bottom'; // bottom or up
+const DETECTION_TYPE = 'up'; // bottom or up
 
 class ReadPositionHelper extends Connector {
   constructor() {
