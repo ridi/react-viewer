@@ -8,6 +8,7 @@ export const scrollTop = () => document.body.scrollTop;
 export const scrollHeight = () => document.body.scrollHeight;
 
 export const setScrollTop = top => {
+  console.log('scrollTop', top);
   document.body.scrollTop = top;
 };
 
