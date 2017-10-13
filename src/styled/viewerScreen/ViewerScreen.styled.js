@@ -1,7 +1,7 @@
 /* eslint max-len: 0 */
 import styled, { css } from 'styled-components';
 import { svgIcons } from '../SvgIcons.styled';
-import { NAV_BAR_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants/StyledConstants';
+import { NAV_BAR_HEIGHT, PAGE_MAX_WIDTH, STATUS_BAR_HEIGHT } from '../../constants/StyledConstants';
 import { ContentType } from '../../constants/ContentConstants';
 import SvgIconConstants from '../../constants/SvgIconConstants';
 
@@ -50,7 +50,7 @@ const getNovelPadding = level => {
 };
 const getComicPadding = level => '0';
 const getComicWidth = level => (Number(level) * 10) + 40;
-const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? '700px' : 'none');
+const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? `${PAGE_MAX_WIDTH}px` : 'none');
 
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerScreen = styled.div`

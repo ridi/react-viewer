@@ -1,13 +1,14 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
+import {
+  DEFAULT_PADDING_TOP,
+  MAX_PADDING_LEVEL,
+  MIN_PADDING_BOTTOM,
+  PAGE_MAX_WIDTH,
+  PAGE_VIEWER_SELECTOR
+} from '../../constants/StyledConstants';
 
-
-const PAGE_MAX_WIDTH = 600;
-const MIN_PADDING_BOTTOM = 50;
-const MAX_PADDING_LEVEL = 6;
-const DEFAULT_PADDING_TOP = 35;
-const PAGE_VIEWER_SELECTOR = '#viewer_page_contents .pages';
 
 class ViewerHelper extends Connector {
   constructor() {
