@@ -74,27 +74,27 @@ export {
   ReadPositionHelper,
 
   // actions
-  calculatedPageViewer,
-  initializeViewerScreen,
-  onViewerScreenScrolled,
-  onViewerScreenTouched,
-  movePageViewer,
-  showCommentArea,
-  viewerScreenSettingChanged,
-  updateSpineMetaData,
-  renderSpine,
+  calculatedPageViewer, // page view 상태에서 계산된 전체 페이지 수를 반영한다.
+  initializeViewerScreen, // 뷰어의 상태값을 초기화한다.
+  onViewerScreenScrolled, // scroll view 상태에서 뷰어가 스크롤 되었을 떄 호출된다.
+  onViewerScreenTouched, // 뷰어에 터치 입력이 들어왔을 때 호출된다.
+  movePageViewer, // page view 상태에서 특정 페이지로 이동한다.
+  showCommentArea, // 작품 마지막에 있는 댓글 페이지를 활성화한다.
+  viewerScreenSettingChanged, // 뷰어 세팅이 변경되었을 때 호출된다.
+  updateSpineMetaData, // meta data (contentType, viewerType, bindingType) 을 업데이트한다.
+  renderSpine, // spine 데이터를 업데이트한다.
 
   // selectors
-  selectSpines,
-  selectContentType,
-  selectViewerType,
-  selectBindingType,
-  selectPageViewPagination,
-  selectIsEndingScreen,
-  selectIsFullScreen,
-  selectIsLoadingCompleted,
-  selectViewerScreenSettings,
-  selectViewerReadPosition,
+  selectSpines, // spine 데이터를 가져온다.
+  selectContentType, // meta data 중 contentType 을 가져온다.
+  selectViewerType, // meta data 중 viewerType 을 가져온다.
+  selectBindingType, // meta data 중 bindingType 을 가져온다.
+  selectPageViewPagination, // page view 상태에서 pagination 데이터를 가져온다. (totalPage, currentPage, readProcess)
+  selectIsEndingScreen, // 작품 마지막에 있는 댓글 페이지의 활성화 여부를 가져온다.
+  selectIsFullScreen, // header 와 footer 가 비활성화된 full screen 상태인지 여부를 가져온다.
+  selectIsLoadingCompleted, // spine 의 로딩 완료 여부를 가져온다.
+  selectViewerScreenSettings, // 뷰어 세팅값들을 가져온다.
+  selectViewerReadPosition, // 마지막으로 읽은 위치 값을 가져온다.
 
   // constants
   ContentType,
