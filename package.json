@@ -5,7 +5,9 @@
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
   "scripts": {
-    "lint": "eslint --fix --ext .js,.jsx,es6 ./src/, ./demo/src/ --rulesdir .",
+    "lint": "npm run lint:src && npm run lint:demo",
+    "lint:src": "eslint --fix --ext .js,.jsx ./src/ --rulesdir .",
+    "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
     "publish": "release-it",
     "build": "webpack"
@@ -22,19 +24,20 @@
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.0"
+    "reselect": "^3.0.0",
+    "styled-components": "^2.1.1"
   },
   "devDependencies": {
+    "@ridi/eslint-config": "^3.1.0",
     "babel-core": "^6.14.0",
     "babel-loader": "^7.1.1",
     "babel-plugin-transform-es2015-classes": "^6.8.0",
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
     "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.5.0",
     "del": "^3.0.0",
-    "eslint": "^4.6.0",
-    "eslint-config-airbnb": "^15.1.0",
+    "eslint": "^4.9.0",
     "eslint-loader": "^1.3.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
@@ -49,7 +52,6 @@
     "redux-devtools-inspector": "^0.11.0",
     "redux-devtools-log-monitor": "^1.2.0",
     "redux-devtools-multiple-monitors": "^1.0.1",
-    "styled-components": "^2.1.1",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.4.5",
     "webpack-manifest-plugin": "^1.1.0",
