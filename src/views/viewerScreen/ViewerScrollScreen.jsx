@@ -10,7 +10,7 @@ import {
   selectIsLoadingCompleted,
   selectSpines,
   selectViewerReadPosition,
-  selectViewerScreenSettings
+  selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
@@ -55,7 +55,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       return;
     }
     for (let idx = 0; idx < images.length; idx += 1) {
-      images[idx].addEventListener(DOMEventConstants.ERROR, e => {
+      images[idx].addEventListener(DOMEventConstants.ERROR, (e) => {
         e.target.parentNode.replaceChild(errorImage, e.target);
       });
     }
@@ -121,7 +121,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       fontSizeLevel,
       paddingLevel,
       lineHeightLevel,
-      contentWidthLevel
+      contentWidthLevel,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -149,7 +149,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         >
           <div
             dangerouslySetInnerHTML={{ __html: viewData }}
-            ref={screen => { this.onScreenRef(screen); }}
+            ref={(screen) => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
         </ScrollContents>
@@ -169,7 +169,7 @@ ViewerScrollScreen.propTypes = {
   screenRef: PropTypes.func,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   spines: selectSpines(state),
   contentType: selectContentType(state),
   viewerScreenSettings: selectViewerScreenSettings(state),
@@ -177,7 +177,7 @@ const mapStateToProps = (state, ownProps) => ({
   readPosition: selectViewerReadPosition(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   viewerScreenScrolled: () => dispatch(onViewerScreenScrolled()),
 });

@@ -34,14 +34,14 @@ class ViewerFooter extends Component {
     const { viewerType } = this.props.viewerScreenSettings;
 
     return (
-      <section ref={footer => { preventScrollEvent(footer); }}>
+      <section ref={(footer) => { preventScrollEvent(footer); }}>
         {content.content_type === ContentType.WEB_NOVEL ?
           <ViewerNovelSettingPopup content={content} /> :
           <ViewerComicSettingPopup content={content} />
         }
         <footer
           className={`viewer_footer ${isFullScreen ? '' : 'active'}`}
-          ref={footer => {
+          ref={(footer) => {
             this.footer = footer;
             preventScrollEvent(footer);
           }}

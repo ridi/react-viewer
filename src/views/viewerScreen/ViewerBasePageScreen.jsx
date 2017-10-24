@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   movePageViewer as movePageViewerAction,
   onViewerScreenTouched,
-  showCommentArea as showCommentAreaAction
+  showCommentArea as showCommentAreaAction,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import { BindingType } from '../../constants/ContentConstants';
 import { isExist } from '../../util/Util';
@@ -21,7 +21,7 @@ import {
   selectPageViewPagination,
   selectSpines,
   selectViewerReadPosition,
-  selectViewerScreenSettings
+  selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
@@ -81,7 +81,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     for (let idx = 0; idx < images.length; idx += 1) {
-      images[idx].addEventListener(DOMEventConstants.ERROR, e => {
+      images[idx].addEventListener(DOMEventConstants.ERROR, (e) => {
         e.target.parentNode.replaceChild(errorImage, e.target);
       });
     }
@@ -100,7 +100,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }).start(0);
   }
 
-  resizeViewer(width) {
+  resizeViewer(/* width */) {
     this.updatePagination();
   }
 
@@ -134,7 +134,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   movePrevPage() {
-    const { onMoveWrongDirection, bindingType, movePageViewer, pageViewPagination } = this.props;
+    const {
+      onMoveWrongDirection, bindingType, movePageViewer, pageViewPagination,
+    } = this.props;
     const { currentPage } = pageViewPagination;
     const nextPage = currentPage - 1;
     if (nextPage <= 0) {
@@ -186,7 +188,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       fontSizeLevel,
       paddingLevel,
       lineHeightLevel,
-      contentWidthLevel
+      contentWidthLevel,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -216,7 +218,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
           comicWidthLevel={contentWidthLevel}
           paddingLevel={paddingLevel}
           contentType={contentType}
-          innerRef={pages => {
+          innerRef={(pages) => {
             this.preventScrollEvent(pages);
           }}
           fontDomain={fontDomain}
@@ -225,7 +227,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
             className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
-            innerRef={pages => {
+            innerRef={(pages) => {
               this.onScreenRef(pages);
               this.preventScrollEvent(pages);
             }}
@@ -250,7 +252,7 @@ ViewerBasePageScreen.propTypes = {
   fontDomain: PropTypes.string,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   viewerScreenSettings: selectViewerScreenSettings(state),
   contentType: selectContentType(state),
   bindingType: selectBindingType(state),
@@ -270,7 +272,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       return; // 매니져뷰어에서는 사용하지 않음
     }
     dispatch(showCommentAreaAction());
-  }
+  },
 });
 
 export default ViewerBasePageScreen;

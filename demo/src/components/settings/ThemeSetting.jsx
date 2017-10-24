@@ -8,7 +8,7 @@ export default class ThemeSetting extends Component {
   renderThemeList() {
     const { onChanged } = this.props;
 
-    return ViewerThemeType.toList().map((item, index) => (
+    return ViewerThemeType.toList().map(item => (
       <li className="theme_list setting_button_list" key={item}>
         <button
           className={`theme_select_button setting_button ${item}_button`}

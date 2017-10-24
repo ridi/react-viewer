@@ -33,7 +33,7 @@ class EventDispatcher {
   }
 
   eventDispatcher(e) {
-    const type = e.type;
+    const { type } = e;
     const listener = this.listenerMap[type];
     const interval = this.intervalMap[type];
     const lastDispatchedDate = this.lastDistpatchedDateMap[type];

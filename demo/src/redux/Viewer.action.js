@@ -17,18 +17,18 @@ export const viewerSettingChanged = changedSetting => ({
   changedSetting,
 });
 
-export const updateViewerSettings = changedSetting => (dispatch, getState) => {
+export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
 };
 
-export const requestLoadEpisodeEpub = (spine, index) => (dispatch, getState) => {
+export const requestLoadEpisodeEpub = (spine, index) => (dispatch) => {
   getJson(spine).then(({ value }) => {
     const spineHtml = Renderer.generateSpineHtml(index, value);
     dispatch(renderSpine(index, spineHtml));
   });
 };
 
-export const requestLoadEpisode = (contentId, episodeId) => (dispatch, getState) => {
+export const requestLoadEpisode = (contentId, episodeId) => (dispatch) => {
   const spineUrl = `./resources/contents/${contentId}/${episodeId}/spine.json`;
   getJson(spineUrl).then(({ spines }) => {
     spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));

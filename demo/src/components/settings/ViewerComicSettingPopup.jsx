@@ -40,11 +40,11 @@ ViewerComicSettingPopup.propTypes = {
   updateViewerScreenSettings: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   isVisibleSettingPopup: selectIsVisibleSettingPopup(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   updateViewerScreenSettings: changedSettings => dispatch(viewerScreenSettingChanged(changedSettings)),
 });
 

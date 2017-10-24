@@ -5,7 +5,7 @@ import Slider from 'rc-slider';
 import {
   movePageViewer as movePageViewerAction,
   selectPageViewPagination,
-  showCommentArea as showCommentAreaAction
+  showCommentArea as showCommentAreaAction,
 } from '../../../../lib/index';
 import SvgIcons from '../icons/SvgIcons';
 
@@ -80,12 +80,12 @@ ViewerPageFooterToolbar.defaultProps = {
   isDisableComment: false,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   pageViewPagination: selectPageViewPagination(state),
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  movePageViewer: number => {
+  movePageViewer: (number) => {
     dispatch(movePageViewerAction(number));
   },
   showCommentArea: () => {
@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       return;
     }
     dispatch(showCommentAreaAction());
-  }
+  },
 });
 
 export default connect(

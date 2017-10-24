@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const Loading = props => (
+const Loading = () => (
   <div className="loading_wrapper">
     <div className="cover_spinner js_cover_spinner active white_transparent_theme">
       <div className="bounce_spinner">

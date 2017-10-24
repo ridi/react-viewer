@@ -12,7 +12,7 @@ import {
   selectContentType,
   selectIsLoadingCompleted,
   selectViewerScreenSettings,
-  selectViewerType
+  selectViewerType,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { isExist } from '../../util/Util';
 
@@ -98,7 +98,7 @@ class ViewerScreen extends Component {
   renderScreen(SelectedScreen) {
     return (
       <SelectedScreen
-        ref={screen => {
+        ref={(screen) => {
           this.screen = screen && screen.getWrappedInstance();
         }}
         screenRef={el => ReadPositionHelper.setScreenElement(el)}
@@ -132,7 +132,7 @@ ViewerScreen.propTypes = {
   contentType: PropTypes.oneOf(ContentType.toList()),
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   contentType: selectContentType(state),
   viewerType: selectViewerType(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),

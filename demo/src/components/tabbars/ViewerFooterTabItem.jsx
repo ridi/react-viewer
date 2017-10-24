@@ -9,45 +9,45 @@ export default class ViewerFooterTabItem extends Component {
     super();
     this.colorList = {
       normal: '#868a8e',
-      active: '#0282da'
+      active: '#0282da',
     };
     this.iconList = {
       android: {
         list: {
           normal: 'svg_list_fill_1',
-          active: 'svg_list_fill_1'
+          active: 'svg_list_fill_1',
         },
         ticket: {
           normal: 'svg_ticket_fill_1',
-          active: 'svg_ticket_fill_1'
+          active: 'svg_ticket_fill_1',
         },
         comment: {
           normal: 'svg_comment_fill_1',
-          active: 'svg_comment_fill_1'
+          active: 'svg_comment_fill_1',
         },
         setting: {
           normal: 'svg_setting_fill_1',
-          active: 'svg_setting_fill_1'
-        }
+          active: 'svg_setting_fill_1',
+        },
       },
       ios: {
         list: {
           normal: 'svg_list_1',
-          active: 'svg_list_fill_1'
+          active: 'svg_list_fill_1',
         },
         ticket: {
           normal: 'svg_ticket_1',
-          active: 'svg_ticket_fill_1'
+          active: 'svg_ticket_fill_1',
         },
         comment: {
           normal: 'svg_comment_1',
-          active: 'svg_comment_fill_1'
+          active: 'svg_comment_fill_1',
         },
         setting: {
           normal: 'svg_setting_1',
-          active: 'svg_setting_fill_1'
-        }
-      }
+          active: 'svg_setting_fill_1',
+        },
+      },
     };
   }
 
@@ -84,7 +84,7 @@ export default class ViewerFooterTabItem extends Component {
     return (
       <div className="viewer_footer_tabitem">
         <button
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             onClickTabItem();

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { VIEWER_EMPTY_READ_POSITION } from '../../constants/ViewerScreenConstants';
 import { isExist } from '../../util/Util';
@@ -15,9 +15,9 @@ export default class ViewerBaseScreen extends Component {
 }
 
 ViewerBaseScreen.propTypes = {
-  readPosition: PropTypes.string
+  readPosition: PropTypes.string,
 };
 
 ViewerBaseScreen.defaultProps = {
-  readPosition: VIEWER_EMPTY_READ_POSITION
+  readPosition: VIEWER_EMPTY_READ_POSITION,
 };

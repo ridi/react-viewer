@@ -9,7 +9,7 @@ import {
   renderSpine,
   showCommentArea,
   updateSpineMetaData,
-  viewerScreenSettingChanged
+  viewerScreenSettingChanged,
 } from './redux/viewerScreen/ViewerScreen.action';
 import {
   selectBindingType,
@@ -21,7 +21,7 @@ import {
   selectSpines,
   selectViewerReadPosition,
   selectViewerScreenSettings,
-  selectViewerType
+  selectViewerType,
 } from './redux/viewerScreen/ViewerScreen.selector';
 import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
@@ -34,7 +34,7 @@ import {
   ViewerFontType,
   ViewerSpinType,
   ViewerThemeType,
-  ViewerType
+  ViewerType,
 } from './constants/ViewerScreenConstants';
 
 

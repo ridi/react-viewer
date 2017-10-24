@@ -1,3 +1,4 @@
+/* eslint no-restricted-globals: 0 */
 import * as BrowserWrapper from './BrowserWrapper';
 import { isExist } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
@@ -10,7 +11,7 @@ export const isScrolledToBottom = () => BrowserWrapper.scrollTop() >= BrowserWra
 
 const _preventDefault = e => e.preventDefault();
 
-export const removeScrollEvent = ref => {
+export const removeScrollEvent = (ref) => {
   if (isExist(ref)) {
     ref.removeEventListener(DOMEventConstants.SCROLL, _preventDefault);
     ref.removeEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault);
@@ -18,7 +19,7 @@ export const removeScrollEvent = ref => {
   }
 };
 
-export const preventScrollEvent = ref => {
+export const preventScrollEvent = (ref) => {
   removeScrollEvent(ref);
   if (isExist(ref)) {
     ref.addEventListener(DOMEventConstants.SCROLL, _preventDefault, { passive: false });
@@ -31,7 +32,7 @@ export const pageUp = () => window.scrollTo(0, window.scrollY - (BrowserWrapper.
 
 export const pageDown = () => window.scrollTo(0, window.scrollY + (BrowserWrapper.screenHeight() * 0.9));
 
-export const redirect = url => {
+export const redirect = (url) => {
   document.location = url;
   document.location.href = url;
   window.location = url;

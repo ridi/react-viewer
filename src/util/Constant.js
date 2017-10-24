@@ -47,7 +47,7 @@ export default function makeConstants(constants, customHandler = {}) {
   _constants.fromString = fromString.bind(_constants);
   _constants.getDefault = getDefault.bind(_constants);
 
-  Object.keys(customHandler).forEach(key => {
+  Object.keys(customHandler).forEach((key) => {
     _constants[key] = customHandler[key].bind(_constants);
   });
 

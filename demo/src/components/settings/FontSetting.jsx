@@ -25,7 +25,7 @@ class FontSetting extends Component {
 
   render() {
     return (
-      <li className="setting_list" ref={list => { preventScrollEvent(list); }}>
+      <li className="setting_list" ref={(list) => { preventScrollEvent(list); }}>
         <SvgIcons
           svgName="svg_font_2"
           svgClass="setting_title_icon svg_font_icon"
@@ -55,11 +55,9 @@ FontSetting.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   viewerScreenSettings: selectViewerScreenSettings(state),
 });
 
-export default connect(
-  mapStateToProps,
-)(FontSetting);
+export default connect(mapStateToProps)(FontSetting);
 

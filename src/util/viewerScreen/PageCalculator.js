@@ -24,7 +24,7 @@ class PageCalculator extends Connector {
   }
 
   updatePagination() {
-    const { getState, dispatch } = this.store;
+    const { dispatch } = this.store;
     const width = screenWidth();
     const pages = document.querySelector(this._targetSelector);
     let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width);

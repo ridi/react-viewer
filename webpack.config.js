@@ -16,7 +16,7 @@ module.exports = {
         loader: 'babel-loader',
         include: [`${__dirname}/src/`, `${__dirname}/modules/`],
         query: {
-          presets: ['es2015', 'react'],
+          presets: ['env', 'react'],
           plugins: [
             ['transform-es2015-classes', { loose: true }],
             ['transform-proto-to-assign']
@@ -40,7 +40,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.jsx', '.es6']
+    extensions: ['.js', '.jsx']
   },
   externals: {
     'react': 'react',
