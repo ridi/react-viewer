@@ -5,12 +5,15 @@
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
   "scripts": {
+    "postinstall": "cd demo && npm install",
     "lint": "npm run lint:src && npm run lint:demo",
     "lint:src": "eslint --fix --ext .js,.jsx ./src/ --rulesdir .",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
     "publish": "release-it",
-    "build": "webpack"
+    "build": "npm run build:src && npm run build:demo",
+    "build:src": "webpack",
+    "build:demo": "cd demo && npm run build"
   },
   "repository": {
     "type": "git",

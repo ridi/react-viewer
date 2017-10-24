@@ -32,11 +32,7 @@ const rootReducer = combineReducers({
 });
 
 
-const enhancer = composeWithDevTools(
-  applyMiddleware(
-    thunk
-  ),
-);
+const enhancer = composeWithDevTools(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, {}, enhancer);
 ViewerHelper.connect(store);
@@ -45,7 +41,9 @@ ReadPositionHelper.connect(store);
 
 class DemoViewer extends Component {
   componentWillMount() {
-    const { content, episode, requestViewerData, updateSpineMetaData } = this.props;
+    const {
+      content, episode, requestViewerData, updateSpineMetaData,
+    } = this.props;
 
     ReadPositionHelper.setDebugMode(true);
     updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
@@ -120,7 +118,7 @@ DemoViewer.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { ui } = state.viewer;
   const { isVisibleSettingPopup } = ui;
 
@@ -140,7 +138,7 @@ const mapDispatchToProps = dispatch => ({
 
 const DemoViewerPage = connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(DemoViewer);
 
 
@@ -159,5 +157,5 @@ ReactDOM.render(
       episode={episode}
     />
   </Provider>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );

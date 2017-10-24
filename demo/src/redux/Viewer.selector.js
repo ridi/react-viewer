@@ -7,5 +7,5 @@ const getViewer = state => state.viewer || {};
 
 export const selectIsVisibleSettingPopup = createSelector(
   [getViewer],
-  viewer => nullSafeGet(viewer, path.isVisibleSettingPopup(), false)
+  viewer => nullSafeGet(viewer, path.isVisibleSettingPopup(), false),
 );

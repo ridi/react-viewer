@@ -10,7 +10,7 @@ import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
 class ViewerTypeSetting extends Component {
   renderViewerType() {
-    const { viewerScreenSettings, contentViewerType, onChanged, } = this.props;
+    const { viewerScreenSettings, contentViewerType, onChanged } = this.props;
 
     if (contentViewerType === AvailableViewerType.BOTH) {
       return ViewerType.toList().map(item => (
@@ -35,7 +35,7 @@ class ViewerTypeSetting extends Component {
 
   render() {
     return (
-      <li className="setting_list" ref={list => { preventScrollEvent(list); }}>
+      <li className="setting_list" ref={(list) => { preventScrollEvent(list); }}>
         <SvgIcons
           svgName="svg_view_type_1"
           svgClass="setting_title_icon svg_view_type_icon"
@@ -66,10 +66,8 @@ ViewerTypeSetting.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   viewerScreenSettings: selectViewerScreenSettings(state),
 });
 
-export default connect(
-  mapStateToProps,
-)(ViewerTypeSetting);
+export default connect(mapStateToProps)(ViewerTypeSetting);

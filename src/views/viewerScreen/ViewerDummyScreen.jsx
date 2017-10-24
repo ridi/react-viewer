@@ -10,7 +10,7 @@ export default class ViewerDummyScreen extends Component {
     return (
       <div
         className="viewer_dummy_body"
-        ref={refs => {
+        ref={(refs) => {
           preventScrollEvent(refs);
         }}
       >
@@ -21,5 +21,5 @@ export default class ViewerDummyScreen extends Component {
 }
 
 ViewerDummyScreen.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };

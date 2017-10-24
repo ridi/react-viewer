@@ -25,7 +25,7 @@ export const ViewerThemeType = makeConstants(updateObject(_ViewerThemeType, {
     _ViewerThemeType.BLACK,
     _ViewerThemeType.PAPER,
     _ViewerThemeType.KOREAN_PAPER,
-  ]
+  ],
 }), {});
 
 const _ViewerBodyThemeColorType = {
@@ -51,7 +51,7 @@ export const ViewerBodyThemeColorType = makeConstants(updateObject(_ViewerBodyTh
     _ViewerBodyThemeColorType.BLACK,
     _ViewerBodyThemeColorType.PAPER,
     _ViewerBodyThemeColorType.KOREAN_PAPER,
-  ]
+  ],
 }), {});
 
 const _ViewerFontType = {
@@ -64,21 +64,21 @@ export const ViewerFontType = makeConstants(updateObject(_ViewerFontType, {
   _STRING_MAP: {
     [_ViewerFontType.KOPUB_BATANG]: 'Kopub 바탕',
     [_ViewerFontType.KOPUB_DOTUM]: 'Kopub 돋움',
-  }
+  },
 }), {});
 
 // 뷰어 보기 타입 상수
 const _ViewerType = {
   SCROLL: 'scroll',
-  PAGE: 'page'
+  PAGE: 'page',
 };
 
 export const ViewerType = makeConstants(updateObject(_ViewerType, {
   _LIST: [_ViewerType.PAGE, _ViewerType.SCROLL],
   _STRING_MAP: {
     [_ViewerType.PAGE]: '페이지 넘김',
-    [_ViewerType.SCROLL]: '스크롤 보기'
-  }
+    [_ViewerType.SCROLL]: '스크롤 보기',
+  },
 }), {});
 
 const _ViewerSpinType = {
@@ -97,9 +97,9 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
     [_ViewerSpinType.FONT_SIZE]: '글자 크기',
     [_ViewerSpinType.PADDING]: '문단 너비',
     [_ViewerSpinType.LINE_HEIGHT]: '줄 간격',
-  }
+  },
 }), {
-  toReaderSettingType: type => {
+  toReaderSettingType: (type) => {
     switch (type) {
       case _ViewerSpinType.FONT_SIZE:
         return 'fontSizeLevel';
@@ -110,27 +110,27 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
       default:
         return 'fontSizeLevel';
     }
-  }
+  },
 });
 
 const _ViewerComicSpinType = {
-  CONTENT_WIDTH: 'width'
+  CONTENT_WIDTH: 'width',
 };
 
 export const ViewerComicSpinType = makeConstants(updateObject(_ViewerComicSpinType, {
   _LIST: [
-    _ViewerComicSpinType.CONTENT_WIDTH
+    _ViewerComicSpinType.CONTENT_WIDTH,
   ],
   _STRING_MAP: {
-    [_ViewerComicSpinType.CONTENT_WIDTH]: '콘텐츠 너비'
-  }
+    [_ViewerComicSpinType.CONTENT_WIDTH]: '콘텐츠 너비',
+  },
 }), {
-  toReaderSettingType: type => {
+  toReaderSettingType: (type) => {
     switch (type) {
       case _ViewerComicSpinType.CONTENT_WIDTH:
         return 'contentWidthLevel';
       default:
         return 'contentWidthLevel';
     }
-  }
+  },
 });

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   movePageViewer as movePageViewerAction,
   selectPageViewPagination,
-  selectViewerScreenSettings
+  selectViewerScreenSettings,
 } from '../../../../lib/index';
 import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
 import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
@@ -37,10 +37,10 @@ class ViewerScreenFooter extends Component {
     const {
       content,
       episode,
-      isNextEpisodeAvailable,
-      nextEpisodeUrl,
+      // isNextEpisodeAvailable,
+      // nextEpisodeUrl,
       movePageViewer,
-      pageViewPagination
+      pageViewPagination,
     } = this.props;
 
     if (!isExist(content) || !isExist(episode)) {
@@ -54,8 +54,14 @@ class ViewerScreenFooter extends Component {
           <p className="episode_title">{episode.title}</p>
         </div>
         <div
+          role="presentation"
           className="viewer_bottom_best_comment empty"
           onClick={() => this.onClickShowComments()}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13) {
+              this.onClickShowComments();
+            }
+          }}
         >
           {this.renderBestComments()}
           <button className="more_comment_button">
@@ -91,8 +97,8 @@ class ViewerScreenFooter extends Component {
 ViewerScreenFooter.propTypes = {
   content: PropTypes.object.isRequired,
   episode: PropTypes.object.isRequired,
-  isNextEpisodeAvailable: PropTypes.bool.isRequired,
-  nextEpisodeUrl: PropTypes.string.isRequired,
+  // isNextEpisodeAvailable: PropTypes.bool.isRequired,
+  // nextEpisodeUrl: PropTypes.string.isRequired,
   viewerScreenSettings: PropTypes.object,
   movePageViewer: PropTypes.func.isRequired,
   pageViewPagination: PropTypes.object.isRequired,
@@ -115,11 +121,11 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   movePageViewer: number => dispatch(movePageViewerAction(number)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ViewerScreenFooter);

@@ -11,7 +11,9 @@ class PageTouchable extends Component {
     const xPos = e.nativeEvent.pageX;
     const width = document.body.clientWidth;
 
-    const { isEndingScreen, isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched } = this.props;
+    const {
+      isEndingScreen, isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched,
+    } = this.props;
 
     if (isEndingScreen) {
       return;
@@ -32,18 +34,20 @@ class PageTouchable extends Component {
   }
 
   render() {
-    const { children, contentType, footer, isEndingScreen } = this.props;
+    const {
+      children, contentType, footer, isEndingScreen,
+    } = this.props;
 
     return (
       <PageScreen
-        innerRef={pages => {
+        innerRef={(pages) => {
           if (isEndingScreen) {
             removeScrollEvent(pages);
           } else {
             preventScrollEvent(pages);
           }
         }}
-        onClick={e => {
+        onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           this.onTouchScreenHandle(e);
@@ -69,11 +73,9 @@ PageTouchable.propTypes = {
   children: PropTypes.node,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   isEndingScreen: selectIsEndingScreen(state),
   isFullScreen: selectIsFullScreen(state),
 });
 
-export default connect(
-  mapStateToProps,
-)(PageTouchable);
+export default connect(mapStateToProps)(PageTouchable);

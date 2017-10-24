@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { viewerScreenSettingChanged } from '../../../../lib/index';
@@ -44,11 +44,11 @@ ViewerNovelSettingPopup.propTypes = {
   updateViewerScreenSettings: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   isVisibleSettingPopup: selectIsVisibleSettingPopup(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   updateViewerScreenSettings: changedSettings => dispatch(viewerScreenSettingChanged(changedSettings)),
 });
 

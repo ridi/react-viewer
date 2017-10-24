@@ -22,7 +22,7 @@ const onScreenScrolled = state => new ReducerBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-const movePageViewer = (state, action) => new ReducerBuilder(state)
+const movePageViewer = state => new ReducerBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 

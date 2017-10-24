@@ -13,7 +13,7 @@ class NovelSpineSetting extends Component {
     const { item, onChanged, viewerScreenSettings } = this.props;
 
     return (
-      <li className="setting_list" key={item} ref={list => { preventScrollEvent(list); }}>
+      <li className="setting_list" key={item} ref={(list) => { preventScrollEvent(list); }}>
         <SvgIcons
           svgName={`svg_${item}_2`}
           svgClass={`setting_title_icon svg_${item}_icon`}
@@ -55,10 +55,8 @@ NovelSpineSetting.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   viewerScreenSettings: selectViewerScreenSettings(state),
 });
 
-export default connect(
-  mapStateToProps,
-)(NovelSpineSetting);
+export default connect(mapStateToProps)(NovelSpineSetting);

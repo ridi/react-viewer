@@ -6,7 +6,7 @@ import { ContentType } from '../../constants/ContentConstants';
 import SvgIconConstants from '../../constants/SvgIconConstants';
 
 
-const getNovelLineHeight = level => {
+const getNovelLineHeight = (level) => {
   switch (level) {
     case 1:
       return 1.35;
@@ -25,7 +25,7 @@ const getNovelLineHeight = level => {
   }
 };
 
-const getFontSize = level => {
+const getFontSize = (level) => {
   const fontSizeUnit = 15;
   switch (Number(level)) {
     case 1: return fontSizeUnit * 0.8;
@@ -44,11 +44,11 @@ const getFontSize = level => {
   }
 };
 
-const getNovelPadding = level => {
+const getNovelPadding = (level) => {
   const paddingValue = 7 - Number(level);
   return `0 ${paddingValue}% 80px ${paddingValue}%`;
 };
-const getComicPadding = level => '0';
+const getComicPadding = (/* level */) => '0';
 const getComicWidth = level => (Number(level) * 10) + 40;
 const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? `${PAGE_MAX_WIDTH}px` : 'none');
 
@@ -74,7 +74,7 @@ const SizingWrapper = styled.div`
   }
 `;
 SizingWrapper.defaultProps = {
-  contentType: ContentType.WEB_NOVEL
+  contentType: ContentType.WEB_NOVEL,
 };
 
 // language=SCSS prefix=dummy{ suffix=}

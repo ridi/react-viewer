@@ -7,7 +7,7 @@ export default class SpinButton extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.initialValue
+      value: props.initialValue,
     };
     this.handleMinus = this.handleMinus.bind(this);
     this.handlePlus = this.handlePlus.bind(this);
@@ -55,7 +55,7 @@ export default class SpinButton extends React.Component {
                 className="spin_button minus_button"
                 disabled={this.state.value === this.props.min}
                 onClick={this.handleMinus}
-                ref={c => {
+                ref={(c) => {
                   this.minusButton = c;
                 }}
               >
@@ -72,7 +72,7 @@ export default class SpinButton extends React.Component {
                 className="spin_button plus_button"
                 disabled={this.state.value === this.props.max}
                 onClick={this.handlePlus}
-                ref={c => {
+                ref={(c) => {
                   this.plusButton = c;
                 }}
               >
@@ -96,7 +96,7 @@ SpinButton.propTypes = {
   initialValue: PropTypes.number.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 SpinButton.defaultProps = {

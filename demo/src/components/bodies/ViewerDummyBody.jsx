@@ -3,7 +3,7 @@ import ViewerScreen from '../../../../lib/index';
 import Loading from '../loadings/Loading';
 
 
-const ViewerDummyBody = props => (
+const ViewerDummyBody = () => (
   <ViewerScreen fontDomain="resources/fonts/">
     <Loading />
   </ViewerScreen>

@@ -6,7 +6,7 @@ import {
   MAX_PADDING_LEVEL,
   MIN_PADDING_BOTTOM,
   PAGE_MAX_WIDTH,
-  PAGE_VIEWER_SELECTOR
+  PAGE_VIEWER_SELECTOR,
 } from '../../constants/StyledConstants';
 
 

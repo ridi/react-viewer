@@ -28,12 +28,12 @@ export function isObject(obj) {
   return !isArray(obj) && obj === Object(obj);
 }
 
-export const cloneObject = object => {
+export const cloneObject = (object) => {
   if (object === null || typeof object !== 'object') {
     return object;
   }
   const _object = object.constructor();
-  Object.keys(object).forEach(attr => {
+  Object.keys(object).forEach((attr) => {
     if (Object.prototype.hasOwnProperty.call(object, attr)) {
       _object[attr] = cloneObject(object[attr]);
     }
@@ -46,7 +46,7 @@ function _updateObject(origin, target) {
   let _origin = origin;
 
   if (isObject(origin) && isObject(target)) {
-    Object.keys(target).forEach(key => {
+    Object.keys(target).forEach((key) => {
       if (typeof target[key] !== 'object' || origin[key] == null) {
         _origin[key] = target[key];
       } else {
@@ -72,7 +72,7 @@ export const updateObject = (origin, target, isNeedClone = true) => {
 export function invert(object) {
   const result = {};
   const keys = Object.keys(object);
-  for (let i = 0, length = keys.length; i < length; ++i) {
+  for (let i = 0, { length } = keys; i < length; ++i) {
     result[object[keys[i]]] = keys[i];
   }
   return result;
@@ -83,7 +83,7 @@ export function nullSafeGet(object, path, defaultValue) {
   if (!isExist(object)) {
     return defaultValue;
   }
-  path.every(key => {
+  path.every((key) => {
     if (!isExist(refer[key])) {
       refer = defaultValue;
       return false;

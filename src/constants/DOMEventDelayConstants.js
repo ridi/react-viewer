@@ -1,4 +1,4 @@
 
 export default {
-  SCROLL: 100
+  SCROLL: 100,
 };
