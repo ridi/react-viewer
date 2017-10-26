@@ -49,5 +49,6 @@ module.exports = {
     'redux': 'redux',
     'redux-thunk': 'redux-thunk',
     'reselect': 'reselect',
+    '@ridi/reader.js': '@ridi/reader.js',
   }
 };
