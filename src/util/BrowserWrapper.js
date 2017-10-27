@@ -15,6 +15,11 @@ export const offsetWidth = () => document.body.offsetWidth;
 
 export const offsetHeight = () => document.body.offsetHeight;
 
+// If there are scrollbars in screen, these values(documentClientWidth, documentClientHeight) is more accurate.
+export const documentClientWidth = () => document.documentElement.clientWidth;
+
+export const documentClientHeight = () => document.documentElement.clientHeight;
+
 export const documentAddClassList = classList => document.body.classList.add(classList);
 
 export const documentAppendChild = dom => document.body.appendChild(dom);
@@ -31,6 +36,8 @@ export default {
   setScrollTop,
   offsetWidth,
   offsetHeight,
+  documentClientWidth,
+  documentClientHeight,
   documentAddClassList,
   documentAppendChild,
   documentAddEventListener,
