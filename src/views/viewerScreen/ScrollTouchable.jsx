@@ -1,15 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ScrollScreen, SizingWrapper } from '../../styled/viewerScreen/ViewerScreen.styled';
-
 
 const ScrollTouchable = (props) => {
   const {
-    children, onTouched, contentType, footer,
+    children,
+    onTouched,
+    contentType,
+    footer,
+    TouchableScreen,
+    SizingWrapper,
   } = props;
 
   return (
-    <ScrollScreen
+    <TouchableScreen
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -22,7 +25,7 @@ const ScrollTouchable = (props) => {
         {children}
       </SizingWrapper>
       {footer}
-    </ScrollScreen>
+    </TouchableScreen>
   );
 };
 
@@ -31,6 +34,8 @@ ScrollTouchable.propTypes = {
   onTouched: PropTypes.func,
   contentType: PropTypes.number,
   footer: PropTypes.node,
+  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
 };
 ScrollTouchable.defaultProps = {
   footer: null,

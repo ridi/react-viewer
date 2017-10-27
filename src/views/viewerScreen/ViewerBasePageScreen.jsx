@@ -10,7 +10,7 @@ import { isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
-import { PageContents, Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
+import { Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
 import AsyncTask from '../../util/AsyncTask';
 import {
@@ -181,6 +181,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       viewerScreenTouched,
       footer,
       fontDomain,
+      StyledContents,
+      TouchableScreen,
+      SizingWrapper,
     } = this.props;
     const {
       colorTheme,
@@ -207,8 +210,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         onMiddleTouched={() => viewerScreenTouched()}
         contentType={contentType}
         footer={footer}
+        TouchableScreen={TouchableScreen}
+        SizingWrapper={SizingWrapper}
       >
-        <PageContents
+        <StyledContents
           id="viewer_page_contents"
           content={contentType}
           className={colorTheme}
@@ -232,7 +237,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
               this.preventScrollEvent(pages);
             }}
           />
-        </PageContents>
+        </StyledContents>
       </PageTouchable>
     );
   }
@@ -250,6 +255,9 @@ ViewerBasePageScreen.propTypes = {
   footer: PropTypes.node,
   screenRef: PropTypes.func,
   fontDomain: PropTypes.string,
+  StyledContents: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
 };
 
 const mapStateToProps = state => ({

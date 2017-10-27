@@ -14,122 +14,153 @@ import {
   selectViewerScreenSettings,
   selectViewerType,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
+import {
+  ScrollScreen as ScrollScreenDefault,
+  PageScreen as PageScreenDefault,
+  SizingWrapper as SizingWrapperDefault,
+  PageContents as PageContentsDefault,
+  ScrollContents as ScrollContentsDefault,
+} from '../../styled/viewerScreen/ViewerScreen.styled';
 import { isExist } from '../../util/Util';
 
+const createStyledViewerScreen = ({
+  TouchableScrollScreen = ScrollScreenDefault,
+  StyledScrollContents = ScrollContentsDefault,
+  TouchablePageScreen = PageScreenDefault,
+  StyledPageContents = PageContentsDefault,
+  SizingWrapper = SizingWrapperDefault,
+} = {}) => {
+  class ViewerScreen extends Component {
+    constructor() {
+      super();
+      this.screen = null;
+    }
 
-class ViewerScreen extends Component {
-  constructor() {
-    super();
-    this.screen = null;
-  }
+    componentDidMount() {
+      const { onMount } = this.props;
+      if (isExist(onMount)) {
+        onMount();
+      }
+    }
 
-  componentDidMount() {
-    const { onMount } = this.props;
-    if (isExist(onMount)) {
-      onMount();
+    componentWillUnmount() {
+      const { onUnmount } = this.props;
+      if (isExist(onUnmount)) {
+        onUnmount();
+      }
+      ReadPositionHelper.unmountReader();
+    }
+
+    getScreen() {
+      const { viewerType, isLoadingCompleted } = this.props;
+
+      if (!isLoadingCompleted) {
+        return this.renderDummyScreen();
+      }
+
+      switch (viewerType) {
+        case AvailableViewerType.SCROLL:
+          return this.renderScrollView();
+        case AvailableViewerType.PAGE:
+          return this.renderPageView();
+        default:
+          // BOTH available
+          return this.renderWithSetting();
+      }
+    }
+
+    restorePosition() {
+      if (isExist(this.screen)) {
+        this.screen.restorePosition();
+      }
+    }
+
+    moveNextPage() {
+      if (isExist(this.screen)) {
+        this.screen.moveNextPage();
+      }
+    }
+
+    movePrevPage() {
+      if (isExist(this.screen)) {
+        this.screen.movePrevPage();
+      }
+    }
+
+    renderScrollView() {
+      return this.renderScreen(ViewerScrollScreen, {
+        TouchableScreen: TouchableScrollScreen,
+        StyledContents: StyledScrollContents,
+        SizingWrapper,
+      });
+    }
+
+    renderPageView() {
+      const { contentType } = this.props;
+
+      const components = {
+        TouchableScreen: TouchablePageScreen,
+        StyledContents: StyledPageContents,
+        SizingWrapper,
+      };
+      if (contentType === ContentType.COMIC) {
+        return this.renderScreen(ViewerComicPageScreen, components);
+      }
+      return this.renderScreen(ViewerPageScreen, components);
+    }
+
+    renderWithSetting() {
+      const { viewerScreenSettings } = this.props;
+
+      if (viewerScreenSettings.viewerType === ViewerType.SCROLL) {
+        return this.renderScrollView();
+      }
+      return this.renderPageView();
+    }
+
+    renderDummyScreen() {
+      return (<ViewerDummyScreen {...this.props} />);
+    }
+
+    renderScreen(SelectedScreen, components = {}) {
+      return (
+        <SelectedScreen
+          ref={(screen) => {
+            this.screen = screen && screen.getWrappedInstance();
+          }}
+          screenRef={el => ReadPositionHelper.setScreenElement(el)}
+          onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
+          footer={this.props.footer}
+          fontDomain={this.props.fontDomain}
+          ignoreScroll={this.props.ignoreScroll}
+          {...components}
+        />
+      );
+    }
+
+    render() {
+      return (
+        <section className="viewer_body">
+          {this.getScreen()}
+        </section>
+      );
     }
   }
 
-  componentWillUnmount() {
-    const { onUnmount } = this.props;
-    if (isExist(onUnmount)) {
-      onUnmount();
-    }
-    ReadPositionHelper.unmountReader();
-  }
+  ViewerScreen.propTypes = {
+    onMount: PropTypes.func,
+    onUnmount: PropTypes.func,
+    onMoveWrongDirection: PropTypes.func,
+    footer: PropTypes.node,
+    fontDomain: PropTypes.string,
+    ignoreScroll: PropTypes.bool,
+    isLoadingCompleted: PropTypes.bool,
+    viewerScreenSettings: PropTypes.object,
+    viewerType: PropTypes.oneOf(ViewerType.toList()),
+    contentType: PropTypes.oneOf(ContentType.toList()),
+  };
 
-  getScreen() {
-    const { viewerType, isLoadingCompleted } = this.props;
-
-    if (!isLoadingCompleted) {
-      return this.renderDummyScreen();
-    }
-
-    switch (viewerType) {
-      case AvailableViewerType.SCROLL:
-        return this.renderScreen(ViewerScrollScreen);
-      case AvailableViewerType.PAGE:
-        return this.renderPageView();
-      default:
-        return this.renderWithSetting();
-    }
-  }
-
-  restorePosition() {
-    if (isExist(this.screen)) {
-      this.screen.restorePosition();
-    }
-  }
-
-  moveNextPage() {
-    if (isExist(this.screen)) {
-      this.screen.moveNextPage();
-    }
-  }
-
-  movePrevPage() {
-    if (isExist(this.screen)) {
-      this.screen.movePrevPage();
-    }
-  }
-
-  renderPageView() {
-    const { contentType } = this.props;
-
-    if (contentType === ContentType.COMIC) {
-      return this.renderScreen(ViewerComicPageScreen);
-    }
-    return this.renderScreen(ViewerPageScreen);
-  }
-
-  renderWithSetting() {
-    const { viewerScreenSettings } = this.props;
-
-    if (viewerScreenSettings.viewerType === ViewerType.SCROLL) {
-      return this.renderScreen(ViewerScrollScreen);
-    }
-    return this.renderPageView();
-  }
-
-  renderDummyScreen() {
-    return (<ViewerDummyScreen {...this.props} />);
-  }
-
-  renderScreen(SelectedScreen) {
-    return (
-      <SelectedScreen
-        ref={(screen) => {
-          this.screen = screen && screen.getWrappedInstance();
-        }}
-        screenRef={el => ReadPositionHelper.setScreenElement(el)}
-        onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
-        footer={this.props.footer}
-        fontDomain={this.props.fontDomain}
-        ignoreScroll={this.props.ignoreScroll}
-      />
-    );
-  }
-
-  render() {
-    return (
-      <section className="viewer_body">
-        {this.getScreen()}
-      </section>
-    );
-  }
-}
-
-ViewerScreen.propTypes = {
-  onMount: PropTypes.func,
-  onUnmount: PropTypes.func,
-  onMoveWrongDirection: PropTypes.func,
-  footer: PropTypes.node,
-  fontDomain: PropTypes.string,
-  ignoreScroll: PropTypes.bool,
-  isLoadingCompleted: PropTypes.bool,
-  viewerScreenSettings: PropTypes.object,
-  viewerType: PropTypes.oneOf(ViewerType.toList()),
-  contentType: PropTypes.oneOf(ContentType.toList()),
+  return ViewerScreen;
 };
 
 const mapStateToProps = state => ({
@@ -144,4 +175,6 @@ export default connect(
   null,
   null,
   { withRef: true },
-)(ViewerScreen);
+)(createStyledViewerScreen());
+
+export { createStyledViewerScreen };

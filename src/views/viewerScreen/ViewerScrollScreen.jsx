@@ -12,7 +12,6 @@ import {
   selectViewerReadPosition,
   selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
@@ -114,6 +113,9 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       isLoadingCompleted,
       footer,
       fontDomain,
+      TouchableScreen,
+      StyledContents,
+      SizingWrapper,
     } = this.props;
     const {
       colorTheme,
@@ -135,8 +137,10 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         onTouched={() => viewerScreenTouched()}
         contentType={contentType}
         footer={footer}
+        TouchableScreen={TouchableScreen}
+        SizingWrapper={SizingWrapper}
       >
-        <ScrollContents
+        <StyledContents
           id="contents"
           contentType={contentType}
           className={colorTheme}
@@ -152,7 +156,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
             ref={(screen) => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
-        </ScrollContents>
+        </StyledContents>
       </ScrollTouchable>
     );
   }
@@ -167,6 +171,9 @@ ViewerScrollScreen.propTypes = {
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
   screenRef: PropTypes.func,
+  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  StyledContents: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
 };
 
 const mapStateToProps = state => ({

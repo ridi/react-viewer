@@ -1,4 +1,4 @@
-import ViewerScreen from './views/viewerScreen/ViewerScreen';
+import ViewerScreen, { createStyledViewerScreen } from './views/viewerScreen/ViewerScreen';
 import {
   actions,
   calculatedPageViewer,
@@ -106,4 +106,7 @@ export {
   ViewerType,
   ViewerSpinType,
   ViewerComicSpinType,
+
+  // higher-order components
+  createStyledViewerScreen,
 };

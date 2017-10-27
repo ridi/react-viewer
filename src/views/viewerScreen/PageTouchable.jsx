@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { selectIsEndingScreen, selectIsFullScreen } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { PageScreen, SizingWrapper } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 
 
@@ -35,11 +34,16 @@ class PageTouchable extends Component {
 
   render() {
     const {
-      children, contentType, footer, isEndingScreen,
+      children,
+      contentType,
+      footer,
+      isEndingScreen,
+      TouchableScreen,
+      SizingWrapper,
     } = this.props;
 
     return (
-      <PageScreen
+      <TouchableScreen
         innerRef={(pages) => {
           if (isEndingScreen) {
             removeScrollEvent(pages);
@@ -57,7 +61,7 @@ class PageTouchable extends Component {
         <SizingWrapper contentType={contentType}>
           {children}
         </SizingWrapper>
-      </PageScreen>
+      </TouchableScreen>
     );
   }
 }
@@ -71,6 +75,8 @@ PageTouchable.propTypes = {
   isEndingScreen: PropTypes.bool,
   isFullScreen: PropTypes.bool,
   children: PropTypes.node,
+  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
 };
 
 const mapStateToProps = state => ({
