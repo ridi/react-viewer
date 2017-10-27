@@ -2,7 +2,7 @@
   "contents" : [
     {
       "id": 1,
-      "title": "태평양 고래사나이",
+      "title": "BEHIND THE FOOTLIGHTS",
       "content_type": 10,
       "binding_type": 0,
       "viewer_type": 0,
@@ -29,9 +29,9 @@
     {
       "id": 3,
       "title": "AllTrueRomance",
-      "content_type": 30,
+      "content_type": 20,
       "binding_type": 0,
-      "viewer_type": 1,
+      "viewer_type": 0,
       "last_episode": {
         "id": 494219,
         "content_id": 3,
