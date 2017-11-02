@@ -17,9 +17,8 @@ import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
 import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { isExist } from '../../util/Util';
-import EventDispatcher from '../../util/EventDispatcher';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { debounce, isExist } from '../../util/Util';
+import { documentAddEventListener, documentRemoveEventListener, setScrollTop } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
@@ -73,14 +72,13 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   addScrollEvent() {
-    // ayon: 어째서인지 컴포넌트에 스크롤 이벤트를 걸면 걸리지 않는다.
-    this.viewerScrollCallback = e => this.onScrollHandle(e);
-    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, DOMEventDelayConstants.SCROLL);
+    this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
+    documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
   }
 
   removeScrollEvent() {
     if (this.viewerScrollCallback) {
-      EventDispatcher.removeEventListener(DOMEventConstants.SCROLL);
+      documentRemoveEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
       this.viewerScrollCallback = undefined;
     }
   }

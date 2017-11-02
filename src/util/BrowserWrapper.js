@@ -3,12 +3,12 @@ export const screenWidth = () => window.innerWidth;
 
 export const screenHeight = () => window.innerHeight;
 
-export const scrollTop = () => document.body.scrollTop;
+export const scrollTop = () => document.documentElement.scrollTop;
 
-export const scrollHeight = () => document.body.scrollHeight;
+export const scrollHeight = () => document.documentElement.scrollHeight;
 
 export const setScrollTop = (top) => {
-  document.body.scrollTop = top;
+  document.documentElement.scrollTop = top;
 };
 
 export const offsetWidth = () => document.body.offsetWidth;

@@ -45,7 +45,7 @@ class ViewerHelper extends Connector {
       paddingBottom: paddingVertical,
       paddingLeft: paddingHorizontal,
       paddingRight: paddingHorizontal,
-      height: height - paddingVertical,
+      height: height - paddingVertical - DEFAULT_PADDING_TOP,
       // WebkitTransition: 'transform 0s',
       // transition: 'transform 0s',
       WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
