@@ -160,21 +160,21 @@ const createStyledViewerScreen = ({
     contentType: PropTypes.oneOf(ContentType.toList()),
   };
 
-  return ViewerScreen;
+  const mapStateToProps = state => ({
+    contentType: selectContentType(state),
+    viewerType: selectViewerType(state),
+    isLoadingCompleted: selectIsLoadingCompleted(state),
+    viewerScreenSettings: selectViewerScreenSettings(state),
+  });
+
+  return connect(
+    mapStateToProps,
+    null,
+    null,
+    { withRef: true },
+  )(ViewerScreen);
 };
 
-const mapStateToProps = state => ({
-  contentType: selectContentType(state),
-  viewerType: selectViewerType(state),
-  isLoadingCompleted: selectIsLoadingCompleted(state),
-  viewerScreenSettings: selectViewerScreenSettings(state),
-});
-
-export default connect(
-  mapStateToProps,
-  null,
-  null,
-  { withRef: true },
-)(createStyledViewerScreen());
+export default createStyledViewerScreen();
 
 export { createStyledViewerScreen };

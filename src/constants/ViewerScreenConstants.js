@@ -62,8 +62,8 @@ const _ViewerFontType = {
 export const ViewerFontType = makeConstants(updateObject(_ViewerFontType, {
   _LIST: [_ViewerFontType.KOPUB_BATANG, _ViewerFontType.KOPUB_DOTUM],
   _STRING_MAP: {
-    [_ViewerFontType.KOPUB_BATANG]: 'Kopub 바탕',
-    [_ViewerFontType.KOPUB_DOTUM]: 'Kopub 돋움',
+    [_ViewerFontType.KOPUB_BATANG]: 'KoPub 바탕',
+    [_ViewerFontType.KOPUB_DOTUM]: 'KoPub 돋움',
   },
 }), {});
 
