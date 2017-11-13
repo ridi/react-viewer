@@ -15,10 +15,21 @@ import {
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
-import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
+import {
+  onViewerScreenScrolled,
+  onViewerScreenTouched,
+  showCommentArea,
+} from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { debounce, isExist } from '../../util/Util';
-import { documentAddEventListener, documentRemoveEventListener, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  documentAddEventListener,
+  documentRemoveEventListener,
+  setScrollTop,
+  scrollTop,
+  screenHeight,
+  scrollHeight,
+} from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
@@ -71,6 +82,16 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     return ViewerHelper.getScrollStyle();
   }
 
+  checkEndingScreen() {
+    const { setEndingScreen } = this.props;
+    const thresholdY = (scrollHeight() - (screenHeight() * 2));
+    const reachedBottom = scrollTop() >= thresholdY;
+
+    if (reachedBottom) {
+      setEndingScreen();
+    }
+  }
+
   addScrollEvent() {
     this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
@@ -94,6 +115,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     }
     viewerScreenScrolled();
     ReadPositionHelper.dispatchChangedReadPosition();
+    this.checkEndingScreen();
   }
 
   onScreenRef(ref) {
@@ -164,6 +186,7 @@ ViewerScrollScreen.propTypes = {
   viewerScreenSettings: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   viewerScreenScrolled: PropTypes.func,
+  isDisableComment: PropTypes.bool,
   readPosition: PropTypes.string,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
@@ -172,6 +195,7 @@ ViewerScrollScreen.propTypes = {
   TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
   StyledContents: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
   SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  setEndingScreen: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -182,9 +206,16 @@ const mapStateToProps = state => ({
   readPosition: selectViewerReadPosition(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   viewerScreenScrolled: () => dispatch(onViewerScreenScrolled()),
+  setEndingScreen: () => {
+    const { isDisableComment = false } = ownProps;
+    if (isDisableComment) {
+      return; // 매니져뷰어에서는 사용하지 않음
+    }
+    dispatch(showCommentArea());
+  },
 });
 
 export default connect(
