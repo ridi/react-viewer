@@ -6,8 +6,9 @@ class Connector {
     this.store = undefined;
   }
 
-  connect(store) {
+  connect(store, options = {}) {
     this.store = store;
+    this.options = options;
     this.afterConnected();
   }
 
