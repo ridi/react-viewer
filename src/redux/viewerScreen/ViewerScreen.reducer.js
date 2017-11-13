@@ -27,7 +27,7 @@ const calculatedPageViewer = (state, action) => new ReducerBuilder(state)
 
 const movePageViewer = (state, action) => new ReducerBuilder(state)
   .set(path.isEndingScreen(), false)
-  .set(path.isFullScreen(), true)
+  // .set(path.isFullScreen(), true)
   .set(path.pageViewCurrentPage(), action.number)
   .build();
 
@@ -37,6 +37,7 @@ const showEndingScreen = state => new ReducerBuilder(state)
   .build();
 
 const viewerScreenSettingChanged = (state, action) => new ReducerBuilder(state)
+  .set(path.isEndingScreen(), false)
   .set(path.viewerScreenSettings(), updateObject(state.viewerScreenSettings, action.changedSetting))
   .build();
 
