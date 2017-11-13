@@ -6,7 +6,7 @@ import {
   showCommentArea as showCommentAreaAction,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import { BindingType } from '../../constants/ContentConstants';
-import { isExist } from '../../util/Util';
+import { debounce, isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
@@ -27,12 +27,13 @@ import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import { setScrollTop } from '../../util/BrowserWrapper';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
     super();
-    this.resizeViewerFunc = this.resizeViewer.bind(this);
+    this.resizeViewerFunc = debounce(() => this.resizeViewer(), DOMEventDelayConstants.RESIZE);
   }
 
   componentDidMount() {
@@ -101,7 +102,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   resizeViewer(/* width */) {
-    this.updatePagination();
+    new AsyncTask(() => {
+      PageCalculator.updatePagination();
+      this.restorePosition();
+    }).start(0);
   }
 
   preventScrollEvent(ref) {
