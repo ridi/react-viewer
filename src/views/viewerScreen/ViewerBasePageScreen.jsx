@@ -42,8 +42,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
 
-    this.restorePosition();
-    this.updatePagination();
+    this.updatePagination(true);
     this.changeErrorImage();
   }
 
@@ -75,6 +74,12 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
+  isLastPage() {
+    const { pageViewPagination } = this.props;
+    const { currentPage, totalPage } = pageViewPagination;
+    return currentPage === totalPage;
+  }
+
   changeErrorImage() {
     const images = document.getElementsByTagName('img');
     const errorImage = renderImageOnErrorPlaceholder();
@@ -88,24 +93,22 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
-  updatePagination() {
-    const { pageViewPagination } = this.props;
-    const { currentPage, totalPage } = pageViewPagination;
-    const lastPage = totalPage - 1;
+  updatePagination(restore = false) {
     new AsyncTask(() => {
       setScrollTop(0);
       PageCalculator.updatePagination();
-      if (currentPage !== lastPage) {
-        ReadPositionHelper.dispatchChangedReadPosition();
+      if (!this.isLastPage()) {
+        if (restore) {
+          this.restorePosition();
+        } else {
+          ReadPositionHelper.dispatchChangedReadPosition();
+        }
       }
     }).start(0);
   }
 
   resizeViewer(/* width */) {
-    new AsyncTask(() => {
-      PageCalculator.updatePagination();
-      this.restorePosition();
-    }).start(0);
+    new AsyncTask(() => this.updatePagination(true)).start(0);
   }
 
   preventScrollEvent(ref) {
