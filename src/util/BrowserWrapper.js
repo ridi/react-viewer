@@ -3,12 +3,27 @@ export const screenWidth = () => window.innerWidth;
 
 export const screenHeight = () => window.innerHeight;
 
-export const scrollTop = () => document.documentElement.scrollTop;
+export const scrollTop = () => {
+  if (document.scrollingElement) {
+    return document.scrollingElement.scrollTop;
+  }
+  return document.documentElement.scrollTop || document.body.scrollTop;
+};
 
-export const scrollHeight = () => document.documentElement.scrollHeight;
+export const scrollHeight = () => {
+  if (document.scrollingElement) {
+    return document.scrollingElement.scrollHeight;
+  }
+  return document.documentElement.scrollHeight || document.body.scrollHeight;
+};
 
 export const setScrollTop = (top) => {
-  document.documentElement.scrollTop = top;
+  if (document.scrollingElement) {
+    document.scrollingElement.scrollTop = top;
+  } else {
+    document.body.scrollTop = top;
+    document.documentElement.scrollTop = top;
+  }
 };
 
 export const offsetWidth = () => document.body.offsetWidth;

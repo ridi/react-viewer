@@ -93,7 +93,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   addScrollEvent() {
-    this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
+    this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL, true);
     documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
   }
 

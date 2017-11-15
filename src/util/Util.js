@@ -116,16 +116,24 @@ export function nullSafeSet(object, path, value) {
  *
  * @param {function} fn
  * @param {number} [wait=100]
+ * @param {boolean} [immediate=false]
  * @return {function} debounced function
  */
-export function debounce(fn, wait = 100) {
+export function debounce(fn, wait = 100, immediate = false) {
   let timeout;
   return (...args) => {
     const context = this;
+    if (immediate && !timeout) {
+      // immediately run at the first time
+      fn.apply(context, args);
+    }
     if (timeout) {
       clearTimeout(timeout);
       timeout = null;
     }
-    timeout = setTimeout(() => fn.apply(context, args), wait);
+    timeout = setTimeout(() => {
+      timeout = null;
+      fn.apply(context, args);
+    }, wait);
   };
 }
