@@ -34,8 +34,8 @@ ScrollTouchable.propTypes = {
   onTouched: PropTypes.func,
   contentType: PropTypes.number,
   footer: PropTypes.node,
-  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 ScrollTouchable.defaultProps = {
   footer: null,

@@ -192,9 +192,9 @@ ViewerScrollScreen.propTypes = {
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
   screenRef: PropTypes.func,
-  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  StyledContents: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   setEndingScreen: PropTypes.func,
 };
 

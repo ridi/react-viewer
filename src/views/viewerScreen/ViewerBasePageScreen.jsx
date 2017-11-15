@@ -262,9 +262,9 @@ ViewerBasePageScreen.propTypes = {
   footer: PropTypes.node,
   screenRef: PropTypes.func,
   fontDomain: PropTypes.string,
-  StyledContents: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
 const mapStateToProps = state => ({

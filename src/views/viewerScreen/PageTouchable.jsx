@@ -75,8 +75,8 @@ PageTouchable.propTypes = {
   isEndingScreen: PropTypes.bool,
   isFullScreen: PropTypes.bool,
   children: PropTypes.node,
-  TouchableScreen: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
-  SizingWrapper: PropTypes.oneOfType([ PropTypes.node, PropTypes.func ]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
 const mapStateToProps = state => ({
