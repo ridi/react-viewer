@@ -32,11 +32,6 @@ export const selectPageViewPagination = createSelector(
   viewerScreen => nullSafeGet(viewerScreen, path.pageViewPagination(), null),
 );
 
-export const selectIsEndingScreen = createSelector(
-  [getViewerScreen],
-  viewerScreen => nullSafeGet(viewerScreen, path.isEndingScreen(), false),
-);
-
 export const selectIsFullScreen = createSelector(
   [getViewerScreen],
   viewerScreen => nullSafeGet(viewerScreen, path.isFullScreen(), false),

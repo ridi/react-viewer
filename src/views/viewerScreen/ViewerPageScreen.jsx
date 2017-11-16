@@ -11,7 +11,6 @@ class ViewerPageScreen extends ViewerBasePageScreen {
 }
 
 ViewerPageScreen.propTypes = {
-  isEndingScreen: PropTypes.bool,
   pageViewPagination: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   movePageViewer: PropTypes.func,

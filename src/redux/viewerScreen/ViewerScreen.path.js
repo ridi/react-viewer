@@ -9,7 +9,6 @@ export const initialState = {
   bindingType: BindingType.LEFT,
   readPosition: VIEWER_EMPTY_READ_POSITION,
   isLoadingCompleted: false,
-  isEndingScreen: false,
   isFullScreen: false,
   pageView: {
     calculatedPage: {
@@ -36,7 +35,6 @@ export default {
   viewerType: () => ['viewerType'],
   bindingType: () => ['bindingType'],
   isLoadingCompleted: () => ['isLoadingCompleted'],
-  isEndingScreen: () => ['isEndingScreen'],
   isFullScreen: () => ['isFullScreen'],
   readPosition: () => ['readPosition'],
   pageView: () => ['ui', 'pageView'],

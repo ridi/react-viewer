@@ -7,14 +7,12 @@ import {
   onViewerScreenScrolled,
   onViewerScreenTouched,
   renderSpine,
-  showCommentArea,
   updateSpineMetaData,
   viewerScreenSettingChanged,
 } from './redux/viewerScreen/ViewerScreen.action';
 import {
   selectBindingType,
   selectContentType,
-  selectIsEndingScreen,
   selectIsFullScreen,
   selectIsLoadingCompleted,
   selectPageViewPagination,
@@ -44,7 +42,6 @@ const actionGenerators = {
   onViewerScreenScrolled,
   onViewerScreenTouched,
   movePageViewer,
-  showCommentArea,
   viewerScreenSettingChanged,
   updateSpineMetaData,
   renderSpine,
@@ -56,7 +53,6 @@ const selectors = {
   selectViewerType,
   selectBindingType,
   selectPageViewPagination,
-  selectIsEndingScreen,
   selectIsFullScreen,
   selectIsLoadingCompleted,
   selectViewerScreenSettings,
@@ -79,7 +75,6 @@ export {
   onViewerScreenScrolled, // scroll view 상태에서 뷰어가 스크롤 되었을 떄 호출된다.
   onViewerScreenTouched, // 뷰어에 터치 입력이 들어왔을 때 호출된다.
   movePageViewer, // page view 상태에서 특정 페이지로 이동한다.
-  showCommentArea, // 작품 마지막에 있는 댓글 페이지를 활성화한다.
   viewerScreenSettingChanged, // 뷰어 세팅이 변경되었을 때 호출된다.
   updateSpineMetaData, // meta data (contentType, viewerType, bindingType) 을 업데이트한다.
   renderSpine, // spine 데이터를 업데이트한다.
@@ -90,7 +85,6 @@ export {
   selectViewerType, // meta data 중 viewerType 을 가져온다.
   selectBindingType, // meta data 중 bindingType 을 가져온다.
   selectPageViewPagination, // page view 상태에서 pagination 데이터를 가져온다. (totalPage, currentPage, readProcess)
-  selectIsEndingScreen, // 작품 마지막에 있는 댓글 페이지의 활성화 여부를 가져온다.
   selectIsFullScreen, // header 와 footer 가 비활성화된 full screen 상태인지 여부를 가져온다.
   selectIsLoadingCompleted, // spine 의 로딩 완료 여부를 가져온다.
   selectViewerScreenSettings, // 뷰어 세팅값들을 가져온다.

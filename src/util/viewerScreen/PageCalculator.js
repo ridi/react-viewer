@@ -1,5 +1,6 @@
 import Connector from '../Connector';
 import { calculatedPageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
+import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { screenWidth } from '../BrowserWrapper';
 import { updateObject } from '../Util';
 
@@ -16,15 +17,17 @@ class PageCalculator extends Connector {
     this._option = updateObject(this._option, option);
   }
 
-  isEndingPage(page, totalPage) {
+  isEndingPage(page) {
+    const { totalPage } = selectPageViewPagination(this.getState());
     if (this._option.containExtraPage > 0) {
-      return page === totalPage;
+      return page >= totalPage;
     }
     return false;
   }
 
   updatePagination() {
     const { dispatch } = this.store;
+    const { currentPage } = selectPageViewPagination(this.getState());
     const width = screenWidth();
     const pages = document.querySelector(this._targetSelector);
     let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width);
@@ -32,11 +35,12 @@ class PageCalculator extends Connector {
       totalPage += 1;
     }
 
-    const newPage = {
+    const newPagination = {
       totalPage,
+      currentPage: Math.min(totalPage, currentPage),
     };
 
-    dispatch(calculatedPageViewer(newPage));
+    dispatch(calculatedPageViewer(newPagination));
   }
 }
 const pageCalculator = new PageCalculator();

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectIsEndingScreen, selectIsFullScreen } from '../../redux/viewerScreen/ViewerScreen.selector';
+import {
+  selectIsFullScreen,
+  selectPageViewPagination,
+} from '../../redux/viewerScreen/ViewerScreen.selector';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
+import PageCalculator from '../../util/viewerScreen/PageCalculator';
 
 
 class PageTouchable extends Component {
@@ -11,10 +15,10 @@ class PageTouchable extends Component {
     const width = document.body.clientWidth;
 
     const {
-      isEndingScreen, isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched,
+      isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
     } = this.props;
 
-    if (isEndingScreen) {
+    if (PageCalculator.isEndingPage(pagination.currentPage)) {
       return;
     }
 
@@ -37,10 +41,12 @@ class PageTouchable extends Component {
       children,
       contentType,
       footer,
-      isEndingScreen,
+      pagination,
       TouchableScreen,
       SizingWrapper,
     } = this.props;
+
+    const isEndingScreen = PageCalculator.isEndingPage(pagination.currentPage);
 
     return (
       <TouchableScreen
@@ -72,7 +78,7 @@ PageTouchable.propTypes = {
   onMiddleTouched: PropTypes.func,
   contentType: PropTypes.number,
   footer: PropTypes.node,
-  isEndingScreen: PropTypes.bool,
+  pagination: PropTypes.shape({ currentPage: PropTypes.number }),
   isFullScreen: PropTypes.bool,
   children: PropTypes.node,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
@@ -80,7 +86,7 @@ PageTouchable.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  isEndingScreen: selectIsEndingScreen(state),
+  pagination: selectPageViewPagination(state),
   isFullScreen: selectIsFullScreen(state),
 });
 

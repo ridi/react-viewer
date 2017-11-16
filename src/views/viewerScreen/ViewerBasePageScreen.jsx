@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {
   movePageViewer as movePageViewerAction,
   onViewerScreenTouched,
-  showCommentArea as showCommentAreaAction,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import { BindingType } from '../../constants/ContentConstants';
 import { debounce, isExist } from '../../util/Util';
@@ -16,7 +15,6 @@ import AsyncTask from '../../util/AsyncTask';
 import {
   selectBindingType,
   selectContentType,
-  selectIsEndingScreen,
   selectIsLoadingCompleted,
   selectPageViewPagination,
   selectSpines,
@@ -37,11 +35,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentDidMount() {
-    const { isEndingScreen } = this.props;
-    if (isEndingScreen) {
-      return;
-    }
-
     this.updatePagination(true);
     this.changeErrorImage();
   }
@@ -66,18 +59,13 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   componentWillReceiveProps(nextProps) {
     const nextPage = nextProps.pageViewPagination.currentPage;
     if (nextPage !== this.props.pageViewPagination.currentPage) {
+      // FIXME 이 부분에서 왜 updatePagination을 하는것일까?
       setScrollTop(0);
       this.updatePagination();
     }
-    if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
-      this.updatePagination();
-    }
-  }
-
-  isLastPage() {
-    const { pageViewPagination } = this.props;
-    const { currentPage, totalPage } = pageViewPagination;
-    return currentPage === totalPage;
+    // if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
+    //   this.updatePagination();
+    // }
   }
 
   changeErrorImage() {
@@ -94,10 +82,12 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   updatePagination(restore = false) {
+    const { pageViewPagination } = this.props;
+    const { currentPage } = pageViewPagination;
     new AsyncTask(() => {
       setScrollTop(0);
       PageCalculator.updatePagination();
-      if (!this.isLastPage()) {
+      if (!PageCalculator.isEndingPage(currentPage)) {
         if (restore) {
           this.restorePosition();
         } else {
@@ -126,7 +116,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   moveNextPage() {
-    const { movePageViewer, pageViewPagination, showCommentArea } = this.props;
+    const { movePageViewer, pageViewPagination } = this.props;
     const { currentPage, totalPage } = pageViewPagination;
 
     const nextPage = currentPage + 1;
@@ -134,10 +124,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
-
-    if (PageCalculator.isEndingPage(nextPage, totalPage)) {
-      showCommentArea();
-    }
   }
 
   movePrevPage() {
@@ -253,11 +239,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 ViewerBasePageScreen.propTypes = {
   onMoveWrongDirection: PropTypes.func,
   readPosition: PropTypes.string,
-  isEndingScreen: PropTypes.bool,
   pageViewPagination: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   movePageViewer: PropTypes.func,
-  showCommentArea: PropTypes.func,
   isDisableComment: PropTypes.bool,
   footer: PropTypes.node,
   screenRef: PropTypes.func,
@@ -273,7 +257,6 @@ const mapStateToProps = state => ({
   bindingType: selectBindingType(state),
   pageViewPagination: selectPageViewPagination(state),
   spines: selectSpines(state),
-  isEndingScreen: selectIsEndingScreen(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
   readPosition: selectViewerReadPosition(state),
 });
@@ -281,13 +264,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   movePageViewer: number => dispatch(movePageViewerAction(number)),
-  showCommentArea: () => {
-    const { isDisableComment = false } = ownProps;
-    if (isDisableComment) {
-      return; // 매니져뷰어에서는 사용하지 않음
-    }
-    dispatch(showCommentAreaAction());
-  },
 });
 
 export default ViewerBasePageScreen;

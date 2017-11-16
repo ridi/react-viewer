@@ -18,7 +18,6 @@ import ViewerBaseScreen from './ViewerBaseScreen';
 import {
   onViewerScreenScrolled,
   onViewerScreenTouched,
-  showCommentArea,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { debounce, isExist } from '../../util/Util';
@@ -26,9 +25,6 @@ import {
   documentAddEventListener,
   documentRemoveEventListener,
   setScrollTop,
-  scrollTop,
-  screenHeight,
-  scrollHeight,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
@@ -82,16 +78,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     return ViewerHelper.getScrollStyle();
   }
 
-  checkEndingScreen() {
-    const { setEndingScreen } = this.props;
-    const thresholdY = (scrollHeight() - (screenHeight() * 2));
-    const reachedBottom = scrollTop() >= thresholdY;
-
-    if (reachedBottom) {
-      setEndingScreen();
-    }
-  }
-
   addScrollEvent() {
     this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL, true);
     documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
@@ -115,7 +101,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     }
     viewerScreenScrolled();
     ReadPositionHelper.dispatchChangedReadPosition();
-    this.checkEndingScreen();
   }
 
   onScreenRef(ref) {
@@ -195,7 +180,6 @@ ViewerScrollScreen.propTypes = {
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-  setEndingScreen: PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -206,16 +190,9 @@ const mapStateToProps = state => ({
   readPosition: selectViewerReadPosition(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   viewerScreenScrolled: () => dispatch(onViewerScreenScrolled()),
-  setEndingScreen: () => {
-    const { isDisableComment = false } = ownProps;
-    if (isDisableComment) {
-      return; // 매니져뷰어에서는 사용하지 않음
-    }
-    dispatch(showCommentArea());
-  },
 });
 
 export default connect(

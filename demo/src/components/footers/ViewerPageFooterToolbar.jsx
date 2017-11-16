@@ -5,7 +5,6 @@ import Slider from 'rc-slider';
 import {
   movePageViewer as movePageViewerAction,
   selectPageViewPagination,
-  showCommentArea as showCommentAreaAction,
 } from '../../../../lib/index';
 import SvgIcons from '../icons/SvgIcons';
 
@@ -28,11 +27,8 @@ class ViewerPageFooterToolbar extends Component {
   }
 
   onSlideAfterChanged(value) {
-    const { movePageViewer, pageViewPagination, showCommentArea } = this.props;
+    const { movePageViewer } = this.props;
     movePageViewer(value);
-    if (value === pageViewPagination.totalPage) {
-      showCommentArea();
-    }
   }
 
   render() {
@@ -73,7 +69,6 @@ ViewerPageFooterToolbar.propTypes = {
   }).isRequired,
   isDisableComment: PropTypes.bool,
   movePageViewer: PropTypes.func.isRequired,
-  showCommentArea: PropTypes.func.isRequired,
 };
 
 ViewerPageFooterToolbar.defaultProps = {
@@ -84,16 +79,9 @@ const mapStateToProps = state => ({
   pageViewPagination: selectPageViewPagination(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch) => ({
   movePageViewer: (number) => {
     dispatch(movePageViewerAction(number));
-  },
-  showCommentArea: () => {
-    const { isDisableComment = false } = ownProps;
-    if (isDisableComment) {
-      return;
-    }
-    dispatch(showCommentAreaAction());
   },
 });
 
