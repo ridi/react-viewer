@@ -79,7 +79,7 @@ const mapStateToProps = state => ({
   pageViewPagination: selectPageViewPagination(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   movePageViewer: (number) => {
     dispatch(movePageViewerAction(number));
   },
