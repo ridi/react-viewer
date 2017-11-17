@@ -185,7 +185,7 @@ ViewerContents.defaultProps = {
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
   .viewer_bottom {
-    min-height: ${() => screenHeight()};
+    min-height: ${() => screenHeight()}px;
     padding: ${NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT + 10}px 0 132px 0;
     box-sizing: border-box;
     user-select: none;
