@@ -3,7 +3,9 @@ import styled, { css } from 'styled-components';
 import { svgIcons } from '../SvgIcons.styled';
 import { NAV_BAR_HEIGHT, PAGE_MAX_WIDTH, STATUS_BAR_HEIGHT } from '../../constants/StyledConstants';
 import { ContentType } from '../../constants/ContentConstants';
+import { ViewerType } from '../../constants/ViewerScreenConstants';
 import SvgIconConstants from '../../constants/SvgIconConstants';
+import { screenHeight } from '../../util/BrowserWrapper';
 
 
 const getNovelLineHeight = (level) => {
@@ -50,7 +52,12 @@ const getNovelPadding = (level) => {
 };
 const getComicPadding = (/* level */) => '0';
 const getComicWidth = level => (Number(level) * 10) + 40;
-const getMaxWidth = contentType => (contentType === ContentType.WEB_NOVEL ? `${PAGE_MAX_WIDTH}px` : 'none');
+const getMaxWidth = (contentType, viewerType) => {
+  if (contentType === ContentType.WEB_NOVEL || viewerType === ViewerType.SCROLL) {
+    return `${PAGE_MAX_WIDTH}px`;
+  }
+  return 'none';
+};
 
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerScreen = styled.div`
@@ -59,7 +66,7 @@ const ViewerScreen = styled.div`
 
 // language=SCSS prefix=dummy{ suffix=}
 const SizingWrapper = styled.div`
-  max-width: ${props => getMaxWidth(props.contentType)};
+  max-width: ${props => getMaxWidth(props.contentType, props.viewerType)};
   margin: 0 auto;
   box-sizing: border-box;
   .error_image_wrapper {
@@ -75,6 +82,7 @@ const SizingWrapper = styled.div`
 `;
 SizingWrapper.defaultProps = {
   contentType: ContentType.WEB_NOVEL,
+  viewerType: ViewerType.SCROLL,
 };
 
 // language=SCSS prefix=dummy{ suffix=}
@@ -177,7 +185,7 @@ ViewerContents.defaultProps = {
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
   .viewer_bottom {
-    min-height: 100%; min-height: 100vh;
+    min-height: ${() => screenHeight()};
     padding: ${NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT + 10}px 0 132px 0;
     box-sizing: border-box;
     user-select: none;
@@ -204,7 +212,7 @@ const PageContents = ViewerContents.extend`
         width: auto;
         height: auto;
         max-width: ${props => `${getComicWidth(props.comicWidthLevel)}%`};
-        max-height: ${props => getComicWidth(props.comicWidthLevel)}vh;
+        max-height: ${() => screenHeight()}px;
       }
     }
   }
@@ -217,7 +225,7 @@ const Pages = styled.div`
     display: flex; align-items: center;
   }
   .comic_page {
-    display: flex; height: 100vh; overflow: hidden;
+    display: flex; height: ${() => screenHeight()}px; overflow: hidden;
     box-sizing: border-box; align-items: center;
     img {
       margin: 0 auto;

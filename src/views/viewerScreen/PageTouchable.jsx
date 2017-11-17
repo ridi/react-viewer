@@ -44,6 +44,7 @@ class PageTouchable extends Component {
       pagination,
       TouchableScreen,
       SizingWrapper,
+      viewerType,
     } = this.props;
 
     const isEndingScreen = PageCalculator.isEndingPage(pagination.currentPage);
@@ -64,7 +65,10 @@ class PageTouchable extends Component {
         }}
       >
         {isEndingScreen && footer ? footer : null}
-        <SizingWrapper contentType={contentType}>
+        <SizingWrapper
+          contentType={contentType}
+          viewerType={viewerType}
+        >
           {children}
         </SizingWrapper>
       </TouchableScreen>
@@ -77,6 +81,7 @@ PageTouchable.propTypes = {
   onRightTouched: PropTypes.func,
   onMiddleTouched: PropTypes.func,
   contentType: PropTypes.number,
+  viewerType: PropTypes.number,
   footer: PropTypes.node,
   pagination: PropTypes.shape({ currentPage: PropTypes.number }),
   isFullScreen: PropTypes.bool,

@@ -129,6 +129,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       paddingLevel,
       lineHeightLevel,
       contentWidthLevel,
+      viewerType,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -141,6 +142,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       <ScrollTouchable
         onTouched={() => viewerScreenTouched()}
         contentType={contentType}
+        viewerType={viewerType}
         footer={footer}
         TouchableScreen={TouchableScreen}
         SizingWrapper={SizingWrapper}

@@ -37,6 +37,13 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   componentDidMount() {
     this.updatePagination(true);
     this.changeErrorImage();
+    if (this.contentsComponent) {
+      preventScrollEvent(this.contentsComponent);
+    }
+    if (this.pagesComponent) {
+      preventScrollEvent(this.pagesComponent);
+    }
+    window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
   }
 
   restorePosition() {
@@ -53,19 +60,23 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentWillUnmount() {
-    this.removeScrollEvent();
+    if (this.contentsComponent) {
+      removeScrollEvent(this.contentsComponent);
+      this.contentsComponent = null;
+    }
+    if (this.pagesComponent) {
+      removeScrollEvent(this.pagesComponent);
+      this.pagesComponent = null;
+    }
+    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
   }
 
   componentWillReceiveProps(nextProps) {
     const nextPage = nextProps.pageViewPagination.currentPage;
     if (nextPage !== this.props.pageViewPagination.currentPage) {
-      // FIXME 이 부분에서 왜 updatePagination을 하는것일까?
       setScrollTop(0);
       this.updatePagination();
     }
-    // if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
-    //   this.updatePagination();
-    // }
   }
 
   changeErrorImage() {
@@ -99,20 +110,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 
   resizeViewer(/* width */) {
     new AsyncTask(() => this.updatePagination(true)).start(0);
-  }
-
-  preventScrollEvent(ref) {
-    preventScrollEvent(ref);
-    if (isExist(ref)) {
-      window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-    }
-  }
-
-  removeScrollEvent(ref) {
-    removeScrollEvent(ref);
-    if (isExist(ref)) {
-      window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-    }
   }
 
   moveNextPage() {
@@ -185,6 +182,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       paddingLevel,
       lineHeightLevel,
       contentWidthLevel,
+      viewerType,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -205,6 +203,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         footer={footer}
         TouchableScreen={TouchableScreen}
         SizingWrapper={SizingWrapper}
+        viewerType={viewerType}
       >
         <StyledContents
           id="viewer_page_contents"
@@ -216,18 +215,16 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
           comicWidthLevel={contentWidthLevel}
           paddingLevel={paddingLevel}
           contentType={contentType}
-          innerRef={(pages) => {
-            this.preventScrollEvent(pages);
-          }}
+          innerRef={(comp) => { this.contentsComponent = comp; }}
           fontDomain={fontDomain}
         >
           <Pages
             className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
-            innerRef={(pages) => {
-              this.onScreenRef(pages);
-              this.preventScrollEvent(pages);
+            innerRef={(comp) => {
+              this.onScreenRef(comp);
+              this.pagesComponent = comp;
             }}
           />
         </StyledContents>
@@ -261,7 +258,7 @@ const mapStateToProps = state => ({
   readPosition: selectViewerReadPosition(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   movePageViewer: number => dispatch(movePageViewerAction(number)),
 });

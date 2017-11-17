@@ -9,8 +9,8 @@ const ScrollTouchable = (props) => {
     footer,
     TouchableScreen,
     SizingWrapper,
+    viewerType,
   } = props;
-
   return (
     <TouchableScreen
       onClick={(e) => {
@@ -21,6 +21,7 @@ const ScrollTouchable = (props) => {
     >
       <SizingWrapper
         contentType={contentType}
+        viewerType={viewerType}
       >
         {children}
       </SizingWrapper>
@@ -33,6 +34,7 @@ ScrollTouchable.propTypes = {
   children: PropTypes.node,
   onTouched: PropTypes.func,
   contentType: PropTypes.number,
+  viewerType: PropTypes.number,
   footer: PropTypes.node,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,

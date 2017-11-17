@@ -1,6 +1,7 @@
 import Connector from '../Connector';
 import { calculatedPageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
-import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
+import { selectPageViewPagination, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
+import { ViewerType } from '../../constants/ViewerScreenConstants';
 import { screenWidth } from '../BrowserWrapper';
 import { updateObject } from '../Util';
 
@@ -19,7 +20,8 @@ class PageCalculator extends Connector {
 
   isEndingPage(page) {
     const { totalPage } = selectPageViewPagination(this.getState());
-    if (this._option.containExtraPage > 0) {
+    const { viewerType } = selectViewerScreenSettings(this.getState());
+    if (viewerType === ViewerType.PAGE && this._option.containExtraPage > 0) {
       return page >= totalPage;
     }
     return false;
