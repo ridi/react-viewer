@@ -2,24 +2,16 @@ const git = require('git-rev');
 const fs = require('fs-extra');
 const webpack = require('webpack');
 const npm = require('package-json');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 const viewerWebpackConfig = require('./webpack.config.js');
 const demoWebpackConfig = require('./demo/webpack.config.js');
 const { version, name } = require('./package.json');
 
-const exitWithErrorMsg = msg => {
+const exitWithErrorMsg = (msg) => {
   console.error(msg);
   process.exit(1);
 };
-
-const exec = cmd => new Promise((resolve, reject) => {
-  process.exec(cmd, (err, stdout, stderr) => {
-    if (err) {
-      reject(err);
-      return;
-    }
-    resolve();
-  });
-});
 
 const getGitBranch = () => new Promise((resolve, reject) => git.branch(branch => resolve(branch)));
 const gitCheckout = branch => exec(`git checkout ${branch}`);
@@ -67,7 +59,7 @@ const commands = {
   RELEASED: 'released',
 };
 
-if (args == null || args.length === 0) {
+if (args === null || args.length === 0) {
   exitWithErrorMsg('args required for release.js');
 }
 
