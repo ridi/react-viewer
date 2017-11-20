@@ -10,7 +10,6 @@ export const actions = {
   RENDER_SPINE: 'VIEWER_SCREEN:RENDER_SPINE',
   CALCULATED_PAGE_VIEWER: 'PAGE_VIEWER:CALCULATED_PAGE',
   MOVE_PAGE_VIEWER: 'PAGE_VIEWER:MOVE',
-  SHOW_ENDING_SCREEN: 'PAGE_VIEWER:SHOW_ENDING_SCREEN',
 };
 
 export const initializeViewerScreen = viewerScreenSettings => ({
@@ -39,10 +38,6 @@ export const calculatedPageViewer = page => ({
 export const movePageViewer = number => ({
   type: actions.MOVE_PAGE_VIEWER,
   number,
-});
-
-export const showCommentArea = () => ({
-  type: actions.SHOW_ENDING_SCREEN,
 });
 
 export const viewerScreenSettingChanged = changedSetting => ({

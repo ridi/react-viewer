@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { viewerScreenSettingChanged } from '../../../../lib/index';
+import { viewerScreenSettingChanged, PageCalculator } from '../../../../lib/index';
 import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import FontSetting from './FontSetting';
@@ -49,7 +49,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateViewerScreenSettings: changedSettings => dispatch(viewerScreenSettingChanged(changedSettings)),
+  updateViewerScreenSettings: (changedSettings) => {
+    dispatch(viewerScreenSettingChanged(changedSettings));
+    PageCalculator.updatePagination();
+  },
 });
 
 export default connect(

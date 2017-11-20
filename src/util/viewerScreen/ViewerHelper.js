@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { screenHeight, screenWidth } from '../BrowserWrapper';
+import { documentClientWidth, documentClientHeight } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_TOP,
   MAX_PADDING_LEVEL,
@@ -11,26 +11,33 @@ import {
 
 
 class ViewerHelper extends Connector {
-  constructor() {
-    super();
-    this._targetSelector = PAGE_VIEWER_SELECTOR;
+  afterConnected() {
+    const {
+      paddingTop = DEFAULT_PADDING_TOP,
+      pageMaxWidth = PAGE_MAX_WIDTH,
+      pageViewerSelector = PAGE_VIEWER_SELECTOR,
+    } = this.options;
+
+    this._targetSelector = pageViewerSelector;
+    this._paddingTop = paddingTop;
+    this._pageMaxWidth = pageMaxWidth;
   }
 
   getScrollStyle() {
     return {
-      paddingTop: DEFAULT_PADDING_TOP,
+      paddingTop: this._paddingTop,
     };
   }
 
   getPageStyle(paddingLevel) {
     const { getState } = this.store;
-    const width = screenWidth();
-    const height = screenHeight();
+    const width = documentClientWidth();
+    const height = documentClientHeight();
     const pageView = selectPageViewPagination(getState());
 
     const { currentPage } = pageView;
 
-    const maxGap = width > PAGE_MAX_WIDTH ? ((width - PAGE_MAX_WIDTH) / 2) : 0;
+    const maxGap = width > this._pageMaxWidth ? ((width - this._pageMaxWidth) / 2) : 0;
     const paddingHorizontal = parseInt(width * 0.01 * (MAX_PADDING_LEVEL - paddingLevel), 10);
     let paddingVertical = parseInt(width * 0.10, 10);
     paddingVertical = paddingVertical > MIN_PADDING_BOTTOM ? paddingVertical : MIN_PADDING_BOTTOM;
@@ -41,24 +48,21 @@ class ViewerHelper extends Connector {
       columnWidth: `${width}px`,
       WebkitColumnGap: columnGap,
       columnGap,
-      paddingTop: DEFAULT_PADDING_TOP,
+      paddingTop: this._paddingTop,
       paddingBottom: paddingVertical,
       paddingLeft: paddingHorizontal,
       paddingRight: paddingHorizontal,
-      height: height - paddingVertical,
-      // WebkitTransition: 'transform 0s',
-      // transition: 'transform 0s',
+      boxSizing: 'border-box',
+      height,
       WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
       transform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
-      // 'animation': 'pageChange 2s 1',
-      // 'overflowX': 'scroll',
     };
   }
 
   getComicPageStyle() {
     const { getState } = this.store;
-    const width = screenWidth();
-    const height = screenHeight();
+    const width = documentClientWidth();
+    const height = documentClientHeight();
     const pageView = selectPageViewPagination(getState());
 
     const { currentPage } = pageView;
@@ -73,12 +77,8 @@ class ViewerHelper extends Connector {
       paddingLeft: 0,
       paddingRight: 0,
       height,
-      // WebkitTransition: 'transform 0s',
-      // transition: 'transform 0s',
       WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
       transform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
-      // 'animation': 'pageChange 2s 1',
-      // 'overflowX': 'scroll',
     };
   }
 }

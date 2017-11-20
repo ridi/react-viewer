@@ -109,3 +109,31 @@ export function nullSafeSet(object, path, value) {
   });
   return object;
 }
+
+/**
+ * Create a debounced(grouping multiple event listener in one) function
+ * And the latest invoking of this deboucnced function will only be taken after `wait` miliseconds periods.
+ *
+ * @param {function} fn
+ * @param {number} [wait=100]
+ * @param {boolean} [immediate=false]
+ * @return {function} debounced function
+ */
+export function debounce(fn, wait = 100, immediate = false) {
+  let timeout;
+  return (...args) => {
+    const context = this;
+    if (immediate && !timeout) {
+      // immediately run at the first time
+      fn.apply(context, args);
+    }
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(() => {
+      timeout = null;
+      fn.apply(context, args);
+    }, wait);
+  };
+}

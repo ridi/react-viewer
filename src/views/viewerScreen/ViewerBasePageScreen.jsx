@@ -3,20 +3,18 @@ import PropTypes from 'prop-types';
 import {
   movePageViewer as movePageViewerAction,
   onViewerScreenTouched,
-  showCommentArea as showCommentAreaAction,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import { BindingType } from '../../constants/ContentConstants';
-import { isExist } from '../../util/Util';
+import { debounce, isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
-import { PageContents, Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
+import { Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
 import AsyncTask from '../../util/AsyncTask';
 import {
   selectBindingType,
   selectContentType,
-  selectIsEndingScreen,
   selectIsLoadingCompleted,
   selectPageViewPagination,
   selectSpines,
@@ -27,23 +25,25 @@ import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import { setScrollTop } from '../../util/BrowserWrapper';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
     super();
-    this.resizeViewerFunc = this.resizeViewer.bind(this);
+    this.resizeViewerFunc = debounce(() => this.resizeViewer(), DOMEventDelayConstants.RESIZE);
   }
 
   componentDidMount() {
-    const { isEndingScreen } = this.props;
-    if (isEndingScreen) {
-      return;
-    }
-
-    this.restorePosition();
-    this.updatePagination();
+    this.updatePagination(true);
     this.changeErrorImage();
+    if (this.contentsComponent) {
+      preventScrollEvent(this.contentsComponent);
+    }
+    if (this.pagesComponent) {
+      preventScrollEvent(this.pagesComponent);
+    }
+    window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
   }
 
   restorePosition() {
@@ -60,16 +60,21 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentWillUnmount() {
-    this.removeScrollEvent();
+    if (this.contentsComponent) {
+      removeScrollEvent(this.contentsComponent);
+      this.contentsComponent = null;
+    }
+    if (this.pagesComponent) {
+      removeScrollEvent(this.pagesComponent);
+      this.pagesComponent = null;
+    }
+    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
   }
 
   componentWillReceiveProps(nextProps) {
     const nextPage = nextProps.pageViewPagination.currentPage;
     if (nextPage !== this.props.pageViewPagination.currentPage) {
       setScrollTop(0);
-      this.updatePagination();
-    }
-    if (!nextProps.isEndingScreen && this.props.isEndingScreen) {
       this.updatePagination();
     }
   }
@@ -87,39 +92,28 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
-  updatePagination() {
+  updatePagination(restore = false) {
     const { pageViewPagination } = this.props;
-    const { currentPage, totalPage } = pageViewPagination;
-    const lastPage = totalPage - 1;
+    const { currentPage } = pageViewPagination;
     new AsyncTask(() => {
       setScrollTop(0);
       PageCalculator.updatePagination();
-      if (currentPage !== lastPage) {
-        ReadPositionHelper.dispatchChangedReadPosition();
+      if (!PageCalculator.isEndingPage(currentPage)) {
+        if (restore) {
+          this.restorePosition();
+        } else {
+          ReadPositionHelper.dispatchChangedReadPosition();
+        }
       }
     }).start(0);
   }
 
   resizeViewer(/* width */) {
-    this.updatePagination();
-  }
-
-  preventScrollEvent(ref) {
-    preventScrollEvent(ref);
-    if (isExist(ref)) {
-      window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-    }
-  }
-
-  removeScrollEvent(ref) {
-    removeScrollEvent(ref);
-    if (isExist(ref)) {
-      window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-    }
+    new AsyncTask(() => this.updatePagination(true)).start(0);
   }
 
   moveNextPage() {
-    const { movePageViewer, pageViewPagination, showCommentArea } = this.props;
+    const { movePageViewer, pageViewPagination } = this.props;
     const { currentPage, totalPage } = pageViewPagination;
 
     const nextPage = currentPage + 1;
@@ -127,10 +121,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
-
-    if (PageCalculator.isEndingPage(nextPage, totalPage)) {
-      showCommentArea();
-    }
   }
 
   movePrevPage() {
@@ -181,6 +171,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       viewerScreenTouched,
       footer,
       fontDomain,
+      StyledContents,
+      TouchableScreen,
+      SizingWrapper,
     } = this.props;
     const {
       colorTheme,
@@ -189,6 +182,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       paddingLevel,
       lineHeightLevel,
       contentWidthLevel,
+      viewerType,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -207,8 +201,11 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         onMiddleTouched={() => viewerScreenTouched()}
         contentType={contentType}
         footer={footer}
+        TouchableScreen={TouchableScreen}
+        SizingWrapper={SizingWrapper}
+        viewerType={viewerType}
       >
-        <PageContents
+        <StyledContents
           id="viewer_page_contents"
           content={contentType}
           className={colorTheme}
@@ -218,21 +215,19 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
           comicWidthLevel={contentWidthLevel}
           paddingLevel={paddingLevel}
           contentType={contentType}
-          innerRef={(pages) => {
-            this.preventScrollEvent(pages);
-          }}
+          innerRef={(comp) => { this.contentsComponent = comp; }}
           fontDomain={fontDomain}
         >
           <Pages
             className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
-            innerRef={(pages) => {
-              this.onScreenRef(pages);
-              this.preventScrollEvent(pages);
+            innerRef={(comp) => {
+              this.onScreenRef(comp);
+              this.pagesComponent = comp;
             }}
           />
-        </PageContents>
+        </StyledContents>
       </PageTouchable>
     );
   }
@@ -241,15 +236,16 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 ViewerBasePageScreen.propTypes = {
   onMoveWrongDirection: PropTypes.func,
   readPosition: PropTypes.string,
-  isEndingScreen: PropTypes.bool,
   pageViewPagination: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   movePageViewer: PropTypes.func,
-  showCommentArea: PropTypes.func,
   isDisableComment: PropTypes.bool,
   footer: PropTypes.node,
   screenRef: PropTypes.func,
   fontDomain: PropTypes.string,
+  StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -258,21 +254,13 @@ const mapStateToProps = state => ({
   bindingType: selectBindingType(state),
   pageViewPagination: selectPageViewPagination(state),
   spines: selectSpines(state),
-  isEndingScreen: selectIsEndingScreen(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
   readPosition: selectViewerReadPosition(state),
 });
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   viewerScreenTouched: () => dispatch(onViewerScreenTouched()),
   movePageViewer: number => dispatch(movePageViewerAction(number)),
-  showCommentArea: () => {
-    const { isDisableComment = false } = ownProps;
-    if (isDisableComment) {
-      return; // 매니져뷰어에서는 사용하지 않음
-    }
-    dispatch(showCommentAreaAction());
-  },
 });
 
 export default ViewerBasePageScreen;

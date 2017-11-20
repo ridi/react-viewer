@@ -12,15 +12,20 @@ import {
   selectViewerReadPosition,
   selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { ScrollContents } from '../../styled/viewerScreen/ViewerScreen.styled';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerBaseScreen from './ViewerBaseScreen';
-import { onViewerScreenScrolled, onViewerScreenTouched } from '../../redux/viewerScreen/ViewerScreen.action';
+import {
+  onViewerScreenScrolled,
+  onViewerScreenTouched,
+} from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { isExist } from '../../util/Util';
-import EventDispatcher from '../../util/EventDispatcher';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { debounce, isExist } from '../../util/Util';
+import {
+  documentAddEventListener,
+  documentRemoveEventListener,
+  setScrollTop,
+} from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 
@@ -74,14 +79,13 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   addScrollEvent() {
-    // ayon: 어째서인지 컴포넌트에 스크롤 이벤트를 걸면 걸리지 않는다.
-    this.viewerScrollCallback = e => this.onScrollHandle(e);
-    EventDispatcher.addEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback, DOMEventDelayConstants.SCROLL);
+    this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL, true);
+    documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
   }
 
   removeScrollEvent() {
     if (this.viewerScrollCallback) {
-      EventDispatcher.removeEventListener(DOMEventConstants.SCROLL);
+      documentRemoveEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
       this.viewerScrollCallback = undefined;
     }
   }
@@ -114,6 +118,9 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       isLoadingCompleted,
       footer,
       fontDomain,
+      TouchableScreen,
+      StyledContents,
+      SizingWrapper,
     } = this.props;
     const {
       colorTheme,
@@ -122,6 +129,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       paddingLevel,
       lineHeightLevel,
       contentWidthLevel,
+      viewerType,
     } = this.props.viewerScreenSettings;
 
     if (!isLoadingCompleted) {
@@ -134,9 +142,12 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       <ScrollTouchable
         onTouched={() => viewerScreenTouched()}
         contentType={contentType}
+        viewerType={viewerType}
         footer={footer}
+        TouchableScreen={TouchableScreen}
+        SizingWrapper={SizingWrapper}
       >
-        <ScrollContents
+        <StyledContents
           id="contents"
           contentType={contentType}
           className={colorTheme}
@@ -152,7 +163,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
             ref={(screen) => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
-        </ScrollContents>
+        </StyledContents>
       </ScrollTouchable>
     );
   }
@@ -162,11 +173,15 @@ ViewerScrollScreen.propTypes = {
   viewerScreenSettings: PropTypes.object,
   viewerScreenTouched: PropTypes.func,
   viewerScreenScrolled: PropTypes.func,
+  isDisableComment: PropTypes.bool,
   readPosition: PropTypes.string,
   footer: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
   screenRef: PropTypes.func,
+  TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
 const mapStateToProps = state => ({
