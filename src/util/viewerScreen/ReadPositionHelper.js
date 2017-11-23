@@ -4,8 +4,8 @@ import { isExist } from '../Util';
 import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.action';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
 import {
-  selectPageViewPagination, selectViewerReadPosition,
-  selectViewerScreenSettings
+  selectViewerReadPosition,
+  selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { VIEWER_EMPTY_READ_POSITION, ViewerType } from '../../constants/ViewerScreenConstants';
 
