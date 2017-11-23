@@ -3,7 +3,10 @@ import Connector from '../Connector';
 import { isExist } from '../Util';
 import { changedReadPosition } from '../../redux/viewerScreen/ViewerScreen.action';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
-import { selectViewerReadPosition, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
+import {
+  selectPageViewPagination, selectViewerReadPosition,
+  selectViewerScreenSettings
+} from '../../redux/viewerScreen/ViewerScreen.selector';
 import { VIEWER_EMPTY_READ_POSITION, ViewerType } from '../../constants/ViewerScreenConstants';
 
 const DETECTION_TYPE = 'up'; // bottom or up
@@ -19,17 +22,36 @@ class ReadPositionHelper extends Connector {
 
   setScreenElement(screen) {
     if (isExist(screen)) {
-      const state = this.store.getState();
-      const viewerScreenSettings = selectViewerScreenSettings(state);
       this._screen = screen;
-      const width = screenWidth();
-      const height = screenHeight();
-      const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
-
-      const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
-      this._context = new Context(width, height, columnGap, false, scrollMode);
+      this._context = this.createContext();
       this._reader = new Reader(this._screen, this._context, 0);
       this.setDebugMode();
+    }
+  }
+
+  updateScreenElement(screen) {
+    if (isExist(this._reader)) {
+      this._reader.content.updateNodes(screen);
+    }
+  }
+
+  createContext() {
+    if (isExist(this._screen)) {
+      const state = this.store.getState();
+      const viewerScreenSettings = selectViewerScreenSettings(state);
+      const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
+      const width = screenWidth() - columnGap;
+      const height = screenHeight();
+      const scrollMode = (viewerScreenSettings.viewerType === ViewerType.SCROLL);
+      return new Context(width, height, columnGap, false, scrollMode);
+    }
+    return null;
+  }
+
+  invalidateContext() {
+    if (isExist(this._reader)) {
+      this._context = this.createContext();
+      this._reader.changeContext(this._context);
     }
   }
 

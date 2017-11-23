@@ -29,20 +29,21 @@ class PageCalculator extends Connector {
 
   updatePagination() {
     const { dispatch } = this.store;
-    const { currentPage } = selectPageViewPagination(this.getState());
     const width = screenWidth();
+    const { totalPage: prevTotalPage } = selectPageViewPagination(this.getState());
     const pages = document.querySelector(this._targetSelector);
-    let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width);
+    let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width) - 1;
     if (this._option.containExtraPage > 0) {
       totalPage += 1;
     }
 
-    const newPagination = {
-      totalPage,
-      currentPage: Math.min(totalPage, currentPage),
-    };
+    if (totalPage !== prevTotalPage) {
+      const newPagination = {
+        totalPage,
+      };
 
-    dispatch(calculatedPageViewer(newPagination));
+      dispatch(calculatedPageViewer(newPagination));
+    }
   }
 }
 const pageCalculator = new PageCalculator();

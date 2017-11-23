@@ -184,6 +184,9 @@ ViewerContents.defaultProps = {
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%; height: ${() => screenHeight()}px;
   .viewer_bottom {
     min-height: ${() => screenHeight()}px;
     padding: ${NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT + 10}px 0 132px 0;
@@ -205,7 +208,7 @@ const PageScreen = ViewerScreen.extend`
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageContents = ViewerContents.extend`
-  overflow: hidden;
+  // overflow: hidden;
   .pages {
     .comic_page {
       img {

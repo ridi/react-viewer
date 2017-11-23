@@ -24,8 +24,10 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { disableScrolling, screenHeight, setScrollTop } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
+import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -35,6 +37,8 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentDidMount() {
+    disableScrolling();
+    ReadPositionHelper.setScreenElement(document.querySelector(PAGE_VIEWER_SELECTOR));
     this.updatePagination(true);
     this.changeErrorImage();
     if (this.contentsComponent) {
@@ -72,9 +76,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextPage = nextProps.pageViewPagination.currentPage;
-    if (nextPage !== this.props.pageViewPagination.currentPage) {
-      setScrollTop(0);
+    const { currentPage: nextPage } = nextProps.pageViewPagination;
+    if (ViewerHelper.haveToSlideToPage(nextPage)) {
+      ViewerHelper.slideToPage(nextPage);
       this.updatePagination();
     }
   }
@@ -97,6 +101,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     const { currentPage } = pageViewPagination;
     new AsyncTask(() => {
       setScrollTop(0);
+      ReadPositionHelper.invalidateContext();
       PageCalculator.updatePagination();
       if (!PageCalculator.isEndingPage(currentPage)) {
         if (restore) {
@@ -136,13 +141,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
-  }
-
-  onScreenRef(ref) {
-    const { screenRef } = this.props;
-    if (isExist(screenRef)) {
-      screenRef(ref);
-    }
   }
 
   onLeftTouched() {
@@ -220,13 +218,14 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         >
           <Pages
             className="pages"
-            dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
             innerRef={(comp) => {
-              this.onScreenRef(comp);
+            //   this.onScreenRef(comp);
               this.pagesComponent = comp;
             }}
-          />
+          >
+            <div style={{ marginBottom: `${screenHeight() - 1}px` }} dangerouslySetInnerHTML={{ __html: viewData }} />
+          </Pages>
         </StyledContents>
       </PageTouchable>
     );

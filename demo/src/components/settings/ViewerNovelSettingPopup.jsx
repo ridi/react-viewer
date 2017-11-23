@@ -49,10 +49,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateViewerScreenSettings: (changedSettings) => {
-    dispatch(viewerScreenSettingChanged(changedSettings));
-    PageCalculator.updatePagination();
-  },
+  updateViewerScreenSettings: changedSettings => dispatch(viewerScreenSettingChanged(changedSettings)),
 });
 
 export default connect(

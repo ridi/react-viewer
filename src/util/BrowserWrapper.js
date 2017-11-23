@@ -3,12 +3,8 @@ export const screenWidth = () => window.innerWidth;
 
 export const screenHeight = () => window.innerHeight;
 
-export const scrollTop = () => {
-  if (document.scrollingElement) {
-    return document.scrollingElement.scrollTop;
-  }
-  return document.documentElement.scrollTop || document.body.scrollTop;
-};
+export const scrollTop = () => window.pageYOffset;
+export const scrollLeft = () => window.pageXOffset;
 
 export const scrollHeight = () => {
   if (document.scrollingElement) {
@@ -23,6 +19,23 @@ export const setScrollTop = (top) => {
   } else {
     document.body.scrollTop = top;
     document.documentElement.scrollTop = top;
+  }
+};
+
+export const scrollTo = (x, y) => window.scrollTo(x, y);
+export const disableScrolling = () => {
+  if (document.scrollingElement) {
+    document.scrollingElement.style.overflow = 'hidden';
+  } else {
+    document.documentElement.style.overflow = 'hidden';
+  }
+};
+
+export const enableScrolling = () => {
+  if (document.scrollingElement) {
+    document.scrollingElement.style.overflow = 'auto';
+  } else {
+    document.documentElement.style.overflow = 'auto';
   }
 };
 

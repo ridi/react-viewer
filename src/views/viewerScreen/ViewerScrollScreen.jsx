@@ -24,13 +24,17 @@ import { debounce, isExist } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
+  enableScrolling,
   setScrollTop,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 
 
 class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
+    enableScrolling();
+    ReadPositionHelper.setScreenElement(document.querySelector(SCROLL_VIEWER_SELECTOR));
     this.restorePosition();
     this.addScrollEvent();
     this.changeErrorImage();
@@ -103,13 +107,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     ReadPositionHelper.dispatchChangedReadPosition();
   }
 
-  onScreenRef(ref) {
-    const { screenRef } = this.props;
-    if (isExist(screenRef)) {
-      screenRef(ref);
-    }
-  }
-
   render() {
     const {
       contentType,
@@ -148,7 +145,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         SizingWrapper={SizingWrapper}
       >
         <StyledContents
-          id="contents"
+          id="viewer_scroll_contents"
           contentType={contentType}
           className={colorTheme}
           fontSizeLevel={fontSizeLevel}
@@ -159,8 +156,8 @@ class ViewerScrollScreen extends ViewerBaseScreen {
           fontDomain={fontDomain}
         >
           <div
+            className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
-            ref={(screen) => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
         </StyledContents>
