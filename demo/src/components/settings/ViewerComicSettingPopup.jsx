@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { viewerScreenSettingChanged, PageCalculator } from '../../../../lib/index';
+import { viewerScreenSettingChanged } from '../../../../lib/index';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
