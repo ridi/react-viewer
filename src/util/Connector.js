@@ -1,5 +1,4 @@
-import { isExist } from './Util';
-
+import { isExist, updateObject } from './Util';
 
 class Connector {
   constructor() {
@@ -8,7 +7,8 @@ class Connector {
 
   connect(store, options = {}) {
     this.store = store;
-    this.options = options;
+
+    this._options = updateObject(this._options, options);
     this.afterConnected();
   }
 

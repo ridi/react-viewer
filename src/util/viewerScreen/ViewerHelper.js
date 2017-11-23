@@ -15,7 +15,7 @@ class ViewerHelper extends Connector {
       paddingTop = DEFAULT_PADDING_TOP,
       pageMaxWidth = PAGE_MAX_WIDTH,
       pageViewerSelector = PAGE_VIEWER_SELECTOR,
-    } = this.options;
+    } = this._options;
 
     this._targetSelector = pageViewerSelector;
     this._paddingTop = paddingTop;
@@ -69,7 +69,7 @@ class ViewerHelper extends Connector {
     };
   }
 
-  haveToSlideToPage(nextPage) {
+  shouldSlideToPage(nextPage) {
     const { getState } = this.store;
     const pageView = selectPageViewPagination(getState());
     const { totalPage } = pageView;

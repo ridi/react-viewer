@@ -43,4 +43,5 @@ export default {
   pageViewCurrentPage: () => ['pageView', 'calculatedPage', 'currentPage'],
   pageViewReadProcess: () => ['pageView', 'calculatedPage', 'readProcess'],
   viewerScreenSettings: () => ['viewerScreenSettings'],
+  viewerScreenColorTheme: () => ['viewerScreenSettings', 'colorTheme'],
 };

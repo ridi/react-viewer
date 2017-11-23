@@ -24,7 +24,7 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
-import { disableScrolling, screenHeight, setScrollTop } from '../../util/BrowserWrapper';
+import { disableScrolling, screenHeight } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
@@ -39,7 +39,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   componentDidMount() {
     disableScrolling();
     ReadPositionHelper.setScreenElement(document.querySelector(PAGE_VIEWER_SELECTOR));
-    this.updatePagination(true);
+    PageCalculator.updatePagination(true);
     this.changeErrorImage();
     if (this.contentsComponent) {
       preventScrollEvent(this.contentsComponent);
@@ -48,19 +48,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       preventScrollEvent(this.pagesComponent);
     }
     window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-  }
-
-  restorePosition() {
-    const { readPosition, movePageViewer } = this.props;
-
-    if (this.checkEmptyPosition()) {
-      return;
-    }
-
-    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
-    if (isExist(offset)) {
-      movePageViewer(offset + 1);
-    }
   }
 
   componentWillUnmount() {
@@ -77,9 +64,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
 
   componentWillReceiveProps(nextProps) {
     const { currentPage: nextPage } = nextProps.pageViewPagination;
-    if (ViewerHelper.haveToSlideToPage(nextPage)) {
+    if (ViewerHelper.shouldSlideToPage(nextPage)) {
       ViewerHelper.slideToPage(nextPage);
-      this.updatePagination();
+      PageCalculator.updatePagination();
     }
   }
 
@@ -96,25 +83,8 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
-  updatePagination(restore = false) {
-    const { pageViewPagination } = this.props;
-    const { currentPage } = pageViewPagination;
-    new AsyncTask(() => {
-      setScrollTop(0);
-      ReadPositionHelper.invalidateContext();
-      PageCalculator.updatePagination();
-      if (!PageCalculator.isEndingPage(currentPage)) {
-        if (restore) {
-          this.restorePosition();
-        } else {
-          ReadPositionHelper.dispatchChangedReadPosition();
-        }
-      }
-    }).start(0);
-  }
-
   resizeViewer(/* width */) {
-    new AsyncTask(() => this.updatePagination(true)).start(0);
+    new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
   }
 
   moveNextPage() {

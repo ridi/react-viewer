@@ -20,12 +20,11 @@ import {
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { debounce, isExist } from '../../util/Util';
+import { debounce } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
   enableScrolling,
-  setScrollTop,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';
@@ -35,22 +34,9 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
     enableScrolling();
     ReadPositionHelper.setScreenElement(document.querySelector(SCROLL_VIEWER_SELECTOR));
-    this.restorePosition();
+    ReadPositionHelper.restorePosition();
     this.addScrollEvent();
     this.changeErrorImage();
-  }
-
-  restorePosition() {
-    const { readPosition } = this.props;
-
-    if (this.checkEmptyPosition()) {
-      return;
-    }
-
-    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
-    if (isExist(offset)) {
-      setScrollTop(offset);
-    }
   }
 
   componentWillUnmount() {
@@ -104,7 +90,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       return;
     }
     viewerScreenScrolled();
-    ReadPositionHelper.dispatchChangedReadPosition();
+    ReadPositionHelper.updateChangedReadPosition();
   }
 
   render() {

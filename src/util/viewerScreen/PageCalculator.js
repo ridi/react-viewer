@@ -1,39 +1,32 @@
 import Connector from '../Connector';
+import ReadPositionHelper from './ReadPositionHelper';
 import { calculatedPageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
 import { selectPageViewPagination, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
-import { screenWidth } from '../BrowserWrapper';
-import { updateObject } from '../Util';
+import { screenWidth, setScrollTop } from '../BrowserWrapper';
+import AsyncTask from '../AsyncTask';
 
 class PageCalculator extends Connector {
   constructor() {
     super();
     this._targetSelector = '#viewer_page_contents .pages';
-    this._option = {
+    this._options = {
       containExtraPage: 1,
     };
   }
 
-  setOption(option) {
-    this._option = updateObject(this._option, option);
+  _getScrollMode() {
+    const viewerScreenSettings = selectViewerScreenSettings(this.store.getState());
+    return viewerScreenSettings.viewerType === ViewerType.SCROLL;
   }
 
-  isEndingPage(page) {
-    const { totalPage } = selectPageViewPagination(this.getState());
-    const { viewerType } = selectViewerScreenSettings(this.getState());
-    if (viewerType === ViewerType.PAGE && this._option.containExtraPage > 0) {
-      return page >= totalPage;
-    }
-    return false;
-  }
-
-  updatePagination() {
-    const { dispatch } = this.store;
+  _updateTotalPage() {
+    const { dispatch, getState } = this.store;
     const width = screenWidth();
-    const { totalPage: prevTotalPage } = selectPageViewPagination(this.getState());
+    const { totalPage: prevTotalPage } = selectPageViewPagination(getState());
     const pages = document.querySelector(this._targetSelector);
     let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width) - 1;
-    if (this._option.containExtraPage > 0) {
+    if (this._options.containExtraPage > 0) {
       totalPage += 1;
     }
 
@@ -44,6 +37,36 @@ class PageCalculator extends Connector {
 
       dispatch(calculatedPageViewer(newPagination));
     }
+  }
+
+  isEndingPage(page) {
+    const { totalPage } = selectPageViewPagination(this.getState());
+    const { viewerType } = selectViewerScreenSettings(this.getState());
+    if (viewerType === ViewerType.PAGE && this._options.containExtraPage > 0) {
+      return page >= totalPage;
+    }
+    return false;
+  }
+
+  updatePagination(restore = false) {
+    if (this._getScrollMode()) {
+      return;
+    }
+
+    const { getState } = this.store;
+    const { currentPage } = selectPageViewPagination(getState());
+    new AsyncTask(() => {
+      setScrollTop(0);
+      ReadPositionHelper.invalidateContext();
+      this._updateTotalPage();
+      if (!this.isEndingPage(currentPage)) {
+        if (restore) {
+          ReadPositionHelper.restorePosition();
+        } else {
+          ReadPositionHelper.updateChangedReadPosition();
+        }
+      }
+    }).start(0);
   }
 }
 const pageCalculator = new PageCalculator();
