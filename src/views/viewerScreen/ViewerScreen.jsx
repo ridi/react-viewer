@@ -48,7 +48,6 @@ const createStyledViewerScreen = ({
       if (isExist(onUnmount)) {
         onUnmount();
       }
-      ReadPositionHelper.unmountReader();
     }
 
     getScreen() {

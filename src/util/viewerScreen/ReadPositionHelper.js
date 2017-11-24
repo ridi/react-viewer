@@ -56,10 +56,13 @@ class ReadPositionHelper extends Connector {
     return this._reader.getNodeLocationOfCurrentPage();
   }
 
+  /**
+   * @deprecated
+   */
   unmountReader() {
-    if (isExist(this._reader)) {
-      this._reader.removeScrollListenerIfNeeded();
-    }
+    // if (isExist(this._reader)) {
+    //   this._reader.removeScrollListenerIfNeeded();
+    // }
   }
 
   restorePosition() {

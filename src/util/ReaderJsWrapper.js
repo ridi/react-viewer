@@ -8,11 +8,11 @@ const DETECTION_TYPE = 'up'; // bottom or up
 export default class ReaderJsWrapper {
   constructor(screen, scrollMode) {
     this._screen = screen;
-    this._context = this.createContext(scrollMode);
+    this._context = this._createContext(scrollMode);
     this._reader = new Reader(this._screen, this._context);
   }
 
-  createContext(scrollMode) {
+  _createContext(scrollMode) {
     const columnGap = Util.getStylePropertyIntValue(this._screen, 'column-gap');
     const width = screenWidth() - columnGap;
     const height = screenHeight();
@@ -20,7 +20,7 @@ export default class ReaderJsWrapper {
   }
 
   invalidateContext(scrollMode) {
-    this._context = this.createContext(scrollMode);
+    this._context = this._createContext(scrollMode);
     this._reader.changeContext(this._context);
   }
 
@@ -37,9 +37,5 @@ export default class ReaderJsWrapper {
 
   getNodeLocationOfCurrentPage() {
     return this._reader.getNodeLocationOfCurrentPage(DETECTION_TYPE);
-  }
-
-  removeScrollListenerIfNeeded() {
-    this._reader.removeScrollListenerIfNeeded();
   }
 }
