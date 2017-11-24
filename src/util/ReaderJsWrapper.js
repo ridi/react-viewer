@@ -25,8 +25,7 @@ export default class ReaderJsWrapper {
   }
 
   setDebugMode(debugMode = true) {
-    this._isDebug = debugMode;
-    this._reader.debugNodeLocation = this._isDebug;
+    this._reader.debugNodeLocation = debugMode;
   }
 
   getOffsetFromNodeLocation(location) {

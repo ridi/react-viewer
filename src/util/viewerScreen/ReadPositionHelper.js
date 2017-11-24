@@ -31,7 +31,7 @@ class ReadPositionHelper extends Connector {
   setScreenElement(screen) {
     if (isExist(screen)) {
       this._reader = new ReaderJsWrapper(screen, this._getScrollMode());
-      this.setDebugMode();
+      this.setDebugMode(this._debugMode);
     }
   }
 
@@ -41,7 +41,8 @@ class ReadPositionHelper extends Connector {
     }
   }
 
-  setDebugMode(debugMode = false) {
+  setDebugMode(debugMode = true) {
+    this._debugMode = debugMode;
     if (isExist(this._reader)) {
       this._reader.setDebugMode(debugMode);
     }
