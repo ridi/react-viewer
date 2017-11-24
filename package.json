@@ -1,8 +1,8 @@
 {
   "name": "@ridi/react-webviewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
-  "description": "React-Redux based comics viewer",
+  "description": "Web reader for novels and comics based on React and Redux",
   "main": "lib/index.js",
   "scripts": {
     "postinstall": "cd demo && npm install",
