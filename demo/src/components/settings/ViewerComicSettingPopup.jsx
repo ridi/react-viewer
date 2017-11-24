@@ -1,55 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { viewerScreenSettingChanged, PageCalculator } from '../../../../lib/index';
-import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
 import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
+import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
 
-
-const ViewerComicSettingPopup = ({ content, isVisibleSettingPopup, updateViewerScreenSettings }) => (
-  <div
-    id="setting_popup"
-    className={`${isVisibleSettingPopup ? 'active' : ''} android_setting_popup`}
-  >
-    <h2 className="indent_hidden">보기설정 팝업</h2>
-    <ul className="setting_group">
-      <ThemeSetting
-        onChanged={colorTheme => updateViewerScreenSettings({ colorTheme })}
-      />
-      <ViewerTypeSetting
-        onChanged={viewerType => updateViewerScreenSettings({ viewerType })}
-        contentViewerType={content.viewer_type}
-      />
-      {ViewerComicSpinType.toList().map(item => (
-        <ComicSpineSetting
-          item={item}
-          key={item}
-          onChanged={changedSetting => updateViewerScreenSettings(changedSetting)}
+class ViewerComicSettingPopup extends BaseSettingPopup {
+  renderSettings() {
+    const { content } = this.props;
+    return (
+      <ul className="setting_group">
+        <ThemeSetting
+          onChanged={colorTheme => this.onSettingChanged({ colorTheme })}
         />
-      ))}
-    </ul>
-  </div>
-);
+        <ViewerTypeSetting
+          onChanged={viewerType => this.onSettingChanged({ viewerType })}
+          contentViewerType={content.viewer_type}
+        />
+        {ViewerComicSpinType.toList().map(item => (
+          <ComicSpineSetting
+            item={item}
+            key={item}
+            onChanged={changedSetting => this.onSettingChanged(changedSetting)}
+          />
+        ))}
+      </ul>
+    );
+  }
+}
 
 ViewerComicSettingPopup.propTypes = {
   content: PropTypes.object.isRequired,
-  isVisibleSettingPopup: PropTypes.bool.isRequired,
-  updateViewerScreenSettings: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = state => ({
-  isVisibleSettingPopup: selectIsVisibleSettingPopup(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  updateViewerScreenSettings: (changedSettings) => {
-    dispatch(viewerScreenSettingChanged(changedSettings));
-    PageCalculator.updatePagination();
-  },
-});
 
 export default connect(
   mapStateToProps,

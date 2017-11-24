@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { documentClientWidth, documentClientHeight } from '../BrowserWrapper';
+import { documentClientWidth, documentClientHeight, scrollTo, scrollLeft } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_TOP,
   MAX_PADDING_LEVEL,
@@ -9,14 +9,13 @@ import {
   PAGE_VIEWER_SELECTOR,
 } from '../../constants/StyledConstants';
 
-
 class ViewerHelper extends Connector {
   afterConnected() {
     const {
       paddingTop = DEFAULT_PADDING_TOP,
       pageMaxWidth = PAGE_MAX_WIDTH,
       pageViewerSelector = PAGE_VIEWER_SELECTOR,
-    } = this.options;
+    } = this._options;
 
     this._targetSelector = pageViewerSelector;
     this._paddingTop = paddingTop;
@@ -30,12 +29,8 @@ class ViewerHelper extends Connector {
   }
 
   getPageStyle(paddingLevel) {
-    const { getState } = this.store;
     const width = documentClientWidth();
     const height = documentClientHeight();
-    const pageView = selectPageViewPagination(getState());
-
-    const { currentPage } = pageView;
 
     const maxGap = width > this._pageMaxWidth ? ((width - this._pageMaxWidth) / 2) : 0;
     const paddingHorizontal = parseInt(width * 0.01 * (MAX_PADDING_LEVEL - paddingLevel), 10);
@@ -54,18 +49,12 @@ class ViewerHelper extends Connector {
       paddingRight: paddingHorizontal,
       boxSizing: 'border-box',
       height,
-      WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
-      transform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
     };
   }
 
   getComicPageStyle() {
-    const { getState } = this.store;
     const width = documentClientWidth();
     const height = documentClientHeight();
-    const pageView = selectPageViewPagination(getState());
-
-    const { currentPage } = pageView;
 
     return {
       WebkitColumnWidth: `${width}px`,
@@ -77,9 +66,19 @@ class ViewerHelper extends Connector {
       paddingLeft: 0,
       paddingRight: 0,
       height,
-      WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
-      transform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
     };
+  }
+
+  shouldSlideToPage(nextPage) {
+    const { getState } = this.store;
+    const pageView = selectPageViewPagination(getState());
+    const { totalPage } = pageView;
+    return totalPage > nextPage && (nextPage - 1) * documentClientWidth() !== scrollLeft();
+  }
+
+  slideToPage(nextPage) {
+    const leftOffset = (nextPage - 1) * documentClientWidth();
+    scrollTo(leftOffset, 0);
   }
 }
 const viewerHelper = new ViewerHelper();

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
 import { AvailableViewerType, ContentType } from '../../constants/ContentConstants';
-import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import ViewerPageScreen from './ViewerPageScreen';
 import ViewerScrollScreen from './ViewerScrollScreen';
 import ViewerComicPageScreen from './ViewerComicPageScreen';
@@ -48,7 +47,6 @@ const createStyledViewerScreen = ({
       if (isExist(onUnmount)) {
         onUnmount();
       }
-      ReadPositionHelper.unmountReader();
     }
 
     getScreen() {
@@ -128,7 +126,7 @@ const createStyledViewerScreen = ({
           ref={(screen) => {
             this.screen = screen && screen.getWrappedInstance();
           }}
-          screenRef={el => ReadPositionHelper.setScreenElement(el)}
+          // screenRef={el => {} /* ReadPositionHelper.setScreenElement(el) */}
           onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
           footer={this.props.footer}
           fontDomain={this.props.fontDomain}

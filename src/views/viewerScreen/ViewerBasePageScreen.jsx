@@ -24,8 +24,10 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { disableScrolling, screenHeight } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
+import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
@@ -35,7 +37,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentDidMount() {
-    this.updatePagination(true);
+    disableScrolling();
+    ReadPositionHelper.setScreenElement(document.querySelector(PAGE_VIEWER_SELECTOR));
+    PageCalculator.updatePagination(true);
     this.changeErrorImage();
     if (this.contentsComponent) {
       preventScrollEvent(this.contentsComponent);
@@ -44,19 +48,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       preventScrollEvent(this.pagesComponent);
     }
     window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewerFunc);
-  }
-
-  restorePosition() {
-    const { readPosition, movePageViewer } = this.props;
-
-    if (this.checkEmptyPosition()) {
-      return;
-    }
-
-    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
-    if (isExist(offset)) {
-      movePageViewer(offset + 1);
-    }
   }
 
   componentWillUnmount() {
@@ -72,10 +63,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   componentWillReceiveProps(nextProps) {
-    const nextPage = nextProps.pageViewPagination.currentPage;
-    if (nextPage !== this.props.pageViewPagination.currentPage) {
-      setScrollTop(0);
-      this.updatePagination();
+    const { currentPage: nextPage } = nextProps.pageViewPagination;
+    if (ViewerHelper.shouldSlideToPage(nextPage)) {
+      ViewerHelper.slideToPage(nextPage);
+      PageCalculator.updatePagination();
     }
   }
 
@@ -92,24 +83,8 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
-  updatePagination(restore = false) {
-    const { pageViewPagination } = this.props;
-    const { currentPage } = pageViewPagination;
-    new AsyncTask(() => {
-      setScrollTop(0);
-      PageCalculator.updatePagination();
-      if (!PageCalculator.isEndingPage(currentPage)) {
-        if (restore) {
-          this.restorePosition();
-        } else {
-          ReadPositionHelper.dispatchChangedReadPosition();
-        }
-      }
-    }).start(0);
-  }
-
   resizeViewer(/* width */) {
-    new AsyncTask(() => this.updatePagination(true)).start(0);
+    new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
   }
 
   moveNextPage() {
@@ -136,13 +111,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       return;
     }
     movePageViewer(nextPage);
-  }
-
-  onScreenRef(ref) {
-    const { screenRef } = this.props;
-    if (isExist(screenRef)) {
-      screenRef(ref);
-    }
   }
 
   onLeftTouched() {
@@ -206,7 +174,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         viewerType={viewerType}
       >
         <StyledContents
-          id="viewer_page_contents"
+          id="viewer_contents"
           content={contentType}
           className={colorTheme}
           fontSizeLevel={fontSizeLevel}
@@ -220,13 +188,14 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         >
           <Pages
             className="pages"
-            dangerouslySetInnerHTML={{ __html: viewData }}
             style={this.pageViewStyle()}
             innerRef={(comp) => {
-              this.onScreenRef(comp);
+            //   this.onScreenRef(comp);
               this.pagesComponent = comp;
             }}
-          />
+          >
+            <div style={{ marginBottom: `${screenHeight() - 1}px` }} dangerouslySetInnerHTML={{ __html: viewData }} />
+          </Pages>
         </StyledContents>
       </PageTouchable>
     );

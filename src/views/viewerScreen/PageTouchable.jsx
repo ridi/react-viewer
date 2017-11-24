@@ -7,12 +7,13 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
+import { documentClientWidth } from '../../util/BrowserWrapper';
 
 
 class PageTouchable extends Component {
   onTouchScreenHandle(e) {
-    const xPos = e.nativeEvent.pageX;
-    const width = document.body.clientWidth;
+    const xPos = e.clientX;
+    const width = documentClientWidth();
 
     const {
       isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
@@ -50,28 +51,35 @@ class PageTouchable extends Component {
     const isEndingScreen = PageCalculator.isEndingPage(pagination.currentPage);
 
     return (
-      <TouchableScreen
-        innerRef={(pages) => {
-          if (isEndingScreen) {
-            removeScrollEvent(pages);
-          } else {
-            preventScrollEvent(pages);
-          }
-        }}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.onTouchScreenHandle(e);
-        }}
-      >
-        {isEndingScreen && footer ? footer : null}
+      <div>
+        {
+          // As the page movement method is changed from css translate to scroll control,
+          // a fixed touchable area that doesn't move away according to scrolled position is needed,
+          // so that `TouchableScreen` cannot maintain the form of wrapping the `SizingWrapper` no more.
+        }
+        <TouchableScreen
+          innerRef={(pages) => {
+            if (isEndingScreen) {
+              removeScrollEvent(pages);
+            } else {
+              preventScrollEvent(pages);
+            }
+          }}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.onTouchScreenHandle(e);
+          }}
+        >
+          {isEndingScreen && footer ? footer : null}
+        </TouchableScreen>
         <SizingWrapper
           contentType={contentType}
           viewerType={viewerType}
         >
           {children}
         </SizingWrapper>
-      </TouchableScreen>
+      </div>
     );
   }
 }
@@ -81,7 +89,7 @@ PageTouchable.propTypes = {
   onRightTouched: PropTypes.func,
   onMiddleTouched: PropTypes.func,
   contentType: PropTypes.number,
-  viewerType: PropTypes.number,
+  viewerType: PropTypes.string,
   footer: PropTypes.node,
   pagination: PropTypes.shape({ currentPage: PropTypes.number }),
   isFullScreen: PropTypes.bool,
