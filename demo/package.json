@@ -1,8 +1,8 @@
 {
   "name": "@ridi/react-webviewer-demo",
-  "version": "0.1.5",
+  "version": "0.2.1",
   "license": "MIT",
-  "description": "React-Redux based comics viewer demo page",
+  "description": "react-webviewer demo app",
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix --ext .js,.jsx ./src/",
