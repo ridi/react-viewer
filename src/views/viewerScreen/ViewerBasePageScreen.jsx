@@ -174,7 +174,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
         viewerType={viewerType}
       >
         <StyledContents
-          id="viewer_page_contents"
+          id="viewer_contents"
           content={contentType}
           className={colorTheme}
           fontSizeLevel={fontSizeLevel}

@@ -5,11 +5,12 @@ import { selectPageViewPagination, selectViewerScreenSettings } from '../../redu
 import { ViewerType } from '../../constants/ViewerScreenConstants';
 import { screenWidth, setScrollTop } from '../BrowserWrapper';
 import AsyncTask from '../AsyncTask';
+import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 
 class PageCalculator extends Connector {
   constructor() {
     super();
-    this._targetSelector = '#viewer_page_contents .pages';
+    this._targetSelector = PAGE_VIEWER_SELECTOR;
     this._options = {
       containExtraPage: 1,
     };

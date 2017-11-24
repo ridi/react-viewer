@@ -131,7 +131,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         SizingWrapper={SizingWrapper}
       >
         <StyledContents
-          id="viewer_scroll_contents"
+          id="viewer_contents"
           contentType={contentType}
           className={colorTheme}
           fontSizeLevel={fontSizeLevel}

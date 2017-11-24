@@ -6156,7 +6156,7 @@ body.white_theme .theme_select_button.korean_paper_theme_button .theme_check_ico
     fill: #868a8e
 }
 
-body.white_theme #contents, body.white_theme #contents *, body.white_theme #viewer_page_contents, body.white_theme #viewer_page_contents * {
+body.white_theme #contents, body.white_theme #contents *, body.white_theme #viewer_contents, body.white_theme #viewer_contents * {
     color: #000
 }
 
@@ -6467,7 +6467,7 @@ body.sepia_theme .theme_select_button.korean_paper_theme_button .theme_check_ico
     fill: #868a8e
 }
 
-body.sepia_theme #contents, body.sepia_theme #contents *, body.sepia_theme #viewer_page_contents, body.sepia_theme #viewer_page_contents, body.sepia_theme #viewer_scroll_contents, body.sepia_theme #viewer_scroll_contents * {
+body.sepia_theme #contents, body.sepia_theme #contents *, body.sepia_theme #viewer_contents, body.sepia_theme #viewer_contents, body.sepia_theme #viewer_scroll_contents, body.sepia_theme #viewer_scroll_contents * {
     color: #3e2917
 }
 
@@ -6782,7 +6782,7 @@ body.ios_sepia_theme .theme_select_button.korean_paper_theme_button .theme_check
     fill: #868a8e
 }
 
-body.ios_sepia_theme #contents, body.ios_sepia_theme #contents *, body.ios_sepia_theme #viewer_page_contents, body.ios_sepia_theme #viewer_page_contents * {
+body.ios_sepia_theme #contents, body.ios_sepia_theme #contents *, body.ios_sepia_theme #viewer_contents, body.ios_sepia_theme #viewer_contents * {
     color: #32312f
 }
 
@@ -7097,7 +7097,7 @@ body.blackboard_theme .theme_select_button.korean_paper_theme_button .theme_chec
     fill: #868a8e
 }
 
-body.blackboard_theme #contents, body.blackboard_theme #contents *, body.blackboard_theme #viewer_page_contents, body.blackboard_theme #viewer_page_contents * {
+body.blackboard_theme #contents, body.blackboard_theme #contents *, body.blackboard_theme #viewer_contents, body.blackboard_theme #viewer_contents * {
     color: #bec7c6
 }
 
@@ -7474,7 +7474,7 @@ body.darkgray_theme .theme_select_button.korean_paper_theme_button .theme_check_
     fill: #868a8e
 }
 
-body.darkgray_theme #contents, body.darkgray_theme #contents *, body.darkgray_theme #viewer_page_contents, body.darkgray_theme #viewer_page_contents * {
+body.darkgray_theme #contents, body.darkgray_theme #contents *, body.darkgray_theme #viewer_contents, body.darkgray_theme #viewer_contents * {
     color: #9a9a99
 }
 
@@ -7851,7 +7851,7 @@ body.black_theme .theme_select_button.korean_paper_theme_button .theme_check_ico
     fill: #868a8e
 }
 
-body.black_theme #contents, body.black_theme #contents *, body.black_theme #viewer_page_contents, body.black_theme #viewer_page_contents * {
+body.black_theme #contents, body.black_theme #contents *, body.black_theme #viewer_contents, body.black_theme #viewer_contents * {
     color: #bebebe
 }
 
@@ -8229,7 +8229,7 @@ body.paper_theme .theme_select_button.korean_paper_theme_button .theme_check_ico
     fill: #868a8e
 }
 
-body.paper_theme #contents, body.paper_theme #contents *, body.paper_theme #viewer_page_contents, body.paper_theme #viewer_page_contents * {
+body.paper_theme #contents, body.paper_theme #contents *, body.paper_theme #viewer_contents, body.paper_theme #viewer_contents * {
     color: #3e2917
 }
 
@@ -8545,7 +8545,7 @@ body.korean_paper_theme .theme_select_button.korean_paper_theme_button .theme_ch
     fill: #868a8e
 }
 
-body.korean_paper_theme #contents, body.korean_paper_theme #contents *, body.korean_paper_theme #viewer_page_contents, body.korean_paper_theme #viewer_page_contents * {
+body.korean_paper_theme #contents, body.korean_paper_theme #contents *, body.korean_paper_theme #viewer_contents, body.korean_paper_theme #viewer_contents * {
     color: #3e2917
 }
 

@@ -23,7 +23,6 @@ const onScreenScrolled = state => new ReducerBuilder(state)
 
 const calculatedPageViewer = (state, action) => new ReducerBuilder(state)
   .set(path.pageViewTotalPage(), action.page.totalPage)
-  // .set(path.pageViewCurrentPage(), Math.max(0, action.page.currentPage))
   .build();
 
 const movePageViewer = (state, action) => {
