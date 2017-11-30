@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ViewerType } from '../../constants/ViewerScreenConstants';
 
 const ScrollTouchable = (props) => {
   const {
@@ -34,7 +35,7 @@ ScrollTouchable.propTypes = {
   children: PropTypes.node,
   onTouched: PropTypes.func,
   contentType: PropTypes.number,
-  viewerType: PropTypes.number,
+  viewerType: PropTypes.oneOf(ViewerType.toList()),
   footer: PropTypes.node,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,

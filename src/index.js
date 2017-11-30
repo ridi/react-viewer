@@ -91,7 +91,7 @@ export {
   selectContentType, // meta data 중 contentType 을 가져온다.
   selectViewerType, // meta data 중 viewerType 을 가져온다.
   selectBindingType, // meta data 중 bindingType 을 가져온다.
-  selectPageViewPagination, // page view 상태에서 pagination 데이터를 가져온다. (totalPage, currentPage, readProcess)
+  selectPageViewPagination, // page view 상태에서 pagination 데이터를 가져온다. (totalPage, currentPage)
   selectIsFullScreen, // header 와 footer 가 비활성화된 full screen 상태인지 여부를 가져온다.
   selectIsLoadingCompleted, // spine 의 로딩 완료 여부를 가져온다.
   selectViewerScreenSettings, // 뷰어 세팅값들을 가져온다.
