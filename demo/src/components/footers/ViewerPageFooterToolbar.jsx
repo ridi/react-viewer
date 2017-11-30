@@ -65,7 +65,6 @@ ViewerPageFooterToolbar.propTypes = {
   pageViewPagination: PropTypes.shape({
     currentPage: PropTypes.number,
     totalPage: PropTypes.number,
-    readProcess: PropTypes.number,
   }).isRequired,
   isDisableComment: PropTypes.bool,
   movePageViewer: PropTypes.func.isRequired,
