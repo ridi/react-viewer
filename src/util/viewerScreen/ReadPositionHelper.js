@@ -16,8 +16,7 @@ class ReadPositionHelper extends Connector {
   }
 
   _getScrollMode() {
-    const state = this.store.getState();
-    const viewerScreenSettings = selectViewerScreenSettings(state);
+    const viewerScreenSettings = selectViewerScreenSettings(this.getState());
     return viewerScreenSettings.viewerType === ViewerType.SCROLL;
   }
 
@@ -57,26 +56,24 @@ class ReadPositionHelper extends Connector {
   }
 
   restorePosition() {
-    const { dispatch, getState } = this.store;
-    const readPosition = selectViewerReadPosition(getState());
+    const readPosition = selectViewerReadPosition(this.getState());
 
     const offset = this._getOffsetByNodeLocation(readPosition);
     if (isExist(offset)) {
       if (this._getScrollMode()) {
         setScrollTop(offset);
       } else {
-        dispatch(movePageViewer(offset + 1));
+        this.dispatch(movePageViewer(offset + 1));
       }
     }
   }
 
   updateChangedReadPosition() {
     const readPosition = this.getNodeLocation();
-    const { dispatch, getState } = this.store;
-    const originPosition = selectViewerReadPosition(getState());
+    const originPosition = selectViewerReadPosition(this.getState());
 
     if (isExist(readPosition) && readPosition !== VIEWER_EMPTY_READ_POSITION && readPosition !== originPosition) {
-      dispatch(changedReadPosition(readPosition));
+      this.dispatch(changedReadPosition(readPosition));
     }
   }
 }

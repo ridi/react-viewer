@@ -3,6 +3,7 @@ import { updateObject } from '../util/Util';
 
 
 export const VIEWER_EMPTY_READ_POSITION = '-1#-1';
+export const INVALID_PAGE = -1;
 
 const _ViewerThemeType = {
   WHITE: 'white_theme',
