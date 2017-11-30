@@ -1,8 +1,8 @@
 import Connector from '../Connector';
 import ReadPositionHelper from './ReadPositionHelper';
-import { calculatedPageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
+import { calculatedPageViewer, movePageViewer } from '../../redux/viewerScreen/ViewerScreen.action';
 import { selectPageViewPagination, selectViewerScreenSettings } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { ViewerType } from '../../constants/ViewerScreenConstants';
+import { ViewerType, INVALID_PAGE } from '../../constants/ViewerScreenConstants';
 import { screenWidth, setScrollTop } from '../BrowserWrapper';
 import AsyncTask from '../AsyncTask';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
@@ -16,15 +16,18 @@ class PageCalculator extends Connector {
     };
   }
 
+  afterConnected() {
+    this.updatePagination();
+  }
+
   _getScrollMode() {
-    const viewerScreenSettings = selectViewerScreenSettings(this.store.getState());
+    const viewerScreenSettings = selectViewerScreenSettings(this.getState());
     return viewerScreenSettings.viewerType === ViewerType.SCROLL;
   }
 
   _updateTotalPage() {
-    const { dispatch, getState } = this.store;
     const width = screenWidth();
-    const { totalPage: prevTotalPage } = selectPageViewPagination(getState());
+    const { totalPage: prevTotalPage } = selectPageViewPagination(this.getState());
     const pages = document.querySelector(this._targetSelector);
     let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width) - 1;
     if (this._options.containExtraPage > 0) {
@@ -36,14 +39,15 @@ class PageCalculator extends Connector {
         totalPage,
       };
 
-      dispatch(calculatedPageViewer(newPagination));
+      this.dispatch(calculatedPageViewer(newPagination));
     }
+    return totalPage;
   }
 
   isEndingPage(page) {
     const { totalPage } = selectPageViewPagination(this.getState());
     const { viewerType } = selectViewerScreenSettings(this.getState());
-    if (viewerType === ViewerType.PAGE && this._options.containExtraPage > 0) {
+    if (totalPage !== INVALID_PAGE && viewerType === ViewerType.PAGE && this._options.containExtraPage > 0) {
       return page >= totalPage;
     }
     return false;
@@ -51,21 +55,24 @@ class PageCalculator extends Connector {
 
   updatePagination(restore = false) {
     if (this._getScrollMode()) {
+      this.dispatch(calculatedPageViewer(INVALID_PAGE));
       return;
     }
 
-    const { getState } = this.store;
-    const { currentPage } = selectPageViewPagination(getState());
+    const { currentPage } = selectPageViewPagination(this.getState());
+    const isEndingPage = this.isEndingPage(currentPage);
     new AsyncTask(() => {
       setScrollTop(0);
       ReadPositionHelper.invalidateContext();
-      this._updateTotalPage();
-      if (!this.isEndingPage(currentPage)) {
+      const totalPage = this._updateTotalPage();
+      if (!isEndingPage) {
         if (restore) {
           ReadPositionHelper.restorePosition();
         } else {
           ReadPositionHelper.updateChangedReadPosition();
         }
+      } else {
+        this.dispatch(movePageViewer(totalPage));
       }
     }).start(0);
   }

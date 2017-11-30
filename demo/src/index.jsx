@@ -39,6 +39,8 @@ ViewerHelper.connect(store);
 PageCalculator.connect(store);
 ReadPositionHelper.connect(store);
 
+window.setDebugMode = ReadPositionHelper.setDebugMode.bind(ReadPositionHelper);
+
 class DemoViewer extends Component {
   componentWillMount() {
     const {
