@@ -70,8 +70,7 @@ class ViewerHelper extends Connector {
   }
 
   shouldSlideToPage(nextPage) {
-    const { getState } = this.store;
-    const pageView = selectPageViewPagination(getState());
+    const pageView = selectPageViewPagination(this.getState());
     const { totalPage } = pageView;
     return totalPage > nextPage && (nextPage - 1) * documentClientWidth() !== scrollLeft();
   }

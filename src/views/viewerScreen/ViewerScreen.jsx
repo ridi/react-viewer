@@ -154,7 +154,7 @@ const createStyledViewerScreen = ({
     ignoreScroll: PropTypes.bool,
     isLoadingCompleted: PropTypes.bool,
     viewerScreenSettings: PropTypes.object,
-    viewerType: PropTypes.oneOf(ViewerType.toList()),
+    viewerType: PropTypes.oneOf(AvailableViewerType.toList()),
     contentType: PropTypes.oneOf(ContentType.toList()),
   };
 

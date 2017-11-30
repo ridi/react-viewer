@@ -18,9 +18,9 @@ class Connector {
     return isExist(this.store);
   }
 
-  getDispatch() {
+  dispatch(action) {
     this.throwIfNotConnected();
-    return this.store.dispatch;
+    return this.store.dispatch(action);
   }
 
   getState() {

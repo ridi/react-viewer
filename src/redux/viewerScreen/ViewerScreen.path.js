@@ -1,6 +1,11 @@
 import { AvailableViewerType, BindingType, ContentType } from '../../constants/ContentConstants';
-import { VIEWER_EMPTY_READ_POSITION, ViewerFontType, ViewerThemeType, ViewerType } from '../../constants/ViewerScreenConstants';
-
+import {
+  VIEWER_EMPTY_READ_POSITION,
+  INVALID_PAGE,
+  ViewerFontType,
+  ViewerThemeType,
+  ViewerType,
+} from '../../constants/ViewerScreenConstants';
 
 export const initialState = {
   spines: {},
@@ -13,8 +18,7 @@ export const initialState = {
   pageView: {
     calculatedPage: {
       currentPage: 1,
-      totalPage: 1,
-      readProcess: 0,
+      totalPage: INVALID_PAGE,
     },
   },
   viewerScreenSettings: {
@@ -41,7 +45,6 @@ export default {
   pageViewPagination: () => ['pageView', 'calculatedPage'],
   pageViewTotalPage: () => ['pageView', 'calculatedPage', 'totalPage'],
   pageViewCurrentPage: () => ['pageView', 'calculatedPage', 'currentPage'],
-  pageViewReadProcess: () => ['pageView', 'calculatedPage', 'readProcess'],
   viewerScreenSettings: () => ['viewerScreenSettings'],
   viewerScreenColorTheme: () => ['viewerScreenSettings', 'colorTheme'],
 };
