@@ -12,8 +12,10 @@ import { documentClientWidth } from '../../util/BrowserWrapper';
 
 class PageTouchable extends Component {
   onTouchScreenHandle(e) {
-    const xPos = e.clientX;
+    // const xPos = e.clientX;
     const width = documentClientWidth();
+    // chrome 47, 49-59, 61 event.clientX value issue
+    const xPos = e.clientX % width;
 
     const {
       isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
