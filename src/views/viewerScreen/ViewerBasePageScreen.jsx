@@ -24,7 +24,7 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
-import { disableScrolling, screenHeight } from '../../util/BrowserWrapper';
+import { disableScrolling } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
