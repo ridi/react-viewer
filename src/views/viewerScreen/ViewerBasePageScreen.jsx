@@ -24,14 +24,14 @@ import {
 import ViewerBaseScreen from './ViewerBaseScreen';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
-import { setScrollTop, screenHeight } from '../../util/BrowserWrapper';
+import { setScrollTop } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
     super();
-    this.resizeViewerFunc = debounce(() => this.resizeViewer().bind(this), DOMEventDelayConstants.RESIZE);
+    this.resizeViewerFunc = debounce(() => this.resizeViewer(), DOMEventDelayConstants.RESIZE);
   }
 
   componentDidMount() {
@@ -206,7 +206,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
               this.pagesComponent = comp;
             }}
           >
-            <div style={{ marginBottom: `${screenHeight() - 1}px` }} dangerouslySetInnerHTML={{ __html: viewData }} />
+            <div className="page_contents" dangerouslySetInnerHTML={{ __html: viewData }} />
           </Pages>
         </StyledContents>
       </PageTouchable>

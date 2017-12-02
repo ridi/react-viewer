@@ -55,7 +55,7 @@ class PageCalculator extends Connector {
 
   updatePagination(restore = false) {
     if (this._getScrollMode()) {
-      this.dispatch(calculatedPageViewer(INVALID_PAGE));
+      this.dispatch(calculatedPageViewer({ totalPage: INVALID_PAGE }));
       return;
     }
 

@@ -77,8 +77,7 @@ const ViewerContents = styled.section`
     src: ${props =>
     `url('${props.fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
       url('${props.fontDomain}KoPubBatangMedium.woff') format('woff'), 
-      url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`
-}
+      url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`}
   }
   @font-face {
     font-family: 'kopub_dotum';
@@ -87,8 +86,7 @@ const ViewerContents = styled.section`
     src: ${props =>
     `url('${props.fontDomain}KoPubDotumMedium.woff2') format('woff2'),
       url('${props.fontDomain}KoPubDotumMedium.woff') format('woff'),
-      url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`
-}
+      url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`}
   }
   
   * {
@@ -133,6 +131,18 @@ ViewerContents.defaultProps = {
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
+  position: fixed; left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  .left_area, .right_area {
+    position: fixed; top: 0;
+    display: block;
+    height: 100%; width: ${() => ViewerHelper.getLeftRightAreaWidth()}px;
+    background: transparent; border: 0;
+    cursor: default;
+    z-index: 1;
+  }
+  .left_area { left: 0; }
+  .right_area { right: 0; }
   .viewer_bottom {
     min-height: ${() => screenHeight()}px;
     padding: ${NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT + 10}px 0 132px 0;
@@ -162,6 +172,9 @@ const PageContents = ViewerContents.extend`
         max-width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
         max-height: ${() => screenHeight()}px;
       }
+    }
+    .page_contents {
+      margin-bottom: ${() => screenHeight() - 1}px !important;
     }
   }
 `;

@@ -24,7 +24,6 @@ import { debounce } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
-  setScrollTop,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';

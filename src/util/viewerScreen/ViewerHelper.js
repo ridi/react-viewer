@@ -6,6 +6,7 @@ import {
   MAX_PADDING_LEVEL,
   PAGE_MAX_WIDTH,
   PAGE_VIEWER_SELECTOR,
+  EXTENDED_TOUCH_WIDTH,
 } from '../../constants/StyledConstants';
 import { ContentType } from '../../constants/ContentConstants';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
@@ -16,11 +17,13 @@ class ViewerHelper extends Connector {
       paddingVertical = DEFAULT_PADDING_VERTICAL,
       pageMaxWidth = PAGE_MAX_WIDTH,
       pageViewerSelector = PAGE_VIEWER_SELECTOR,
+      extendedTouchWidth = EXTENDED_TOUCH_WIDTH,
     } = this._options;
 
     this._targetSelector = pageViewerSelector;
     this._paddingVertical = paddingVertical;
     this._pageMaxWidth = pageMaxWidth;
+    this._extendedTouchWidth = extendedTouchWidth;
   }
 
   getScrollStyle() {
@@ -138,6 +141,18 @@ class ViewerHelper extends Connector {
       default:
         return 1.70;
     }
+  }
+
+  getExtendedTouchWidth() {
+    return this._extendedTouchWidth || EXTENDED_TOUCH_WIDTH;
+  }
+
+  getLeftRightAreaWidth() {
+    const clientWidth = documentClientWidth();
+    if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
+      return ((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth();
+    }
+    return clientWidth * 0.25;
   }
 }
 const viewerHelper = new ViewerHelper();

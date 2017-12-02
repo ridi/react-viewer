@@ -7,12 +7,17 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
-import { documentClientWidth } from '../../util/BrowserWrapper';
+
+const Position = {
+  LEFT: 1,
+  MIDDLE: 2,
+  RIGHT: 3,
+};
 
 class PageTouchable extends Component {
-  onTouchScreenHandle(e) {
-    const xPos = e.clientX;
-    const width = documentClientWidth();
+  onTouchScreenHandle(e, position) {
+    e.preventDefault();
+    e.stopPropagation();
 
     const {
       isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
@@ -27,13 +32,13 @@ class PageTouchable extends Component {
       return;
     }
 
-    if (xPos < width * 0.25) {
-      onLeftTouched();
-    } else if (xPos > width * 0.75) {
-      onRightTouched();
-    } else {
-      onMiddleTouched();
-    }
+    const actions = {
+      [Position.LEFT]: onLeftTouched,
+      [Position.RIGHT]: onRightTouched,
+      [Position.MIDDLE]: onMiddleTouched,
+    };
+
+    actions[position]();
   }
 
   render() {
@@ -48,22 +53,16 @@ class PageTouchable extends Component {
     } = this.props;
 
     const isEndingScreen = PageCalculator.isEndingPage(pagination.currentPage);
-
     return (
       <TouchableScreen
         innerRef={(pages) => {
-          if (isEndingScreen) {
-            removeScrollEvent(pages);
-          } else {
-            preventScrollEvent(pages);
-          }
+          if (isEndingScreen) removeScrollEvent(pages);
+          else preventScrollEvent(pages);
         }}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.onTouchScreenHandle(e);
-        }}
+        onClick={e => this.onTouchScreenHandle(e, Position.MIDDLE)}
       >
+        {!isEndingScreen && <button className="left_area" onClick={e => this.onTouchScreenHandle(e, Position.LEFT)} />}
+        {!isEndingScreen && <button className="right_area" onClick={e => this.onTouchScreenHandle(e, Position.RIGHT)} />}
         {isEndingScreen && footer ? footer : null}
         <SizingWrapper
           contentType={contentType}
