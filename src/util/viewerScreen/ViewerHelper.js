@@ -7,7 +7,10 @@ import {
   MIN_PADDING_BOTTOM,
   PAGE_MAX_WIDTH,
   PAGE_VIEWER_SELECTOR,
+  EXTENDED_TOUCH_WIDTH,
 } from '../../constants/StyledConstants';
+import { ContentType } from '../../constants/ContentConstants';
+import { ViewerType } from '../../constants/ViewerScreenConstants';
 
 class ViewerHelper extends Connector {
   afterConnected() {
@@ -15,11 +18,13 @@ class ViewerHelper extends Connector {
       paddingTop = DEFAULT_PADDING_TOP,
       pageMaxWidth = PAGE_MAX_WIDTH,
       pageViewerSelector = PAGE_VIEWER_SELECTOR,
+      extendedTouchWidth = EXTENDED_TOUCH_WIDTH,
     } = this._options;
 
     this._targetSelector = pageViewerSelector;
     this._paddingTop = paddingTop;
     this._pageMaxWidth = pageMaxWidth;
+    this._extendedTouchWidth = extendedTouchWidth;
   }
 
   getScrollStyle() {
@@ -78,6 +83,78 @@ class ViewerHelper extends Connector {
   slideToPage(nextPage) {
     const leftOffset = (nextPage - 1) * documentClientWidth();
     scrollTo(leftOffset, 0);
+  }
+
+  getPageMaxWidth() {
+    return this._pageMaxWidth || PAGE_MAX_WIDTH;
+  }
+
+  getExtendedTouchWidth() {
+    return this._extendedTouchWidth || EXTENDED_TOUCH_WIDTH;
+  }
+
+  getLeftRightAreaWidth() {
+    const clientWidth = documentClientWidth();
+    if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
+      return ((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth();
+    }
+    return clientWidth * 0.25;
+  }
+
+  getNovelPadding(level) {
+    const paddingValue = 7 - Number(level);
+    return `0 ${paddingValue}% 80px ${paddingValue}%`;
+  }
+
+  getComicPadding() { return '0'; }
+
+  getComicWidth(level) {
+    return (Number(level) * 10) + 40;
+  }
+
+  getMaxWidth(contentType, viewerType) {
+    if (contentType === ContentType.WEB_NOVEL || viewerType === ViewerType.SCROLL) {
+      return `${this.getPageMaxWidth()}px`;
+    }
+    return 'none';
+  }
+
+  getFontSize(level) {
+    const fontSizeUnit = 15;
+    switch (Number(level)) {
+      case 1: return fontSizeUnit * 0.8;
+      case 2: return fontSizeUnit * 0.85;
+      case 3: return fontSizeUnit * 0.9;
+      case 4: return fontSizeUnit * 0.95;
+      case 5: return fontSizeUnit;
+      case 6: return fontSizeUnit * 1.15;
+      case 7: return fontSizeUnit * 1.25;
+      case 8: return fontSizeUnit * 1.4;
+      case 9: return fontSizeUnit * 1.6;
+      case 10: return fontSizeUnit * 1.8;
+      case 11: return fontSizeUnit * 2.0;
+      case 12: return fontSizeUnit * 2.3;
+      default: return fontSizeUnit;
+    }
+  }
+
+  getNovelLineHeight(level) {
+    switch (level) {
+      case 1:
+        return 1.35;
+      case 2:
+        return 1.51;
+      case 3:
+        return 1.70;
+      case 4:
+        return 1.86;
+      case 5:
+        return 2.05;
+      case 6:
+        return 2.27;
+      default:
+        return 1.70;
+    }
   }
 }
 const viewerHelper = new ViewerHelper();

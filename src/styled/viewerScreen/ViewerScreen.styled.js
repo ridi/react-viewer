@@ -1,63 +1,12 @@
 /* eslint max-len: 0 */
 import styled, { css } from 'styled-components';
 import { svgIcons } from '../SvgIcons.styled';
-import { NAV_BAR_HEIGHT, PAGE_MAX_WIDTH, STATUS_BAR_HEIGHT } from '../../constants/StyledConstants';
+import { NAV_BAR_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants/StyledConstants';
 import { ContentType } from '../../constants/ContentConstants';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
 import SvgIconConstants from '../../constants/SvgIconConstants';
 import { screenHeight } from '../../util/BrowserWrapper';
-
-
-const getNovelLineHeight = (level) => {
-  switch (level) {
-    case 1:
-      return 1.35;
-    case 2:
-      return 1.51;
-    case 3:
-      return 1.70;
-    case 4:
-      return 1.86;
-    case 5:
-      return 2.05;
-    case 6:
-      return 2.27;
-    default:
-      return 1.70;
-  }
-};
-
-const getFontSize = (level) => {
-  const fontSizeUnit = 15;
-  switch (Number(level)) {
-    case 1: return fontSizeUnit * 0.8;
-    case 2: return fontSizeUnit * 0.85;
-    case 3: return fontSizeUnit * 0.9;
-    case 4: return fontSizeUnit * 0.95;
-    case 5: return fontSizeUnit;
-    case 6: return fontSizeUnit * 1.15;
-    case 7: return fontSizeUnit * 1.25;
-    case 8: return fontSizeUnit * 1.4;
-    case 9: return fontSizeUnit * 1.6;
-    case 10: return fontSizeUnit * 1.8;
-    case 11: return fontSizeUnit * 2.0;
-    case 12: return fontSizeUnit * 2.3;
-    default: return fontSizeUnit;
-  }
-};
-
-const getNovelPadding = (level) => {
-  const paddingValue = 7 - Number(level);
-  return `0 ${paddingValue}% 80px ${paddingValue}%`;
-};
-const getComicPadding = (/* level */) => '0';
-const getComicWidth = level => (Number(level) * 10) + 40;
-const getMaxWidth = (contentType, viewerType) => {
-  if (contentType === ContentType.WEB_NOVEL || viewerType === ViewerType.SCROLL) {
-    return `${PAGE_MAX_WIDTH}px`;
-  }
-  return 'none';
-};
+import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerScreen = styled.div`
@@ -66,7 +15,7 @@ const ViewerScreen = styled.div`
 
 // language=SCSS prefix=dummy{ suffix=}
 const SizingWrapper = styled.div`
-  max-width: ${props => getMaxWidth(props.contentType, props.viewerType)};
+  max-width: ${props => ViewerHelper.getMaxWidth(props.contentType, props.viewerType)};
   margin: 0 auto;
   box-sizing: border-box;
   .error_image_wrapper {
@@ -128,8 +77,7 @@ const ViewerContents = styled.section`
     src: ${props =>
     `url('${props.fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
       url('${props.fontDomain}KoPubBatangMedium.woff') format('woff'), 
-      url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`
-}
+      url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`}
   }
   @font-face {
     font-family: 'kopub_dotum';
@@ -138,20 +86,19 @@ const ViewerContents = styled.section`
     src: ${props =>
     `url('${props.fontDomain}KoPubDotumMedium.woff2') format('woff2'),
       url('${props.fontDomain}KoPubDotumMedium.woff') format('woff'),
-      url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`
-}
+      url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`}
   }
   
   * {
-    font-size: ${props => getFontSize(props.fontSizeLevel)}px;
-    line-height: ${props => getNovelLineHeight(props.lineHeight)}em;
+    font-size: ${props => ViewerHelper.getFontSize(props.fontSizeLevel)}px;
+    line-height: ${props => ViewerHelper.getNovelLineHeight(props.lineHeight)}em;
     font-family: ${props => props.fontFamily};
   }
   .comic_page {
     text-align: center;
     img {
       padding: 0;
-      width: ${props => `${getComicWidth(props.comicWidthLevel)}%`};
+      width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
     }
   }
 
@@ -184,9 +131,17 @@ ViewerContents.defaultProps = {
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
-  position: fixed;
-  left: 0; top: 0;
+  position: fixed; left: 0; top: 0;
   width: 100%; height: ${() => screenHeight()}px;
+  .left_area, .right_area {
+    position: absolute; top: 0;
+    display: block;
+    height: 100%; width: ${() => ViewerHelper.getLeftRightAreaWidth()}px;
+    background: transparent; border: 0;
+    cursor: default;
+  }
+  .left_area { left: 0; }
+  .right_area { right: 0; }
   .viewer_bottom {
     min-height: ${() => screenHeight()}px;
     padding: ${NAV_BAR_HEIGHT + STATUS_BAR_HEIGHT + 10}px 0 132px 0;
@@ -214,9 +169,12 @@ const PageContents = ViewerContents.extend`
       img {
         width: auto;
         height: auto;
-        max-width: ${props => `${getComicWidth(props.comicWidthLevel)}%`};
+        max-width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
         max-height: ${() => screenHeight()}px;
       }
+    }
+    .page_contents {
+      margin-bottom: 100vh;
     }
   }
 `;
@@ -255,7 +213,7 @@ const ScrollScreen = ViewerScreen.extend`
 // language=SCSS prefix=dummy{ suffix=}
 const ScrollContents = ViewerContents.extend`
   article {
-    padding: ${props => (props.contentType === ContentType.WEB_NOVEL ? getNovelPadding(props.paddingLevel) : getComicPadding(props.paddingLevel))};
+    padding: ${props => (props.contentType === ContentType.WEB_NOVEL ? ViewerHelper.getNovelPadding(props.paddingLevel) : ViewerHelper.getComicPadding(props.paddingLevel))};
   }
   img  {
     padding: 15px;

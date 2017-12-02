@@ -194,7 +194,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
               this.pagesComponent = comp;
             }}
           >
-            <div style={{ marginBottom: `${screenHeight() - 1}px` }} dangerouslySetInnerHTML={{ __html: viewData }} />
+            <div className="page_contents" dangerouslySetInnerHTML={{ __html: viewData }} />
           </Pages>
         </StyledContents>
       </PageTouchable>
