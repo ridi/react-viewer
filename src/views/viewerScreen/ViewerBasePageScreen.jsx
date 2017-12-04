@@ -27,17 +27,16 @@ import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import { setScrollTop, screenHeight } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
-import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
     super();
-    this.resizeViewerFunc = debounce(() => this.resizeViewer(), DOMEventDelayConstants.RESIZE);
+    this.resizeViewerFunc = debounce(() => this.resizeViewer().bind(this), DOMEventDelayConstants.RESIZE);
   }
 
   componentDidMount() {
     ReadPositionHelper.setScreenElement(document.querySelector(PAGE_VIEWER_SELECTOR));
-    PageCalculator.updatePagination(true);
+    this.updatePagination(true);
     this.changeErrorImage();
     if (this.contentsComponent) {
       preventScrollEvent(this.contentsComponent);
@@ -83,7 +82,9 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
   }
 
   resizeViewer() {
-    new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
+    if (!this.props.disablePageCalculation) {
+      new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
+    }
   }
 
   moveNextPage() {
@@ -134,6 +135,12 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       this.movePrevPage();
     } else {
       this.moveNextPage();
+    }
+  }
+
+  updatePagination(restore) {
+    if (!this.props.disablePageCalculation) {
+      PageCalculator.updatePagination(restore);
     }
   }
 
@@ -220,6 +227,7 @@ ViewerBasePageScreen.propTypes = {
   StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  disablePageCalculation: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
