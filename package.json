@@ -1,6 +1,6 @@
 {
   "name": "@ridi/react-webviewer",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "license": "MIT",
   "description": "Web reader for novels and comics based on React and Redux",
   "main": "lib/index.js",
@@ -10,7 +10,7 @@
     "lint:src": "eslint --fix --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
-    "publish": "release-it",
+    "release": "release-it",
     "build": "npm run build:src && npm run build:demo",
     "build:src": "webpack",
     "build:demo": "cd demo && npm run build"
