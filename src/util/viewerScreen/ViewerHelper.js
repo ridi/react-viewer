@@ -77,12 +77,15 @@ class ViewerHelper extends Connector {
   shouldSlideToPage(nextPage) {
     const pageView = selectPageViewPagination(this.getState());
     const { totalPage } = pageView;
-    return totalPage > nextPage && (nextPage - 1) * documentClientWidth() !== scrollLeft();
+    return totalPage > nextPage && this.getPageXOffset(nextPage) !== scrollLeft();
   }
 
   slideToPage(nextPage) {
-    const leftOffset = (nextPage - 1) * documentClientWidth();
-    scrollTo(leftOffset, 0);
+    scrollTo(this.getPageXOffset(nextPage), 0);
+  }
+
+  getPageXOffset(page) {
+    return (page - 1) * documentClientWidth();
   }
 
   getPageMaxWidth() {

@@ -131,7 +131,7 @@ ViewerContents.defaultProps = {
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageScreen = ViewerScreen.extend`
-  position: fixed; left: 0; top: 0;
+  position: absolute; left: ${props => ViewerHelper.getPageXOffset(props.pagination.currentPage)}px; top: 0;
   width: 100%; height: ${() => screenHeight()}px;
   .left_area, .right_area {
     position: absolute; top: 0;
@@ -174,7 +174,7 @@ const PageContents = ViewerContents.extend`
       }
     }
     .page_contents {
-      margin-bottom: 100vh;
+      margin-bottom: ${() => screenHeight() - 1}px !important;
     }
   }
 `;

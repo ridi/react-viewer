@@ -190,7 +190,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
             className="pages"
             style={this.pageViewStyle()}
             innerRef={(comp) => {
-            //   this.onScreenRef(comp);
               this.pagesComponent = comp;
             }}
           >

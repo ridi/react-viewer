@@ -66,6 +66,7 @@ class PageTouchable extends Component {
             else preventScrollEvent(pages);
           }}
           onClick={e => this.onTouchScreenHandle(e, Position.MIDDLE)}
+          pagination={pagination}
         >
           {!isEndingScreen && <button className="left_area" onClick={e => this.onTouchScreenHandle(e, Position.LEFT)} />}
           {!isEndingScreen && <button className="right_area" onClick={e => this.onTouchScreenHandle(e, Position.RIGHT)} />}
