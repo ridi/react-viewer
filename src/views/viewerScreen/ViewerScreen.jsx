@@ -121,16 +121,25 @@ const createStyledViewerScreen = ({
     }
 
     renderScreen(SelectedScreen, components = {}) {
+      const {
+        onMoveWrongDirection,
+        footer,
+        fontDomain,
+        ignoreScroll,
+        disablePageCalculation = false,
+      } = this.props;
+
       return (
         <SelectedScreen
           ref={(screen) => {
             this.screen = screen && screen.getWrappedInstance();
           }}
           // screenRef={el => {} /* ReadPositionHelper.setScreenElement(el) */}
-          onMoveWrongDirection={() => this.props.onMoveWrongDirection()}
-          footer={this.props.footer}
-          fontDomain={this.props.fontDomain}
-          ignoreScroll={this.props.ignoreScroll}
+          onMoveWrongDirection={() => onMoveWrongDirection()}
+          footer={footer}
+          fontDomain={fontDomain}
+          ignoreScroll={ignoreScroll}
+          disablePageCalculation={disablePageCalculation}
           {...components}
         />
       );
@@ -156,6 +165,7 @@ const createStyledViewerScreen = ({
     viewerScreenSettings: PropTypes.object,
     viewerType: PropTypes.oneOf(AvailableViewerType.toList()),
     contentType: PropTypes.oneOf(ContentType.toList()),
+    disablePageCalculation: PropTypes.bool,
   };
 
   const mapStateToProps = state => ({

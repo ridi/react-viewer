@@ -33,13 +33,13 @@ import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
     super();
-    this.resizeViewerFunc = debounce(() => this.resizeViewer(), DOMEventDelayConstants.RESIZE);
+    this.resizeViewerFunc = debounce(() => this.resizeViewer().bind(this), DOMEventDelayConstants.RESIZE);
   }
 
   componentDidMount() {
     disableScrolling();
     ReadPositionHelper.setScreenElement(document.querySelector(PAGE_VIEWER_SELECTOR));
-    PageCalculator.updatePagination(true);
+    this.updatePagination(true);
     this.changeErrorImage();
     if (this.contentsComponent) {
       preventScrollEvent(this.contentsComponent);
@@ -66,7 +66,7 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     const { currentPage: nextPage } = nextProps.pageViewPagination;
     if (ViewerHelper.shouldSlideToPage(nextPage)) {
       ViewerHelper.slideToPage(nextPage);
-      PageCalculator.updatePagination();
+      this.updatePagination();
     }
   }
 
@@ -83,8 +83,10 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
-  resizeViewer(/* width */) {
-    new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
+  resizeViewer() {
+    if (!this.props.disablePageCalculation) {
+      new AsyncTask(() => PageCalculator.updatePagination(true)).start(0);
+    }
   }
 
   moveNextPage() {
@@ -128,6 +130,12 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
       this.movePrevPage();
     } else {
       this.moveNextPage();
+    }
+  }
+
+  updatePagination(restore) {
+    if (!this.props.disablePageCalculation) {
+      PageCalculator.updatePagination(restore);
     }
   }
 
@@ -214,6 +222,7 @@ ViewerBasePageScreen.propTypes = {
   StyledContents: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+  disablePageCalculation: PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
