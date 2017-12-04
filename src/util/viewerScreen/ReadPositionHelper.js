@@ -29,6 +29,9 @@ class ReadPositionHelper extends Connector {
 
   setScreenElement(screen) {
     if (isExist(screen)) {
+      if (isExist(this._reader)) {
+        this._reader.unmount();
+      }
       this._reader = new ReaderJsWrapper(screen, this._getScrollMode());
       this.setDebugMode(this._debugMode);
     }
@@ -53,15 +56,6 @@ class ReadPositionHelper extends Connector {
     }
     // nodeIndex#wordIndex (if couldn't find returns -1#-1)
     return this._reader.getNodeLocationOfCurrentPage();
-  }
-
-  /**
-   * @deprecated
-   */
-  unmountReader() {
-    // if (isExist(this._reader)) {
-    //   this._reader.removeScrollListenerIfNeeded();
-    // }
   }
 
   restorePosition() {

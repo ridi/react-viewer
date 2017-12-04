@@ -20,7 +20,7 @@
     "url": "git+https://github.com/ridi/react-webviewer.git"
   },
   "dependencies": {
-    "@ridi/reader.js": "^1.0.13",
+    "@ridi/reader.js": "^1.0.14",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
