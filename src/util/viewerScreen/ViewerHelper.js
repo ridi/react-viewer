@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { documentClientWidth, documentClientHeight } from '../BrowserWrapper';
+import { documentClientWidth, screenHeight } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_VERTICAL,
   MAX_PADDING_LEVEL,
@@ -35,7 +35,7 @@ class ViewerHelper extends Connector {
   getPageStyle(paddingLevel) {
     const { getState } = this.store;
     const width = documentClientWidth();
-    const height = documentClientHeight();
+    const height = screenHeight();
     const pageView = selectPageViewPagination(getState());
 
     const { currentPage } = pageView;
@@ -63,7 +63,7 @@ class ViewerHelper extends Connector {
   getComicPageStyle() {
     const { getState } = this.store;
     const width = documentClientWidth();
-    const height = documentClientHeight();
+    const height = screenHeight();
     const pageView = selectPageViewPagination(getState());
 
     const { currentPage } = pageView;
