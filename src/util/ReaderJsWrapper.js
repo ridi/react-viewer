@@ -38,4 +38,8 @@ export default class ReaderJsWrapper {
   getNodeLocationOfCurrentPage() {
     return this._reader.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
+
+  unmount() {
+    this._reader.unmount();
+  }
 }
