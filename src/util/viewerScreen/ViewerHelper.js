@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { documentClientWidth, documentClientHeight, scrollTo, scrollLeft } from '../BrowserWrapper';
+import { documentClientWidth, screenHeight, scrollTo, scrollLeft } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_TOP,
   MAX_PADDING_LEVEL,
@@ -35,7 +35,7 @@ class ViewerHelper extends Connector {
 
   getPageStyle(paddingLevel) {
     const width = documentClientWidth();
-    const height = documentClientHeight();
+    const height = screenHeight();
 
     const maxGap = width > this._pageMaxWidth ? ((width - this._pageMaxWidth) / 2) : 0;
     const paddingHorizontal = parseInt(width * 0.01 * (MAX_PADDING_LEVEL - paddingLevel), 10);
@@ -59,7 +59,7 @@ class ViewerHelper extends Connector {
 
   getComicPageStyle() {
     const width = documentClientWidth();
-    const height = documentClientHeight();
+    const height = screenHeight();
 
     return {
       WebkitColumnWidth: `${width}px`,
