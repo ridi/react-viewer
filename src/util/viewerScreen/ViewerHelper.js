@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { documentClientWidth, screenHeight, scrollTo, scrollLeft } from '../BrowserWrapper';
+import { screenHeight, screenWidth, scrollTo, scrollLeft } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_TOP,
   MAX_PADDING_LEVEL,
@@ -34,7 +34,7 @@ class ViewerHelper extends Connector {
   }
 
   getPageStyle(paddingLevel) {
-    const width = documentClientWidth();
+    const width = screenWidth();
     const height = screenHeight();
 
     const maxGap = width > this._pageMaxWidth ? ((width - this._pageMaxWidth) / 2) : 0;
@@ -58,7 +58,7 @@ class ViewerHelper extends Connector {
   }
 
   getComicPageStyle() {
-    const width = documentClientWidth();
+    const width = screenWidth();
     const height = screenHeight();
 
     return {
@@ -85,7 +85,7 @@ class ViewerHelper extends Connector {
   }
 
   getPageXOffset(page) {
-    return (page - 1) * documentClientWidth();
+    return (page - 1) * screenWidth();
   }
 
   getPageMaxWidth() {
@@ -97,7 +97,7 @@ class ViewerHelper extends Connector {
   }
 
   getLeftRightAreaWidth() {
-    const clientWidth = documentClientWidth();
+    const clientWidth = screenWidth();
     if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
       return ((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth();
     }

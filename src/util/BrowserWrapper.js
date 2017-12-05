@@ -43,8 +43,6 @@ export const offsetWidth = () => document.body.offsetWidth;
 
 export const offsetHeight = () => document.body.offsetHeight;
 
-export const documentClientWidth = () => document.documentElement.clientWidth;
-
 export const documentAddClassList = classList => document.body.classList.add(classList);
 
 export const documentAppendChild = dom => document.body.appendChild(dom);
@@ -61,7 +59,6 @@ export default {
   setScrollTop,
   offsetWidth,
   offsetHeight,
-  documentClientWidth,
   documentAddClassList,
   documentAppendChild,
   documentAddEventListener,

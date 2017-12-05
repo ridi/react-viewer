@@ -1,5 +1,5 @@
 
 export default {
-  SCROLL: 100,
+  SCROLL: 250,
   RESIZE: 100,
 };
