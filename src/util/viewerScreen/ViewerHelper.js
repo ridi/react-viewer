@@ -1,6 +1,6 @@
 import Connector from '../Connector';
 import { selectPageViewPagination } from '../../redux/viewerScreen/ViewerScreen.selector';
-import { documentClientWidth, screenHeight } from '../BrowserWrapper';
+import { screenWidth, screenHeight } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_VERTICAL,
   MAX_PADDING_LEVEL,
@@ -34,7 +34,7 @@ class ViewerHelper extends Connector {
 
   getPageStyle(paddingLevel) {
     const { getState } = this.store;
-    const width = documentClientWidth();
+    const width = screenWidth();
     const height = screenHeight();
     const pageView = selectPageViewPagination(getState());
 
@@ -62,7 +62,7 @@ class ViewerHelper extends Connector {
 
   getComicPageStyle() {
     const { getState } = this.store;
-    const width = documentClientWidth();
+    const width = screenWidth();
     const height = screenHeight();
     const pageView = selectPageViewPagination(getState());
 
@@ -85,6 +85,18 @@ class ViewerHelper extends Connector {
 
   getPageMaxWidth() {
     return this._pageMaxWidth || PAGE_MAX_WIDTH;
+  }
+
+  getExtendedTouchWidth() {
+    return this._extendedTouchWidth || EXTENDED_TOUCH_WIDTH;
+  }
+
+  getLeftRightAreaWidth() {
+    const clientWidth = screenWidth();
+    if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
+      return ((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth();
+    }
+    return clientWidth * 0.25;
   }
 
   getNovelPadding(level) {
@@ -141,18 +153,6 @@ class ViewerHelper extends Connector {
       default:
         return 1.70;
     }
-  }
-
-  getExtendedTouchWidth() {
-    return this._extendedTouchWidth || EXTENDED_TOUCH_WIDTH;
-  }
-
-  getLeftRightAreaWidth() {
-    const clientWidth = documentClientWidth();
-    if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
-      return ((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth();
-    }
-    return clientWidth * 0.25;
   }
 }
 const viewerHelper = new ViewerHelper();
