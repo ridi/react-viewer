@@ -20,33 +20,21 @@ import {
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { debounce, isExist } from '../../util/Util';
+import { debounce } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
   setScrollTop,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-
+import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';
 
 class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
-    this.restorePosition();
+    ReadPositionHelper.setScreenElement(document.querySelector(SCROLL_VIEWER_SELECTOR));
+    ReadPositionHelper.restorePosition();
     this.addScrollEvent();
     this.changeErrorImage();
-  }
-
-  restorePosition() {
-    const { readPosition } = this.props;
-
-    if (this.checkEmptyPosition()) {
-      return;
-    }
-
-    const offset = ReadPositionHelper.getOffsetByNodeLocation(readPosition);
-    if (isExist(offset)) {
-      setScrollTop(offset);
-    }
   }
 
   componentWillUnmount() {
@@ -100,14 +88,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
       return;
     }
     viewerScreenScrolled();
-    ReadPositionHelper.dispatchChangedReadPosition();
-  }
-
-  onScreenRef(ref) {
-    const { screenRef } = this.props;
-    if (isExist(screenRef)) {
-      screenRef(ref);
-    }
+    ReadPositionHelper.updateChangedReadPosition();
   }
 
   render() {
@@ -148,7 +129,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
         SizingWrapper={SizingWrapper}
       >
         <StyledContents
-          id="contents"
+          id="viewer_contents"
           contentType={contentType}
           className={colorTheme}
           fontSizeLevel={fontSizeLevel}
@@ -159,8 +140,8 @@ class ViewerScrollScreen extends ViewerBaseScreen {
           fontDomain={fontDomain}
         >
           <div
+            className="pages"
             dangerouslySetInnerHTML={{ __html: viewData }}
-            ref={(screen) => { this.onScreenRef(screen); }}
             style={this.pageViewStyle()}
           />
         </StyledContents>

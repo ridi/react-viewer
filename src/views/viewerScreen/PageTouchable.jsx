@@ -7,12 +7,12 @@ import {
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
-
+import { documentClientWidth } from '../../util/BrowserWrapper';
 
 class PageTouchable extends Component {
   onTouchScreenHandle(e) {
-    const xPos = e.nativeEvent.pageX;
-    const width = document.body.clientWidth;
+    const xPos = e.clientX;
+    const width = documentClientWidth();
 
     const {
       isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
@@ -81,7 +81,7 @@ PageTouchable.propTypes = {
   onRightTouched: PropTypes.func,
   onMiddleTouched: PropTypes.func,
   contentType: PropTypes.number,
-  viewerType: PropTypes.number,
+  viewerType: PropTypes.string,
   footer: PropTypes.node,
   pagination: PropTypes.shape({ currentPage: PropTypes.number }),
   isFullScreen: PropTypes.bool,

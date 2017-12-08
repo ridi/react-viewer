@@ -34,7 +34,14 @@ import {
   ViewerThemeType,
   ViewerType,
 } from './constants/ViewerScreenConstants';
-
+import {
+  SizingWrapper,
+  ScrollContents,
+  PageContents,
+  ScrollScreen,
+  PageScreen,
+  Pages,
+} from './styled/viewerScreen/ViewerScreen.styled';
 
 const actionGenerators = {
   calculatedPageViewer,
@@ -103,4 +110,12 @@ export {
 
   // higher-order components
   createStyledViewerScreen,
+
+  // styled-components
+  SizingWrapper,
+  ScrollContents,
+  PageContents,
+  ScrollScreen,
+  PageScreen,
+  Pages,
 };

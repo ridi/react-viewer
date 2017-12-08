@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import path from './ViewerScreen.path';
 import { nullSafeGet } from '../../util/Util';
 import { AvailableViewerType, BindingType, ContentType } from '../../constants/ContentConstants';
-import { VIEWER_EMPTY_READ_POSITION } from '../../constants/ViewerScreenConstants';
+import { VIEWER_EMPTY_READ_POSITION, ViewerThemeType } from '../../constants/ViewerScreenConstants';
 
 
 const getViewerScreen = state => state.viewerScreen || {};
@@ -50,4 +50,9 @@ export const selectViewerScreenSettings = createSelector(
 export const selectViewerReadPosition = createSelector(
   [getViewerScreen],
   viewerScreen => nullSafeGet(viewerScreen, path.readPosition(), VIEWER_EMPTY_READ_POSITION),
+);
+
+export const selectViewerScreenColorTheme = createSelector(
+  [getViewerScreen],
+  viewerScreen => nullSafeGet(viewerScreen, path.viewerScreenColorTheme(), ViewerThemeType.WHITE),
 );
