@@ -4,7 +4,7 @@ import { actions } from './ViewerScreen.action';
 import ReducerBuilder from '../../util/ReducerBuilder';
 import { cloneObject, updateObject } from '../../util/Util';
 import { isScrolledToBottom, isScrolledToTop } from '../../util/CommonUi';
-
+import { ContentFormat } from '../../constants/ContentConstants';
 
 const initializeViewerScreen = (state, action) => {
   const { viewerScreenSettings } = action;
@@ -38,7 +38,7 @@ const viewerScreenSettingChanged = (state, action) => new ReducerBuilder(state)
   .set(path.viewerScreenSettings(), updateObject(state.viewerScreenSettings, action.changedSetting))
   .build();
 
-const updateSpineMetaData = (state, action) => new ReducerBuilder(state)
+const updateMetaData = (state, action) => new ReducerBuilder(state)
   .set(path.contentType(), action.contentType)
   .set(path.viewerType(), action.viewerType)
   .set(path.bindingType(), action.bindingType)
@@ -46,6 +46,13 @@ const updateSpineMetaData = (state, action) => new ReducerBuilder(state)
 
 const renderSpine = (state, action) => new ReducerBuilder(state)
   .set(path.spine(action.index), action.spine)
+  .set(path.contentFormat(), ContentFormat.EPUB)
+  .set(path.isLoadingCompleted(), true)
+  .build();
+
+const renderImages = (state, action) => new ReducerBuilder(state)
+  .set(path.images(), action.images)
+  .set(path.contentFormat(), ContentFormat.IMAGE)
   .set(path.isLoadingCompleted(), true)
   .build();
 
@@ -61,6 +68,7 @@ export default createReducer(initialState, {
   [actions.CHANGED_READ_POSITION]: changedReadPosition,
   [actions.MOVE_PAGE_VIEWER]: movePageViewer,
   [actions.VIEWER_SCREEN_SETTING_CHANGED]: viewerScreenSettingChanged,
-  [actions.UPDATE_SPINE_META_DATA]: updateSpineMetaData,
+  [actions.UPDATE_META_DATA]: updateMetaData,
   [actions.RENDER_SPINE]: renderSpine,
+  [actions.RENDER_IMAGES]: renderImages,
 });

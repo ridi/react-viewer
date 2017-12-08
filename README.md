@@ -14,6 +14,8 @@ npm install @ridi/react-webviewer
 
 ## How to use
 
+### Initialize
+
 Add `@ridi/react-webviewer` reducer into your reducers.
 ```js
 import { reducers as viewerScreen } from '@ridi/react-webviewer';
@@ -49,7 +51,9 @@ export default ViewerPage extends Component {
 };
 ```
 
-Dispatch `renderSpine` action.
+### Render contents
+
+Dispatch `renderSpine` action to render `html` into the viewer.
 ```js
 import { renderSpine } from '@ridi/react-webviewer';
 
@@ -57,4 +61,13 @@ import { renderSpine } from '@ridi/react-webviewer';
 const index = 0;
 const html = '<h1>hello, world</h1>';
 dispatch(renderSpine(index, html));
+```
+
+If you have image contents to render lazily, dispatch `renderImages` instead of `renderSpine`.
+```js
+import { renderImages } from '@ridi/react-webviewer';
+
+...
+const images = [{ src: '/image_1.jpg' }, { src: '/image_2.jpg' }, ...];
+dispatch(renderImages(images));
 ```

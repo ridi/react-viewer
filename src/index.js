@@ -7,6 +7,7 @@ import {
   onViewerScreenScrolled,
   onViewerScreenTouched,
   renderSpine,
+  renderImages,
   updateSpineMetaData,
   viewerScreenSettingChanged,
 } from './redux/viewerScreen/ViewerScreen.action';
@@ -52,6 +53,7 @@ const actionGenerators = {
   viewerScreenSettingChanged,
   updateSpineMetaData,
   renderSpine,
+  renderImages,
 };
 
 const selectors = {
@@ -85,6 +87,7 @@ export {
   viewerScreenSettingChanged, // 뷰어 세팅이 변경되었을 때 호출된다.
   updateSpineMetaData, // meta data (contentType, viewerType, bindingType) 을 업데이트한다.
   renderSpine, // spine 데이터를 업데이트한다.
+  renderImages, // image 데이터를 업데이트한다.
 
   // selectors
   selectSpines, // spine 데이터를 가져온다.
