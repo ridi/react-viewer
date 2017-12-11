@@ -20,7 +20,7 @@ import {
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { debounce } from '../../util/Util';
+import { throttle } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
@@ -66,7 +66,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   addScrollEvent() {
-    this.viewerScrollCallback = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL, true);
+    this.viewerScrollCallback = throttle(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
   }
 
@@ -82,7 +82,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     e.stopPropagation();
 
     const { ignoreScroll, viewerScreenScrolled } = this.props;
-
     if (ignoreScroll) {
       return;
     }

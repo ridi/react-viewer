@@ -137,3 +137,24 @@ export function debounce(fn, wait = 100, immediate = false) {
     }, wait);
   };
 }
+
+/**
+ * Create a throttled(invoking only once in specified limited time) function
+ *
+ * @param {function} fn
+ * @param {number} [limit=100]
+ * @returns {function} throttled function
+ */
+export function throttle(fn, limit = 100) {
+  let inThrottle = false;
+  return (...args) => {
+    const context = this;
+    if (!inThrottle) {
+      fn.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
+    }
+  };
+}
