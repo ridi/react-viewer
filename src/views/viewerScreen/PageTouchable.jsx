@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  selectIsFullScreen,
   selectPageViewPagination,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
 import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
@@ -78,7 +77,6 @@ PageTouchable.propTypes = {
   viewerType: PropTypes.string,
   footer: PropTypes.node,
   pagination: PropTypes.shape({ currentPage: PropTypes.number }),
-  isFullScreen: PropTypes.bool,
   children: PropTypes.node,
   TouchableScreen: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
   SizingWrapper: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
@@ -86,7 +84,6 @@ PageTouchable.propTypes = {
 
 const mapStateToProps = state => ({
   pagination: selectPageViewPagination(state),
-  isFullScreen: selectIsFullScreen(state),
 });
 
 export default connect(mapStateToProps)(PageTouchable);
