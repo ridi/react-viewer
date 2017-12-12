@@ -142,19 +142,22 @@ export function debounce(fn, wait = 100, immediate = false) {
  * Create a throttled(invoking only once in specified limited time) function
  *
  * @param {function} fn
- * @param {number} [limit=100]
+ * @param {number} [limit=100] up to 1 invoke per ${limit} milliseconds
+ * @param {boolean} [delayed=false] invoke ${fn} after ${limit} milliseconds delayed
  * @returns {function} throttled function
  */
-export function throttle(fn, limit = 100) {
+export function throttle(fn, limit = 100, delayed = false) {
   let inThrottle = false;
   return (...args) => {
     const context = this;
     if (!inThrottle) {
-      fn.apply(context, args);
+      if (delayed) {
+        setTimeout(() => fn.apply(context, args), limit);
+      } else {
+        fn.apply(context, args);
+      }
       inThrottle = true;
-      setTimeout(() => {
-        inThrottle = false;
-      }, limit);
+      setTimeout(() => { inThrottle = false; }, limit);
     }
   };
 }

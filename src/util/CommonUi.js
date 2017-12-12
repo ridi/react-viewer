@@ -4,9 +4,9 @@ import { isExist } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
 
 
-export const isScrolledToTop = () => BrowserWrapper.scrollTop() <= 10;
+export const isScrolledToTop = () => BrowserWrapper.scrollTop() <= 100;
 
-export const isScrolledToBottom = () => BrowserWrapper.scrollTop() >= BrowserWrapper.scrollHeight() - BrowserWrapper.screenHeight() - 10;
+export const isScrolledToBottom = () => BrowserWrapper.scrollTop() >= BrowserWrapper.scrollHeight() - BrowserWrapper.screenHeight() - 100;
 
 
 const _preventDefault = e => e.preventDefault();
