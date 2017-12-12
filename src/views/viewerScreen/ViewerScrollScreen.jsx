@@ -66,7 +66,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
   }
 
   addScrollEvent() {
-    this.viewerScrollCallback = throttle(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
+    this.viewerScrollCallback = throttle(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL, true);
     documentAddEventListener(DOMEventConstants.SCROLL, this.viewerScrollCallback);
   }
 
