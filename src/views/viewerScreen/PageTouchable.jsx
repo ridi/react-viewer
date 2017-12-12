@@ -20,15 +20,10 @@ class PageTouchable extends Component {
     e.stopPropagation();
 
     const {
-      isFullScreen, onLeftTouched, onRightTouched, onMiddleTouched, pagination,
+      onLeftTouched, onRightTouched, onMiddleTouched, pagination,
     } = this.props;
 
     if (PageCalculator.isEndingPage(pagination.currentPage)) {
-      return;
-    }
-
-    if (!isFullScreen) {
-      onMiddleTouched();
       return;
     }
 
