@@ -1,7 +1,6 @@
 import Renderer from '../utils/Renderer';
-import { renderSpine } from '../../../lib/index';
+import { renderSpine, renderImages } from '../../../lib/index';
 import { getJson } from '../utils/Api';
-
 
 export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',
@@ -30,7 +29,11 @@ export const requestLoadEpisodeEpub = (spine, index) => (dispatch) => {
 
 export const requestLoadEpisode = (contentId, episodeId) => (dispatch) => {
   const spineUrl = `./resources/contents/${contentId}/${episodeId}/spine.json`;
-  getJson(spineUrl).then(({ spines }) => {
-    spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));
+  getJson(spineUrl).then(({ spines, images }) => {
+    if (spines) {
+      spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));
+    } else if (images) {
+      dispatch(renderImages(images));
+    }
   });
 };
