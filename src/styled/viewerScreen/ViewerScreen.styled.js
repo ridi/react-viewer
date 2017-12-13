@@ -21,6 +21,7 @@ const SizingWrapper = styled.div`
   .error_image_wrapper {
     display: block; width: 100%;
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.05);
     .svg_picture_1 {
       display: inline-block; text-indent: -444px; font-size: 0; overflow: hidden;
       background: url("data:image/svg+xml,${svgIcons[SvgIconConstants.PICTURE_1]('#e5e8eb')}") center center no-repeat;
@@ -164,26 +165,12 @@ const PageScreen = ViewerScreen.extend`
 
 // language=SCSS prefix=dummy{ suffix=}
 const PageContents = ViewerContents.extend`
-  .pages {
-    .comic_page {
-      img {
-        width: auto;
-        height: auto;
-        max-width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
-        max-height: ${() => screenHeight()}px;
-      }
-    }
-    .page_contents {
-      margin-bottom: ${() => screenHeight() - 1}px !important;
-    }
-  }
-`;
-
-// language=SCSS prefix=dummy{ suffix=}
-const Pages = styled.div`
   .error_image_wrapper {
     height: 100vh; overflow: hidden;
-    display: flex; align-items: center;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .page_contents {
+    margin-bottom: ${() => screenHeight() - 1}px !important;
   }
   .comic_page {
     display: flex; height: ${() => screenHeight()}px; overflow: hidden;
@@ -192,9 +179,16 @@ const Pages = styled.div`
       margin: 0 auto;
       padding: 0;
       box-sizing: border-box;
+      width: auto; height: auto;
+      max-width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
+      max-height: ${() => screenHeight()}px;
     }
-    .error_image_wrapper {
-      display: block; height: auto;
+    &.lazy_load {
+      background-color: rgba(0, 0, 0, 0.1);
+      &.loaded {
+        width: auto; max-width: none;
+        background-color: transparent;
+      }
     }
   }
 `;
@@ -203,7 +197,7 @@ const Pages = styled.div`
 const ScrollScreen = ViewerScreen.extend`
   padding-bottom: 0;
   .error_image_wrapper {
-    padding: 100px 0;
+    padding: 30% 0;
   }
   .viewer_bottom {
     padding: 10px 0 94px 0;
@@ -218,6 +212,19 @@ const ScrollContents = ViewerContents.extend`
   img  {
     padding: 15px;
   }
+  .comic_page {
+    img {
+      padding: 0;
+    }
+    &.lazy_load {
+      width: 100%; height: ${() => screenHeight()}px;
+      background-color: rgba(0, 0, 0, 0.1);
+      &.loaded {
+        width: auto; height: auto;
+        background-color: transparent;
+      }
+    }
+  }
 `;
 ScrollContents.defaultProps = {
   contentType: ContentType.WEB_NOVEL,
@@ -230,4 +237,4 @@ ScrollContents.defaultProps = {
   fontDomain: '',
 };
 
-export { ScrollScreen, PageScreen, SizingWrapper, PageContents, Pages, ScrollContents };
+export { ScrollScreen, PageScreen, SizingWrapper, PageContents, ScrollContents };

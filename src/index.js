@@ -8,6 +8,7 @@ import {
   onViewerScreenTouched,
   renderSpine,
   renderImages,
+  updateMetaData,
   updateSpineMetaData,
   viewerScreenSettingChanged,
 } from './redux/viewerScreen/ViewerScreen.action';
@@ -17,7 +18,10 @@ import {
   selectIsFullScreen,
   selectIsLoadingCompleted,
   selectPageViewPagination,
+  selectContent,
   selectSpines,
+  selectImages,
+  selectContentFormat,
   selectViewerReadPosition,
   selectViewerScreenSettings,
   selectViewerType,
@@ -26,7 +30,7 @@ import reducers from './redux/viewerScreen/ViewerScreen.reducer';
 import PageCalculator from './util/viewerScreen/PageCalculator';
 import ViewerHelper from './util/viewerScreen/ViewerHelper';
 import ReadPositionHelper from './util/viewerScreen/ReadPositionHelper';
-import { AvailableViewerType, BindingType, ContentType } from './constants/ContentConstants';
+import { AvailableViewerType, BindingType, ContentType, ContentFormat } from './constants/ContentConstants';
 import {
   ViewerBodyThemeColorType,
   ViewerComicSpinType,
@@ -41,7 +45,6 @@ import {
   PageContents,
   ScrollScreen,
   PageScreen,
-  Pages,
 } from './styled/viewerScreen/ViewerScreen.styled';
 
 const actionGenerators = {
@@ -51,13 +54,17 @@ const actionGenerators = {
   onViewerScreenTouched,
   movePageViewer,
   viewerScreenSettingChanged,
+  updateMetaData,
   updateSpineMetaData,
   renderSpine,
   renderImages,
 };
 
 const selectors = {
+  selectContent,
   selectSpines,
+  selectImages,
+  selectContentFormat,
   selectContentType,
   selectViewerType,
   selectBindingType,
@@ -85,12 +92,16 @@ export {
   onViewerScreenTouched, // 뷰어에 터치 입력이 들어왔을 때 호출된다.
   movePageViewer, // page view 상태에서 특정 페이지로 이동한다.
   viewerScreenSettingChanged, // 뷰어 세팅이 변경되었을 때 호출된다.
-  updateSpineMetaData, // meta data (contentType, viewerType, bindingType) 을 업데이트한다.
-  renderSpine, // spine 데이터를 업데이트한다.
-  renderImages, // image 데이터를 업데이트한다.
+  updateMetaData, // meta data (contentType, viewerType, bindingType) 을 업데이트한다.
+  updateSpineMetaData, // = `updateMetaData` (@deprecated)
+  renderSpine, // 콘텐츠 포맷을 epub으로 변경하고 spine 데이터를 업데이트한다.
+  renderImages, // 콘텐츠 포맷을 이미지로 변경하고 image 데이터를 업데이트한다.
 
   // selectors
-  selectSpines, // spine 데이터를 가져온다.
+  selectContent, // 콘텐츠 내용을 가져온다.
+  selectSpines, // spines 콘텐츠 데이터를 가져온다.
+  selectImages, // images 콘텐츠 데이터를 가져온다.
+  selectContentFormat, // 콘텐츠 포맷을 가져온다.
   selectContentType, // meta data 중 contentType 을 가져온다.
   selectViewerType, // meta data 중 viewerType 을 가져온다.
   selectBindingType, // meta data 중 bindingType 을 가져온다.
@@ -102,6 +113,7 @@ export {
 
   // constants
   ContentType,
+  ContentFormat,
   BindingType,
   AvailableViewerType,
   ViewerThemeType,
@@ -120,5 +132,4 @@ export {
   PageContents,
   ScrollScreen,
   PageScreen,
-  Pages,
 };
