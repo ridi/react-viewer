@@ -33,7 +33,7 @@ export default class LazyLoadImage extends React.Component {
     }
 
     this.observer = new IntersectionObserver((entries, observer) => {
-      if (entries.some(({ isIntersecting }) => isIntersecting)) {
+      if (entries.some(({ isIntersecting, intersectionRatio }) => isIntersecting || intersectionRatio > 0)) {
         this.setState({ inView: true });
         observer.unobserve(this.node);
       }
