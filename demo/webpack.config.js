@@ -11,6 +11,7 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
         include: `${__dirname}/src/`,
         query: {

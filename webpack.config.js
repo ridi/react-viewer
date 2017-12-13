@@ -13,6 +13,7 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
         include: [`${__dirname}/src/`, `${__dirname}/modules/`],
         query: {
