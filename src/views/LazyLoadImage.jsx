@@ -39,7 +39,7 @@ export default class LazyLoadImage extends React.Component {
       }
     }, {
       threshold: 0,
-      rootMargin: '150%',
+      rootMargin: '250%', // load 2 pages in advance
     });
     this.observer.observe(this.node);
   }
