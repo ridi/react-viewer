@@ -1,4 +1,9 @@
-import { AvailableViewerType, BindingType, ContentType } from '../../constants/ContentConstants';
+import {
+  AvailableViewerType,
+  BindingType,
+  ContentType,
+  ContentFormat,
+} from '../../constants/ContentConstants';
 import {
   VIEWER_EMPTY_READ_POSITION,
   INVALID_PAGE,
@@ -8,7 +13,11 @@ import {
 } from '../../constants/ViewerScreenConstants';
 
 export const initialState = {
-  spines: {},
+  content: {
+    format: ContentFormat.EPUB,
+    spines: {},
+    images: [],
+  },
   contentType: ContentType.WEB_NOVEL,
   viewerType: AvailableViewerType.SCROLL,
   bindingType: BindingType.LEFT,
@@ -33,8 +42,11 @@ export const initialState = {
 };
 
 export default {
-  spines: () => ['spines'],
-  spine: index => ['spines', index],
+  content: () => ['content'],
+  spines: () => ['content', 'spines'],
+  spine: index => ['content', 'spines', index],
+  images: () => ['content', 'images'],
+  contentFormat: () => ['content', 'format'],
   contentType: () => ['contentType'],
   viewerType: () => ['viewerType'],
   bindingType: () => ['bindingType'],

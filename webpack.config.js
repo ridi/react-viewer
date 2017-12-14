@@ -13,17 +13,18 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
-        include: [`${__dirname}/src/`, `${__dirname}/modules/`],
+        include: `${__dirname}/src/`,
         query: {
           presets: ['env', 'react'],
           plugins: [
             ['transform-es2015-classes', { loose: true }],
-            ['transform-proto-to-assign']
-          ]
-        }
-      }
-    ]
+            ['transform-proto-to-assign'],
+          ],
+        },
+      },
+    ],
   },
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
@@ -37,10 +38,10 @@ module.exports = {
       compress: {
         warnings: false,
       },
-    })
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   externals: {
     'react': 'react',
@@ -50,5 +51,5 @@ module.exports = {
     'redux-thunk': 'redux-thunk',
     'reselect': 'reselect',
     '@ridi/reader.js': '@ridi/reader.js',
-  }
+  },
 };

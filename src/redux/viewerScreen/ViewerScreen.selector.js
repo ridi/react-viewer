@@ -1,15 +1,30 @@
 import { createSelector } from 'reselect';
 import path from './ViewerScreen.path';
 import { nullSafeGet } from '../../util/Util';
-import { AvailableViewerType, BindingType, ContentType } from '../../constants/ContentConstants';
+import { AvailableViewerType, BindingType, ContentType, ContentFormat } from '../../constants/ContentConstants';
 import { VIEWER_EMPTY_READ_POSITION, ViewerThemeType } from '../../constants/ViewerScreenConstants';
 
 
 const getViewerScreen = state => state.viewerScreen || {};
 
+export const selectContent = createSelector(
+  [getViewerScreen],
+  viewerScreen => nullSafeGet(viewerScreen, path.content(), {}),
+);
+
 export const selectSpines = createSelector(
   [getViewerScreen],
   viewerScreen => nullSafeGet(viewerScreen, path.spines(), {}),
+);
+
+export const selectImages = createSelector(
+  [getViewerScreen],
+  viewerScreen => nullSafeGet(viewerScreen, path.images(), []),
+);
+
+export const selectContentFormat = createSelector(
+  [getViewerScreen],
+  viewerScreen => nullSafeGet(viewerScreen, path.contentFormat(), ContentFormat.EPUB),
 );
 
 export const selectContentType = createSelector(

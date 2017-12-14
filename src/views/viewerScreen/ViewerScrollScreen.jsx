@@ -9,6 +9,8 @@ import {
   selectContentType,
   selectIsLoadingCompleted,
   selectSpines,
+  selectImages,
+  selectContentFormat,
   selectViewerReadPosition,
   selectViewerScreenSettings,
 } from '../../redux/viewerScreen/ViewerScreen.selector';
@@ -26,7 +28,9 @@ import {
   documentRemoveEventListener,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { ContentFormat } from '../../constants/ContentConstants';
 import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';
+import LazyLoadImage from '../LazyLoadImage';
 
 class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
@@ -89,11 +93,37 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     ReadPositionHelper.updateChangedReadPosition();
   }
 
+  renderContent() {
+    const {
+      contentFormat,
+      spines,
+      images,
+    } = this.props;
+
+    if (contentFormat === ContentFormat.EPUB) {
+      let viewData = '';
+      Object.keys(spines).forEach((value, index) => { viewData = `${viewData} ${spines[index]}`; });
+      return (
+        <div
+          className="pages"
+          dangerouslySetInnerHTML={{ __html: viewData }}
+          style={this.pageViewStyle()}
+        />
+      );
+    } else if (contentFormat === ContentFormat.IMAGE) {
+      return (
+        <React.Fragment>
+          {images.map(image => <LazyLoadImage key={image.src} src={image.src} />)}
+        </React.Fragment>
+      );
+    }
+    return null;
+  }
+
   render() {
     const {
       contentType,
       viewerScreenTouched,
-      spines,
       isLoadingCompleted,
       footer,
       fontDomain,
@@ -114,8 +144,6 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     if (!isLoadingCompleted) {
       return null;
     }
-    let viewData = '';
-    Object.keys(spines).forEach((value, index) => { viewData = `${viewData} ${spines[index]}`; });
 
     return (
       <ScrollTouchable
@@ -137,11 +165,7 @@ class ViewerScrollScreen extends ViewerBaseScreen {
           paddingLevel={paddingLevel}
           fontDomain={fontDomain}
         >
-          <div
-            className="pages"
-            dangerouslySetInnerHTML={{ __html: viewData }}
-            style={this.pageViewStyle()}
-          />
+          {this.renderContent()}
         </StyledContents>
       </ScrollTouchable>
     );
@@ -165,10 +189,13 @@ ViewerScrollScreen.propTypes = {
 
 const mapStateToProps = state => ({
   spines: selectSpines(state),
+  images: selectImages(state),
+  contentFormat: selectContentFormat(state),
   contentType: selectContentType(state),
   viewerScreenSettings: selectViewerScreenSettings(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
   readPosition: selectViewerReadPosition(state),
+
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -5,9 +5,10 @@ export const actions = {
   TOUCH_VIEWER_SCREEN: 'VIEWER_SCREEN:TOUCH',
   SCROLLED_VIEWER_SCREEN: 'VIEWER_SCREEN:SCROLLED',
   VIEWER_SCREEN_SETTING_CHANGED: 'VIEWER_SCREEN:SETTING_CHANGED',
-  UPDATE_SPINE_META_DATA: 'VIEWER_SCREEN:UPDATE_SPINE_META_DATA',
+  UPDATE_META_DATA: 'VIEWER_SCREEN:UPDATE_META_DATA',
   CHANGED_READ_POSITION: 'VIEWER_SCREEN:CHANGE_READ_POSITION',
   RENDER_SPINE: 'VIEWER_SCREEN:RENDER_SPINE',
+  RENDER_IMAGES: 'VIEWER_SCREEN:RENDER_IMAGES',
   CALCULATED_PAGE_VIEWER: 'PAGE_VIEWER:CALCULATED_PAGE',
   MOVE_PAGE_VIEWER: 'PAGE_VIEWER:MOVE',
 };
@@ -45,15 +46,23 @@ export const viewerScreenSettingChanged = changedSetting => ({
   changedSetting,
 });
 
-export const updateSpineMetaData = (contentType, viewerType, bindingType) => ({
-  type: actions.UPDATE_SPINE_META_DATA,
+export const updateMetaData = (contentType, viewerType, bindingType) => ({
+  type: actions.UPDATE_META_DATA,
   contentType,
   viewerType,
   bindingType,
 });
 
+// @deprecated
+export const updateSpineMetaData = updateMetaData;
+
 export const renderSpine = (index, spine) => ({
   type: actions.RENDER_SPINE,
   index,
   spine,
+});
+
+export const renderImages = images => ({
+  type: actions.RENDER_IMAGES,
+  images,
 });

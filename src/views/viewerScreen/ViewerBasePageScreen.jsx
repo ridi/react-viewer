@@ -4,17 +4,16 @@ import {
   movePageViewer as movePageViewerAction,
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
-import { BindingType } from '../../constants/ContentConstants';
+import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { debounce, isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
 import PageTouchable from './PageTouchable';
-import { Pages } from '../../styled/viewerScreen/ViewerScreen.styled';
 import { renderImageOnErrorPlaceholder } from '../../util/DomHelper';
 import AsyncTask from '../../util/AsyncTask';
 import {
-  selectBindingType,
-  selectContentType,
+  selectBindingType, selectContentFormat,
+  selectContentType, selectImages,
   selectIsLoadingCompleted,
   selectPageViewPagination,
   selectSpines,
@@ -27,6 +26,7 @@ import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
 import { setScrollTop } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { PAGE_VIEWER_SELECTOR } from '../../constants/StyledConstants';
+import LazyLoadImage from '../LazyLoadImage';
 
 class ViewerBasePageScreen extends ViewerBaseScreen {
   constructor() {
@@ -144,10 +144,32 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     }
   }
 
+  renderContent() {
+    const {
+      contentFormat,
+      spines,
+      images,
+    } = this.props;
+
+    if (contentFormat === ContentFormat.EPUB) {
+      let viewData = '';
+      Object.keys(spines).forEach((value, index) => { viewData = `${viewData} ${spines[index]}`; });
+      return (
+        <div className="page_contents" dangerouslySetInnerHTML={{ __html: viewData }} />
+      );
+    } else if (contentFormat === ContentFormat.IMAGE) {
+      return (
+        <div className="page_contents">
+          {images.map(image => <LazyLoadImage key={image.src} src={image.src} />)}
+        </div>
+      );
+    }
+    return null;
+  }
+
   render() {
     const {
       contentType,
-      spines,
       isLoadingCompleted,
       viewerScreenTouched,
       footer,
@@ -169,11 +191,6 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
     if (!isLoadingCompleted) {
       return null;
     }
-
-    let viewData = '';
-    Object.keys(spines).forEach((value, index) => {
-      viewData = `${viewData} ${spines[index]}`;
-    });
 
     return (
       <PageTouchable
@@ -199,15 +216,13 @@ class ViewerBasePageScreen extends ViewerBaseScreen {
           innerRef={(comp) => { this.contentsComponent = comp; }}
           fontDomain={fontDomain}
         >
-          <Pages
+          <div
             className="pages"
             style={this.pageViewStyle()}
-            innerRef={(comp) => {
-              this.pagesComponent = comp;
-            }}
+            ref={(comp) => { this.pagesComponent = comp; }}
           >
-            <div className="page_contents" dangerouslySetInnerHTML={{ __html: viewData }} />
-          </Pages>
+            {this.renderContent()}
+          </div>
         </StyledContents>
       </PageTouchable>
     );
@@ -236,6 +251,8 @@ const mapStateToProps = state => ({
   bindingType: selectBindingType(state),
   pageViewPagination: selectPageViewPagination(state),
   spines: selectSpines(state),
+  images: selectImages(state),
+  contentFormat: selectContentFormat(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
   readPosition: selectViewerReadPosition(state),
 });
