@@ -1,28 +1,28 @@
 import { ViewerUiActions } from './Viewer.action';
 import { actions as ViewerScreenActions } from '../../../lib/index';
 import path, { initialState } from './Viewer.path';
-import ReducerBuilder from '../../../src/util/ReducerBuilder';
+import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
 import createReducer from '../../../src/util/Reducer';
 
 
-const onToggleViewerSetting = state => new ReducerBuilder(state)
+const onToggleViewerSetting = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), !state.ui.isVisibleSettingPopup)
   .build();
 
-const viewerSettingChanged = (state, action) => new ReducerBuilder(state)
+const viewerSettingChanged = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.viewerSettings(), updateObject(state.ui.viewerSettings, action.changeSetting))
   .build();
 
-const onScreenTouched = state => new ReducerBuilder(state)
+const onScreenTouched = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-const onScreenScrolled = state => new ReducerBuilder(state)
+const onScreenScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-const movePageViewer = state => new ReducerBuilder(state)
+const movePageViewer = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 

@@ -1,7 +1,7 @@
 import { cloneObject, nullSafeSet } from './Util';
 
 
-export default class ReducerBuilder {
+export class ImmutableObjectBuilder {
   constructor(state) {
     this._state = cloneObject(state);
   }
@@ -15,3 +15,5 @@ export default class ReducerBuilder {
     return this._state;
   }
 }
+
+export default { ImmutableObjectBuilder };
