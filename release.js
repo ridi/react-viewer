@@ -73,8 +73,10 @@ const execArgs = arg => {
   } else if (arg === commands.RELEASED) {
     return gitCheckout('gh-pages')
       .then(() => gitCheckout('master ./demo/index.html'))
-      .then(() => gitCheckout('master ./demo/resources/js/*'))
-      .then(() => gitCommitAndPush(`version update ${version}`))
+      .then(() => gitCheckout('master ./demo/resources/js/'))
+      .then(() => gitCheckout('master ./demo/resources/css/'))
+      .then(() => gitCheckout('master ./demo/resources/contents/'))
+      .then(() => gitCommitAndPush(`Demo version update ${version}`))
       .then(() => gitCheckout('master'));
   }
   return Promise.reject('invalid args');
