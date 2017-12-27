@@ -1105,8 +1105,35 @@ module.exports = {
 
 /***/ }),
 /* 42 */,
-/* 43 */,
-/* 44 */
+/* 43 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 44 */,
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var META = __webpack_require__(53)('meta');
@@ -1165,7 +1192,7 @@ var meta = module.exports = {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.31 Array.prototype[@@unscopables]
@@ -1178,34 +1205,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 46 */,
-/* 47 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
+/* 47 */,
 /* 48 */,
 /* 49 */,
 /* 50 */,
@@ -1720,7 +1720,7 @@ var global = __webpack_require__(5);
 var $export = __webpack_require__(0);
 var redefine = __webpack_require__(21);
 var redefineAll = __webpack_require__(62);
-var meta = __webpack_require__(44);
+var meta = __webpack_require__(45);
 var forOf = __webpack_require__(61);
 var anInstance = __webpack_require__(60);
 var isObject = __webpack_require__(7);
@@ -2327,7 +2327,7 @@ module.exports = function fill(value /* , start = 0, end = @length */) {
 
 "use strict";
 
-var addToUnscopables = __webpack_require__(45);
+var addToUnscopables = __webpack_require__(46);
 var step = __webpack_require__(233);
 var Iterators = __webpack_require__(73);
 var toIObject = __webpack_require__(23);
@@ -3343,7 +3343,7 @@ var $iterDefine = __webpack_require__(149);
 var step = __webpack_require__(233);
 var setSpecies = __webpack_require__(59);
 var DESCRIPTORS = __webpack_require__(9);
-var fastKey = __webpack_require__(44).fastKey;
+var fastKey = __webpack_require__(45).fastKey;
 var validate = __webpack_require__(74);
 var SIZE = DESCRIPTORS ? '_s' : 'size';
 
@@ -3507,7 +3507,7 @@ module.exports = __webpack_require__(103)(SET, function (get) {
 
 var each = __webpack_require__(36)(0);
 var redefine = __webpack_require__(21);
-var meta = __webpack_require__(44);
+var meta = __webpack_require__(45);
 var assign = __webpack_require__(221);
 var weak = __webpack_require__(241);
 var isObject = __webpack_require__(7);
@@ -3572,7 +3572,7 @@ if (fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp)
 "use strict";
 
 var redefineAll = __webpack_require__(62);
-var getWeak = __webpack_require__(44).getWeak;
+var getWeak = __webpack_require__(45).getWeak;
 var anObject = __webpack_require__(4);
 var isObject = __webpack_require__(7);
 var anInstance = __webpack_require__(60);
@@ -4012,9 +4012,9 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(427);
-(function webpackMissingModule() { throw new Error("Cannot find module \"url-search-params-polyfill\""); }());
 __webpack_require__(629);
-module.exports = __webpack_require__(630);
+__webpack_require__(630);
+module.exports = __webpack_require__(631);
 
 
 /***/ }),
@@ -4050,7 +4050,7 @@ define(String.prototype, "padRight", "".padEnd);
 "pop,reverse,shift,keys,values,entries,indexOf,every,some,forEach,map,filter,find,findIndex,includes,join,slice,concat,push,splice,unshift,sort,lastIndexOf,reduce,reduceRight,copyWithin,fill".split(",").forEach(function (key) {
   [][key] && define(Array, key, Function.call.bind([][key]));
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(47)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(43)))
 
 /***/ }),
 /* 428 */
@@ -4267,7 +4267,7 @@ var has = __webpack_require__(19);
 var DESCRIPTORS = __webpack_require__(9);
 var $export = __webpack_require__(0);
 var redefine = __webpack_require__(21);
-var META = __webpack_require__(44).KEY;
+var META = __webpack_require__(45).KEY;
 var $fails = __webpack_require__(6);
 var shared = __webpack_require__(94);
 var setToStringTag = __webpack_require__(71);
@@ -4605,7 +4605,7 @@ __webpack_require__(35)('getOwnPropertyNames', function () {
 
 // 19.1.2.5 Object.freeze(O)
 var isObject = __webpack_require__(7);
-var meta = __webpack_require__(44).onFreeze;
+var meta = __webpack_require__(45).onFreeze;
 
 __webpack_require__(35)('freeze', function ($freeze) {
   return function freeze(it) {
@@ -4620,7 +4620,7 @@ __webpack_require__(35)('freeze', function ($freeze) {
 
 // 19.1.2.17 Object.seal(O)
 var isObject = __webpack_require__(7);
-var meta = __webpack_require__(44).onFreeze;
+var meta = __webpack_require__(45).onFreeze;
 
 __webpack_require__(35)('seal', function ($seal) {
   return function seal(it) {
@@ -4635,7 +4635,7 @@ __webpack_require__(35)('seal', function ($seal) {
 
 // 19.1.2.15 Object.preventExtensions(O)
 var isObject = __webpack_require__(7);
-var meta = __webpack_require__(44).onFreeze;
+var meta = __webpack_require__(45).onFreeze;
 
 __webpack_require__(35)('preventExtensions', function ($preventExtensions) {
   return function preventExtensions(it) {
@@ -6280,7 +6280,7 @@ var $export = __webpack_require__(0);
 
 $export($export.P, 'Array', { copyWithin: __webpack_require__(232) });
 
-__webpack_require__(45)('copyWithin');
+__webpack_require__(46)('copyWithin');
 
 
 /***/ }),
@@ -6292,7 +6292,7 @@ var $export = __webpack_require__(0);
 
 $export($export.P, 'Array', { fill: __webpack_require__(157) });
 
-__webpack_require__(45)('fill');
+__webpack_require__(46)('fill');
 
 
 /***/ }),
@@ -6313,7 +6313,7 @@ $export($export.P + $export.F * forced, 'Array', {
     return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-__webpack_require__(45)(KEY);
+__webpack_require__(46)(KEY);
 
 
 /***/ }),
@@ -6334,7 +6334,7 @@ $export($export.P + $export.F * forced, 'Array', {
     return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
   }
 });
-__webpack_require__(45)(KEY);
+__webpack_require__(46)(KEY);
 
 
 /***/ }),
@@ -7365,7 +7365,7 @@ $export($export.P, 'Array', {
   }
 });
 
-__webpack_require__(45)('includes');
+__webpack_require__(46)('includes');
 
 
 /***/ }),
@@ -7394,7 +7394,7 @@ $export($export.P, 'Array', {
   }
 });
 
-__webpack_require__(45)('flatMap');
+__webpack_require__(46)('flatMap');
 
 
 /***/ }),
@@ -7422,7 +7422,7 @@ $export($export.P, 'Array', {
   }
 });
 
-__webpack_require__(45)('flatten');
+__webpack_require__(46)('flatten');
 
 
 /***/ }),
@@ -9288,7 +9288,7 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
   typeof self === "object" ? self : this
 );
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(47)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(43)))
 
 /***/ }),
 /* 626 */
@@ -9325,6 +9325,314 @@ module.exports = function (regExp, replace) {
 
 /***/ }),
 /* 629 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ *
+ *
+ * @author Jerry Bendy <jerry@icewingcc.com>
+ * @licence MIT
+ *
+ */
+
+(function(self) {
+    'use strict';
+
+    var nativeURLSearchParams = self.URLSearchParams ? self.URLSearchParams : null,
+        isSupportObjectConstructor = nativeURLSearchParams && (new nativeURLSearchParams({a: 1})).toString() === 'a=1',
+        __URLSearchParams__ = "__URLSearchParams__",
+        prototype = URLSearchParamsPolyfill.prototype,
+        iterable = !!(self.Symbol && self.Symbol.iterator);
+
+    if (nativeURLSearchParams && isSupportObjectConstructor) {
+        return;
+    }
+
+
+    /**
+     * Make a URLSearchParams instance
+     *
+     * @param {object|string|URLSearchParams} search
+     * @constructor
+     */
+    function URLSearchParamsPolyfill(search) {
+        search = search || "";
+
+        // support construct object with another URLSearchParams instance
+        if (search instanceof URLSearchParams || search instanceof URLSearchParamsPolyfill) {
+            search = search.toString();
+        }
+
+        this [__URLSearchParams__] = parseToDict(search);
+    }
+
+
+    /**
+     * Appends a specified key/value pair as a new search parameter.
+     *
+     * @param {string} name
+     * @param {string} value
+     */
+    prototype.append = function(name, value) {
+        appendTo(this [__URLSearchParams__], name, value);
+    };
+
+    /**
+     * Deletes the given search parameter, and its associated value,
+     * from the list of all search parameters.
+     *
+     * @param {string} name
+     */
+    prototype.delete = function(name) {
+        delete this [__URLSearchParams__] [name];
+    };
+
+    /**
+     * Returns the first value associated to the given search parameter.
+     *
+     * @param {string} name
+     * @returns {string|null}
+     */
+    prototype.get = function(name) {
+        var dict = this [__URLSearchParams__];
+        return name in dict ? dict[name][0] : null;
+    };
+
+    /**
+     * Returns all the values association with a given search parameter.
+     *
+     * @param {string} name
+     * @returns {Array}
+     */
+    prototype.getAll = function(name) {
+        var dict = this [__URLSearchParams__];
+        return name in dict ? dict [name].slice(0) : [];
+    };
+
+    /**
+     * Returns a Boolean indicating if such a search parameter exists.
+     *
+     * @param {string} name
+     * @returns {boolean}
+     */
+    prototype.has = function(name) {
+        return name in this [__URLSearchParams__];
+    };
+
+    /**
+     * Sets the value associated to a given search parameter to
+     * the given value. If there were several values, delete the
+     * others.
+     *
+     * @param {string} name
+     * @param {string} value
+     */
+    prototype.set = function set(name, value) {
+        this [__URLSearchParams__][name] = ['' + value];
+    };
+
+    /**
+     * Returns a string containg a query string suitable for use in a URL.
+     *
+     * @returns {string}
+     */
+    prototype.toString = function() {
+        var dict = this[__URLSearchParams__], query = [], i, key, name, value;
+        for (key in dict) {
+            name = encode(key);
+            for (i = 0, value = dict[key]; i < value.length; i++) {
+                query.push(name + '=' + encode(value[i]));
+            }
+        }
+        return query.join('&');
+    };
+
+
+    /*
+     * Apply polifill to global object and append other prototype into it
+     */
+    self.URLSearchParams = (nativeURLSearchParams && !isSupportObjectConstructor) ?
+        new Proxy(nativeURLSearchParams, {
+            construct: function(target, args) {
+                return new target((new URLSearchParamsPolyfill(args[0]).toString()));
+            }
+        }) :
+        URLSearchParamsPolyfill;
+
+
+    var USPProto = self.URLSearchParams.prototype;
+
+    USPProto.polyfill = true;
+
+    /**
+     *
+     * @param {function} callback
+     * @param {object} thisArg
+     */
+    USPProto.forEach = USPProto.forEach || function(callback, thisArg) {
+        var dict = parseToDict(this.toString());
+        Object.getOwnPropertyNames(dict).forEach(function(name) {
+            dict[name].forEach(function(value) {
+                callback.call(thisArg, value, name, this);
+            }, this);
+        }, this);
+    };
+
+    /**
+     * Sort all name-value pairs
+     */
+    USPProto.sort = USPProto.sort || function() {
+        var dict = parseToDict(this.toString()), keys = [], k, i, j;
+        for (k in dict) {
+            keys.push(k);
+        }
+        keys.sort();
+
+        for (i = 0; i < keys.length; i++) {
+            this.delete(keys[i]);
+        }
+        for (i = 0; i < keys.length; i++) {
+            var key = keys[i], values = dict[key];
+            for (j = 0; j < values.length; j++) {
+                this.append(key, values[j]);
+            }
+        }
+    };
+
+    /**
+     * Returns an iterator allowing to go through all keys of
+     * the key/value pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.keys = USPProto.keys || function() {
+        var items = [];
+        this.forEach(function(item, name) {
+            items.push([name]);
+        });
+        return makeIterator(items);
+    };
+
+    /**
+     * Returns an iterator allowing to go through all values of
+     * the key/value pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.values = USPProto.values || function() {
+        var items = [];
+        this.forEach(function(item) {
+            items.push([item]);
+        });
+        return makeIterator(items);
+    };
+
+    /**
+     * Returns an iterator allowing to go through all key/value
+     * pairs contained in this object.
+     *
+     * @returns {function}
+     */
+    USPProto.entries = USPProto.entries || function() {
+        var items = [];
+        this.forEach(function(item, name) {
+            items.push([name, item]);
+        });
+        return makeIterator(items);
+    };
+
+
+    if (iterable) {
+        USPProto[self.Symbol.iterator] = USPProto[self.Symbol.iterator] || USPProto.entries;
+    }
+
+
+    function encode(str) {
+        var replace = {
+            '!': '%21',
+            "'": '%27',
+            '(': '%28',
+            ')': '%29',
+            '~': '%7E',
+            '%20': '+',
+            '%00': '\x00'
+        };
+        return encodeURIComponent(str).replace(/[!'\(\)~]|%20|%00/g, function(match) {
+            return replace[match];
+        });
+    }
+
+    function decode(str) {
+        return decodeURIComponent(str.replace(/\+/g, ' '));
+    }
+
+    function makeIterator(arr) {
+        var iterator = {
+            next: function() {
+                var value = arr.shift();
+                return {done: value === undefined, value: value};
+            }
+        };
+
+        if (iterable) {
+            iterator[self.Symbol.iterator] = function() {
+                return iterator;
+            };
+        }
+
+        return iterator;
+    }
+
+    function parseToDict(search) {
+        var dict = {};
+
+        if (typeof search === "object") {
+            for (var i in search) {
+                if (search.hasOwnProperty(i)) {
+                    var str = typeof search [i] === 'string' ? search [i] : JSON.stringify(search [i]);
+                    appendTo(dict, i, str);
+                }
+            }
+
+        } else {
+            // remove first '?'
+            if (search.indexOf("?") === 0) {
+                search = search.slice(1);
+            }
+
+            var pairs = search.split("&");
+            for (var j = 0; j < pairs.length; j++) {
+                var value = pairs [j],
+                    index = value.indexOf('=');
+
+                if (-1 < index) {
+                    appendTo(dict, decode(value.slice(0, index)), decode(value.slice(index + 1)));
+
+                } else {
+                    if (value) {
+                        appendTo(dict, decode(value), '');
+                    }
+                }
+            }
+        }
+
+        return dict;
+    }
+
+    function appendTo(dict, name, value) {
+        if (name in dict) {
+            dict[name].push('' + value);
+        } else {
+            dict[name] = ['' + value];
+        }
+    }
+
+})(typeof global !== 'undefined' ? global : (typeof window !== 'undefined' ? window : this));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(43)))
+
+/***/ }),
+/* 630 */
 /***/ (function(module, exports) {
 
 (function(self) {
@@ -9791,7 +10099,7 @@ module.exports = function (regExp, replace) {
 
 
 /***/ }),
-/* 630 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
