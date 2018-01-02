@@ -97,8 +97,7 @@ const ViewerContents = styled.section`
   }
   .comic_page {
     text-align: center;
-    font-size: unset;
-    line-height: unset;
+    line-height: 0;
     img {
       padding: 0;
       width: ${props => `${ViewerHelper.getComicWidth(props.comicWidthLevel)}%`};
