@@ -23,11 +23,6 @@ const checkPreconditions = () => getGitBranch()
       exitWithErrorMsg('branch must be master');
     }
     return npm(name);
-  })
-  .then(packageInfo => {
-    if (version === packageInfo.version) {
-      exitWithErrorMsg(`version ${version} already published`);
-    }
   });
 
 const build = webpackConfig => new Promise((resolve, reject) => {
