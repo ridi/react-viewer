@@ -11,7 +11,7 @@ module.exports = {
     libraryTarget: 'umd',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
@@ -26,20 +26,6 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      comments: false,
-      mangle: true,
-      minimize: true,
-      compress: {
-        warnings: false,
-      },
-    }),
-  ],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
