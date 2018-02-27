@@ -12,7 +12,7 @@ http://www.ridicorp.com/react-webviewer/demo/
 npm install @ridi/react-webviewer
 ```
 
-## How to use
+## How to Use
 
 ### Initialize
 
@@ -34,26 +34,107 @@ import { createStore } from 'redux';
 import { ViewerHelper, PageCalculator, ReadPositionHelper } from '@ridi/react-webviewer';
 
 const store = createStore( ... );
-ViewerHelper.connect(store);
-PageCalculator.connect(store);
+ViewerHelper.connect(store, { ...options });
+PageCalculator.connect(store, { ...options });
 ReadPositionHelper.connect(store);
 ```
 
+`ViewerHelper`'s options = defaults:
+* `paddingVertical` = DEFAULT_PADDING_VERTICAL(`35`),
+* `pageMaxWidth` = PAGE_MAX_WIDTH(`700`),
+* `pageViewerSelector` = PAGE_VIEWER_SELECTOR(`#viewer_contents .pages`),
+* `extendedTouchWidth` = EXTENDED_TOUCH_WIDTH(`100`),
+
+`PageCalculator`'s options = defaults:
+* `containExtraPage` = 1
+
+### `ViewerScreen` Component
+
+`ViewerScreen` component provides all functionality of viewer and renders viewer body.
+
 Put `ViewerScreen` component into your component.
 ```js
-import React, { Component } from 'react';
+import React from 'react';
 import ViewerScreen from '@ridi/react-webviewer';
 
-export default ViewerPage extends Component {
+export default ViewerPage extends React.Component {
     render() {
-        <ViewerScreen />
+        return <ViewerScreen />;
     }
 };
 ```
 
-### Render contents
+`ViewerScreen`'s properties:
 
-Dispatch `renderSpine` action to render `html` into the viewer.
+* `onMount`(func): called after viewer is mounted
+* `onUnmount`(func): called after viewer is unmounted
+* `onMoveWrongDirection`(func): called when user try to tap wrong direction to the next page (on `page` viewerType)
+* `footer`(node): markup for the footer area
+* `fontDomain`(string): prefixed URL for searching font files 
+* `ignoreScroll`(bool): disable scrolling (on `scroll` viewerType)
+
+* disablePageCalculation: PropTypes.bool,
+
+You can extend or replace child components of `ViewerScreen` with the HoC-style function `createStyledViewerScreen()`.
+
+```js
+// Signature
+createStyledViewerScreen = ({
+  TouchableScrollScreen = ScrollScreen,
+  StyledScrollContents = ScrollContents,
+  TouchablePageScreen = PageScreen,
+  StyledPageContents = PageContents,
+  SizingWrapper = SizingWrapper,
+} = {}) => ViewerScreen
+```
+
+This is an example.
+
+```js
+import {
+    createStyledViewerScreen,
+    SizingWrapper,
+    ScrollContents,
+    PageContents,
+    ScrollScreen,
+    PageScreen,
+} from '@ridi/react-webviewer';
+
+const TouchableScrollScreen = ScrollScreen.extend`...`;
+const TouchablePageScreen = PageScreen.extend`...`;
+...
+
+createStyledViewerScreen({
+    TouchablePageScreen,
+    TouchableScrollScreen,
+    ...,
+})
+```
+
+### Render Contents
+
+Dispatch `updateMetaData` action to update content's metadata.
+
+```js
+import {
+  updateMetaData,
+  ContentType,
+  AvailableViewerType,
+  BindingType,
+} from '@ridi/react-webviewer';
+
+const contentType = ContentType.COMIC;
+const viewerType = AvailableViewerType.BOTH;
+const bindingType = BindingType.LEFT;
+
+dispatch(updateMetaData(contentType, viewerType, bindingType));
+```
+
+* `viewerType`: available viewer type (BOTH: 0, SCROLL: 1, PAGE: 2)
+* `contentType`: content type (WEB_NOVEL: 10, COMIC: 20, WEBTOON: 30)
+* `bindingType`: binding type (LEFT: 0, RIGHT: 1)
+
+And then dispatch `renderSpine` action to render `html` into the viewer after loading contents data.
 ```js
 import { renderSpine } from '@ridi/react-webviewer';
 

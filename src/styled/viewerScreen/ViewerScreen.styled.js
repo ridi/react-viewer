@@ -8,6 +8,25 @@ import SvgIconConstants from '../../constants/SvgIconConstants';
 import { screenHeight } from '../../util/BrowserWrapper';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
 
+const fontFace = fontDomain => `${fontDomain ? `
+  @font-face {
+    font-family: 'kopub_batang';
+    font-style: normal;
+    font-weight: normal;
+    src: url('${fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
+      url('${fontDomain}KoPubBatangMedium.woff') format('woff'), 
+      url('${fontDomain}KoPubBatangMedium.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'kopub_dotum';
+    font-style: normal;
+    font-weight: normal;
+    src: url('${fontDomain}KoPubDotumMedium.woff2') format('woff2'),
+      url('${fontDomain}KoPubDotumMedium.woff') format('woff'),
+      url('${fontDomain}KoPubDotumMedium.ttf') format('truetype');
+  }
+` : ''}`;
+
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerScreen = styled.div`
   background: transparent;
@@ -71,25 +90,8 @@ const novelStyleMixin = css`
 
 // language=SCSS prefix=dummy{ suffix=}
 const ViewerContents = styled.section`
-  @font-face {
-    font-family: 'kopub_batang';
-    font-style: normal;
-    font-weight: normal;
-    src: ${props =>
-    `url('${props.fontDomain}KoPubBatangMedium.woff2') format('woff2'), 
-      url('${props.fontDomain}KoPubBatangMedium.woff') format('woff'), 
-      url('${props.fontDomain}KoPubBatangMedium.ttf') format('truetype');`}
-  }
-  @font-face {
-    font-family: 'kopub_dotum';
-    font-style: normal;
-    font-weight: normal;
-    src: ${props =>
-    `url('${props.fontDomain}KoPubDotumMedium.woff2') format('woff2'),
-      url('${props.fontDomain}KoPubDotumMedium.woff') format('woff'),
-      url('${props.fontDomain}KoPubDotumMedium.ttf') format('truetype');`}
-  }
-  
+  ${props => fontFace(props.fontDomain)};
+
   * {
     font-size: ${props => ViewerHelper.getFontSize(props.fontSizeLevel)}px;
     line-height: ${props => ViewerHelper.getNovelLineHeight(props.lineHeight)}em;
