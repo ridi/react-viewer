@@ -14,7 +14,7 @@ module.exports = {
     filename: 'resources/js/[name].js',
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader',
@@ -26,10 +26,7 @@ module.exports = {
             ['transform-proto-to-assign'],
           ],
         },
-      }, {
-        test: /\.json$/,
-        loader: 'json-loader',
-      },
+      }
     ],
   },
   resolve: {

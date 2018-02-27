@@ -33,7 +33,7 @@
   "devDependencies": {
     "@ridi/eslint-config": "*",
     "babel-core": "^6.14.0",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^7.1.3",
     "babel-plugin-transform-es2015-classes": "^6.8.0",
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
     "babel-polyfill": "^6.16.0",
@@ -55,8 +55,9 @@
     "redux-devtools-inspector": "^0.11.3",
     "redux-devtools-log-monitor": "^1.4.0",
     "redux-devtools-multiple-monitors": "^1.0.1",
-    "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.9.7",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.9",
+    "webpack-dev-server": "^2.11.2",
     "webpack-manifest-plugin": "^1.3.2",
     "webpack-stream": "^4.0.0"
   },
