@@ -71,9 +71,8 @@ export default ViewerPage extends React.Component {
 * `onMoveWrongDirection`(func): called when user try to tap wrong direction to the next page (on `page` viewerType)
 * `footer`(node): markup for the footer area
 * `fontDomain`(string): prefixed URL for searching font files 
-* `ignoreScroll`(bool): disable scrolling (on `scroll` viewerType)
-
-* disablePageCalculation: PropTypes.bool,
+* `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewerType)
+* `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewerType)
 
 You can extend or replace child components of `ViewerScreen` with the HoC-style function `createStyledViewerScreen()`.
 
