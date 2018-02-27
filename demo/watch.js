@@ -9,7 +9,7 @@ const server = new WebpackDevServer(compiler, {
   watchOptions: {
     aggregateTimeout: 300,
     poll: 1000,
-  }
+  },
 });
 
 const port = 8000;
