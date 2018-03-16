@@ -4,7 +4,7 @@ import {
   movePageViewer as movePageViewerAction,
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
-import { BindingType, ContentFormat } from '../../constants/ContentConstants';
+import { BindingType } from '../../constants/ContentConstants';
 import { debounce, isExist } from '../../util/Util';
 import PageCalculator from '../../util/viewerScreen/PageCalculator';
 import ReadPositionHelper from '../../util/viewerScreen/ReadPositionHelper';
