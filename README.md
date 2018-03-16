@@ -152,3 +152,11 @@ import { renderImages } from '@ridi/react-webviewer';
 const images = [{ src: '/image_1.jpg' }, { src: '/image_2.jpg' }, ...];
 dispatch(renderImages(images));
 ```
+
+## How to run demo
+
+```
+$ npm install
+$ npm run install:demo
+$ npm run watch
+```

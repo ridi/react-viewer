@@ -28,9 +28,7 @@ import {
   documentRemoveEventListener,
 } from '../../util/BrowserWrapper';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { ContentFormat } from '../../constants/ContentConstants';
 import { SCROLL_VIEWER_SELECTOR } from '../../constants/StyledConstants';
-import LazyLoadImage from '../LazyLoadImage';
 
 class ViewerScrollScreen extends ViewerBaseScreen {
   componentDidMount() {
@@ -93,39 +91,13 @@ class ViewerScrollScreen extends ViewerBaseScreen {
     ReadPositionHelper.updateChangedReadPosition();
   }
 
-  renderContent() {
-    const {
-      contentFormat,
-      spines,
-      images,
-    } = this.props;
-
-    if (contentFormat === ContentFormat.EPUB) {
-      let viewData = '';
-      Object.keys(spines).forEach((value, index) => { viewData = `${viewData} ${spines[index]}`; });
-      return (
-        <div
-          className="pages"
-          dangerouslySetInnerHTML={{ __html: viewData }}
-          style={this.pageViewStyle()}
-        />
-      );
-    } else if (contentFormat === ContentFormat.IMAGE) {
-      return (
-        <React.Fragment>
-          {images.map(image => <LazyLoadImage key={image.src} src={image.src} />)}
-        </React.Fragment>
-      );
-    }
-    return null;
-  }
-
   render() {
     const {
       contentType,
       viewerScreenTouched,
       isLoadingCompleted,
       footer,
+      contentFooter,
       fontDomain,
       TouchableScreen,
       StyledContents,
@@ -165,7 +137,10 @@ class ViewerScrollScreen extends ViewerBaseScreen {
           paddingLevel={paddingLevel}
           fontDomain={fontDomain}
         >
-          {this.renderContent()}
+          <div className="pages" style={this.pageViewStyle()}>
+            {this.renderContent()}
+            {contentFooter && <div className="content_footer" style={this.contentFooterStyle()}>{contentFooter}</div>}
+          </div>
         </StyledContents>
       </ScrollTouchable>
     );
@@ -179,6 +154,7 @@ ViewerScrollScreen.propTypes = {
   isDisableComment: PropTypes.bool,
   readPosition: PropTypes.string,
   footer: PropTypes.node,
+  contentFooter: PropTypes.node,
   fontDomain: PropTypes.string,
   ignoreScroll: PropTypes.bool,
   screenRef: PropTypes.func,
@@ -195,7 +171,6 @@ const mapStateToProps = state => ({
   viewerScreenSettings: selectViewerScreenSettings(state),
   isLoadingCompleted: selectIsLoadingCompleted(state),
   readPosition: selectViewerReadPosition(state),
-
 });
 
 const mapDispatchToProps = dispatch => ({

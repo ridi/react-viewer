@@ -92,7 +92,7 @@ const novelStyleMixin = css`
 const ViewerContents = styled.section`
   ${props => fontFace(props.fontDomain)};
 
-  * {
+  .chapter * {
     font-size: ${props => ViewerHelper.getFontSize(props.fontSizeLevel)}px;
     line-height: ${props => ViewerHelper.getNovelLineHeight(props.lineHeight)}em;
     font-family: ${props => props.fontFamily};
@@ -172,8 +172,10 @@ const PageContents = ViewerContents.extend`
     height: 100vh; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
   }
-  .page_contents {
-    margin-bottom: ${() => screenHeight() - 1}px !important;
+  .pages {
+    & > :last-child {
+      margin-bottom: ${() => screenHeight() - 1}px !important;
+    }
   }
   .comic_page {
     display: flex; height: ${() => screenHeight()}px; overflow: hidden;
@@ -193,6 +195,19 @@ const PageContents = ViewerContents.extend`
         background-color: transparent;
       }
     }
+    &.last {
+      height: ${() => screenHeight() - ViewerHelper.getContentFooterHeight()}px;
+      img {
+       max-height: ${() => screenHeight() - ViewerHelper.getContentFooterHeight()}px;
+      }
+    }
+  }
+  .content_footer {
+    margin: 90px auto 0 auto;
+    padding: 15px;
+  }
+  .comic_page + .content_footer {
+    margin-top: 0;
   }
 `;
 
@@ -209,8 +224,16 @@ const ScrollScreen = ViewerScreen.extend`
 
 // language=SCSS prefix=dummy{ suffix=}
 const ScrollContents = ViewerContents.extend`
-  article {
-    padding: ${props => (props.contentType === ContentType.WEB_NOVEL ? ViewerHelper.getNovelPadding(props.paddingLevel) : ViewerHelper.getComicPadding(props.paddingLevel))};
+  .chapter {
+    padding: 0 ${({ contentType, paddingLevel }) => (contentType === ContentType.WEB_NOVEL ? ViewerHelper.getNovelPadding(paddingLevel) : ViewerHelper.getComicPadding(paddingLevel))};
+    padding-bottom: ${props => (props.contentType === ContentType.WEB_NOVEL ? '80px' : '0')};
+    &.last {
+      padding-bottom: 0;
+    }
+  }
+  .content_footer {
+    margin-top: 90px;
+    padding: 15px ${({ contentType, paddingLevel }) => (contentType === ContentType.WEB_NOVEL ? ViewerHelper.getNovelPadding(paddingLevel) : '15px')};
   }
   img  {
     padding: 15px;

@@ -13910,3 +13910,15 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     word-break: break-all;
     white-space: normal
 }
+
+@media only screen and (min-width: 700px) {
+    .comic_page + .content_footer {
+        text-align: center;
+    }
+}
+.content_footer {
+    line-height: 1.36 !important;
+}
+.content_footer small {
+    font-size: 11px;
+}

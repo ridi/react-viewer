@@ -7,6 +7,9 @@ import {
   PAGE_MAX_WIDTH,
   PAGE_VIEWER_SELECTOR,
   EXTENDED_TOUCH_WIDTH,
+  CONTENT_FOOTER_HEIGHT,
+  CHAPTER_INDICATOR_ID_PREFIX,
+  CHAPTER_ID_PREFIX,
 } from '../../constants/StyledConstants';
 import { ContentType } from '../../constants/ContentConstants';
 import { ViewerType } from '../../constants/ViewerScreenConstants';
@@ -18,12 +21,18 @@ class ViewerHelper extends Connector {
       pageMaxWidth = PAGE_MAX_WIDTH,
       pageViewerSelector = PAGE_VIEWER_SELECTOR,
       extendedTouchWidth = EXTENDED_TOUCH_WIDTH,
+      contentFooterHeight = CONTENT_FOOTER_HEIGHT,
+      chapterIndicatorIdPrefix = CHAPTER_INDICATOR_ID_PREFIX,
+      chapterIdPrefix = CHAPTER_ID_PREFIX,
     } = this._options;
 
     this._targetSelector = pageViewerSelector;
     this._paddingVertical = paddingVertical;
     this._pageMaxWidth = pageMaxWidth;
     this._extendedTouchWidth = extendedTouchWidth;
+    this._contentFooterHeight = contentFooterHeight;
+    this._chapterIndicatorIdPrefix = chapterIndicatorIdPrefix;
+    this._chapterIdPrefix = chapterIdPrefix;
   }
 
   getScrollStyle() {
@@ -99,10 +108,7 @@ class ViewerHelper extends Connector {
     return clientWidth * 0.25;
   }
 
-  getNovelPadding(level) {
-    const paddingValue = 7 - Number(level);
-    return `0 ${paddingValue}% 80px ${paddingValue}%`;
-  }
+  getNovelPadding(level) { return `${7 - Number(level)}%`; }
 
   getComicPadding() { return '0'; }
 
@@ -153,6 +159,27 @@ class ViewerHelper extends Connector {
       default:
         return 1.70;
     }
+  }
+
+  getChapterIndicatorId(chapterNum) {
+    return `${this._chapterIndicatorIdPrefix}${chapterNum}`;
+  }
+
+  getChapterId(chapterNum) {
+    return `${this._chapterIdPrefix}${chapterNum}`;
+  }
+
+  getContentFooterStyle() {
+    return {
+      overflow: 'hidden',
+      boxSizing: 'border-box',
+      height: `${this.getContentFooterHeight()}px`,
+      width: '100%',
+    };
+  }
+
+  getContentFooterHeight() {
+    return this._contentFooterHeight;
   }
 }
 const viewerHelper = new ViewerHelper();
