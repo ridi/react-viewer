@@ -1,4 +1,3 @@
-import Renderer from '../utils/Renderer';
 import { renderSpine, renderImages } from '../../../lib/index';
 import { getJson } from '../utils/Api';
 
@@ -21,10 +20,7 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
 };
 
 export const requestLoadEpisodeEpub = (spine, index) => (dispatch) => {
-  getJson(spine).then(({ value }) => {
-    const spineHtml = Renderer.generateSpineHtml(index, value);
-    dispatch(renderSpine(index, spineHtml));
-  });
+  getJson(spine).then(({ value }) => dispatch(renderSpine(index, value)));
 };
 
 export const requestLoadEpisode = (contentId, episodeId) => (dispatch) => {

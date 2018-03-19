@@ -124,6 +124,7 @@ const createStyledViewerScreen = ({
       const {
         onMoveWrongDirection,
         footer,
+        contentFooter,
         fontDomain,
         ignoreScroll,
         disablePageCalculation = false,
@@ -136,6 +137,7 @@ const createStyledViewerScreen = ({
           }}
           onMoveWrongDirection={() => onMoveWrongDirection()}
           footer={footer}
+          contentFooter={contentFooter}
           fontDomain={fontDomain}
           ignoreScroll={ignoreScroll}
           disablePageCalculation={disablePageCalculation}
@@ -158,6 +160,7 @@ const createStyledViewerScreen = ({
     onUnmount: PropTypes.func,
     onMoveWrongDirection: PropTypes.func,
     footer: PropTypes.node,
+    contentFooter: PropTypes.node,
     fontDomain: PropTypes.string,
     ignoreScroll: PropTypes.bool,
     isLoadingCompleted: PropTypes.bool,

@@ -77,9 +77,10 @@ export default class LazyLoadImage extends React.Component {
 
   render() {
     const { loaded } = this.state;
+    const { className = '' } = this.props;
     return (
       <div
-        className={`comic_page lazy_load ${loaded ? 'loaded' : ''}`}
+        className={`comic_page lazy_load ${loaded ? 'loaded' : ''} ${className}`}
         ref={(node) => { this.node = node; }}
       >
         {this.renderImage()}
@@ -90,4 +91,5 @@ export default class LazyLoadImage extends React.Component {
 
 LazyLoadImage.propTypes = {
   src: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };

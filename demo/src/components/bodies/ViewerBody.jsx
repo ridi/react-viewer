@@ -10,6 +10,7 @@ const ViewerBody = ({ content, episode }) => (
     episode={episode}
     footer={<ViewerScreenFooter content={content} episode={episode} />}
     fontDomain="resources/fonts/"
+    contentFooter={<small>content footer</small>}
   />
 );
 

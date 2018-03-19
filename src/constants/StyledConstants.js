@@ -6,8 +6,11 @@ const MIN_PADDING_BOTTOM = 50;
 const MAX_PADDING_LEVEL = 6;
 const DEFAULT_PADDING_VERTICAL = 35;
 const EXTENDED_TOUCH_WIDTH = 100;
+const CONTENT_FOOTER_HEIGHT = 60;
 const PAGE_VIEWER_SELECTOR = '#viewer_contents .pages';
 const SCROLL_VIEWER_SELECTOR = '#viewer_contents .pages';
+const CHAPTER_INDICATOR_ID_PREFIX = 'ridi_link_c';
+const CHAPTER_ID_PREFIX = 'ridi_c';
 
 const mainMenuStyleConstants = {
   HEIGHT: 56,
@@ -29,6 +32,9 @@ export {
   EXTENDED_TOUCH_WIDTH,
   PAGE_VIEWER_SELECTOR,
   SCROLL_VIEWER_SELECTOR,
+  CONTENT_FOOTER_HEIGHT,
+  CHAPTER_INDICATOR_ID_PREFIX,
+  CHAPTER_ID_PREFIX,
   mainMenuStyleConstants,
   categoryStyleConstants,
 };

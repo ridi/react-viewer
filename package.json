@@ -5,7 +5,7 @@
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
   "scripts": {
-    "postinstall": "cd demo && npm install",
+    "install:demo": "cd demo && npm install",
     "lint": "npm run lint:src && npm run lint:demo",
     "lint:src": "eslint --fix --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
