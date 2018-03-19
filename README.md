@@ -113,6 +113,11 @@ createStyledViewerScreen({
 
 ### Render Contents
 
+1. Update meta data with `updateMetaData`
+2. Render contents with `renderSpine` or `renderImages`
+
+#### `updateMetaData`
+
 Dispatch `updateMetaData` action to update content's metadata.
 
 ```js
@@ -134,6 +139,8 @@ dispatch(updateMetaData(contentType, viewerType, bindingType));
 * `contentType`: content type (WEB_NOVEL: 10, COMIC: 20, WEBTOON: 30)
 * `bindingType`: binding type (LEFT: 0, RIGHT: 1)
 
+#### `renderSpine`
+
 And then dispatch `renderSpine` action to render `html` into the viewer after loading contents data.
 ```js
 import { renderSpine } from '@ridi/react-webviewer';
@@ -144,6 +151,8 @@ const html = '<h1>hello, world</h1>';
 dispatch(renderSpine(index, html));
 ```
 
+#### `renderImages`
+
 If you have image contents to render lazily, dispatch `renderImages` instead of `renderSpine`.
 ```js
 import { renderImages } from '@ridi/react-webviewer';
@@ -153,10 +162,11 @@ const images = [{ src: '/image_1.jpg' }, { src: '/image_2.jpg' }, ...];
 dispatch(renderImages(images));
 ```
 
-## How to run demo
+## How to Run Demo
 
 ```
 $ npm install
 $ npm run install:demo
 $ npm run watch
 ```
+Browse http://localhost:8000.
