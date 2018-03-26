@@ -92,10 +92,15 @@ const novelStyleMixin = css`
 const ViewerContents = styled.section`
   ${props => fontFace(props.fontDomain)};
 
-  .chapter * {
+  .chapter {
     font-size: ${props => ViewerHelper.getFontSize(props.fontSizeLevel)}px;
     line-height: ${props => ViewerHelper.getNovelLineHeight(props.lineHeight)}em;
     font-family: ${props => props.fontFamily};
+    * {
+      font-size: 1em;
+      line-height: inherit;
+      font-family: inherit;
+    }
   }
   .comic_page {
     text-align: center;
