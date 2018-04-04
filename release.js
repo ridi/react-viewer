@@ -71,7 +71,7 @@ const execArgs = arg => {
       .then(() => gitCheckout('master ./demo/resources/js/'))
       .then(() => gitCheckout('master ./demo/resources/css/'))
       .then(() => gitCheckout('master ./demo/resources/contents/'))
-      .then(() => gitCommitAndPush(`Demo version update ${version}`))
+      .then(() => gitCommitAndPush(`"Demo version update ${version}"`))
       .then(() => gitCheckout('master'));
   }
   return Promise.reject('invalid args');

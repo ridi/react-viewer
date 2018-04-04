@@ -1,24 +1,24 @@
-# react-webviewer
+# @ridi/react-viewer
 
-[![Build Status](https://travis-ci.org/ridi/react-webviewer.svg?branch=master)](https://travis-ci.org/ridi/react-webviewer)
-[![npm version](https://img.shields.io/npm/v/@ridi/react-webviewer.svg)](https://www.npmjs.com/package/@ridi/react-webviewer)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/react-webviewer.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/ridi/react-viewer.svg?branch=master)](https://travis-ci.org/ridi/react-viewer)
+[![npm version](https://img.shields.io/npm/v/@ridi/react-viewer.svg)](https://www.npmjs.com/package/@ridi/react-viewer)
+[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/react-viewer.svg)](https://greenkeeper.io/)
 
 ## Demo
-http://www.ridicorp.com/react-webviewer/demo/
+http://www.ridicorp.com/react-viewer/demo/
 
 ## Installation
 ```
-npm install @ridi/react-webviewer
+npm install @ridi/react-viewer
 ```
 
 ## How to Use
 
 ### Initialize
 
-Add `@ridi/react-webviewer` reducer into your reducers.
+Add `@ridi/react-viewer` reducer into your reducers.
 ```js
-import { reducers as viewerScreen } from '@ridi/react-webviewer';
+import { reducers as viewerScreen } from '@ridi/react-viewer';
 import { combineReducers } from 'redux';
 
 const appReducer = combineReducers({
@@ -31,7 +31,7 @@ const appReducer = combineReducers({
 Connect `ViewerHelper`, `PageCalculator`, `ReadPositionHelper` with redux store.
 ```js
 import { createStore } from 'redux';
-import { ViewerHelper, PageCalculator, ReadPositionHelper } from '@ridi/react-webviewer';
+import { ViewerHelper, PageCalculator, ReadPositionHelper } from '@ridi/react-viewer';
 
 const store = createStore( ... );
 ViewerHelper.connect(store, { ...options });
@@ -55,7 +55,7 @@ ReadPositionHelper.connect(store);
 Put `ViewerScreen` component into your component.
 ```js
 import React from 'react';
-import ViewerScreen from '@ridi/react-webviewer';
+import ViewerScreen from '@ridi/react-viewer';
 
 export default ViewerPage extends React.Component {
     render() {
@@ -97,7 +97,7 @@ import {
     PageContents,
     ScrollScreen,
     PageScreen,
-} from '@ridi/react-webviewer';
+} from '@ridi/react-viewer';
 
 const TouchableScrollScreen = ScrollScreen.extend`...`;
 const TouchablePageScreen = PageScreen.extend`...`;
@@ -125,7 +125,7 @@ import {
   ContentType,
   AvailableViewerType,
   BindingType,
-} from '@ridi/react-webviewer';
+} from '@ridi/react-viewer';
 
 const contentType = ContentType.COMIC;
 const viewerType = AvailableViewerType.BOTH;
@@ -142,7 +142,7 @@ dispatch(updateMetaData(contentType, viewerType, bindingType));
 
 And then dispatch `renderSpine` action to render `html` into the viewer after loading contents data.
 ```js
-import { renderSpine } from '@ridi/react-webviewer';
+import { renderSpine } from '@ridi/react-viewer';
 
 ...
 const index = 0;
@@ -154,7 +154,7 @@ dispatch(renderSpine(index, html));
 
 If you have image contents to render lazily, dispatch `renderImages` instead of `renderSpine`.
 ```js
-import { renderImages } from '@ridi/react-webviewer';
+import { renderImages } from '@ridi/react-viewer';
 
 ...
 const images = [{ src: '/image_1.jpg' }, { src: '/image_2.jpg' }, ...];
