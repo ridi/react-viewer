@@ -5,7 +5,7 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/ridi/react-viewer.svg)](https://greenkeeper.io/)
 
 ## Demo
-http://www.ridicorp.com/react-viewer/demo/
+https://ridi.github.io/react-viewer/demo/
 
 ## Installation
 ```
