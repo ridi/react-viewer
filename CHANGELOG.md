@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
-## [v0.4.0-alpha]
+## [v0.4.0-alpha.1]
 
 - Update dependencies (includes settings for Greenkeeper)
     - `styled-components` 2.x.x => 3.x.x
@@ -15,5 +15,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/php-oauth2/compare/v0.4.0-alpha...HEAD
-[v0.4.0-alpha]: https://github.com/ridi/php-oauth2/compare/v0.3.8...v0.4.0-alpha
+[unreleased]: https://github.com/ridi/php-oauth2/compare/v0.4.0-alpha.1...HEAD
+[v0.4.0-alpha]: https://github.com/ridi/php-oauth2/compare/v0.3.8...v0.4.0-alpha.1

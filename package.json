@@ -1,6 +1,6 @@
 {
   "name": "@ridi/react-viewer",
-  "version": "0.3.9-alpha.0",
+  "version": "0.3.9-alpha.1",
   "license": "MIT",
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
@@ -10,10 +10,11 @@
     "lint:src": "eslint --fix --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
-    "release": "release-it",
     "build": "npm run build:src && npm run build:demo",
     "build:src": "webpack --mode production",
-    "build:demo": "cd demo && npm run build"
+    "build:demo": "cd demo && npm run build",
+    "release": "release-it",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
