@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 module.exports = {
   entry: {
     index: `${__dirname}/src/index.js`,
@@ -30,13 +28,10 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
   externals: {
-    'react': 'react',
+    react: 'react',
+    redux: 'redux',
     'react-dom': 'react-dom',
     'react-redux': 'react-redux',
-    'redux': 'redux',
-    'redux-thunk': 'redux-thunk',
-    'reselect': 'reselect',
-    '@ridi/reader.js': '@ridi/reader.js',
   },
   mode: 'development',
 };
