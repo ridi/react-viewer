@@ -72,7 +72,7 @@ export const updateObject = (origin, target, isNeedClone = true) => {
 export function invert(object) {
   const result = {};
   const keys = Object.keys(object);
-  for (let i = 0, { length } = keys; i < length; ++i) {
+  for (let i = 0, { length } = keys; i < length; i += 1) {
     result[object[keys[i]]] = keys[i];
   }
   return result;
