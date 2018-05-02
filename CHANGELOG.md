@@ -16,4 +16,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
 [unreleased]: https://github.com/ridi/php-oauth2/compare/v0.4.0-alpha.1...HEAD
-[v0.4.0-alpha]: https://github.com/ridi/php-oauth2/compare/v0.3.8...v0.4.0-alpha.1
+[v0.4.0-alpha.1]: https://github.com/ridi/php-oauth2/compare/v0.3.8...v0.4.0-alpha.1
