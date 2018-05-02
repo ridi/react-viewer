@@ -38,4 +38,5 @@ module.exports = {
     'reselect': 'reselect',
     '@ridi/reader.js': '@ridi/reader.js',
   },
+  mode: 'development',
 };
