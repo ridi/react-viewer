@@ -15,7 +15,7 @@ const exitWithErrorMsg = (msg) => {
 
 const getGitBranch = () => new Promise((resolve, reject) => git.branch(branch => resolve(branch)));
 const gitCheckout = branch => exec(`git checkout ${branch}`);
-const gitCommitAndPush = commitMsg => exec(`git add . --all && git commit -m ${commitMsg} && git push`);
+const gitCommitAndPush = (commitMsg, branch) => exec(`git add . --all && git commit -m ${commitMsg} && git push origin ${branch}`);
 
 const checkPreconditions = () => getGitBranch()
   .then(branch => {
@@ -71,7 +71,7 @@ const execArgs = arg => {
       .then(() => gitCheckout('master ./demo/resources/js/'))
       .then(() => gitCheckout('master ./demo/resources/css/'))
       .then(() => gitCheckout('master ./demo/resources/contents/'))
-      .then(() => gitCommitAndPush(`"Demo version update ${version}"`))
+      .then(() => gitCommitAndPush(`"Demo version update ${version}"`, 'gh-pages'))
       .then(() => gitCheckout('master'));
   }
   return Promise.reject('invalid args');
