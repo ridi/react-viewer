@@ -3,3 +3,8 @@ src/
 node_modules/
 package-lock.json
 demo/
+.release-it.json
+.eslintrc.js
+.babelrc
+watch.js
+webpack.config.js
