@@ -1,7 +1,20 @@
+import { debounce } from './Util';
 
-export const screenWidth = () => window.innerWidth;
+// TODO 리팩토링
+let cache = {};
 
-export const screenHeight = () => window.innerHeight;
+const cached = (cacheName, func) => () => {
+  if (typeof cache[cacheName] === 'undefined') {
+    cache[cacheName] = func();
+  }
+  return cache[cacheName];
+};
+
+window.addEventListener('resize', debounce(() => { cache = {}; }, 0));
+
+export const screenWidth = cached('screenWidth', () => window.innerWidth);
+
+export const screenHeight = cached('screenHeight', () => window.innerHeight);
 
 export const scrollTop = () => {
   if (document.scrollingElement) {

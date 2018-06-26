@@ -26,7 +26,7 @@ module.exports = {
             ['transform-proto-to-assign'],
           ],
         },
-      }
+      },
     ],
   },
   resolve: {

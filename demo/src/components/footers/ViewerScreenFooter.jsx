@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  movePageViewer as movePageViewerAction,
-  selectPageViewPagination,
-  selectViewerScreenSettings,
-} from '../../../../lib/index';
+  Connector,
+  selectSetting,
+  selectCalculationsTotal,
+} from '../../../../lib';
 import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
 import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
 import { isExist } from '../../../../src/util/Util';
@@ -37,10 +37,7 @@ class ViewerScreenFooter extends Component {
     const {
       content,
       episode,
-      // isNextEpisodeAvailable,
-      // nextEpisodeUrl,
-      movePageViewer,
-      pageViewPagination,
+      calculationsTotal,
     } = this.props;
 
     if (!isExist(content) || !isExist(episode)) {
@@ -79,11 +76,12 @@ class ViewerScreenFooter extends Component {
           {this.checkIsPageView() ? (
             <button
               className="move_prev_page_button"
-              onClick={() => movePageViewer(pageViewPagination.totalPage - 1)}
+              onClick={() => Connector.calculations.updateCurrentPosition(calculationsTotal - 2)}
             >
               <SvgIcons
                 svgName="svg_arrow_6_left"
                 svgClass="svg_arrow_6_left"
+
               />
               이전 페이지로 돌아가기
             </button>
@@ -97,11 +95,8 @@ class ViewerScreenFooter extends Component {
 ViewerScreenFooter.propTypes = {
   content: PropTypes.object.isRequired,
   episode: PropTypes.object.isRequired,
-  // isNextEpisodeAvailable: PropTypes.bool.isRequired,
-  // nextEpisodeUrl: PropTypes.string.isRequired,
   viewerScreenSettings: PropTypes.object,
-  movePageViewer: PropTypes.func.isRequired,
-  pageViewPagination: PropTypes.object.isRequired,
+  calculationsTotal: PropTypes.number.isRequired,
 };
 
 ViewerScreenFooter.defaultProps = {
@@ -110,22 +105,14 @@ ViewerScreenFooter.defaultProps = {
 
 const mapStateToProps = (state, ownProps) => {
   const { content, episode } = ownProps;
-  const isLoaded = content && episode;
   return {
     content,
     episode,
-    viewerScreenSettings: selectViewerScreenSettings(state),
-    isNextEpisodeAvailable: isLoaded && content.last_episode.volume > episode.volume,
-    nextEpisodeUrl: '',
-    pageViewPagination: selectPageViewPagination(state),
+    viewerScreenSettings: selectSetting(state),
+    calculationsTotal: selectCalculationsTotal(state),
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  movePageViewer: number => dispatch(movePageViewerAction(number)),
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(ViewerScreenFooter);

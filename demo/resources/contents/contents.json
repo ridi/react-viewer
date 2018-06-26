@@ -6,12 +6,7 @@
       "content_type": 10,
       "binding_type": 0,
       "viewer_type": 0,
-      "last_episode": {
-        "id": 494217,
-        "content_id": 1,
-        "title": "9화",
-        "volume": 9
-      }
+      "content_format": 0
     },
     {
       "id": 2,
@@ -19,65 +14,31 @@
       "content_type": 10,
       "binding_type": 0,
       "viewer_type": 0,
-      "last_episode": {
-        "id": 494218,
-        "content_id": 2,
-        "title": "9화",
-        "volume": 9
-      }
+      "content_format": 0
     },
     {
       "id": 3,
+      "title": "AllTrueRomance (HTML)",
+      "content_type": 20,
+      "binding_type": 0,
+      "viewer_type": 0,
+      "content_format": 0
+    },
+    {
+      "id": 4,
       "title": "AllTrueRomance",
       "content_type": 20,
       "binding_type": 0,
       "viewer_type": 0,
-      "last_episode": {
-        "id": 494219,
-        "content_id": 3,
-        "title": "2화",
-        "volume": 2
-      }
+      "content_format": 1
     },
     {
-      "id": 4,
-      "title": "AllTrueRomance lazy-loading",
-      "content_type": 20,
+      "id": 6,
+      "title": "지저 탐험",
+      "content_type": 10,
       "binding_type": 0,
       "viewer_type": 0,
-      "lazy_load": true,
-      "last_episode": {
-        "id": 494220,
-        "content_id": 4,
-        "title": "2화",
-        "volume": 2
-      }
+      "content_format": 0
     }
-  ],
-  "episodes": {
-    "1": {
-      "id": 1,
-      "content_id": 1,
-      "title": "1화",
-      "volume": 1
-    },
-    "2": {
-      "id": 2,
-      "content_id": 2,
-      "title": "1화",
-      "volume": 1
-    },
-    "3": {
-      "id": 3,
-      "content_id": 3,
-      "title": "2화",
-      "volume": 2
-    },
-    "4": {
-      "id": 4,
-      "content_id": 4,
-      "title": "2화",
-      "volume": 2
-    }
-  }
+  ]
 }

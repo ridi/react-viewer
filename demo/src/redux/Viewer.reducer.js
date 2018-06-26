@@ -1,5 +1,5 @@
 import { ViewerUiActions } from './Viewer.action';
-import { actions as ViewerScreenActions } from '../../../lib/index';
+import { actions as ViewerActions } from '../../../lib';
 import path, { initialState } from './Viewer.path';
 import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
@@ -31,7 +31,7 @@ export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
 
-  [ViewerScreenActions.TOUCH_VIEWER_SCREEN]: onScreenTouched,
-  [ViewerScreenActions.SCROLLED_VIEWER_SCREEN]: onScreenScrolled,
-  [ViewerScreenActions.MOVE_PAGE_VIEWER]: movePageViewer,
+  [ViewerActions.TOUCHED]: onScreenTouched,
+  [ViewerActions.SCROLLED]: onScreenScrolled,
+  [ViewerActions.UPDATE_CURRENT]: movePageViewer,
 });

@@ -5,100 +5,70 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import {
-  reducers as viewerScreen,
-  selectViewerScreenSettings,
-  selectIsFullScreen,
-  selectIsLoadingCompleted,
-  updateSpineMetaData as updateSpineMetaDataAction,
-  ViewerHelper,
-  PageCalculator,
-  ReadPositionHelper,
-} from '../../lib/index';
+import ViewerScreen, {
+  reducers as reader,
+  Connector,
+  ContentType,
+  AvailableViewerType,
+  selectCurrentContentIndex,
+  updateMetadata,
+} from '../../lib';
 import viewer from './redux/Viewer.reducer';
-import { ContentType, BindingType } from '../../src/constants/ContentConstants';
 import ViewerHeader from './components/headers/ViewerHeader';
-import ViewerDummyBody from './components/bodies/ViewerDummyBody';
-import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
-import ContentsData from '../resources/contents/contents.json';
-import { requestLoadEpisode } from './redux/Viewer.action';
 import { IconsSprite } from './components/icons/IconsSprite';
+import { selectIsFullScreen } from '../../src/redux/selector';
+import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
+import ContentsData from '../resources/contents/contents.json';
+import { requestLoadContent } from './redux/Viewer.action';
 
 
 const rootReducer = combineReducers({
   viewer,
-  viewerScreen,
+  reader: reader({
+    setting: {
+      font: 'kopup_dotum',
+      containerHorizontalMargin: 15,
+      containerVerticalMargin: 50,
+    },
+  }),
 });
-
 
 const enhancer = composeWithDevTools(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, {}, enhancer);
-ViewerHelper.connect(store);
-PageCalculator.connect(store);
-ReadPositionHelper.connect(store);
-
-window.setDebugMode = ReadPositionHelper.setDebugMode.bind(ReadPositionHelper);
+Connector.connect(store);
 
 class DemoViewer extends Component {
   componentWillMount() {
     const {
-      content, episode, requestViewerData, updateSpineMetaData,
+      content, actionRequestLoadContent, actionUpdateMetadata,
     } = this.props;
 
-    ReadPositionHelper.setDebugMode(true);
-    updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
-    requestViewerData(content.id, episode.id);
-  }
-
-  contentTypeClassName() {
-    const { content } = this.props;
-    switch (content.content_type) {
-      case ContentType.COMIC:
-        return 'comic_content';
-      case ContentType.WEBTOON:
-        return 'webtoon_content';
-      case ContentType.WEB_NOVEL:
-        return 'web_novel_content';
-      default:
-        return '';
-    }
+    actionUpdateMetadata(content.content_type, content.viewer_type, content.binding_type);
+    actionRequestLoadContent(content.id);
   }
 
   render() {
     const {
-      colorTheme,
-      viewerType,
-    } = this.props.viewerScreenSettings;
-    const {
-      content,
-      episode,
       isFullScreen,
-      isVisibleSettingPopup,
-      isLoadingCompleted,
+      content,
+      currentContentIndex,
     } = this.props;
-
     return (
-      <section
-        id="viewer_page"
-        className={`${colorTheme} view_type_${viewerType} ${this.contentTypeClassName()}`}
-      >
-        <ViewerHeader
-          title={content.title}
-          isVisible={!isFullScreen || isVisibleSettingPopup}
+      <section id="viewer_page">
+        <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
+        <ViewerScreen
+          footer={<ViewerScreenFooter
+            content={{ content_type: ContentType.WEB_NOVEL, viewer_type: AvailableViewerType.BOTH, title: '테스트' }}
+            episode={{ title: content.title }}
+          />}
+          contentFooter={<small>content footer area...</small>}
+          onMoveWrongDirection={() => alert('move to the wrong direction')}
+          onMount={() => console.log('onMount')}
+          onUnmount={() => console.log('onUnmount')}
         />
-        {isLoadingCompleted ?
-          <ViewerBody
-            content={content}
-            episode={episode}
-          /> :
-          <ViewerDummyBody />
-        }
-        <ViewerFooter
-          content={content}
-          episode={episode}
-        />
+        <ViewerFooter content={content} />
         <IconsSprite />
       </section>
     );
@@ -107,17 +77,10 @@ class DemoViewer extends Component {
 
 DemoViewer.propTypes = {
   content: PropTypes.object.isRequired,
-  episode: PropTypes.object.isRequired,
-  viewerScreenSettings: PropTypes.object,
+  currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isFullScreen: PropTypes.bool.isRequired,
-  isVisibleSettingPopup: PropTypes.bool.isRequired,
-  isLoadingCompleted: PropTypes.bool.isRequired,
-  requestViewerData: PropTypes.func.isRequired,
-  updateSpineMetaData: PropTypes.func.isRequired,
-};
-
-DemoViewer.defaultProps = {
-  viewerScreenSettings: {},
+  actionUpdateMetadata: PropTypes.func.isRequired,
+  actionRequestLoadContent: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -125,17 +88,15 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    viewerScreenSettings: selectViewerScreenSettings(state),
     isFullScreen: selectIsFullScreen(state),
     isVisibleSettingPopup,
-    isLoadingCompleted: selectIsLoadingCompleted(state),
+    currentContentIndex: selectCurrentContentIndex(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
-  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) =>
-    dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
+  actionUpdateMetadata: (contentType, viewerType, bindingType) => dispatch(updateMetadata(contentType, viewerType, bindingType)),
+  actionRequestLoadContent: contentId => dispatch(requestLoadContent(contentId)),
 });
 
 const DemoViewerPage = connect(
@@ -144,20 +105,16 @@ const DemoViewerPage = connect(
 )(DemoViewer);
 
 
-const { contents, episodes } = ContentsData;
+const { contents } = ContentsData;
 const queryParam = new URLSearchParams(window.location.search);
 
 const contentId = queryParam.get('contentId');
 const selected = contents.filter(content => content.id.toString() === contentId);
 const content = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
-const episode = episodes[content.id];
 
 ReactDOM.render(
   <Provider store={store}>
-    <DemoViewerPage
-      content={content}
-      episode={episode}
-    />
+    <DemoViewerPage content={content} />
   </Provider>,
   document.getElementById('app'),
 );

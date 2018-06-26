@@ -59,17 +59,17 @@ export const AvailableViewerType = makeConstants(updateObject(_AvailableViewerTy
 
 // 렌더링 방식을 결정하는 콘텐츠 데이터 포맷
 const _ContentFormat = {
-  EPUB: 0,
+  HTML: 0,
   IMAGE: 1,
 };
 
 export const ContentFormat = makeConstants(updateObject(_ContentFormat, {
   _LIST: [
-    _ContentFormat.EPUB,
+    _ContentFormat.HTML,
     _ContentFormat.IMAGE,
   ],
   _STRING_MAP: {
-    [_ContentFormat.EPUB]: 'EPUB',
+    [_ContentFormat.HTML]: 'EPUB',
     [_ContentFormat.IMAGE]: '이미지',
   },
 }), {});

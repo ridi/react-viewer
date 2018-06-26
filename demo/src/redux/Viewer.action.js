@@ -1,4 +1,4 @@
-import { renderSpine, renderImages } from '../../../lib/index';
+import { setContents, ContentFormat } from '../../../lib/index';
 import { getJson } from '../utils/Api';
 
 export const ViewerUiActions = {
@@ -19,17 +19,13 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
 };
 
-export const requestLoadEpisodeEpub = (spine, index) => (dispatch) => {
-  getJson(spine).then(({ value }) => dispatch(renderSpine(index, value)));
-};
-
-export const requestLoadEpisode = (contentId, episodeId) => (dispatch) => {
-  const spineUrl = `./resources/contents/${contentId}/${episodeId}/spine.json`;
+export const requestLoadContent = (contentId) => (dispatch) => {
+  const spineUrl = `./resources/contents/${contentId}/spine.json`;
   getJson(spineUrl).then(({ spines, images }) => {
     if (spines) {
-      spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));
+      dispatch(setContents(ContentFormat.HTML, spines));
     } else if (images) {
-      dispatch(renderImages(images));
+      dispatch(setContents(ContentFormat.IMAGE, images));
     }
   });
 };

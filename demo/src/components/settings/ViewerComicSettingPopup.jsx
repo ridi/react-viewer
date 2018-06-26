@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
-import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
+import ColumnSetting from './ColumnSetting';
+import { ViewerComicSpinType, ViewerType } from '../../../../src/constants/ViewerScreenConstants';
 import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
 
 class ViewerComicSettingPopup extends BaseSettingPopup {
   renderSettings() {
-    const { content } = this.props;
+    const { content, setting } = this.props;
     return (
       <ul className="setting_group">
         <ThemeSetting
@@ -19,6 +20,8 @@ class ViewerComicSettingPopup extends BaseSettingPopup {
           onChanged={viewerType => this.onSettingChanged({ viewerType })}
           contentViewerType={content.viewer_type}
         />
+        { setting.viewerType === ViewerType.PAGE
+          ? <ColumnSetting onChanged={columnsInPage => this.onSettingChanged({ columnsInPage })} /> : null }
         {ViewerComicSpinType.toList().map(item => (
           <ComicSpineSetting
             item={item}

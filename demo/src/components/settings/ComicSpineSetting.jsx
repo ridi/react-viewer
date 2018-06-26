@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectViewerScreenSettings } from '../../../../lib/index';
+import { selectSetting } from '../../../../lib';
 import SpinButton from './SpinButton';
 import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
 import SvgIcons from '../icons/SvgIcons';
@@ -10,7 +10,7 @@ import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
 class ComicSpineSetting extends Component {
   render() {
-    const { item, onChanged, viewerScreenSettings } = this.props;
+    const { item, onChanged, setting } = this.props;
 
     return (
       <li className="setting_list" key={item} ref={(list) => { preventScrollEvent(list); }}>
@@ -22,7 +22,7 @@ class ComicSpineSetting extends Component {
           title={ViewerComicSpinType.toString(item)}
           buttonTarget={`set_${item}`}
           initialValue={{
-            [ViewerComicSpinType.CONTENT_WIDTH]: viewerScreenSettings.contentWidthLevel,
+            [ViewerComicSpinType.CONTENT_WIDTH]: setting.contentWidthLevel,
           }[item]}
           min={{
             [ViewerComicSpinType.CONTENT_WIDTH]: 1,
@@ -42,16 +42,16 @@ class ComicSpineSetting extends Component {
 ComicSpineSetting.propTypes = {
   item: PropTypes.string.isRequired,
   onChanged: PropTypes.func,
-  viewerScreenSettings: PropTypes.object,
+  setting: PropTypes.object,
 };
 
 ComicSpineSetting.defaultProps = {
   onChanged: () => {},
-  viewerScreenSettings: {},
+  setting: {},
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectViewerScreenSettings(state),
+  setting: selectSetting(state),
 });
 
 export default connect(mapStateToProps)(ComicSpineSetting);
