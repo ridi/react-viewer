@@ -1,4 +1,4 @@
-import ViewerScreen from './components/Viewer';
+import Reader from './components/Reader';
 import reducers from './redux/reducer';
 import Connector from './util/connector/index';
 
@@ -8,4 +8,4 @@ export * from './constants/ContentConstants';
 export * from './constants/ReaderConstants';
 export { reducers, Connector };
 
-export default ViewerScreen;
+export default Reader;

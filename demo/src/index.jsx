@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import ViewerScreen, {
+import Reader, {
   reducers as reader,
   Connector,
   ContentType,
@@ -58,7 +58,7 @@ class DemoViewer extends Component {
     return (
       <section id="viewer_page">
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
-        <ViewerScreen
+        <Reader
           footer={<ViewerScreenFooter
             content={{ content_type: ContentType.WEB_NOVEL, viewer_type: AvailableViewerType.BOTH, title: '테스트' }}
             episode={{ title: content.title }}

@@ -13,7 +13,7 @@ import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import { PAGE_MAX_WIDTH } from '../constants/StyledConstants';
 
-class Viewer extends React.Component {
+class Reader extends React.Component {
   constructor(props) {
     super(props);
     SpineCalculator.setHasFooter(!!props.footer);
@@ -85,7 +85,7 @@ class Viewer extends React.Component {
   }
 }
 
-Viewer.defaultProps = {
+Reader.defaultProps = {
   footer: null,
   contentFooter: null,
   onTouched: null,
@@ -97,7 +97,7 @@ Viewer.defaultProps = {
   maxWidth: PAGE_MAX_WIDTH,
 };
 
-Viewer.propTypes = {
+Reader.propTypes = {
   setting: SettingType,
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
@@ -124,4 +124,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Viewer);
+)(Reader);
