@@ -19,7 +19,7 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
 };
 
-export const requestLoadContent = (contentId) => (dispatch) => {
+export const requestLoadContent = contentId => (dispatch) => {
   const spineUrl = `./resources/contents/${contentId}/spine.json`;
   getJson(spineUrl).then(({ spines, images }) => {
     if (spines) {

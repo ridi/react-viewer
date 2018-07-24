@@ -14,13 +14,15 @@ import { ViewerType } from '../../constants/ViewerScreenConstants';
 import { selectContentFormat, selectSetting } from '../..';
 import {
   StyledHtmlPageTouchable,
-  StyledHtmlScrollTouchable, StyledImagePageTouchable,
-  StyledImageScrollTouchable
+  StyledHtmlScrollTouchable,
+  StyledImagePageTouchable,
+  StyledImageScrollTouchable,
 } from '../../components/styled/StyledTouchable';
 import {
   StyledHtmlPageContent,
-  StyledHtmlScrollContent, StyledImagePageContent,
-  StyledImageScrollContent
+  StyledHtmlScrollContent,
+  StyledImagePageContent,
+  StyledImageScrollContent,
 } from '../../components/styled/StyledContent';
 import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
 

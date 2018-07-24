@@ -113,6 +113,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-)(ViewerScreenFooter);
+export default connect(mapStateToProps)(ViewerScreenFooter);

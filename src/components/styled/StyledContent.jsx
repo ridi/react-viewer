@@ -65,7 +65,7 @@ const StyledScrollContent = () => `
   padding: ${Connector.setting.getPadding()};
 `;
 
-const StyledPageContent = ({ width, height, visible }) => `
+const StyledPageContent = ({ width, height }) => `
   width: ${width};
   height: ${height};
   vertical-align: top;

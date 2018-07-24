@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
+/* eslint-enable no-unused-vars */
 import BaseHtmlContent from './BaseHtmlContent';
 import { screenHeight } from '../../util/BrowserWrapper';
 

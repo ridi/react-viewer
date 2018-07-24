@@ -10,7 +10,6 @@ import { ViewerSpinType, ViewerType } from '../../../../src/constants/ViewerScre
 import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
 
 class ViewerNovelSettingPopup extends BaseSettingPopup {
-
   renderSettings() {
     const { content, setting } = this.props;
     return (

@@ -7,7 +7,6 @@ import {
   Connector,
   selectCalculationsTotal,
 } from '../../../../lib';
-import SvgIcons from '../icons/SvgIcons';
 
 
 class ViewerPageFooterToolbar extends Component {
@@ -74,6 +73,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(
-  mapStateToProps,
-)(ViewerPageFooterToolbar);
+export default connect(mapStateToProps)(ViewerPageFooterToolbar);

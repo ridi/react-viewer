@@ -42,6 +42,18 @@ export default class BaseHtmlContent extends React.Component {
     return currentOffset - startOffset;
   }
 
+  getHeight() {
+    return 'auto';
+  }
+
+  fetch() {
+    const { uri, index } = this.props.content;
+    const { onContentLoaded, onContentError } = this.props;
+    fetch(uri).then(response => response.json())
+      .then(data => onContentLoaded(index, data.value))
+      .catch(error => onContentError(index, error));
+  }
+
   waitForResources() {
     // images
     const images = [...this.content.current.querySelectorAll('img')]
@@ -56,14 +68,6 @@ export default class BaseHtmlContent extends React.Component {
       fonts.push(document.fonts.ready);
     }
     return Promise.all([...images, ...fonts]);
-  }
-
-  fetch() {
-    const { uri, index } = this.props.content;
-    const { onContentLoaded, onContentError } = this.props;
-    fetch(uri).then(response => response.json())
-      .then(data => onContentLoaded(index, data.value))
-      .catch(error => onContentError(index, error));
   }
 
   moveToOffset() {}
@@ -82,10 +86,6 @@ export default class BaseHtmlContent extends React.Component {
       return <div>Error</div>; // TODO 에러 화면으로 변경
     }
     return <div>Loading...</div>; // TODO 로딩 화면으로 변경
-  }
-
-  getHeight() {
-    return 'auto';
   }
 
   render() {

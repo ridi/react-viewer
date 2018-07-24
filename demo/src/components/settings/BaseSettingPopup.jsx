@@ -25,7 +25,6 @@ export default class BaseSettingPopup extends React.Component {
   onSettingChanged(settings) {
     const { actionUpdateSetting } = this.props;
     actionUpdateSetting(settings);
-
   }
 
   shouldUpdatePagination(currentProps, nextProps) {
