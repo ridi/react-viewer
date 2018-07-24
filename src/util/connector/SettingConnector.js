@@ -103,7 +103,8 @@ class SettingConnector extends Connector {
 
   getFontSize() {
     const { fontSizeLevel } = selectSetting(this.getState());
-    let fontSizeUnit = 15;
+    let fontSizeUnit = 16;
+
     switch (Number(fontSizeLevel)) {
       case 1: fontSizeUnit *= 0.8; break;
       case 2: fontSizeUnit *= 0.85; break;
@@ -115,7 +116,7 @@ class SettingConnector extends Connector {
       case 8: fontSizeUnit *= 1.4; break;
       case 9: fontSizeUnit *= 1.6; break;
       case 10: fontSizeUnit *= 1.8; break;
-      case 11: fontSizeUnit *= 2.0; break;
+      case 11: fontSizeUnit *= 2.05; break;
       case 12: fontSizeUnit *= 2.3; break;
       default: fontSizeUnit *= 1; break;
     }
@@ -124,15 +125,15 @@ class SettingConnector extends Connector {
 
   getNovelLineHeight() {
     const { lineHeightLevel } = selectSetting(this.getState());
-    let lineHeightUnit = 1.70;
+    let lineHeightUnit = 1.67;
     switch (Number(lineHeightLevel)) {
       case 1: lineHeightUnit = 1.35; break;
       case 2: lineHeightUnit = 1.51; break;
-      case 3: lineHeightUnit = 1.70; break;
-      case 4: lineHeightUnit = 1.86; break;
+      case 3: lineHeightUnit = 1.67; break;
+      case 4: lineHeightUnit = 1.85; break;
       case 5: lineHeightUnit = 2.05; break;
       case 6: lineHeightUnit = 2.27; break;
-      default: lineHeightUnit = 1.70; break;
+      default: lineHeightUnit = 1.67; break;
     }
     return `${lineHeightUnit}em`;
   }
