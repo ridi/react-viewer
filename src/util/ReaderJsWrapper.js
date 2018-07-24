@@ -1,7 +1,7 @@
 import { Context, Reader, Util } from '@ridi/reader.js/web';
 import { isExist } from './Util';
 import { screenHeight, screenWidth } from './BrowserWrapper';
-import { VIEWER_EMPTY_READ_POSITION } from '../constants/ViewerScreenConstants';
+import { VIEWER_EMPTY_READ_POSITION } from '../constants/ReaderConstants';
 
 const DETECTION_TYPE = 'up'; // bottom or up
 

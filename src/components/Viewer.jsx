@@ -5,7 +5,7 @@ import ReaderScrollScreen from './screen/HtmlScrollScreen';
 import { selectContentFormat, selectSetting } from '../redux/selector';
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
-import { ViewerType } from '../constants/ViewerScreenConstants';
+import { ViewerType } from '../constants/ReaderConstants';
 import { onScreenTouched } from '../redux/action';
 import SpineCalculator from '../util/connector/CalculationsConnector';
 import { isExist } from '../util/Util';

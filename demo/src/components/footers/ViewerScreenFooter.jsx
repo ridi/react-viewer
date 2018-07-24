@@ -5,9 +5,9 @@ import {
   Connector,
   selectSetting,
   selectCalculationsTotal,
+  AvailableViewerType,
+  ViewerType,
 } from '../../../../lib';
-import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
-import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
 import { isExist } from '../../../../src/util/Util';
 import SvgIcons from '../icons/SvgIcons';
 

@@ -5,7 +5,7 @@ import ThemeSetting from './ThemeSetting';
 import ViewerTypeSetting from './ViewerTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewerComicSpinType, ViewerType } from '../../../../src/constants/ViewerScreenConstants';
+import { ViewerComicSpinType, ViewerType } from '../../../../lib';
 import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
 
 class ViewerComicSettingPopup extends BaseSettingPopup {

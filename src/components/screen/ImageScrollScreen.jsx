@@ -18,18 +18,20 @@ import ImageContent from '../content/ImageContent';
 import ContentFooter from '../footer/ContentFooter';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import DOMEventConstants from '../../constants/DOMEventConstants';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
-    this.onScroll = debounce(e => this.onScrollHandle(e), 100);
-    window.addEventListener('scroll', this.onScroll);
+    this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
+    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener(DOMEventConstants.SCROLL, this.onScroll);
   }
 
   componentDidUpdate(prevProps) {

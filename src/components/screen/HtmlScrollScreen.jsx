@@ -24,18 +24,20 @@ import ScrollTouchable from './ScrollTouchable';
 import Connector from '../../util/connector/index';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import DOMEventConstants from '../../constants/DOMEventConstants';
+import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 
 class HtmlScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
-    this.onScroll = debounce(e => this.onScrollHandle(e), 100);
-    window.addEventListener('scroll', this.onScroll);
+    this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
+    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener(DOMEventConstants.SCROLL, this.onScroll);
   }
 
   onScrollHandle(e) {

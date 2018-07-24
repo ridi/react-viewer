@@ -10,7 +10,7 @@ import {
   CHAPTER_ID_PREFIX,
 } from '../../constants/StyledConstants';
 import { ContentFormat, ContentType } from '../../constants/ContentConstants';
-import { ViewerType } from '../../constants/ViewerScreenConstants';
+import { ViewerType } from '../../constants/ReaderConstants';
 import { selectContentFormat, selectSetting } from '../..';
 import {
   StyledHtmlPageTouchable,

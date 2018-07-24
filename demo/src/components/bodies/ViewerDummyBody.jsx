@@ -1,5 +1,5 @@
 import React from 'react';
-import ViewerScreen from '../../../../lib/index';
+import ViewerScreen from '../../../../lib';
 import Loading from '../loadings/Loading';
 
 

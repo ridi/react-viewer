@@ -18,7 +18,7 @@ import {
   selectContents,
 } from '../../redux/selector';
 import { hasIntersect } from '../Util';
-import { ContentFormat } from '../..';
+import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstant';
 
 // TODO 테스트 작성

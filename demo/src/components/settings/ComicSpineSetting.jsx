@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting } from '../../../../lib';
+import { selectSetting, ViewerComicSpinType } from '../../../../lib';
 import SpinButton from './SpinButton';
-import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
 import SvgIcons from '../icons/SvgIcons';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
 

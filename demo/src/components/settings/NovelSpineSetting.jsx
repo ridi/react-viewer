@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting } from '../../../../lib';
+import { selectSetting, ViewerSpinType } from '../../../../lib';
 import SpinButton from './SpinButton';
-import { ViewerSpinType } from '../../../../src/constants/ViewerScreenConstants';
 import SvgIcons from '../icons/SvgIcons';
 
 const NovelSpineSetting = ({ item, onChanged, setting }) => (

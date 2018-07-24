@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ViewerScreen from '../../../../lib/index';
+import ViewerScreen from '../../../../lib';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
 
 

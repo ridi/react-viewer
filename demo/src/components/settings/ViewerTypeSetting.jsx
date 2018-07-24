@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting } from '../../../../lib';
-import { AvailableViewerType } from '../../../../src/constants/ContentConstants';
-import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
+import { selectSetting, AvailableViewerType, ViewerType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
 

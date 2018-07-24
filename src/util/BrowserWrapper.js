@@ -1,4 +1,5 @@
 import { debounce } from './Util';
+import DOMEventConstants from '../constants/DOMEventConstants';
 
 // TODO 리팩토링
 let cache = {};
@@ -10,7 +11,7 @@ const cached = (cacheName, func) => () => {
   return cache[cacheName];
 };
 
-window.addEventListener('resize', debounce(() => { cache = {}; }, 0));
+window.addEventListener(DOMEventConstants.RESIZE, debounce(() => { cache = {}; }, 0));
 
 export const screenWidth = cached('screenWidth', () => window.innerWidth);
 

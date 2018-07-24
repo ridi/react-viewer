@@ -5,7 +5,7 @@ import Connector from './util/connector/index';
 export * from './redux/action';
 export * from './redux/selector';
 export * from './constants/ContentConstants';
-export * from './constants/ViewerScreenConstants';
+export * from './constants/ReaderConstants';
 export { reducers, Connector };
 
 export default ViewerScreen;

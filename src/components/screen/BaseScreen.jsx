@@ -7,6 +7,7 @@ import CalculationsConnector from '../../util/connector/CalculationsConnector';
 import { selectCurrent, selectIsCalculated, selectSetting } from '../../redux/selector';
 import { Position } from '../screen/BaseTouchable';
 import { CurrentType, SettingType } from '../prop-types';
+import DOMEventConstants from '../../constants/DOMEventConstants';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class BaseScreen extends React.Component {
         CalculationsConnector.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
-    window.addEventListener('resize', this.resizeViewer);
+    window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewer);
   }
 
   componentDidUpdate(prevProps) {
@@ -43,7 +44,7 @@ export default class BaseScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.resizeViewer);
+    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewer);
   }
 
   onTouchableScreenTouched({ position }) {

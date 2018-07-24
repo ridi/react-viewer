@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import {
   selectIsFullScreen,
   selectSetting,
+  ViewerType,
+  ContentType,
 } from '../../../../lib';
 import { onToggleViewerSetting } from '../../redux/Viewer.action';
 import ViewerPageFooterToolbar from './ViewerPageFooterToolbar';
-import { ViewerType } from '../../../../src/constants/ViewerScreenConstants';
-import { ContentType } from '../../../../src/constants/ContentConstants';
 import ViewerNovelSettingPopup from '../settings/ViewerNovelSettingPopup';
 import ViewerComicSettingPopup from '../settings/ViewerComicSettingPopup';
 import ViewerFooterTabbar from '../tabbars/ViewerFooterTabbar';

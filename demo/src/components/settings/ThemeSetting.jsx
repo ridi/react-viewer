@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ViewerThemeType } from '../../../../src/constants/ViewerScreenConstants';
+import { ViewerThemeType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 
 

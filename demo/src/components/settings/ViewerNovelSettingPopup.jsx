@@ -6,7 +6,7 @@ import ViewerTypeSetting from './ViewerTypeSetting';
 import FontSetting from './FontSetting';
 import NovelSpineSetting from './NovelSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewerSpinType, ViewerType } from '../../../../src/constants/ViewerScreenConstants';
+import { ViewerSpinType, ViewerType } from '../../../../lib';
 import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
 
 class ViewerNovelSettingPopup extends BaseSettingPopup {

@@ -1,5 +1,5 @@
 import { AvailableViewerType, BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
-import { ViewerThemeType, ViewerType } from '../constants/ViewerScreenConstants';
+import { ViewerThemeType, ViewerType } from '../constants/ReaderConstants';
 import { CONTENT_FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../constants/StyledConstants';
 
 export const initialContentState = (index, uri) => ({
