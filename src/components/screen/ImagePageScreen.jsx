@@ -16,7 +16,7 @@ import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
 import PageTouchable, { Position } from './PageTouchable';
 import { BindingType } from '../../constants/ContentConstants';
-import { isExist } from '../../util/Util';
+import { isExist, makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import ContentFooter from '../footer/ContentFooter';
 import { StyledImagePageContent } from '../styled/StyledContent';
@@ -91,7 +91,7 @@ class ImagePageScreen extends BaseScreen {
     );
   }
 
-  renderContent(content, contentWidth) {
+  renderContent(content) {
     const {
       current,
       actionUpdateContent,
@@ -99,37 +99,57 @@ class ImagePageScreen extends BaseScreen {
       contentFooter,
     } = this.props;
 
-    const { contentFooterHeight } = this.props.setting;
-
     return (
       <ImageContent
         key={`${content.uri}:${content.index}`}
         content={content}
         currentOffset={current.offset}
         src={content.uri}
-        width={contentWidth}
         onContentLoaded={actionUpdateContent}
         onContentError={actionUpdateContentError}
-        contentFooterHeight={Connector.calculations.isLastContent(content.index) ? contentFooterHeight : 0}
         contentFooter={Connector.calculations.isLastContent(content.index) ?
           <ContentFooter content={contentFooter} /> : null}
       />
     );
   }
 
-  renderBlankPage(contentWidth) {
-    const { startWithBlankPage, columnsInPage } = this.props.setting;
-    if (startWithBlankPage === 0 || startWithBlankPage >= columnsInPage) {
-      return null;
+  getBlankPage() {
+    return <section className="comic_page" />;
+  }
+
+  getContents() {
+    const { contents, bindingType } = this.props;
+    const { columnsInPage, startWithBlankPage } = this.props.setting;
+    let result = [];
+
+    if (startWithBlankPage > 0) {
+      result = makeSequence(startWithBlankPage).map(() => this.getBlankPage());
     }
-    return <StyledImagePageContent width={`${contentWidth}px`} height={`${screenHeight()}px`} />;
+    result = [
+      ...result,
+      ...contents.map(content => this.renderContent(content)),
+    ];
+    if (columnsInPage > 1 && bindingType === BindingType.RIGHT) {
+      const imagesInLastScreen = result.length % columnsInPage;
+      if (imagesInLastScreen > 0) {
+        result = [
+          ...result,
+          ...makeSequence(columnsInPage - imagesInLastScreen).map(() => this.getBlankPage()),
+        ];
+      }
+
+      let reversed = [];
+      for (let i = 0; i < result.length / columnsInPage; i += 1) {
+        const reversingUnit = result.slice(i * columnsInPage, (i + 1) * columnsInPage);
+        reversed = [...reversed, ...reversingUnit.reverse()];
+      }
+      return reversed;
+    }
+    return result;
   }
 
   renderContents() {
-    const { contents } = this.props;
-    const { containerHorizontalMargin, columnsInPage } = this.props.setting;
-    const contentWidth = (screenWidth() - (containerHorizontalMargin * 2)) / columnsInPage;
-
+    const { columnsInPage } = this.props.setting;
     return (
       <StyledImagePageContent
         setting={this.props.setting}
@@ -139,8 +159,7 @@ class ImagePageScreen extends BaseScreen {
         visible
       >
         <div className={`content_container ${columnsInPage === 2 ? 'two_images_in_page' : ''}`}>
-          {this.renderBlankPage(contentWidth)}
-          {contents.map(content => this.renderContent(content, contentWidth))}
+          {this.getContents()}
         </div>
       </StyledImagePageContent>
     );

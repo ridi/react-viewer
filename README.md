@@ -95,10 +95,10 @@ dispatch(updateMetadata(contentType, viewerType, bindingType));
 
 And then dispatch `setContents` action with URIs to render content into the viewer.
 ```js
-import { setContents } from '@ridi/react-viewer';
+import { setContents, ContentFormat } from '@ridi/react-viewer';
 
 ...
-dispatch(setContents([
+dispatch(setContents(ContentFormat.HTML, [
   './uri1.json',
   './uri2.json',
   ...
