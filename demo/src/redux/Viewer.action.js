@@ -1,6 +1,5 @@
 import { setContents } from '../../../lib';
 import { getJson } from '../utils/Api';
-import { actions } from '../../../src/redux/action';
 
 export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',

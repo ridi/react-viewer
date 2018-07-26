@@ -97,7 +97,7 @@ ViewerScreenFooter.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   viewerScreenSettings: selectReaderSetting(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
 });
