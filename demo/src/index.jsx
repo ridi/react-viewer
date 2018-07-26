@@ -14,10 +14,10 @@ import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerFooter from './components/footers/ViewerFooter';
 import { IconsSprite } from './components/icons/IconsSprite';
-import { selectReaderIsFullScreen } from '../../src/redux/selector';
+import { selectIsFullScreen } from './redux/Viewer.selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
-import { requestLoadContent } from './redux/Viewer.action';
+import { requestLoadContent, onScreenTouched } from './redux/Viewer.action';
 
 
 const rootReducer = combineReducers({
@@ -47,6 +47,7 @@ class DemoViewer extends Component {
       isFullScreen,
       content,
       currentContentIndex,
+      actionOnScreenTouched,
     } = this.props;
     return (
       <section id="viewer_page">
@@ -57,6 +58,7 @@ class DemoViewer extends Component {
           onMoveWrongDirection={() => alert('move to the wrong direction')}
           onMount={() => console.log('onMount')}
           onUnmount={() => console.log('onUnmount')}
+          onTouched={() => actionOnScreenTouched()}
         />
         <ViewerFooter content={content} />
         <IconsSprite />
@@ -70,6 +72,7 @@ DemoViewer.propTypes = {
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isFullScreen: PropTypes.bool.isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
+  actionOnScreenTouched: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -77,7 +80,7 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    isFullScreen: selectReaderIsFullScreen(state),
+    isFullScreen: selectIsFullScreen(state),
     isVisibleSettingPopup,
     currentContentIndex: selectReaderCurrentContentIndex(state),
   };
@@ -85,6 +88,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
   actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
+  actionOnScreenTouched: () => dispatch(onScreenTouched()),
 });
 
 const DemoViewerPage = connect(

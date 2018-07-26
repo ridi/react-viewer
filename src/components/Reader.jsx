@@ -6,7 +6,6 @@ import { selectReaderContentFormat, selectReaderSetting } from '../redux/selecto
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
-import { onScreenTouched } from '../redux/action';
 import SpineCalculator from '../util/connector/CalculationsConnector';
 import { isExist } from '../util/Util';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
@@ -35,10 +34,8 @@ class Reader extends React.Component {
 
   onScreenTouched() {
     const {
-      actionToggleFullScreen,
       onTouched,
     } = this.props;
-    actionToggleFullScreen();
     if (isExist(onTouched)) {
       onTouched();
     }
@@ -101,7 +98,6 @@ Reader.propTypes = {
   setting: SettingType,
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
-  actionToggleFullScreen: PropTypes.func.isRequired,
   onTouched: PropTypes.func,
   onMoveWrongDirection: PropTypes.func,
   onMount: PropTypes.func,
@@ -117,11 +113,4 @@ const mapStateToProps = state => ({
   contentFormat: selectReaderContentFormat(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  actionToggleFullScreen: () => dispatch(onScreenTouched()),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Reader);
+export default connect(mapStateToProps)(Reader);

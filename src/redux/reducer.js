@@ -8,19 +8,10 @@ import createReducer from '../util/Reducer';
 import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
 import { updateObject } from '../util/Util';
-import { isScrolledToBottom, isScrolledToTop } from '../util/CommonUi';
 import * as BrowserWrapper from '../util/BrowserWrapper';
 import { ContentFormat } from '..';
 
-const isEdgeOfScreen = () => (isScrolledToTop() || isScrolledToBottom());
-
-// TODO remove? isFullScreen
-const onTouched = state => new ImmutableObjectBuilder(state)
-  .set(path.isFullScreen(), !state.status.isFullScreen)
-  .build();
-
 const onScrolled = state => new ImmutableObjectBuilder(state)
-  .set(path.isFullScreen(), !isEdgeOfScreen())  // TODO remove? isFullScreen
   .set(path.currentOffset(), BrowserWrapper.scrollTop())
   .build();
 
@@ -84,7 +75,6 @@ export default ({
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
   return createReducer({ ...initialState, setting }, {
-    [actions.TOUCHED]: onTouched,
     [actions.SCROLLED]: onScrolled,
     [actions.SET_CONTENTS]: setContents,
     [actions.UPDATE_SETTING]: updateSetting,

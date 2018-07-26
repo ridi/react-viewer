@@ -1,6 +1,5 @@
 
 export const actions = {
-  TOUCHED: 'READER:TOUCHED',
   SCROLLED: 'READER:SCROLLED',
   SET_CONTENTS: 'READER:SET_CONTENTS',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
@@ -12,10 +11,6 @@ export const actions = {
   UPDATE_FOOTER_CALCULATIONS: 'READER:COMPLETE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
 };
-
-export const onScreenTouched = () => ({
-  type: actions.TOUCHED,
-});
 
 export const onScreenScrolled = () => ({
   type: actions.SCROLLED,

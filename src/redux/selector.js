@@ -20,12 +20,6 @@ export const selectReaderBindingType = createSelector(
   reader => nullSafeGet(reader, path.bindingType(), BindingType.LEFT),
 );
 
-// TODO remove?
-export const selectReaderIsFullScreen = createSelector(
-  [getReader],
-  reader => nullSafeGet(reader, path.isFullScreen(), false),
-);
-
 export const selectReaderSetting = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.setting(), {}),

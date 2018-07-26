@@ -33,8 +33,6 @@ export const initialSettingState = () => ({
 
 export const initialState = {
   status: {
-    // TODO isFullScreen은 여기에서 관리할 필요가 없음
-    isFullScreen: false,
     isInitContents: false,
     isContentsLoaded: false,
     isAllCalculated: false,
@@ -71,7 +69,6 @@ export default {
   contentFormat: () => ['metadata', 'format'],
   bindingType: () => ['metadata', 'binding'],
 
-  isFullScreen: () => ['status', 'isFullScreen'],
   isInitContents: () => ['status', 'isInitContents'],
   isContentsLoaded: () => ['status', 'isContentsLoaded'],
   isAllCalculated: () => ['status', 'isAllCalculated'],

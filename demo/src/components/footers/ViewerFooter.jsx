@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  selectReaderIsFullScreen,
-  selectReaderSetting,
-  ViewType,
-} from '../../../../lib';
+import { selectReaderSetting, ViewType } from '../../../../lib';
 import { ContentType } from '../../constants/ContentConstants';
 import { onToggleViewerSetting } from '../../redux/Viewer.action';
+import { selectIsFullScreen } from '../../redux/Viewer.selector';
 import ViewerPageFooterToolbar from './ViewerPageFooterToolbar';
 import ViewerNovelSettingPopup from '../settings/ViewerNovelSettingPopup';
 import ViewerComicSettingPopup from '../settings/ViewerComicSettingPopup';
@@ -67,7 +64,7 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    isFullScreen: selectReaderIsFullScreen(state),
+    isFullScreen: selectIsFullScreen(state),
     isVisibleSettingPopup,
     setting: selectReaderSetting(state),
   };

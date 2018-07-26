@@ -7,7 +7,6 @@ export const initialState = {
     isFullScreen: false,
     availableViewType: AvailableViewType.BOTH,
   },
-
 };
 
 export default {

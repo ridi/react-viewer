@@ -1,9 +1,11 @@
 import { setContents } from '../../../lib';
 import { getJson } from '../utils/Api';
+import { actions } from '../../../src/redux/action';
 
 export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',
   VIEWER_SETTING_CHANGED: 'VIEWER:SETTING_CHANGED',
+  TOUCHED: 'VIEWER:TOUCHED',
 };
 
 export const onToggleViewerSetting = () => ({
@@ -27,3 +29,7 @@ export const requestLoadContent = ({
   getJson(`./resources/contents/${id}/spine.json`)
     .then(({ contents }) => dispatch(setContents(contentFormat, bindingType, contents)));
 };
+
+export const onScreenTouched = () => ({
+  type: ViewerUiActions.TOUCHED,
+});
