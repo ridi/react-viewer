@@ -20,7 +20,7 @@ import PageTouchable, { Position } from './PageTouchable';
 import { BindingType } from '../../constants/ContentConstants';
 import { isExist } from '../../util/Util';
 import PageHtmlContent from '../content/PageHtmlContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class HtmlPageScreen extends BaseScreen {
   calculate(index, nodeInfo) {

@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting, AvailableViewerType, ViewerType } from '../../../../lib';
+import { selectReaderSetting, AvailableViewType, ViewType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
 
-class ViewerTypeSetting extends Component {
-  renderViewerType() {
-    const { viewerScreenSettings, contentViewerType, onChanged } = this.props;
+class ViewTypeSetting extends Component {
+  renderViewType() {
+    const { viewerScreenSettings, contentViewType, onChanged } = this.props;
 
-    if (contentViewerType === AvailableViewerType.BOTH) {
-      return ViewerType.toList().map(item => (
+    if (contentViewType === AvailableViewType.BOTH) {
+      return ViewType.toList().map(item => (
         <li className="view_type_list setting_button_list" key={item}>
           <button
             type="button"
-            className={`view_type_button setting_button ${item} ${viewerScreenSettings.viewerType === item ? 'active' : ''}`}
+            className={`view_type_button setting_button ${item} ${viewerScreenSettings.viewType === item ? 'active' : ''}`}
             onClick={() => onChanged(item)}
           >
-            {ViewerType.toString(item)}
+            {ViewType.toString(item)}
           </button>
         </li>
       ));
@@ -26,7 +26,7 @@ class ViewerTypeSetting extends Component {
 
     return (
       <p className="setting_info_text">
-        이 콘텐츠는 {contentViewerType === AvailableViewerType.PAGE ? '페이지 넘김' : '스크롤 보기'}만 지원됩니다.
+        이 콘텐츠는 {contentViewType === AvailableViewType.PAGE ? '페이지 넘김' : '스크롤 보기'}만 지원됩니다.
       </p>
     );
   }
@@ -44,7 +44,7 @@ class ViewerTypeSetting extends Component {
           </p>
           <div className="setting_buttons_wrapper view_type_setting">
             <ul className="setting_buttons view_type_buttons">
-              {this.renderViewerType()}
+              {this.renderViewType()}
             </ul>
           </div>
         </div>
@@ -53,13 +53,13 @@ class ViewerTypeSetting extends Component {
   }
 }
 
-ViewerTypeSetting.propTypes = {
-  contentViewerType: PropTypes.number.isRequired,
+ViewTypeSetting.propTypes = {
+  contentViewType: PropTypes.number.isRequired,
   onChanged: PropTypes.func,
   viewerScreenSettings: PropTypes.object,
 };
 
-ViewerTypeSetting.defaultProps = {
+ViewTypeSetting.defaultProps = {
   onChanged: () => {},
   viewerScreenSettings: {},
 };
@@ -68,4 +68,4 @@ const mapStateToProps = state => ({
   viewerScreenSettings: selectReaderSetting(state),
 });
 
-export default connect(mapStateToProps)(ViewerTypeSetting);
+export default connect(mapStateToProps)(ViewTypeSetting);

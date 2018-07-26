@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
   selectReaderIsFullScreen,
   selectReaderSetting,
-  ViewerType,
+  ViewType,
   ContentType,
 } from '../../../../lib';
 import { onToggleViewerSetting } from '../../redux/Viewer.action';
@@ -24,7 +24,7 @@ class ViewerFooter extends Component {
       isVisibleSettingPopup,
       toggleViewerSetting,
     } = this.props;
-    const { viewerType } = this.props.setting;
+    const { viewType } = this.props.setting;
 
     return (
       <section /* ref={(footer) => { preventScrollEvent(footer); }} */>
@@ -39,7 +39,7 @@ class ViewerFooter extends Component {
             preventScrollEvent(footer);
           }}
         >
-          {viewerType === ViewerType.PAGE ? <ViewerPageFooterToolbar /> : null}
+          {viewType === ViewType.PAGE ? <ViewerPageFooterToolbar /> : null}
           <ViewerFooterTabbar>
             <ViewerFooterTabItem
               title="보기설정"

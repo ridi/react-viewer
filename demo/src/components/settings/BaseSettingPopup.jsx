@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { updateSetting, selectReaderSetting, ViewerType, Connector } from '../../../../lib';
+import { selectReaderSetting, ViewType, Connector } from '../../../../lib';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
-const settingsAffectingPagination = ['viewerType', 'font', 'fontSizeLevel', 'paddingLevel', 'contentWidthLevel', 'lineHeightLevel', 'columnsInPage', 'startWithBlankPage'];
+const settingsAffectingPagination = ['viewType', 'font', 'fontSizeLevel', 'paddingLevel', 'contentWidthLevel', 'lineHeightLevel', 'columnsInPage', 'startWithBlankPage'];
 
 export default class BaseSettingPopup extends React.Component {
   componentWillReceiveProps(nextProps) {
@@ -23,8 +23,7 @@ export default class BaseSettingPopup extends React.Component {
   }
 
   onSettingChanged(settings) {
-    const { actionUpdateSetting } = this.props;
-    actionUpdateSetting(settings);
+    Connector.setting.updateSetting(settings);
   }
 
   shouldUpdatePagination(currentProps, nextProps) {
@@ -43,7 +42,7 @@ export default class BaseSettingPopup extends React.Component {
       <div
         id="setting_popup"
         className={`
-          ${setting.viewerType === ViewerType.PAGE ? 'page_setting_popup' : ''}
+          ${setting.viewType === ViewType.PAGE ? 'page_setting_popup' : ''}
           ${isVisibleSettingPopup ? 'active' : ''}
           android_setting_popup
         `}
@@ -58,14 +57,9 @@ export default class BaseSettingPopup extends React.Component {
 BaseSettingPopup.propTypes = {
   setting: PropTypes.object.isRequired,
   isVisibleSettingPopup: PropTypes.bool.isRequired,
-  actionUpdateSetting: PropTypes.func.isRequired,
 };
 
 export const mapStateToProps = state => ({
   isVisibleSettingPopup: selectIsVisibleSettingPopup(state),
   setting: selectReaderSetting(state),
-});
-
-export const mapDispatchToProps = dispatch => ({
-  actionUpdateSetting: changedSettings => dispatch(updateSetting(changedSettings)),
 });

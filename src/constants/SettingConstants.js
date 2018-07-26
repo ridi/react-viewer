@@ -5,7 +5,7 @@ import { updateObject } from '../util/Util';
 export const VIEWER_EMPTY_READ_POSITION = '-1#-1';
 export const INVALID_PAGE = -1;
 
-const _ViewerThemeType = {
+const _ReaderThemeType = {
   WHITE: 'white_theme',
   IOS_SEPIA: 'ios_sepia_theme',
   SEPIA: 'sepia_theme',
@@ -16,69 +16,30 @@ const _ViewerThemeType = {
   KOREAN_PAPER: 'korean_paper_theme',
 };
 
-export const ViewerThemeType = makeConstants(updateObject(_ViewerThemeType, {
+export const ReaderThemeType = makeConstants(updateObject(_ReaderThemeType, {
   _LIST: [
-    _ViewerThemeType.WHITE,
-    _ViewerThemeType.IOS_SEPIA,
-    _ViewerThemeType.SEPIA,
-    _ViewerThemeType.BLACKBOARD,
-    _ViewerThemeType.DARKGRAY,
-    _ViewerThemeType.BLACK,
-    _ViewerThemeType.PAPER,
-    _ViewerThemeType.KOREAN_PAPER,
+    _ReaderThemeType.WHITE,
+    _ReaderThemeType.IOS_SEPIA,
+    _ReaderThemeType.SEPIA,
+    _ReaderThemeType.BLACKBOARD,
+    _ReaderThemeType.DARKGRAY,
+    _ReaderThemeType.BLACK,
+    _ReaderThemeType.PAPER,
+    _ReaderThemeType.KOREAN_PAPER,
   ],
-}), {});
-
-const _ViewerBodyThemeColorType = {
-  DEFAULT: 'default_back',
-  WHITE: 'white_back',
-  IOS_SEPIA: 'ios_sepia_back',
-  SEPIA: 'sepia_back',
-  BLACKBOARD: 'blackboard_back',
-  DARKGRAY: 'darkgray_back',
-  BLACK: 'black_back',
-  PAPER: 'paper_back',
-  KOREAN_PAPER: 'korean_paper_back',
-};
-
-export const ViewerBodyThemeColorType = makeConstants(updateObject(_ViewerBodyThemeColorType, {
-  _LIST: [
-    _ViewerBodyThemeColorType.DEFAULT,
-    _ViewerBodyThemeColorType.WHITE,
-    _ViewerBodyThemeColorType.IOS_SEPIA,
-    _ViewerBodyThemeColorType.SEPIA,
-    _ViewerBodyThemeColorType.BLACKBOARD,
-    _ViewerBodyThemeColorType.DARKGRAY,
-    _ViewerBodyThemeColorType.BLACK,
-    _ViewerBodyThemeColorType.PAPER,
-    _ViewerBodyThemeColorType.KOREAN_PAPER,
-  ],
-}), {});
-
-const _ViewerFontType = {
-  KOPUB_BATANG: 'kopub_batang',
-  KOPUB_DOTUM: 'kopub_dotum',
-};
-
-export const ViewerFontType = makeConstants(updateObject(_ViewerFontType, {
-  _LIST: [_ViewerFontType.KOPUB_BATANG, _ViewerFontType.KOPUB_DOTUM],
-  _STRING_MAP: {
-    [_ViewerFontType.KOPUB_BATANG]: 'KoPub 바탕',
-    [_ViewerFontType.KOPUB_DOTUM]: 'KoPub 돋움',
-  },
 }), {});
 
 // 뷰어 보기 타입 상수
-const _ViewerType = {
+const _ViewType = {
   SCROLL: 'scroll',
   PAGE: 'page',
 };
 
-export const ViewerType = makeConstants(updateObject(_ViewerType, {
-  _LIST: [_ViewerType.PAGE, _ViewerType.SCROLL],
+export const ViewType = makeConstants(updateObject(_ViewType, {
+  _LIST: [_ViewType.PAGE, _ViewType.SCROLL],
   _STRING_MAP: {
-    [_ViewerType.PAGE]: '페이지 넘김',
-    [_ViewerType.SCROLL]: '스크롤 보기',
+    [_ViewType.PAGE]: '페이지 넘김',
+    [_ViewType.SCROLL]: '스크롤 보기',
   },
 }), {});
 

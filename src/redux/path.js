@@ -1,5 +1,5 @@
-import { AvailableViewerType, BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
-import { ViewerThemeType, ViewerType } from '../constants/ReaderConstants';
+import { AvailableViewType, BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
+import { ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import { CONTENT_FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../constants/StyledConstants';
 
 export const initialContentState = (index, uri) => ({
@@ -11,25 +11,17 @@ export const initialContentState = (index, uri) => ({
   isContentOnError: false,
 });
 
-export const initialContentCalculationsState = index => ({
-  index,
-  isCalculated: false,
-  total: 0,
-});
-
-export const initialFooterCalculationsState = () => ({
-  isCalculated: false,
-  total: 0,
-});
+export const initialContentCalculationsState = index => ({ index, isCalculated: false, total: 0 });
+export const initialFooterCalculationsState = () => ({ isCalculated: false, total: 0 });
 
 export const initialSettingState = () => ({
-  colorTheme: ViewerThemeType.WHITE,
+  colorTheme: ReaderThemeType.WHITE,
   font: 'system',
   fontSizeLevel: 6,
   paddingLevel: 3,
   contentWidthLevel: 6,
   lineHeightLevel: 3,
-  viewerType: ViewerType.SCROLL,
+  viewType: ViewType.SCROLL,
   columnsInPage: 1,
   columnGap: 40,
   maxWidth: PAGE_MAX_WIDTH,
@@ -50,8 +42,8 @@ export const initialState = {
   metadata: {
     format: ContentFormat.HTML,
     content: ContentType.WEB_NOVEL,
-    // TODO availableViewerType은 여기서 관리할 필요가 없음
-    viewer: AvailableViewerType.BOTH,
+    // TODO availableViewType은 여기서 관리할 필요가 없음
+    view: AvailableViewType.BOTH,
     binding: BindingType.LEFT,
   },
   contents: [],
@@ -67,7 +59,7 @@ export const initialState = {
     contentIndex: 1,
     position: 0, // VIEWER_EMPTY_READ_POSITION,  // readPosition (지금은 일단 spine 내 %)
     offset: 0,  // page or scroll top
-    viewerType: ViewerType.SCROLL,
+    viewType: ViewType.SCROLL,
   },
   setting: initialSettingState(),
 };
@@ -81,7 +73,7 @@ export default {
 
   contentFormat: () => ['metadata', 'format'],
   contentType: () => ['metadata', 'content'],
-  availableViewerType: () => ['metadata', 'viewer'],
+  availableViewType: () => ['metadata', 'view'],
   bindingType: () => ['metadata', 'binding'],
 
   isFullScreen: () => ['status', 'isFullScreen'],

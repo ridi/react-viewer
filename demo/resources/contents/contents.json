@@ -5,7 +5,7 @@
       "title": "BEHIND THE FOOTLIGHTS",
       "content_type": 10,
       "binding_type": 0,
-      "viewer_type": 0,
+      "view_type": 0,
       "content_format": 0
     },
     {
@@ -13,7 +13,7 @@
       "title": "무정",
       "content_type": 10,
       "binding_type": 0,
-      "viewer_type": 0,
+      "view_type": 0,
       "content_format": 0
     },
     {
@@ -21,15 +21,15 @@
       "title": "AllTrueRomance (HTML)",
       "content_type": 20,
       "binding_type": 0,
-      "viewer_type": 0,
+      "view_type": 0,
       "content_format": 0
     },
     {
       "id": 4,
       "title": "AllTrueRomance",
       "content_type": 20,
-      "binding_type": 0,
-      "viewer_type": 0,
+      "binding_type": 1,
+      "view_type": 0,
       "content_format": 1
     },
     {
@@ -37,7 +37,7 @@
       "title": "지저 탐험",
       "content_type": 10,
       "binding_type": 0,
-      "viewer_type": 0,
+      "view_type": 0,
       "content_format": 0
     }
   ]

@@ -34,7 +34,7 @@ export const SettingType = PropTypes.shape({
   paddingLevel: PropTypes.number.isRequired,
   contentWidthLevel: PropTypes.number.isRequired,
   lineHeightLevel: PropTypes.number.isRequired,
-  viewerType: PropTypes.string.isRequired,
+  viewType: PropTypes.string.isRequired,
   columnsInPage: PropTypes.number.isRequired,
   columnGap: PropTypes.number.isRequired,
 });

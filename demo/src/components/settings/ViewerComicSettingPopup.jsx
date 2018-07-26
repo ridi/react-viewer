@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ThemeSetting from './ThemeSetting';
-import ViewerTypeSetting from './ViewerTypeSetting';
+import ViewTypeSetting from './ViewTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewerComicSpinType, ViewerType } from '../../../../lib';
-import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
+import { ViewerComicSpinType, ViewType } from '../../../../lib';
+import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerComicSettingPopup extends BaseSettingPopup {
   renderSettings() {
@@ -16,11 +16,11 @@ class ViewerComicSettingPopup extends BaseSettingPopup {
         <ThemeSetting
           onChanged={colorTheme => this.onSettingChanged({ colorTheme })}
         />
-        <ViewerTypeSetting
-          onChanged={viewerType => this.onSettingChanged({ viewerType })}
-          contentViewerType={content.viewer_type}
+        <ViewTypeSetting
+          onChanged={viewType => this.onSettingChanged({ viewType })}
+          contentViewType={content.view_type}
         />
-        { setting.viewerType === ViewerType.PAGE
+        { setting.viewType === ViewType.PAGE
           ? <ColumnSetting onChanged={columnsInPage => this.onSettingChanged({ columnsInPage })} /> : null }
         {ViewerComicSpinType.toList().map(item => (
           <ComicSpineSetting
@@ -38,7 +38,4 @@ ViewerComicSettingPopup.propTypes = {
   content: PropTypes.object.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ViewerComicSettingPopup);
+export default connect(mapStateToProps)(ViewerComicSettingPopup);

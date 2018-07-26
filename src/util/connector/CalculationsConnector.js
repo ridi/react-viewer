@@ -19,7 +19,7 @@ import {
 } from '../../redux/selector';
 import { hasIntersect } from '../Util';
 import { ContentFormat } from '../../constants/ContentConstants';
-import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstant';
+import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 
 // TODO 테스트 작성
 class CalculationsConnector extends Connector {
@@ -147,7 +147,7 @@ class CalculationsConnector extends Connector {
     // console.log('updateCurrentPosition');
     if (!this.isCompleted()) return;
 
-    const { viewerType } = selectReaderSetting(this.getState());
+    const { viewType } = selectReaderSetting(this.getState());
     const contentIndex = this.getIndexAtOffset(offset);
 
     const total = this.getTotal(contentIndex);
@@ -157,20 +157,20 @@ class CalculationsConnector extends Connector {
       contentIndex,
       offset,
       position,
-      viewerType,
+      viewType,
     }));
   }
 
   restoreCurrentOffset() {
     if (!this.isCompleted()) return;
 
-    const { viewerType } = selectReaderSetting(this.getState());
+    const { viewType } = selectReaderSetting(this.getState());
     const { position, contentIndex } = selectReaderCurrent(this.getState());
 
     const total = this.getTotal(contentIndex);
     const maxOffset = this.startOffset[contentIndex] + (total - 1);
     const offset = Math.min(Math.round(position * total) + this.startOffset[contentIndex], maxOffset);
-    this.dispatch(updateCurrent({ offset, viewerType }));
+    this.dispatch(updateCurrent({ offset, viewType }));
   }
 
   isOnFooter() {

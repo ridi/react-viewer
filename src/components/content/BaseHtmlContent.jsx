@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes, { ContentType, SettingType } from '../prop-types';
 import ContentFooter from '../footer/ContentFooter';
-import { PRE_CALCULATION } from '../../constants/CalculationsConstant';
+import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../util/connector/';
 
 export default class BaseHtmlContent extends React.Component {

@@ -23,7 +23,7 @@ import { debounce } from '../../util/Util';
 import ScrollTouchable from './ScrollTouchable';
 import Connector from '../../util/connector/index';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 

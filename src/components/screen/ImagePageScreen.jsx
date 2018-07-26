@@ -20,7 +20,7 @@ import { isExist, makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import ContentFooter from '../footer/ContentFooter';
 import { StyledImagePageContent } from '../styled/StyledContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class ImagePageScreen extends BaseScreen {
   constructor(props) {

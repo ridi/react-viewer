@@ -9,7 +9,7 @@ import Reader, {
   reducers as reader,
   Connector,
   ContentType,
-  AvailableViewerType,
+  AvailableViewType,
   selectReaderCurrentContentIndex,
   updateMetadata,
 } from '../../lib';
@@ -60,7 +60,7 @@ class DemoViewer extends Component {
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
         <Reader
           footer={<ViewerScreenFooter
-            content={{ content_type: ContentType.WEB_NOVEL, viewer_type: AvailableViewerType.BOTH, title: '테스트' }}
+            content={{ content_type: ContentType.WEB_NOVEL, viewer_type: AvailableViewType.BOTH, title: '테스트' }}
             episode={{ title: content.title }}
           />}
           contentFooter={<small>content footer area...</small>}
@@ -95,7 +95,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateMetadata: (contentType, viewerType, bindingType) => dispatch(updateMetadata(contentType, viewerType, bindingType)),
+  actionUpdateMetadata: (contentType, viewType, bindingType) => dispatch(updateMetadata(contentType, viewType, bindingType)),
   actionRequestLoadContent: contentId => dispatch(requestLoadContent(contentId)),
 });
 

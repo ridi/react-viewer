@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Connector from '../../util/connector/';
-import { PRE_CALCULATION } from '../../constants/CalculationsConstant';
+import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
 
 export default class Footer extends React.Component {

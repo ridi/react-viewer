@@ -7,15 +7,10 @@ import path, {
 import createReducer from '../util/Reducer';
 import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
-import { cloneObject, updateObject } from '../util/Util';
+import { updateObject } from '../util/Util';
 import { isScrolledToBottom, isScrolledToTop } from '../util/CommonUi';
 import * as BrowserWrapper from '../util/BrowserWrapper';
 import { ContentFormat } from '..';
-
-const initialized = (state, action) => {
-  const { setting } = action;
-  return updateObject(cloneObject(initialState), { setting });
-};
 
 const isEdgeOfScreen = () => (isScrolledToTop() || isScrolledToBottom());
 
@@ -39,7 +34,7 @@ const updateSetting = (state, action) => new ImmutableObjectBuilder(state)
 
 const updateMetadata = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.contentType(), action.contentType)
-  .set(path.availableViewerType(), action.viewerType)
+  .set(path.availableViewType(), action.viewType)
   .set(path.bindingType(), action.bindingType)
   .build();
 
@@ -94,7 +89,6 @@ export default ({
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
   return createReducer({ ...initialState, setting }, {
-    [actions.INITIALIZED]: initialized,
     [actions.TOUCHED]: onTouched,
     [actions.SCROLLED]: onScrolled,
     [actions.SET_CONTENTS]: setContents,

@@ -5,7 +5,7 @@ import ReaderScrollScreen from './screen/HtmlScrollScreen';
 import { selectReaderContentFormat, selectReaderSetting } from '../redux/selector';
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
-import { ViewerType } from '../constants/ReaderConstants';
+import { ViewType } from '../constants/SettingConstants';
 import { onScreenTouched } from '../redux/action';
 import SpineCalculator from '../util/connector/CalculationsConnector';
 import { isExist } from '../util/Util';
@@ -45,10 +45,10 @@ class Reader extends React.Component {
   }
 
   getScreen() {
-    const { viewerType } = this.props.setting;
+    const { viewType } = this.props.setting;
     const { contentFormat } = this.props;
 
-    if (viewerType === ViewerType.SCROLL) {
+    if (viewType === ViewType.SCROLL) {
       if (contentFormat === ContentFormat.HTML) {
         return ReaderScrollScreen;
       }

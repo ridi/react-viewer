@@ -10,8 +10,9 @@ import {
   CHAPTER_ID_PREFIX,
 } from '../../constants/StyledConstants';
 import { ContentFormat, ContentType } from '../../constants/ContentConstants';
-import { ViewerType } from '../../constants/ReaderConstants';
-import { selectReaderContentFormat, selectReaderSetting } from '../..';
+import { ViewType } from '../../constants/SettingConstants';
+import { selectReaderContentFormat, selectReaderSetting } from '../../redux/selector';
+import { updateSetting } from '../../redux/action';
 import {
   StyledHtmlPageTouchable,
   StyledHtmlScrollTouchable,
@@ -94,8 +95,8 @@ class SettingConnector extends Connector {
     return `${(Number(contentWidthLevel) * 10) + 40}%`;
   }
 
-  getMaxWidth(contentType, viewerType) {
-    if (contentType === ContentType.WEB_NOVEL || viewerType === ViewerType.SCROLL) {
+  getMaxWidth(contentType, viewType) {
+    if (contentType === ContentType.WEB_NOVEL || viewType === ViewType.SCROLL) {
       return `${this.getPageMaxWidth()}px`;
     }
     return 'none';
@@ -151,8 +152,8 @@ class SettingConnector extends Connector {
 
   getContainerHorizontalMargin() {
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { containerHorizontalMargin, viewerType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.PAGE) {
+    const { containerHorizontalMargin, viewType } = selectReaderSetting(this.getState());
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
       return '0';
     }
     return `${containerHorizontalMargin}px`;
@@ -185,14 +186,14 @@ class SettingConnector extends Connector {
 
   getStyledTouchable() {
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewerType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.SCROLL) {
+    const { viewType } = selectReaderSetting(this.getState());
+    if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
       return StyledHtmlScrollTouchable;
-    } else if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.PAGE) {
+    } else if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
       return StyledHtmlPageTouchable;
-    } else if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.SCROLL) {
+    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
       return StyledImageScrollTouchable;
-    } else if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.PAGE) {
+    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
       return StyledImagePageTouchable;
     }
     return null;
@@ -200,27 +201,31 @@ class SettingConnector extends Connector {
 
   getStyledContent() {
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewerType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.SCROLL) {
+    const { viewType } = selectReaderSetting(this.getState());
+    if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
       return StyledHtmlScrollContent;
-    } else if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.PAGE) {
+    } else if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
       return StyledHtmlPageContent;
-    } else if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.SCROLL) {
+    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
       return StyledImageScrollContent;
-    } else if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.PAGE) {
+    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
       return StyledImagePageContent;
     }
     return null;
   }
 
   getStyledFooter() {
-    const { viewerType } = selectReaderSetting(this.getState());
-    if (viewerType === ViewerType.SCROLL) {
+    const { viewType } = selectReaderSetting(this.getState());
+    if (viewType === ViewType.SCROLL) {
       return StyledScrollFooter;
-    } else if (viewerType === ViewerType.PAGE) {
+    } else if (viewType === ViewType.PAGE) {
       return StyledPageFooter;
     }
     return null;
+  }
+
+  updateSetting(setting) {
+    this.dispatch(updateSetting(setting));
   }
 }
 

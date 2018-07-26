@@ -17,7 +17,7 @@ import Connector from '../../util/connector/';
 import ImageContent from '../content/ImageContent';
 import ContentFooter from '../footer/ContentFooter';
 import { StyledImageScrollContent } from '../styled/StyledContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstant';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 

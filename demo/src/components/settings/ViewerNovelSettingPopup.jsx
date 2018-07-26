@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ThemeSetting from './ThemeSetting';
-import ViewerTypeSetting from './ViewerTypeSetting';
+import ViewTypeSetting from './ViewTypeSetting';
 import FontSetting from './FontSetting';
 import NovelSpineSetting from './NovelSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewerSpinType, ViewerType } from '../../../../lib';
-import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
+import { ViewerSpinType, ViewType } from '../../../../lib';
+import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerNovelSettingPopup extends BaseSettingPopup {
   renderSettings() {
@@ -17,11 +17,11 @@ class ViewerNovelSettingPopup extends BaseSettingPopup {
         <ThemeSetting
           onChanged={colorTheme => this.onSettingChanged({ colorTheme })}
         />
-        <ViewerTypeSetting
-          onChanged={viewerType => this.onSettingChanged({ viewerType })}
-          contentViewerType={content.viewer_type}
+        <ViewTypeSetting
+          onChanged={viewType => this.onSettingChanged({ viewType })}
+          contentViewType={content.viewer_type}
         />
-        { setting.viewerType === ViewerType.PAGE
+        { setting.viewType === ViewType.PAGE
         ? <ColumnSetting onChanged={columnsInPage => this.onSettingChanged({ columnsInPage })} /> : null }
         <FontSetting
           onChanged={font => this.onSettingChanged({ font })}
@@ -42,7 +42,4 @@ ViewerNovelSettingPopup.propTypes = {
   content: PropTypes.object.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ViewerNovelSettingPopup);
+export default connect(mapStateToProps)(ViewerNovelSettingPopup);

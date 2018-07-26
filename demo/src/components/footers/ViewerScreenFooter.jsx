@@ -5,8 +5,8 @@ import {
   Connector,
   selectReaderSetting,
   selectReaderCalculationsTotal,
-  AvailableViewerType,
-  ViewerType,
+  AvailableViewType,
+  ViewType,
 } from '../../../../lib';
 import { isExist } from '../../../../src/util/Util';
 import SvgIcons from '../icons/SvgIcons';
@@ -20,9 +20,9 @@ class ViewerScreenFooter extends Component {
 
   checkIsPageView() {
     const { content, viewerScreenSettings } = this.props;
-    return ((content.viewer_type === AvailableViewerType.BOTH)
-      && (viewerScreenSettings.viewerType === ViewerType.PAGE))
-      || (content.viewer_type === AvailableViewerType.PAGE);
+    return ((content.viewer_type === AvailableViewType.BOTH)
+      && (viewerScreenSettings.viewType === ViewType.PAGE))
+      || (content.viewer_type === AvailableViewType.PAGE);
   }
 
   renderBestComments() {
