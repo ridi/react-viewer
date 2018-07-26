@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting } from '../../../../lib';
+import { selectReaderSetting } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 
 
@@ -60,7 +60,7 @@ FontSetting.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectSetting(state),
+  viewerScreenSettings: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(FontSetting);

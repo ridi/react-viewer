@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { debounce } from '../../util/Util';
 import CalculationsConnector from '../../util/connector/CalculationsConnector';
-import { selectCurrent, selectIsCalculated, selectSetting } from '../../redux/selector';
+import { selectReaderCurrent, selectReaderIsCalculated, selectReaderSetting } from '../../redux/selector';
 import { Position } from '../screen/BaseTouchable';
 import { CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
@@ -92,7 +92,7 @@ BaseScreen.propTypes = {
 };
 
 export const mapStateToProps = state => ({
-  isCalculated: selectIsCalculated(state),
-  setting: selectSetting(state),
-  current: selectCurrent(state),
+  isCalculated: selectReaderIsCalculated(state),
+  setting: selectReaderSetting(state),
+  current: selectReaderCurrent(state),
 });

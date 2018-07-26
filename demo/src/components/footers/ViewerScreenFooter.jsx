@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Connector,
-  selectSetting,
-  selectCalculationsTotal,
+  selectReaderSetting,
+  selectReaderCalculationsTotal,
   AvailableViewerType,
   ViewerType,
 } from '../../../../lib';
@@ -108,8 +108,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     content,
     episode,
-    viewerScreenSettings: selectSetting(state),
-    calculationsTotal: selectCalculationsTotal(state),
+    viewerScreenSettings: selectReaderSetting(state),
+    calculationsTotal: selectReaderCalculationsTotal(state),
   };
 };
 

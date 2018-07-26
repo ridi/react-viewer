@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  selectIsFullScreen,
-  selectSetting,
+  selectReaderIsFullScreen,
+  selectReaderSetting,
   ViewerType,
   ContentType,
 } from '../../../../lib';
@@ -67,9 +67,9 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    isFullScreen: selectIsFullScreen(state),
+    isFullScreen: selectReaderIsFullScreen(state),
     isVisibleSettingPopup,
-    setting: selectSetting(state),
+    setting: selectReaderSetting(state),
   };
 };
 

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Slider from 'rc-slider';
 import {
-  selectCurrentOffset,
+  selectReaderCurrentOffset,
   Connector,
-  selectCalculationsTotal,
+  selectReaderCalculationsTotal,
 } from '../../../../lib';
 
 
@@ -68,8 +68,8 @@ ViewerPageFooterToolbar.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  currentOffset: selectCurrentOffset(state),
-  total: selectCalculationsTotal(state),
+  currentOffset: selectReaderCurrentOffset(state),
+  total: selectReaderCalculationsTotal(state),
 });
 
 

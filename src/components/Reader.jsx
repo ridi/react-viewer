@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ReaderPageScreen from './screen/HtmlPageScreen';
 import ReaderScrollScreen from './screen/HtmlScrollScreen';
-import { selectContentFormat, selectSetting } from '../redux/selector';
+import { selectReaderContentFormat, selectReaderSetting } from '../redux/selector';
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewerType } from '../constants/ReaderConstants';
@@ -113,8 +113,8 @@ Reader.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  setting: selectSetting(state),
-  contentFormat: selectContentFormat(state),
+  setting: selectReaderSetting(state),
+  contentFormat: selectReaderContentFormat(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,4 +1,4 @@
-import { setContents, ContentFormat } from '../../../lib/index';
+import { setContents, ContentFormat } from '../../../lib';
 import { getJson } from '../utils/Api';
 
 export const ViewerUiActions = {

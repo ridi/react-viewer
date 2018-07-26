@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectCurrent,
-  selectContents,
-  selectContentsCalculations,
-  selectFooterCalculations,
-  selectBindingType,
-  selectCalculationsTotal,
+  selectReaderCurrent,
+  selectReaderContents,
+  selectReaderContentsCalculations,
+  selectReaderFooterCalculations,
+  selectReaderBindingType,
+  selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { screenHeight, screenWidth, setScrollTop } from '../../util/BrowserWrapper';
 import { updateContent, updateContentError } from '../../redux/action';
@@ -190,12 +190,12 @@ ImagePageScreen.propTypes = {
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),
-  current: selectCurrent(state),
-  contents: selectContents(state),
-  contentsCalculations: selectContentsCalculations(state),
-  calculationsTotal: selectCalculationsTotal(state),
-  footerCalculations: selectFooterCalculations(state),
-  bindingType: selectBindingType(state),
+  current: selectReaderCurrent(state),
+  contents: selectReaderContents(state),
+  contentsCalculations: selectReaderContentsCalculations(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
+  footerCalculations: selectReaderFooterCalculations(state),
+  bindingType: selectReaderBindingType(state),
 });
 
 const mapDispatchToProps = dispatch => ({

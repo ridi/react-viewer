@@ -5,78 +5,78 @@ import { AvailableViewerType, BindingType, ContentType, ContentFormat } from '..
 
 const getReader = state => state.reader || {};
 
-export const selectContents = createSelector(
+export const selectReaderContents = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.contents(), []),
 );
 
-export const selectContentFormat = createSelector(
+export const selectReaderContentFormat = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.contentFormat(), ContentFormat.HTML),
 );
 
-export const selectContentType = createSelector(
+export const selectReaderContentType = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.contentType(), ContentType.WEB_NOVEL),
 );
 
-export const selectAvailableViewerType = createSelector(
+export const selectReaderAvailableViewerType = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.availableViewerType(), AvailableViewerType.BOTH),
 );
 
-export const selectBindingType = createSelector(
+export const selectReaderBindingType = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.bindingType(), BindingType.LEFT),
 );
 
 // TODO remove?
-export const selectIsFullScreen = createSelector(
+export const selectReaderIsFullScreen = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isFullScreen(), false),
 );
 
-export const selectSetting = createSelector(
+export const selectReaderSetting = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.setting(), {}),
 );
 
-export const selectCurrent = createSelector(
+export const selectReaderCurrent = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.current(), {}),
 );
 
-export const selectCurrentContentIndex = createSelector(
+export const selectReaderCurrentContentIndex = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.currentContentIndex(), 1),
 );
 
-export const selectCurrentOffset = createSelector(
+export const selectReaderCurrentOffset = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.currentOffset(), 0),
 );
 
-export const selectContentsCalculations = createSelector(
+export const selectReaderContentsCalculations = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.contentsCalculations(), []),
 );
 
-export const selectIsCalculated = createSelector(
+export const selectReaderIsCalculated = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isAllCalculated(), false),
 );
 
-export const selectCalculationsTotal = createSelector(
+export const selectReaderCalculationsTotal = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.calculationsTotal(), 0),
 );
 
-export const selectFooterCalculations = createSelector(
+export const selectReaderFooterCalculations = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.footerCalculations(), {}),
 );
 
-export const selectIsInitContents = createSelector(
+export const selectReaderIsInitContents = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isInitContents(), false),
 );

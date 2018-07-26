@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting, AvailableViewerType, ViewerType } from '../../../../lib';
+import { selectReaderSetting, AvailableViewerType, ViewerType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
@@ -65,7 +65,7 @@ ViewerTypeSetting.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectSetting(state),
+  viewerScreenSettings: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(ViewerTypeSetting);

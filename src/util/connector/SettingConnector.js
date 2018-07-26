@@ -11,7 +11,7 @@ import {
 } from '../../constants/StyledConstants';
 import { ContentFormat, ContentType } from '../../constants/ContentConstants';
 import { ViewerType } from '../../constants/ReaderConstants';
-import { selectContentFormat, selectSetting } from '../..';
+import { selectReaderContentFormat, selectReaderSetting } from '../..';
 import {
   StyledHtmlPageTouchable,
   StyledHtmlScrollTouchable,
@@ -81,16 +81,16 @@ class SettingConnector extends Connector {
   }
 
   getPadding() {
-    const contentFormat = selectContentFormat(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.IMAGE) return 0;
-    const { paddingLevel } = selectSetting(this.getState());
+    const { paddingLevel } = selectReaderSetting(this.getState());
     return `0 ${7 - Number(paddingLevel)}%`;
   }
 
   getContentWidth() {
-    const contentFormat = selectContentFormat(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.HTML) return '100%';
-    const { contentWidthLevel } = selectSetting(this.getState());
+    const { contentWidthLevel } = selectReaderSetting(this.getState());
     return `${(Number(contentWidthLevel) * 10) + 40}%`;
   }
 
@@ -102,7 +102,7 @@ class SettingConnector extends Connector {
   }
 
   getFontSize() {
-    const { fontSizeLevel } = selectSetting(this.getState());
+    const { fontSizeLevel } = selectReaderSetting(this.getState());
     let fontSizeUnit = 16;
 
     switch (Number(fontSizeLevel)) {
@@ -124,7 +124,7 @@ class SettingConnector extends Connector {
   }
 
   getNovelLineHeight() {
-    const { lineHeightLevel } = selectSetting(this.getState());
+    const { lineHeightLevel } = selectReaderSetting(this.getState());
     let lineHeightUnit = 1.67;
     switch (Number(lineHeightLevel)) {
       case 1: lineHeightUnit = 1.35; break;
@@ -141,8 +141,8 @@ class SettingConnector extends Connector {
   getColumnGap() {
     const {
       columnGap,
-    } = selectSetting(this.getState());
-    const contentFormat = selectContentFormat(this.getState());
+    } = selectReaderSetting(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.HTML) {
       return `${columnGap}px`;
     }
@@ -150,8 +150,8 @@ class SettingConnector extends Connector {
   }
 
   getContainerHorizontalMargin() {
-    const contentFormat = selectContentFormat(this.getState());
-    const { containerHorizontalMargin, viewerType } = selectSetting(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
+    const { containerHorizontalMargin, viewerType } = selectReaderSetting(this.getState());
     if (contentFormat === ContentFormat.IMAGE && viewerType === ViewerType.PAGE) {
       return '0';
     }
@@ -159,9 +159,9 @@ class SettingConnector extends Connector {
   }
 
   getColumnWidth() {
-    const { columnsInPage } = selectSetting(this.getState());
+    const { columnsInPage } = selectReaderSetting(this.getState());
 
-    const contentFormat = selectContentFormat(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
     const calculatedWidth = screenWidth() - (parseInt(this.getContainerHorizontalMargin(), 10) * 2);
     if (contentFormat === ContentFormat.HTML) {
       const width = (columnsInPage > 1) ? calculatedWidth : Math.min(calculatedWidth, this.getPageMaxWidth());
@@ -179,13 +179,13 @@ class SettingConnector extends Connector {
   }
 
   getContentFooterHeight() {
-    const { contentFooterHeight } = selectSetting(this.getState());
+    const { contentFooterHeight } = selectReaderSetting(this.getState());
     return contentFooterHeight;
   }
 
   getStyledTouchable() {
-    const contentFormat = selectContentFormat(this.getState());
-    const { viewerType } = selectSetting(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
+    const { viewerType } = selectReaderSetting(this.getState());
     if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.SCROLL) {
       return StyledHtmlScrollTouchable;
     } else if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.PAGE) {
@@ -199,8 +199,8 @@ class SettingConnector extends Connector {
   }
 
   getStyledContent() {
-    const contentFormat = selectContentFormat(this.getState());
-    const { viewerType } = selectSetting(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
+    const { viewerType } = selectReaderSetting(this.getState());
     if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.SCROLL) {
       return StyledHtmlScrollContent;
     } else if (contentFormat === ContentFormat.HTML && viewerType === ViewerType.PAGE) {
@@ -214,7 +214,7 @@ class SettingConnector extends Connector {
   }
 
   getStyledFooter() {
-    const { viewerType } = selectSetting(this.getState());
+    const { viewerType } = selectReaderSetting(this.getState());
     if (viewerType === ViewerType.SCROLL) {
       return StyledScrollFooter;
     } else if (viewerType === ViewerType.PAGE) {

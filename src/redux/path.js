@@ -40,8 +40,8 @@ export const initialSettingState = () => ({
 });
 
 export const initialState = {
-  // TODO isFullScreen을 여기에서 관리해야 하는지?
   status: {
+    // TODO isFullScreen은 여기에서 관리할 필요가 없음
     isFullScreen: false,
     isInitContents: false,
     isContentsLoaded: false,
@@ -50,6 +50,7 @@ export const initialState = {
   metadata: {
     format: ContentFormat.HTML,
     content: ContentType.WEB_NOVEL,
+    // TODO availableViewerType은 여기서 관리할 필요가 없음
     viewer: AvailableViewerType.BOTH,
     binding: BindingType.LEFT,
   },

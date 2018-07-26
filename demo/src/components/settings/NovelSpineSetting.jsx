@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting, ViewerSpinType } from '../../../../lib';
+import { selectReaderSetting, ViewerSpinType } from '../../../../lib';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
 
@@ -47,7 +47,7 @@ NovelSpineSetting.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  setting: selectSetting(state),
+  setting: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(NovelSpineSetting);

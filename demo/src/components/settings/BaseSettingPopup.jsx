@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { updateSetting, selectSetting, ViewerType, Connector } from '../../../../lib';
+import { updateSetting, selectReaderSetting, ViewerType, Connector } from '../../../../lib';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
 const settingsAffectingPagination = ['viewerType', 'font', 'fontSizeLevel', 'paddingLevel', 'contentWidthLevel', 'lineHeightLevel', 'columnsInPage', 'startWithBlankPage'];
@@ -63,7 +63,7 @@ BaseSettingPopup.propTypes = {
 
 export const mapStateToProps = state => ({
   isVisibleSettingPopup: selectIsVisibleSettingPopup(state),
-  setting: selectSetting(state),
+  setting: selectReaderSetting(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

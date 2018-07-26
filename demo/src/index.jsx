@@ -10,14 +10,14 @@ import Reader, {
   Connector,
   ContentType,
   AvailableViewerType,
-  selectCurrentContentIndex,
+  selectReaderCurrentContentIndex,
   updateMetadata,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerFooter from './components/footers/ViewerFooter';
 import { IconsSprite } from './components/icons/IconsSprite';
-import { selectIsFullScreen } from '../../src/redux/selector';
+import { selectReaderIsFullScreen } from '../../src/redux/selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
 import { requestLoadContent } from './redux/Viewer.action';
@@ -88,9 +88,9 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    isFullScreen: selectIsFullScreen(state),
+    isFullScreen: selectReaderIsFullScreen(state),
     isVisibleSettingPopup,
-    currentContentIndex: selectCurrentContentIndex(state),
+    currentContentIndex: selectReaderCurrentContentIndex(state),
   };
 };
 

@@ -6,16 +6,16 @@ import {
   updateContentCalculations,
 } from '../../redux/action';
 import {
-  selectFooterCalculations,
-  selectContentsCalculations,
-  selectCalculationsTotal,
-  selectCurrent,
-  selectCurrentContentIndex,
-  selectIsCalculated,
-  selectSetting,
-  selectContentFormat,
-  selectIsInitContents,
-  selectContents,
+  selectReaderFooterCalculations,
+  selectReaderContentsCalculations,
+  selectReaderCalculationsTotal,
+  selectReaderCurrent,
+  selectReaderCurrentContentIndex,
+  selectReaderIsCalculated,
+  selectReaderSetting,
+  selectReaderContentFormat,
+  selectReaderIsInitContents,
+  selectReaderContents,
 } from '../../redux/selector';
 import { hasIntersect } from '../Util';
 import { ContentFormat } from '../../constants/ContentConstants';
@@ -41,24 +41,24 @@ class CalculationsConnector extends Connector {
   }
 
   isCompleted() {
-    return selectIsCalculated(this.getState());
+    return selectReaderIsCalculated(this.getState());
   }
 
   isCalculated(index) {
     if (index === FOOTER_INDEX) {
-      const calculatedFooter = selectFooterCalculations(this.getState());
+      const calculatedFooter = selectReaderFooterCalculations(this.getState());
       return calculatedFooter.isCalculated;
     }
-    const calculatedContents = selectContentsCalculations(this.getState());
+    const calculatedContents = selectReaderContentsCalculations(this.getState());
     return calculatedContents[index - 1].isCalculated;
   }
 
   checkComplete() {
-    const isInitContents = selectIsInitContents(this.getState());
+    const isInitContents = selectReaderIsInitContents(this.getState());
     if (!isInitContents) return;
-    const calculatedContents = selectContentsCalculations(this.getState());
-    const calculatedFooter = selectFooterCalculations(this.getState());
-    const contentFormat = selectContentFormat(this.getState());
+    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    const calculatedFooter = selectReaderFooterCalculations(this.getState());
+    const contentFormat = selectReaderContentFormat(this.getState());
     const isAllCalculated = contentFormat === ContentFormat.HTML
       ? calculatedContents.every(content => content.isCalculated)
       : calculatedContents[0].isCalculated;
@@ -87,10 +87,10 @@ class CalculationsConnector extends Connector {
 
   getTotal(index) {
     if (index === FOOTER_INDEX) {
-      const { total } = selectFooterCalculations(this.getState());
+      const { total } = selectReaderFooterCalculations(this.getState());
       return total;
     }
-    const calculatedContents = selectContentsCalculations(this.getState());
+    const calculatedContents = selectReaderContentsCalculations(this.getState());
     return calculatedContents[index - 1].total;
   }
 
@@ -99,8 +99,8 @@ class CalculationsConnector extends Connector {
   }
 
   getContentIndexesInOffsetRange(startOffset, endOffset) {
-    const total = selectCalculationsTotal(this.getState());
-    const calculations = selectContentsCalculations(this.getState());
+    const total = selectReaderCalculationsTotal(this.getState());
+    const calculations = selectReaderContentsCalculations(this.getState());
     const result = [];
     const range = [startOffset, endOffset];
 
@@ -147,7 +147,7 @@ class CalculationsConnector extends Connector {
     // console.log('updateCurrentPosition');
     if (!this.isCompleted()) return;
 
-    const { viewerType } = selectSetting(this.getState());
+    const { viewerType } = selectReaderSetting(this.getState());
     const contentIndex = this.getIndexAtOffset(offset);
 
     const total = this.getTotal(contentIndex);
@@ -164,8 +164,8 @@ class CalculationsConnector extends Connector {
   restoreCurrentOffset() {
     if (!this.isCompleted()) return;
 
-    const { viewerType } = selectSetting(this.getState());
-    const { position, contentIndex } = selectCurrent(this.getState());
+    const { viewerType } = selectReaderSetting(this.getState());
+    const { position, contentIndex } = selectReaderCurrent(this.getState());
 
     const total = this.getTotal(contentIndex);
     const maxOffset = this.startOffset[contentIndex] + (total - 1);
@@ -177,12 +177,12 @@ class CalculationsConnector extends Connector {
     if (!this.hasFooter) return false;
     if (!this.isCompleted()) return false;
 
-    const currentContentIndex = selectCurrentContentIndex(this.getState());
+    const currentContentIndex = selectReaderCurrentContentIndex(this.getState());
     return currentContentIndex === FOOTER_INDEX;
   }
 
   isLastContent(index) {
-    const calculatedContents = selectContents(this.getState());
+    const calculatedContents = selectReaderContents(this.getState());
     return index === calculatedContents.length;
   }
 }

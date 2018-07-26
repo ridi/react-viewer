@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectContents,
-  selectContentsCalculations,
-  selectCalculationsTotal,
-  selectFooterCalculations,
+  selectReaderContents,
+  selectReaderContentsCalculations,
+  selectReaderCalculationsTotal,
+  selectReaderFooterCalculations,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import { screenHeight, screenWidth, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
@@ -148,10 +148,10 @@ HtmlScrollScreen.propTypes = {
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),
-  contents: selectContents(state),
-  contentsCalculations: selectContentsCalculations(state),
-  calculationsTotal: selectCalculationsTotal(state),
-  footerCalculations: selectFooterCalculations(state),
+  contents: selectReaderContents(state),
+  contentsCalculations: selectReaderContentsCalculations(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
+  footerCalculations: selectReaderFooterCalculations(state),
 });
 
 const mapDispatchToProps = dispatch => ({

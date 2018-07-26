@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectContents,
-  selectContentsCalculations,
-  selectFooterCalculations,
-  selectBindingType,
-  selectCalculationsTotal,
+  selectReaderContents,
+  selectReaderContentsCalculations,
+  selectReaderFooterCalculations,
+  selectReaderBindingType,
+  selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { screenWidth, setScrollTop } from '../../util/BrowserWrapper';
 import {
@@ -171,11 +171,11 @@ HtmlPageScreen.propTypes = {
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),
-  contents: selectContents(state),
-  contentsCalculations: selectContentsCalculations(state),
-  calculationsTotal: selectCalculationsTotal(state),
-  footerCalculations: selectFooterCalculations(state),
-  bindingType: selectBindingType(state),
+  contents: selectReaderContents(state),
+  contentsCalculations: selectReaderContentsCalculations(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
+  footerCalculations: selectReaderFooterCalculations(state),
+  bindingType: selectReaderBindingType(state),
 });
 
 const mapDispatchToProps = dispatch => ({

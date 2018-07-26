@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectSetting, ViewerComicSpinType } from '../../../../lib';
+import { selectReaderSetting, ViewerComicSpinType } from '../../../../lib';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
@@ -50,7 +50,7 @@ ComicSpineSetting.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  setting: selectSetting(state),
+  setting: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(ComicSpineSetting);
