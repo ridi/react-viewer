@@ -5,8 +5,8 @@ import {
   selectReaderIsFullScreen,
   selectReaderSetting,
   ViewType,
-  ContentType,
 } from '../../../../lib';
+import { ContentType } from '../../constants/ContentConstants';
 import { onToggleViewerSetting } from '../../redux/Viewer.action';
 import ViewerPageFooterToolbar from './ViewerPageFooterToolbar';
 import ViewerNovelSettingPopup from '../settings/ViewerNovelSettingPopup';

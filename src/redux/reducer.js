@@ -34,7 +34,6 @@ const updateSetting = (state, action) => new ImmutableObjectBuilder(state)
 
 const setContents = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
-  .set(path.contentType(), action.contentType)
   .set(path.contentFormat(), action.contentFormat)
   .set(path.bindingType(), action.bindingType)
   .set(path.contents(), action.contents.map((uri, i) => initialContentState(i + 1, uri)))

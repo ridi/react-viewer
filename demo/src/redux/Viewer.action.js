@@ -21,10 +21,9 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
 
 export const requestLoadContent = ({
   id,
-  contentType,
   contentFormat,
   bindingType,
 }) => (dispatch) => {
   getJson(`./resources/contents/${id}/spine.json`)
-    .then(({ contents }) => dispatch(setContents(contentType, contentFormat, bindingType, contents)));
+    .then(({ contents }) => dispatch(setContents(contentFormat, bindingType, contents)));
 };

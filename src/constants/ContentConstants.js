@@ -1,26 +1,6 @@
 import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
-
-const _ContentType = {
-  WEB_NOVEL: 10,
-  COMIC: 20,
-  WEBTOON: 30,
-};
-
-export const ContentType = makeConstants(updateObject(_ContentType, {
-  _LIST: [
-    _ContentType.WEB_NOVEL,
-    _ContentType.COMIC,
-    _ContentType.WEBTOON,
-  ],
-  _STRING_MAP: {
-    [_ContentType.WEB_NOVEL]: '웹소설',
-    [_ContentType.COMIC]: '만화',
-    [_ContentType.WEBTOON]: '웹툰',
-  },
-}), {});
-
 const _BindingType = {
   LEFT: 0,
   RIGHT: 1,

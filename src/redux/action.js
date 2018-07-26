@@ -21,9 +21,8 @@ export const onScreenScrolled = () => ({
   type: actions.SCROLLED,
 });
 
-export const setContents = (contentType, contentFormat, bindingType, contents) => ({
+export const setContents = (contentFormat, bindingType, contents) => ({
   type: actions.SET_CONTENTS,
-  contentType,
   contentFormat,
   bindingType,
   contents,

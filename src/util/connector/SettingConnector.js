@@ -9,7 +9,7 @@ import {
   CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,
 } from '../../constants/StyledConstants';
-import { ContentFormat, ContentType } from '../../constants/ContentConstants';
+import { ContentFormat } from '../../constants/ContentConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { selectReaderContentFormat, selectReaderSetting } from '../../redux/selector';
 import { updateSetting } from '../../redux/action';
@@ -93,13 +93,6 @@ class SettingConnector extends Connector {
     if (contentFormat === ContentFormat.HTML) return '100%';
     const { contentWidthLevel } = selectReaderSetting(this.getState());
     return `${(Number(contentWidthLevel) * 10) + 40}%`;
-  }
-
-  getMaxWidth(contentType, viewType) {
-    if (contentType === ContentType.WEB_NOVEL || viewType === ViewType.SCROLL) {
-      return `${this.getPageMaxWidth()}px`;
-    }
-    return 'none';
   }
 
   getFontSize() {

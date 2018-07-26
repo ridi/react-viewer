@@ -1,4 +1,4 @@
-import { BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
+import { BindingType, ContentFormat } from '../constants/ContentConstants';
 import { ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import { CONTENT_FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../constants/StyledConstants';
 
@@ -41,7 +41,6 @@ export const initialState = {
   },
   metadata: {
     format: ContentFormat.HTML,
-    content: ContentType.WEB_NOVEL,
     binding: BindingType.LEFT,
   },
   contents: [],
@@ -70,7 +69,6 @@ export default {
   contentError: index => ['contents', index - 1, 'error'],
 
   contentFormat: () => ['metadata', 'format'],
-  contentType: () => ['metadata', 'content'],
   bindingType: () => ['metadata', 'binding'],
 
   isFullScreen: () => ['status', 'isFullScreen'],
