@@ -34,7 +34,7 @@ export default class BaseTouchable extends React.Component {
         role="button"
         tabIndex="-1"
         innerRef={forwardedRef}
-        className="viewer"
+        className="reader"
         onClick={e => this.onTouchScreenHandle(e, Position.MIDDLE)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

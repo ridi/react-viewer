@@ -2,7 +2,7 @@ import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
 
-export const VIEWER_EMPTY_READ_POSITION = '-1#-1';
+export const EMPTY_READ_POSITION = '-1#-1';
 export const INVALID_PAGE = -1;
 
 const _ReaderThemeType = {

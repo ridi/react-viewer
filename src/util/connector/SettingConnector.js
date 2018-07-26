@@ -3,7 +3,7 @@ import { screenWidth } from '../BrowserWrapper';
 import {
   DEFAULT_PADDING_VERTICAL,
   PAGE_MAX_WIDTH,
-  PAGE_VIEWER_SELECTOR,
+  READER_SELECTOR_PAGE,
   EXTENDED_TOUCH_WIDTH,
   CONTENT_FOOTER_HEIGHT,
   CHAPTER_INDICATOR_ID_PREFIX,
@@ -33,7 +33,7 @@ class SettingConnector extends Connector {
     // TODO 모든 옵션 property 또는 redux로 변경하기
     this.options = {
       pageMaxWidth: PAGE_MAX_WIDTH,
-      pageViewerSelector: PAGE_VIEWER_SELECTOR,
+      readerSelectorPage: READER_SELECTOR_PAGE,
       extendedTouchWidth: EXTENDED_TOUCH_WIDTH,
       contentFooterHeight: CONTENT_FOOTER_HEIGHT,
     };
@@ -43,14 +43,14 @@ class SettingConnector extends Connector {
     const {
       paddingVertical = DEFAULT_PADDING_VERTICAL,
       pageMaxWidth = PAGE_MAX_WIDTH,
-      pageViewerSelector = PAGE_VIEWER_SELECTOR,
+      readerSelectorPage = READER_SELECTOR_PAGE,
       extendedTouchWidth = EXTENDED_TOUCH_WIDTH,
       contentFooterHeight = CONTENT_FOOTER_HEIGHT,
       chapterIndicatorIdPrefix = CHAPTER_INDICATOR_ID_PREFIX,
       chapterIdPrefix = CHAPTER_ID_PREFIX,
     } = this._options;
 
-    this._targetSelector = pageViewerSelector;
+    this._targetSelector = readerSelectorPage;
     this._paddingVertical = paddingVertical;
     this._pageMaxWidth = pageMaxWidth;
     this._extendedTouchWidth = extendedTouchWidth;

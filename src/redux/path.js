@@ -52,7 +52,7 @@ export const initialState = {
   },
   current: {
     contentIndex: 1,
-    position: 0, // VIEWER_EMPTY_READ_POSITION,  // readPosition (지금은 일단 spine 내 %)
+    position: 0, // EMPTY_READ_POSITION TODO reader.js 연동 필요, 현재는 일단 spine 내 %로 저장하고 있음
     offset: 0,  // page or scroll top
     viewType: ViewType.SCROLL,
   },

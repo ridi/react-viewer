@@ -22,12 +22,12 @@ export default class BaseScreen extends React.Component {
     }
     this.moveToOffset();
 
-    this.resizeViewer = debounce(() => {
+    this.resizeReader = debounce(() => {
       if (!disableCalculation) {
         CalculationsConnector.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
-    window.addEventListener(DOMEventConstants.RESIZE, this.resizeViewer);
+    window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
   }
 
   componentDidUpdate(prevProps) {
@@ -44,7 +44,7 @@ export default class BaseScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeViewer);
+    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeReader);
   }
 
   onTouchableScreenTouched({ position }) {
