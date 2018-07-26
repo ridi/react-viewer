@@ -1,4 +1,4 @@
-import { setContents, ContentFormat } from '../../../lib';
+import { setContents } from '../../../lib';
 import { getJson } from '../utils/Api';
 
 export const ViewerUiActions = {
@@ -19,13 +19,12 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
 };
 
-export const requestLoadContent = contentId => (dispatch) => {
-  const spineUrl = `./resources/contents/${contentId}/spine.json`;
-  getJson(spineUrl).then(({ spines, images }) => {
-    if (spines) {
-      dispatch(setContents(ContentFormat.HTML, spines));
-    } else if (images) {
-      dispatch(setContents(ContentFormat.IMAGE, images));
-    }
-  });
+export const requestLoadContent = ({
+  id,
+  contentType,
+  contentFormat,
+  bindingType,
+}) => (dispatch) => {
+  getJson(`./resources/contents/${id}/spine.json`)
+    .then(({ contents }) => dispatch(setContents(contentType, contentFormat, bindingType, contents)));
 };

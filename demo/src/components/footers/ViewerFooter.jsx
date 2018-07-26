@@ -28,7 +28,7 @@ class ViewerFooter extends Component {
 
     return (
       <section /* ref={(footer) => { preventScrollEvent(footer); }} */>
-        {content.content_type === ContentType.WEB_NOVEL ?
+        {content.contentType === ContentType.WEB_NOVEL ?
           <ViewerNovelSettingPopup content={content} /> :
           <ViewerComicSettingPopup content={content} />
         }

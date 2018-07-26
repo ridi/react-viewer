@@ -3,42 +3,42 @@
     {
       "id": 1,
       "title": "BEHIND THE FOOTLIGHTS",
-      "content_type": 10,
-      "binding_type": 0,
-      "view_type": 0,
-      "content_format": 0
+      "contentType": 10,
+      "bindingType": 0,
+      "viewType": 0,
+      "contentFormat": 0
     },
     {
       "id": 2,
       "title": "무정",
-      "content_type": 10,
-      "binding_type": 0,
-      "view_type": 0,
-      "content_format": 0
+      "contentType": 10,
+      "bindingType": 0,
+      "viewType": 0,
+      "contentFormat": 0
     },
     {
       "id": 3,
       "title": "AllTrueRomance (HTML)",
-      "content_type": 20,
-      "binding_type": 0,
-      "view_type": 0,
-      "content_format": 0
+      "contentType": 20,
+      "bindingType": 0,
+      "viewType": 0,
+      "contentFormat": 0
     },
     {
       "id": 4,
       "title": "AllTrueRomance",
-      "content_type": 20,
-      "binding_type": 1,
-      "view_type": 0,
-      "content_format": 1
+      "contentType": 20,
+      "bindingType": 1,
+      "viewType": 0,
+      "contentFormat": 1
     },
     {
       "id": 6,
       "title": "지저 탐험",
-      "content_type": 10,
-      "binding_type": 0,
-      "view_type": 0,
-      "content_format": 0
+      "contentType": 10,
+      "bindingType": 0,
+      "viewType": 0,
+      "contentFormat": 0
     }
   ]
 }

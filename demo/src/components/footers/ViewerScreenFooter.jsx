@@ -5,9 +5,9 @@ import {
   Connector,
   selectReaderSetting,
   selectReaderCalculationsTotal,
-  AvailableViewType,
   ViewType,
 } from '../../../../lib';
+import { AvailableViewType } from '../../constants/ContentConstants';
 import { isExist } from '../../../../src/util/Util';
 import SvgIcons from '../icons/SvgIcons';
 
@@ -20,9 +20,9 @@ class ViewerScreenFooter extends Component {
 
   checkIsPageView() {
     const { content, viewerScreenSettings } = this.props;
-    return ((content.viewer_type === AvailableViewType.BOTH)
+    return ((content.viewType === AvailableViewType.BOTH)
       && (viewerScreenSettings.viewType === ViewType.PAGE))
-      || (content.viewer_type === AvailableViewType.PAGE);
+      || (content.viewType === AvailableViewType.PAGE);
   }
 
   renderBestComments() {
@@ -36,11 +36,10 @@ class ViewerScreenFooter extends Component {
   render() {
     const {
       content,
-      episode,
       calculationsTotal,
     } = this.props;
 
-    if (!isExist(content) || !isExist(episode)) {
+    if (!isExist(content)) {
       return null;
     }
 
@@ -48,14 +47,13 @@ class ViewerScreenFooter extends Component {
       <div className="viewer_bottom">
         <div className="viewer_bottom_information">
           <p className="content_title">{content.title}</p>
-          <p className="episode_title">{episode.title}</p>
         </div>
         <div
           role="presentation"
           className="viewer_bottom_best_comment empty"
           onClick={() => this.onClickShowComments()}
           onKeyDown={(e) => {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter' || e.key === ' ') {
               this.onClickShowComments();
             }
           }}
@@ -70,9 +68,6 @@ class ViewerScreenFooter extends Component {
           </button>
         </div>
         <div className="viewer_bottom_button_wrapper">
-          <div className="last_button_wrapper">
-            <p className="last_episode_text">마지막 에피소드 입니다.</p>
-          </div>
           {this.checkIsPageView() ? (
             <button
               className="move_prev_page_button"
@@ -94,7 +89,6 @@ class ViewerScreenFooter extends Component {
 
 ViewerScreenFooter.propTypes = {
   content: PropTypes.object.isRequired,
-  episode: PropTypes.object.isRequired,
   viewerScreenSettings: PropTypes.object,
   calculationsTotal: PropTypes.number.isRequired,
 };
@@ -103,14 +97,9 @@ ViewerScreenFooter.defaultProps = {
   viewerScreenSettings: {},
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { content, episode } = ownProps;
-  return {
-    content,
-    episode,
-    viewerScreenSettings: selectReaderSetting(state),
-    calculationsTotal: selectReaderCalculationsTotal(state),
-  };
-};
+const mapStateToProps = (state) => ({
+  viewerScreenSettings: selectReaderSetting(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
+});
 
 export default connect(mapStateToProps)(ViewerScreenFooter);

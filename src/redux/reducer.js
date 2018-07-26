@@ -32,17 +32,13 @@ const updateSetting = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.setting(), updateObject(state.setting, action.setting))
   .build();
 
-const updateMetadata = (state, action) => new ImmutableObjectBuilder(state)
-  .set(path.contentType(), action.contentType)
-  .set(path.availableViewType(), action.viewType)
-  .set(path.bindingType(), action.bindingType)
-  .build();
-
 const setContents = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
-  .set(path.contentFormat(), action.format)
+  .set(path.contentType(), action.contentType)
+  .set(path.contentFormat(), action.contentFormat)
+  .set(path.bindingType(), action.bindingType)
   .set(path.contents(), action.contents.map((uri, i) => initialContentState(i + 1, uri)))
-  .set(path.contentsCalculations(), action.format === ContentFormat.HTML
+  .set(path.contentsCalculations(), action.contentFormat === ContentFormat.HTML
     ? action.contents.map((_, i) => initialContentCalculationsState(i + 1))
     : [initialContentCalculationsState(1)])
   .build();
@@ -93,7 +89,6 @@ export default ({
     [actions.SCROLLED]: onScrolled,
     [actions.SET_CONTENTS]: setContents,
     [actions.UPDATE_SETTING]: updateSetting,
-    [actions.UPDATE_METADATA]: updateMetadata,
     [actions.UPDATE_CONTENT]: updateContent,
     [actions.UPDATE_CONTENT_ERROR]: updateContentError,
     [actions.UPDATE_CURRENT]: updateCurrent,

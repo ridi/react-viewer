@@ -6265,7 +6265,7 @@ body.white_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_button
     color: #0282da
 }
 
-body.white_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.white_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.white_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -6580,7 +6580,7 @@ body.sepia_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_button
     color: #0282da
 }
 
-body.sepia_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.sepia_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.sepia_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -6895,7 +6895,7 @@ body.ios_sepia_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_bu
     color: #0282da
 }
 
-body.ios_sepia_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.ios_sepia_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.ios_sepia_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -7210,7 +7210,7 @@ body.blackboard_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_b
     color: #87b4e9
 }
 
-body.blackboard_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.blackboard_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.blackboard_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -7587,7 +7587,7 @@ body.darkgray_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_but
     color: #87b4e9
 }
 
-body.darkgray_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.darkgray_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.darkgray_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -7964,7 +7964,7 @@ body.black_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_button
     color: #87b4e9
 }
 
-body.black_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.black_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.black_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -8342,7 +8342,7 @@ body.paper_theme .viewer_bottom .viewer_bottom_best_comment .more_comment_button
     color: #0282da
 }
 
-body.paper_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.paper_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.paper_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -8658,7 +8658,7 @@ body.korean_paper_theme .viewer_bottom .viewer_bottom_best_comment .more_comment
     color: #0282da
 }
 
-body.korean_paper_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text, body.korean_paper_theme .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
+body.korean_paper_theme .viewer_bottom .viewer_bottom_best_comment.empty .empty_text {
     color: #868a8e
 }
 
@@ -9292,12 +9292,6 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
 
 #viewer_page .viewer_bottom .viewer_bottom_button_wrapper .bottom_button {
     width: 100%
-}
-
-#viewer_page .viewer_bottom .viewer_bottom_button_wrapper .last_button_wrapper .last_episode_text {
-    padding: 10px 0 30px;
-    text-align: center;
-    font-size: 16px
 }
 
 #viewer_page .viewer_bottom .home_section {

@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import path from './path';
 import { nullSafeGet } from '../util/Util';
-import { AvailableViewType, BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
+import { BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
 
 const getReader = state => state.reader || {};
 
@@ -18,11 +18,6 @@ export const selectReaderContentFormat = createSelector(
 export const selectReaderContentType = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.contentType(), ContentType.WEB_NOVEL),
-);
-
-export const selectReaderAvailableViewType = createSelector(
-  [getReader],
-  reader => nullSafeGet(reader, path.availableViewType(), AvailableViewType.BOTH),
 );
 
 export const selectReaderBindingType = createSelector(

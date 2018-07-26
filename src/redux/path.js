@@ -1,4 +1,4 @@
-import { AvailableViewType, BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
+import { BindingType, ContentType, ContentFormat } from '../constants/ContentConstants';
 import { ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import { CONTENT_FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../constants/StyledConstants';
 
@@ -42,8 +42,6 @@ export const initialState = {
   metadata: {
     format: ContentFormat.HTML,
     content: ContentType.WEB_NOVEL,
-    // TODO availableViewType은 여기서 관리할 필요가 없음
-    view: AvailableViewType.BOTH,
     binding: BindingType.LEFT,
   },
   contents: [],
@@ -73,7 +71,6 @@ export default {
 
   contentFormat: () => ['metadata', 'format'],
   contentType: () => ['metadata', 'content'],
-  availableViewType: () => ['metadata', 'view'],
   bindingType: () => ['metadata', 'binding'],
 
   isFullScreen: () => ['status', 'isFullScreen'],

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting, AvailableViewType, ViewType } from '../../../../lib';
+import { selectReaderSetting, ViewType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
+import { AvailableViewType } from '../../constants/ContentConstants';
 import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
 

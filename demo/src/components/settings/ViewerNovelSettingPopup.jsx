@@ -19,7 +19,7 @@ class ViewerNovelSettingPopup extends BaseSettingPopup {
         />
         <ViewTypeSetting
           onChanged={viewType => this.onSettingChanged({ viewType })}
-          contentViewType={content.viewer_type}
+          contentViewType={content.viewType}
         />
         { setting.viewType === ViewType.PAGE
         ? <ColumnSetting onChanged={columnsInPage => this.onSettingChanged({ columnsInPage })} /> : null }

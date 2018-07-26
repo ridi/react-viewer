@@ -4,7 +4,6 @@ export const actions = {
   SCROLLED: 'READER:SCROLLED',
   SET_CONTENTS: 'READER:SET_CONTENTS',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
-  UPDATE_METADATA: 'READER:UPDATE_METADATA',
   UPDATE_CURRENT: 'READER:UPDATE_CURRENT',
   UPDATE_CONTENT: 'READER:UPDATE_CONTENT',
   UPDATE_CONTENT_ERROR: 'READER:UPDATE_CONTENT_ERROR',
@@ -22,9 +21,11 @@ export const onScreenScrolled = () => ({
   type: actions.SCROLLED,
 });
 
-export const setContents = (format, contents) => ({
+export const setContents = (contentType, contentFormat, bindingType, contents) => ({
   type: actions.SET_CONTENTS,
-  format,
+  contentType,
+  contentFormat,
+  bindingType,
   contents,
 });
 
@@ -36,13 +37,6 @@ export const updateCurrent = current => ({
 export const updateSetting = setting => ({
   type: actions.UPDATE_SETTING,
   setting,
-});
-
-export const updateMetadata = (contentType, viewType, bindingType) => ({
-  type: actions.UPDATE_METADATA,
-  contentType,
-  viewType,
-  bindingType,
 });
 
 export const updateContent = (index, content, isAllLoaded = false) => ({

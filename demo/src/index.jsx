@@ -8,10 +8,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import Reader, {
   reducers as reader,
   Connector,
-  ContentType,
-  AvailableViewType,
   selectReaderCurrentContentIndex,
-  updateMetadata,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -41,12 +38,8 @@ Connector.connect(store);
 
 class DemoViewer extends Component {
   componentWillMount() {
-    const {
-      content, actionRequestLoadContent, actionUpdateMetadata,
-    } = this.props;
-
-    actionUpdateMetadata(content.content_type, content.viewer_type, content.binding_type);
-    actionRequestLoadContent(content.id);
+    const { content, actionRequestLoadContent } = this.props;
+    actionRequestLoadContent(content);
   }
 
   render() {
@@ -59,10 +52,7 @@ class DemoViewer extends Component {
       <section id="viewer_page">
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
         <Reader
-          footer={<ViewerScreenFooter
-            content={{ content_type: ContentType.WEB_NOVEL, viewer_type: AvailableViewType.BOTH, title: '테스트' }}
-            episode={{ title: content.title }}
-          />}
+          footer={<ViewerScreenFooter content={content} />}
           contentFooter={<small>content footer area...</small>}
           onMoveWrongDirection={() => alert('move to the wrong direction')}
           onMount={() => console.log('onMount')}
@@ -79,7 +69,6 @@ DemoViewer.propTypes = {
   content: PropTypes.object.isRequired,
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isFullScreen: PropTypes.bool.isRequired,
-  actionUpdateMetadata: PropTypes.func.isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
 };
 
@@ -95,8 +84,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateMetadata: (contentType, viewType, bindingType) => dispatch(updateMetadata(contentType, viewType, bindingType)),
-  actionRequestLoadContent: contentId => dispatch(requestLoadContent(contentId)),
+  actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
 });
 
 const DemoViewerPage = connect(
