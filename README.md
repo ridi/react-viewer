@@ -37,73 +37,51 @@ const store = createStore( ... );
 Connector.connect(store);
 ```
 
-### `Viewer` Component
+### `Reader` Component
 
-`Viewer` component provides all functionality of viewer and renders viewer body.
+`Reader` component provides all functionality of viewer and renders viewer body.
 
-Put `Viewer` component into your component.
+Put `Reader` component into your component.
 ```js
 import React from 'react';
-import Viewer from '@ridi/react-viewer';
+import Reader from '@ridi/react-viewer';
 
 export default ViewerPage extends React.Component {
     render() {
-        return <Viewer />;
+        return <Reader />;
     }
 };
 ```
 
-`ViewerScreen`'s properties:
+`Reader`'s properties:
 
-* `onMount`(func): called after viewer is mounted
-* `onUnmount`(func): called after viewer is unmounted
-* `onMoveWrongDirection`(func): called when user try to tap wrong direction to the next page (on `page` viewerType)
+* `onMount`(func): called after reader is mounted
+* `onUnmount`(func): called after reader is unmounted
+* `onTouched`(func): called when user touches the reader screen
+* `onMoveWrongDirection`(func): called when user tries to tap wrong direction to the next page (on `page` viewType)
 * `footer`(node): markup for the footer area
-* `fontDomain`(string): prefixed URL for searching font files 
-* `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewerType)
-* `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewerType)
+* `contentFooter`(node): markup for the content footer area
+* `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewType)
+* `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewType)
 
 ### Render Contents
 
-1. Update meta data with `updateMetadata`
-2. Render contents with `renderSpine` or `renderImages`
-
-#### `updateMetadata`
-
-Dispatch `updateMetadata` action to update content's metadata.
-
-```js
-import {
-  updateMetadata,
-  ContentType,
-  AvailableViewerType,
-  BindingType,
-} from '@ridi/react-viewer';
-
-const contentType = ContentType.COMIC;
-const viewerType = AvailableViewerType.BOTH;
-const bindingType = BindingType.LEFT;
-
-dispatch(updateMetadata(contentType, viewerType, bindingType));
-```
-
-* `viewerType`: available viewer type (BOTH: 0, SCROLL: 1, PAGE: 2)
-* `contentType`: content type (WEB_NOVEL: 10, COMIC: 20, WEBTOON: 30)
-* `bindingType`: binding type (LEFT: 0, RIGHT: 1)
-
 #### `setContents`
 
-And then dispatch `setContents` action with URIs to render content into the viewer.
-```js
-import { setContents, ContentFormat } from '@ridi/react-viewer';
+Dispatch `setContents` action with content's metadata and URIs to render content into the reader.
 
-...
-dispatch(setContents(ContentFormat.HTML, [
+```js
+import { setContents, ContentFormat, BindingType } from '@ridi/react-viewer';
+
+dispatch(setContents(ContentFormat.HTML, BindingType.LEFT, [
   './uri1.json',
   './uri2.json',
   ...
 ]));
 ```
+
+* `contentFormat`: content format (HTML: 0, IMAGE: 1)
+* `bindingType`: binding type (LEFT: 0, RIGHT: 1)
 
 ## How to Run Demo
 
