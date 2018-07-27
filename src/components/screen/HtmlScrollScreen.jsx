@@ -1,24 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectReaderContents,
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import { screenHeight, screenWidth, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
-import {
-  onScreenScrolled,
-  updateContent,
-  updateContentError,
-} from '../../redux/action';
+import { onScreenScrolled } from '../../redux/action';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
-  ContentType,
 } from '../prop-types';
-import BaseScreen, { mapStateToProps as readerBaseScreenMapStateToProps } from './BaseScreen';
+import BaseScreen, {
+  mapDispatchToProps as readerBaseScreenMapDispatchToProps,
+  mapStateToProps as readerBaseScreenMapStateToProps,
+} from './BaseScreen';
 import { debounce } from '../../util/Util';
 import ScrollTouchable from './ScrollTouchable';
 import Connector from '../../util/connector/index';
@@ -96,8 +93,6 @@ class HtmlScrollScreen extends BaseScreen {
     const {
       current,
       setting,
-      actionUpdateContent,
-      actionUpdateContentError,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
@@ -112,8 +107,8 @@ class HtmlScrollScreen extends BaseScreen {
         width={this.getWidth()}
         containerHorizontalMargin={(screenWidth() - this.getWidth()) / 2}
         containerVerticalMargin={setting.containerVerticalMargin}
-        onContentLoaded={actionUpdateContent}
-        onContentError={actionUpdateContentError}
+        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
+        onContentError={(index, error) => this.onContentError(index, error)}
         onContentRendered={(index, nodeInfo) => this.calculate(index, nodeInfo)}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
       />
@@ -135,7 +130,6 @@ HtmlScrollScreen.defaultProps = {
 
 HtmlScrollScreen.propTypes = {
   ...BaseScreen.propTypes,
-  contents: PropTypes.arrayOf(ContentType),
   contentsCalculations: PropTypes.arrayOf(ContentCalculationsType),
   calculationsTotal: PropTypes.number.isRequired,
   actionUpdateContent: PropTypes.func.isRequired,
@@ -148,15 +142,13 @@ HtmlScrollScreen.propTypes = {
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),
-  contents: selectReaderContents(state),
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateContent: (index, content) => dispatch(updateContent(index, content)),
-  actionUpdateContentError: (index, error) => dispatch(updateContentError(index, error)),
+  ...readerBaseScreenMapDispatchToProps(dispatch),
   actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 

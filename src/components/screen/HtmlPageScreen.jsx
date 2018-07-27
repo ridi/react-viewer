@@ -1,19 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  selectReaderContents,
   selectReaderContentsCalculations,
   selectReaderFooterCalculations,
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { screenWidth, setScrollTop } from '../../util/BrowserWrapper';
-import {
-  updateContent,
-  updateContentError,
-} from '../../redux/action';
-import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
-import BaseScreen, { mapStateToProps as readerBaseScreenMapStateToProps } from './BaseScreen';
+import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
+import BaseScreen, {
+  mapStateToProps as readerBaseScreenMapStateToProps,
+  mapDispatchToProps as readerBaseScreenMapDispatchToProps,
+} from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
 import PageTouchable, { Position } from './PageTouchable';
@@ -88,18 +86,6 @@ class HtmlPageScreen extends BaseScreen {
     return visible || !calculated;
   }
 
-  onContentLoaded(index, content) {
-    const { contents, actionUpdateContent } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContent(index, content, isAllLoaded);
-  }
-
-  onContentError(index, error) {
-    const { contents, actionUpdateContentError } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContentError(index, error, isAllLoaded);
-  }
-
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
@@ -157,10 +143,7 @@ HtmlPageScreen.defaultProps = {
 
 HtmlPageScreen.propTypes = {
   ...BaseScreen.propTypes,
-  contents: PropTypes.arrayOf(ContentType).isRequired,
   contentsCalculations: PropTypes.arrayOf(ContentCalculationsType).isRequired,
-  actionUpdateContent: PropTypes.func.isRequired,
-  actionUpdateContentError: PropTypes.func.isRequired,
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
   footerCalculations: FooterCalculationsType.isRequired,
@@ -171,7 +154,6 @@ HtmlPageScreen.propTypes = {
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),
-  contents: selectReaderContents(state),
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
@@ -179,8 +161,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateContent: (index, content, isAllLoaded) => dispatch(updateContent(index, content, isAllLoaded)),
-  actionUpdateContentError: (index, error, isAllLoaded) => dispatch(updateContentError(index, error, isAllLoaded)),
+  ...readerBaseScreenMapDispatchToProps(dispatch),
 });
 
 export default connect(

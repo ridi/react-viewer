@@ -7,9 +7,12 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import { screenWidth, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
-import { onScreenScrolled, updateContent, updateContentError } from '../../redux/action';
+import { onScreenScrolled } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
-import BaseScreen, { mapStateToProps as readerBaseScreenMapStateToProps } from './BaseScreen';
+import BaseScreen, {
+  mapStateToProps as readerBaseScreenMapStateToProps,
+  mapDispatchToProps as readerBaseScreenMapDispatchToProps,
+} from './BaseScreen';
 import { debounce } from '../../util/Util';
 import ScrollTouchable from './ScrollTouchable';
 import Footer from '../footer/Footer';
@@ -77,8 +80,6 @@ class ImageScrollScreen extends BaseScreen {
   renderContent(content, contentWidth) {
     const {
       current,
-      actionUpdateContent,
-      actionUpdateContentError,
       contentFooter,
     } = this.props;
 
@@ -91,8 +92,8 @@ class ImageScrollScreen extends BaseScreen {
         currentOffset={current.offset}
         src={content.uri}
         width={contentWidth}
-        onContentLoaded={actionUpdateContent}
-        onContentError={actionUpdateContentError}
+        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
+        onContentError={(index, error) => this.onContentError(index, error)}
         contentFooter={Connector.calculations.isLastContent(content.index) ?
           <ContentFooter content={contentFooter} height={contentFooterHeight} /> : null}
       />
@@ -149,8 +150,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateContent: (index, content) => dispatch(updateContent(index, content)),
-  actionUpdateContentError: (index, error) => dispatch(updateContentError(index, error)),
+  ...readerBaseScreenMapDispatchToProps(dispatch),
   actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 

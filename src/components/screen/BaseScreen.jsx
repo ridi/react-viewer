@@ -4,10 +4,16 @@ import PropTypes from 'prop-types';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { debounce } from '../../util/Util';
 import CalculationsConnector from '../../util/connector/CalculationsConnector';
-import { selectReaderCurrent, selectReaderIsCalculated, selectReaderSetting } from '../../redux/selector';
+import {
+  selectReaderContents,
+  selectReaderCurrent,
+  selectReaderIsCalculated,
+  selectReaderSetting
+} from '../../redux/selector';
 import { Position } from '../screen/BaseTouchable';
-import { CurrentType, SettingType } from '../prop-types';
+import { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
+import { updateContent, updateContentError } from '../../redux/action';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -54,6 +60,18 @@ export default class BaseScreen extends React.Component {
     }
   }
 
+  onContentLoaded(index, content) {
+    const { contents, actionUpdateContent } = this.props;
+    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
+    actionUpdateContent(index, content, isAllLoaded);
+  }
+
+  onContentError(index, error) {
+    const { contents, actionUpdateContentError } = this.props;
+    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
+    actionUpdateContentError(index, error, isAllLoaded);
+  }
+
   getTouchableScreen() {
     return null;
   }
@@ -89,10 +107,19 @@ BaseScreen.propTypes = {
   setting: SettingType.isRequired,
   maxWidth: PropTypes.number.isRequired,
   current: CurrentType.isRequired,
+  contents: PropTypes.arrayOf(ContentType).isRequired,
+  actionUpdateContent: PropTypes.func.isRequired,
+  actionUpdateContentError: PropTypes.func.isRequired,
 };
 
 export const mapStateToProps = state => ({
   isCalculated: selectReaderIsCalculated(state),
   setting: selectReaderSetting(state),
   current: selectReaderCurrent(state),
+  contents: selectReaderContents(state),
+});
+
+export const mapDispatchToProps = dispatch => ({
+  actionUpdateContent: (index, content, isAllLoaded) => dispatch(updateContent(index, content, isAllLoaded)),
+  actionUpdateContentError: (index, error, isAllLoaded) => dispatch(updateContentError(index, error, isAllLoaded)),
 });

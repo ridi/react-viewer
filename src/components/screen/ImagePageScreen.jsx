@@ -9,9 +9,11 @@ import {
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { screenHeight, screenWidth, setScrollTop } from '../../util/BrowserWrapper';
-import { updateContent, updateContentError } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, CurrentType, ContentType } from '../prop-types';
-import BaseScreen, { mapStateToProps as readerBaseScreenMapStateToProps } from './BaseScreen';
+import BaseScreen, {
+  mapStateToProps as readerBaseScreenMapStateToProps,
+  mapDispatchToProps as readerBaseScreenMapDispatchToProps,
+} from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
 import PageTouchable, { Position } from './PageTouchable';
@@ -94,8 +96,6 @@ class ImagePageScreen extends BaseScreen {
   renderContent(content) {
     const {
       current,
-      actionUpdateContent,
-      actionUpdateContentError,
       contentFooter,
     } = this.props;
 
@@ -105,8 +105,8 @@ class ImagePageScreen extends BaseScreen {
         content={content}
         currentOffset={current.offset}
         src={content.uri}
-        onContentLoaded={actionUpdateContent}
-        onContentError={actionUpdateContentError}
+        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
+        onContentError={(index, error) => this.onContentError(index, error)}
         contentFooter={Connector.calculations.isLastContent(content.index) ?
           <ContentFooter content={contentFooter} /> : null}
       />
@@ -199,8 +199,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionUpdateContent: (index, content) => dispatch(updateContent(index, content)),
-  actionUpdateContentError: (index, error) => dispatch(updateContentError(index, error)),
+  ...readerBaseScreenMapDispatchToProps(dispatch),
 });
 
 export default connect(
