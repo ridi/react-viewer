@@ -8,7 +8,8 @@ import {
   selectReaderContents,
   selectReaderCurrent,
   selectReaderIsCalculated,
-  selectReaderSetting
+  selectReaderSetting,
+  selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { Position } from '../screen/BaseTouchable';
 import { ContentType, CurrentType, SettingType } from '../prop-types';
@@ -83,10 +84,12 @@ export default class BaseScreen extends React.Component {
   renderFooter() { return null; }
 
   render() {
+    const { calculationsTotal } = this.props;
     const TouchableScreen = this.getTouchableScreen();
     return (
       <TouchableScreen
         ref={this.wrapper}
+        total={calculationsTotal}
         onTouched={position => this.onTouchableScreenTouched(position)}
       >
         { this.renderContents() }
@@ -110,6 +113,7 @@ BaseScreen.propTypes = {
   contents: PropTypes.arrayOf(ContentType).isRequired,
   actionUpdateContent: PropTypes.func.isRequired,
   actionUpdateContentError: PropTypes.func.isRequired,
+  calculationsTotal: PropTypes.number.isRequired,
 };
 
 export const mapStateToProps = state => ({
@@ -117,6 +121,7 @@ export const mapStateToProps = state => ({
   setting: selectReaderSetting(state),
   current: selectReaderCurrent(state),
   contents: selectReaderContents(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

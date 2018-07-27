@@ -2,7 +2,8 @@ import Connector from '../Connector';
 import {
   updateCalculationsTotal,
   invalidateCalculations,
-  updateCurrent, updateFooterCalculation,
+  updateCurrent,
+  updateFooterCalculation,
   updateContentCalculations,
 } from '../../redux/action';
 import {

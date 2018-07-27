@@ -27,7 +27,7 @@ export default class BaseTouchable extends React.Component {
   }
 
   render() {
-    const { forwardedRef } = this.props;
+    const { forwardedRef, total } = this.props;
     const StyledTouchable = Connector.setting.getStyledTouchable();
     return (
       <StyledTouchable
@@ -35,6 +35,7 @@ export default class BaseTouchable extends React.Component {
         tabIndex="-1"
         innerRef={forwardedRef}
         id="reader_contents"
+        total={total}
         onClick={e => this.onTouchScreenHandle(e, Position.MIDDLE)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -56,10 +57,12 @@ BaseTouchable.defaultProps = {
   forwardedRef: React.createRef(),
   onTouched: () => {},
   children: null,
+  total: null,
 };
 
 BaseTouchable.propTypes = {
   onTouched: PropTypes.func,
   children: PropTypes.node,
   forwardedRef: PropTypes.object,
+  total: PropTypes.number,
 };
