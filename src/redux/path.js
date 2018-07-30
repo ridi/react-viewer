@@ -1,6 +1,12 @@
 import { BindingType, ContentFormat } from '../constants/ContentConstants';
 import { ReaderThemeType, ViewType } from '../constants/SettingConstants';
-import { CONTENT_FOOTER_HEIGHT, PAGE_MAX_WIDTH } from '../constants/StyledConstants';
+import {
+  DEFAULT_CONTENT_FOOTER_HEIGHT,
+  DEFAULT_MAX_WIDTH,
+  DEFAULT_VERTICAL_MARGIN,
+  DEFAULT_HORIZONTAL_MARGIN,
+  DEFAULT_EXTENDED_SIDE_TOUCH_WIDTH,
+} from '../constants/StyledConstants';
 
 export const initialContentState = (index, uri) => ({
   index,
@@ -24,11 +30,12 @@ export const initialSettingState = () => ({
   viewType: ViewType.SCROLL,
   columnsInPage: 1,
   columnGap: 40,
-  maxWidth: PAGE_MAX_WIDTH,
-  contentFooterHeight: CONTENT_FOOTER_HEIGHT,
-  containerHorizontalMargin: 15,
-  containerVerticalMargin: 50,
   startWithBlankPage: 0,
+  maxWidth: DEFAULT_MAX_WIDTH,
+  contentFooterHeight: DEFAULT_CONTENT_FOOTER_HEIGHT,
+  containerHorizontalMargin: DEFAULT_HORIZONTAL_MARGIN,
+  containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
+  extendedSideTouchWidth: DEFAULT_EXTENDED_SIDE_TOUCH_WIDTH,
 });
 
 export const initialState = {

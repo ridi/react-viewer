@@ -26,7 +26,6 @@ import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConst
 class CalculationsConnector extends Connector {
   constructor() {
     super();
-    // TODO 둘 다 Redux에서 관리하도록 변경해볼까..
     this.startOffset = { 1: 0 };
     this.hasFooter = false;
   }
@@ -36,7 +35,6 @@ class CalculationsConnector extends Connector {
   }
 
   invalidate() {
-    // console.log('invalidate');
     this.startOffset = { 1: 0 };
     this.dispatch(invalidateCalculations());
   }

@@ -1,13 +1,9 @@
 import Connector from '../Connector';
 import { screenWidth } from '../BrowserWrapper';
 import {
-  DEFAULT_PADDING_VERTICAL,
-  PAGE_MAX_WIDTH,
-  READER_SELECTOR_PAGE,
-  EXTENDED_TOUCH_WIDTH,
-  CONTENT_FOOTER_HEIGHT,
   CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,
+  MAX_PADDING_LEVEL,
 } from '../../constants/StyledConstants';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { ViewType } from '../../constants/SettingConstants';
@@ -28,74 +24,40 @@ import {
 import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
 
 class SettingConnector extends Connector {
-  constructor() {
-    super();
-    // TODO 모든 옵션 property 또는 redux로 변경하기
-    this.options = {
-      pageMaxWidth: PAGE_MAX_WIDTH,
-      readerSelectorPage: READER_SELECTOR_PAGE,
-      extendedTouchWidth: EXTENDED_TOUCH_WIDTH,
-      contentFooterHeight: CONTENT_FOOTER_HEIGHT,
-    };
+  getMaxWidth(withUnit = false) {
+    const { maxWidth } = selectReaderSetting(this.getState());
+    return withUnit ? `${maxWidth}px` : maxWidth;
   }
 
-  afterConnected() {
-    const {
-      paddingVertical = DEFAULT_PADDING_VERTICAL,
-      pageMaxWidth = PAGE_MAX_WIDTH,
-      readerSelectorPage = READER_SELECTOR_PAGE,
-      extendedTouchWidth = EXTENDED_TOUCH_WIDTH,
-      contentFooterHeight = CONTENT_FOOTER_HEIGHT,
-      chapterIndicatorIdPrefix = CHAPTER_INDICATOR_ID_PREFIX,
-      chapterIdPrefix = CHAPTER_ID_PREFIX,
-    } = this._options;
-
-    this._targetSelector = readerSelectorPage;
-    this._paddingVertical = paddingVertical;
-    this._pageMaxWidth = pageMaxWidth;
-    this._extendedTouchWidth = extendedTouchWidth;
-    this._contentFooterHeight = contentFooterHeight;
-    this._chapterIndicatorIdPrefix = chapterIndicatorIdPrefix;
-    this._chapterIdPrefix = chapterIdPrefix;
+  getExtendedSideTouchWidth(withUnit = false) {
+    const { extendedSideTouchWidth } = selectReaderSetting(this.getState());
+    return withUnit ? `${extendedSideTouchWidth}px` : extendedSideTouchWidth;
   }
 
-  getScrollStyle() {
-    return {
-      paddingTop: this._paddingVertical,
-    };
-  }
-
-  getPageMaxWidth() {
-    return this._pageMaxWidth || PAGE_MAX_WIDTH;
-  }
-
-  getExtendedTouchWidth() {
-    return this._extendedTouchWidth || EXTENDED_TOUCH_WIDTH;
-  }
-
-  getLeftRightAreaWidth() {
+  getSideTouchWidth(withUnit = false) {
     const clientWidth = screenWidth();
-    if (clientWidth >= (this.getPageMaxWidth() - this.getExtendedTouchWidth()) * 2) {
-      return `${((clientWidth - this.getPageMaxWidth()) / 2) + this.getExtendedTouchWidth()}px`;
+    if (clientWidth >= (this.getMaxWidth() - this.getExtendedSideTouchWidth()) * 2) {
+      return `${((clientWidth - this.getMaxWidth()) / 2) + this.getExtendedSideTouchWidth()}px`;
     }
-    return `${clientWidth * 0.25}px`;
+    return withUnit ? `${clientWidth * 0.25}px` : clientWidth * 0.25;
   }
 
-  getPadding() {
+  getHorizontalPadding(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.IMAGE) return 0;
     const { paddingLevel } = selectReaderSetting(this.getState());
-    return `0 ${7 - Number(paddingLevel)}%`;
+    return withUnit ? `${MAX_PADDING_LEVEL - Number(paddingLevel)}%` : MAX_PADDING_LEVEL - Number(paddingLevel);
   }
 
-  getContentWidth() {
+  getContentWidth(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.HTML) return '100%';
     const { contentWidthLevel } = selectReaderSetting(this.getState());
-    return `${(Number(contentWidthLevel) * 10) + 40}%`;
+    const result = (Number(contentWidthLevel) * 10) + 40;
+    return withUnit ? `${result}%` : result;
   }
 
-  getFontSize() {
+  getFontSize(withUnit = false) {
     const { fontSizeLevel } = selectReaderSetting(this.getState());
     let fontSizeUnit = 16;
 
@@ -114,10 +76,10 @@ class SettingConnector extends Connector {
       case 12: fontSizeUnit *= 2.3; break;
       default: fontSizeUnit *= 1; break;
     }
-    return `${fontSizeUnit}px`;
+    return withUnit ? `${fontSizeUnit}px` : fontSizeUnit;
   }
 
-  getNovelLineHeight() {
+  getLineHeight(withUnit = false) {
     const { lineHeightLevel } = selectReaderSetting(this.getState());
     let lineHeightUnit = 1.67;
     switch (Number(lineHeightLevel)) {
@@ -129,52 +91,50 @@ class SettingConnector extends Connector {
       case 6: lineHeightUnit = 2.27; break;
       default: lineHeightUnit = 1.67; break;
     }
-    return `${lineHeightUnit}em`;
+    return withUnit ? `${lineHeightUnit}em` : lineHeightUnit;
   }
 
-  getColumnGap() {
-    const {
-      columnGap,
-    } = selectReaderSetting(this.getState());
+  getColumnGap(withUnit = false) {
+    const { columnGap } = selectReaderSetting(this.getState());
     const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.HTML) {
-      return `${columnGap}px`;
+      return withUnit ? `${columnGap}px` : columnGap;
     }
-    return 0;
+    return withUnit ? '0px' : 0;
   }
 
-  getContainerHorizontalMargin() {
+  getContainerHorizontalMargin(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
     const { containerHorizontalMargin, viewType } = selectReaderSetting(this.getState());
     if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
-      return '0';
+      return withUnit ? '0px' : 0;
     }
-    return `${containerHorizontalMargin}px`;
+    return withUnit ? `${containerHorizontalMargin}px` : containerHorizontalMargin;
   }
 
-  getColumnWidth() {
+  getColumnWidth(withUnit = false) {
     const { columnsInPage } = selectReaderSetting(this.getState());
 
     const contentFormat = selectReaderContentFormat(this.getState());
-    const calculatedWidth = screenWidth() - (parseInt(this.getContainerHorizontalMargin(), 10) * 2);
+    const calculatedWidth = screenWidth() - (this.getContainerHorizontalMargin() * 2);
     if (contentFormat === ContentFormat.HTML) {
-      const width = (columnsInPage > 1) ? calculatedWidth : Math.min(calculatedWidth, this.getPageMaxWidth());
-      return `${(width - (parseInt(this.getColumnGap(), 10) * (columnsInPage - 1))) / columnsInPage}px`;
+      const width = (columnsInPage > 1) ? calculatedWidth : Math.min(calculatedWidth, this.getMaxWidth());
+      return `${(width - (this.getColumnGap() * (columnsInPage - 1))) / columnsInPage}px`;
     }
-    return `${calculatedWidth / columnsInPage}px`;
+    return withUnit ? `${calculatedWidth / columnsInPage}px` : calculatedWidth / columnsInPage;
+  }
+
+  getContentFooterHeight(withUnit = false) {
+    const { contentFooterHeight } = selectReaderSetting(this.getState());
+    return withUnit ? `${contentFooterHeight}px` : contentFooterHeight;
   }
 
   getChapterIndicatorId(chapterNum) {
-    return `${this._chapterIndicatorIdPrefix}${chapterNum}`;
+    return `${CHAPTER_INDICATOR_ID_PREFIX}${chapterNum}`;
   }
 
   getChapterId(chapterNum) {
-    return `${this._chapterIdPrefix}${chapterNum}`;
-  }
-
-  getContentFooterHeight() {
-    const { contentFooterHeight } = selectReaderSetting(this.getState());
-    return contentFooterHeight;
+    return `${CHAPTER_ID_PREFIX}${chapterNum}`;
   }
 
   getStyledTouchable() {

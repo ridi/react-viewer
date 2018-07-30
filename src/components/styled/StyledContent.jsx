@@ -12,7 +12,7 @@ const StyledBaseContent = styled.article`
     box-sizing: border-box;
     width: 100%;
     padding: 15px;
-    height: ${() => `${Connector.setting.getContentFooterHeight()}px`};
+    height: ${() => `${Connector.setting.getContentFooterHeight(true)}`};
     small {
       font-size: 11px;
     }
@@ -34,8 +34,8 @@ const StyledHtmlContent = ({ setting }) => `
          local("Tahoma");
   }
 
-  font-size: ${Connector.setting.getFontSize()};
-  line-height: ${Connector.setting.getNovelLineHeight()};
+  font-size: ${Connector.setting.getFontSize(true)};
+  line-height: ${Connector.setting.getLineHeight(true)};
   font-family: ${setting.font ? setting.font : 'os_specific'};
   
   h1, h2, h3, h4, h5, h6, p, th, td, div, label, textarea, a, li, input, button, textarea, select, address {
@@ -62,7 +62,7 @@ const StyledImageContent = ({ width, height, visible }) => `
 `;
 
 const StyledScrollContent = () => `
-  padding: ${Connector.setting.getPadding()};
+  padding: 0 ${Connector.setting.getHorizontalPadding(true)};
 `;
 
 const StyledPageContent = ({ width, height }) => `
@@ -76,8 +76,8 @@ const StyledPageContent = ({ width, height }) => `
   .content_container {
     height: 100%;
     column-fill: auto;
-    column-gap: ${Connector.setting.getColumnGap()};
-    column-width: ${Connector.setting.getColumnWidth()};
+    column-gap: ${Connector.setting.getColumnGap(true)};
+    column-width: ${Connector.setting.getColumnWidth(true)};
   }
 `;
 
@@ -100,7 +100,7 @@ export const StyledImageScrollContent = StyledBaseContent.extend`
   margin: 0 auto;
   .content_container {
     margin: 0 auto;
-    width: ${() => Connector.setting.getContentWidth()};
+    width: ${() => Connector.setting.getContentWidth(true)};
     img {
       width: 100%;
     }
@@ -132,7 +132,7 @@ export const StyledImagePageContent = StyledBaseContent.extend`
       }
       &.has_content_footer {
         img {
-          max-height: calc(100% - ${() => Connector.setting.getContentFooterHeight()}px);
+          max-height: calc(100% - ${() => Connector.setting.getContentFooterHeight(true)});
           top: calc(50% - ${() => Connector.setting.getContentFooterHeight() / 2}px);
         }
         .content_footer {

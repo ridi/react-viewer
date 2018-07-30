@@ -20,7 +20,7 @@ const StyledPageTouchable = StyledBaseTouchable.extend`
     top: 0;
     display: block;
     height: 100%;
-    width: ${() => Connector.setting.getLeftRightAreaWidth()};
+    width: ${() => Connector.setting.getSideTouchWidth(true)};
     cursor: default;
     background: transparent;
     border: 0;
