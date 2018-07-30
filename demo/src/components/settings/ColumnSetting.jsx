@@ -6,55 +6,92 @@ import SvgIcons from '../icons/SvgIcons';
 
 
 class ColumnSetting extends Component {
-  renderFontList() {
-    const { onChanged, viewerScreenSettings } = this.props;
+  renderColumnOptionList() {
+    const { onChanged } = this.props;
+    const { columnsInPage, startWithBlankPage } = this.props.setting;
 
     return [1, 2, 3].map(item => (
       <li className="setting_button_list" key={item}>
         <button
           type="button"
-          className={`setting_button ${viewerScreenSettings.columnsInPage === item ? 'active' : ''}`}
-          onClick={() => onChanged && onChanged(item)}
+          className={`setting_button ${columnsInPage === item ? 'active' : ''}`}
+          onClick={() => onChanged && onChanged({ columnsInPage: item, startWithBlankPage })}
         >{item} 단
         </button>
       </li>
     ));
   }
 
-  render() {
-    return (
-      <li className="setting_list">
-        <SvgIcons
-          svgName="svg_column"
-          svgClass="setting_title_icon svg_column_icon"
-        />
-        <div className="table_wrapper">
-          <p className="setting_title">
-            다단 보기<span className="indent_hidden">변경</span>
-          </p>
-          <div className="setting_buttons_wrapper font_family_setting">
-            <ul className="setting_buttons font_family_buttons">
-              {this.renderFontList()}
-            </ul>
-          </div>
-        </div>
+  renderBlankPageOptionList() {
+    const { onChanged } = this.props;
+    const { columnsInPage, startWithBlankPage } = this.props.setting;
+    return [0, 1, 2].map(item => (
+      <li className="setting_button_list" key={item}>
+        <button
+          type="button"
+          className={`setting_button ${startWithBlankPage === item ? 'active' : ''}`}
+          onClick={() => onChanged && onChanged({ columnsInPage, startWithBlankPage: item })}
+        >{item} 페이지
+        </button>
       </li>
+    ));
+  }
+
+  render() {
+    const { columnsInPage } = this.props.setting;
+    return (
+      <React.Fragment>
+        <li className="setting_list">
+          <SvgIcons
+            svgName="svg_column"
+            svgClass="setting_title_icon svg_column_icon"
+          />
+          <div className="table_wrapper">
+            <p className="setting_title">
+              다단 보기<span className="indent_hidden">변경</span>
+            </p>
+            <div className="setting_buttons_wrapper font_family_setting">
+              <ul className="setting_buttons font_family_buttons">
+                {this.renderColumnOptionList()}
+              </ul>
+            </div>
+          </div>
+        </li>
+        { columnsInPage > 1 &&
+        <li className="setting_list">
+          <SvgIcons
+            svgName="svg_column"
+            svgClass="setting_title_icon svg_column_icon"
+          />
+          <div className="table_wrapper">
+            <p className="setting_title">
+              빈 페이지 보기<span className="indent_hidden">변경</span>
+            </p>
+            <div className="setting_buttons_wrapper font_family_setting">
+              <ul className="setting_buttons font_family_buttons">
+                {this.renderBlankPageOptionList()}
+              </ul>
+            </div>
+          </div>
+        </li>
+        }
+      </React.Fragment>
     );
   }
 }
 
 ColumnSetting.propTypes = {
   onChanged: PropTypes.func,
-  viewerScreenSettings: PropTypes.object,
+  setting: PropTypes.object,
 };
 
 ColumnSetting.defaultProps = {
   onChanged: () => {},
-  viewerScreenSettings: {},
+  setting: {},
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectReaderSetting(state),
+  setting: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(ColumnSetting);

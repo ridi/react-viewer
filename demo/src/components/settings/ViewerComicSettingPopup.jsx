@@ -22,7 +22,7 @@ class ViewerComicSettingPopup extends BaseSettingPopup {
           contentViewType={content.viewType}
         />
         { setting.viewType === ViewType.PAGE
-          ? <ColumnSetting onChanged={columnsInPage => this.onSettingChanged({ columnsInPage })} /> : null }
+          ? <ColumnSetting onChanged={changedSetting => this.onSettingChanged(changedSetting)} /> : null }
         {ViewerComicSpinType.toList().map(item => (
           <ComicSpineSetting
             item={item}
