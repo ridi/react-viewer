@@ -19,9 +19,9 @@ const gitCommitAndPush = (commitMsg, branch) => exec(`git add . --all && git com
 
 const checkPreconditions = () => getGitBranch()
   .then(branch => {
-    if (branch !== 'master') {
-      exitWithErrorMsg('branch must be master');
-    }
+    // if (branch !== 'master') {
+    //   exitWithErrorMsg('branch must be master');
+    // }
     return npm(name);
   });
 
