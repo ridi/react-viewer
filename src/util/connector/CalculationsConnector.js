@@ -30,6 +30,10 @@ class CalculationsConnector extends Connector {
     this.hasFooter = hasFooter;
   }
 
+  getHasFooter() {
+    return this.hasFooter;
+  }
+
   invalidate() {
     this.startOffset = { 1: 0 };
     this.dispatch(invalidateCalculations());

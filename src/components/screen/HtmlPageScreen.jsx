@@ -50,7 +50,7 @@ class HtmlPageScreen extends BaseScreen {
       nextOffset = bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
     }
 
-    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal));
+    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
     if (currentOffset === nextOffset) return;
 
     Connector.current.updateCurrentPosition(nextOffset);
@@ -90,11 +90,12 @@ class HtmlPageScreen extends BaseScreen {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
+    const hasFooter = Connector.calculations.getHasFooter();
     return (
       <Footer
         content={footer}
         startOffset={startOffset}
-        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, 1)}
+        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0)}
         containerVerticalMargin={containerVerticalMargin}
       />
     );

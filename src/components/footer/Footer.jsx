@@ -41,11 +41,12 @@ export default class Footer extends React.Component {
 }
 
 Footer.defaultProps = {
+  content: null,
   onContentRendered: () => {},
 };
 
 Footer.propTypes = {
-  content: PropTypes.node.isRequired,
+  content: PropTypes.node,
   onContentRendered: PropTypes.func,
   startOffset: PropTypes.number.isRequired,
   containerVerticalMargin: PropTypes.number.isRequired,

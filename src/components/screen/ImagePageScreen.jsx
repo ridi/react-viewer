@@ -83,11 +83,12 @@ class ImagePageScreen extends BaseScreen {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
+    const hasFooter = Connector.calculations.getHasFooter();
     return (
       <Footer
         content={footer}
         startOffset={startOffset}
-        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, 1)}
+        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0)}
         containerVerticalMargin={containerVerticalMargin}
       />
     );

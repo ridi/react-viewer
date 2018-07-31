@@ -71,7 +71,7 @@ class ViewerScreenFooter extends Component {
           {this.checkIsPageView() ? (
             <button
               className="move_prev_page_button"
-              onClick={() => Connector.calculations.updateCurrentPosition(calculationsTotal - 2)}
+              onClick={() => Connector.current.updateCurrentPosition(calculationsTotal - 2)}
             >
               <SvgIcons
                 svgName="svg_arrow_6_left"

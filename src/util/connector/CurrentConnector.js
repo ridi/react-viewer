@@ -1,5 +1,10 @@
 import Connector from '../Connector';
-import { selectReaderCurrent, selectReaderCurrentContentIndex, selectReaderSetting } from '../../redux/selector';
+import {
+  selectReaderCalculationsTotal,
+  selectReaderCurrent,
+  selectReaderCurrentContentIndex,
+  selectReaderSetting,
+} from '../../redux/selector';
 import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -42,7 +47,7 @@ class CurrentConnector extends Connector {
   }
 
   isOnFooter() {
-    if (!CalculationsConnector.hasFooter) return false;
+    if (!CalculationsConnector.getHasFooter()) return false;
     if (!CalculationsConnector.isCompleted()) return false;
 
     const currentContentIndex = selectReaderCurrentContentIndex(this.getState());
