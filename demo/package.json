@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .js,.jsx ./src/",
-    "build": "webpack --mode production"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",

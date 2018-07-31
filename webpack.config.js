@@ -37,5 +37,5 @@ module.exports = {
     'react-dom': 'react-dom',
     'react-redux': 'react-redux',
   },
-  mode: 'development',
+  mode: 'production',
 };

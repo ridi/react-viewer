@@ -10,9 +10,7 @@ export default class ReaderJsHelper {
     this._node = node;
     this._context = this._createContext(isScrollMode);
     this._readerJs = new Reader(this._node, this._context);
-    if (process.env.NODE_ENV === 'development') {
-      this.setDebugMode(true);
-    }
+    this.setDebugMode(process.env.NODE_ENV === 'development');
   }
 
   _createContext(isScrollMode) {
