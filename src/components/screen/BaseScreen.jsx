@@ -39,8 +39,7 @@ export default class BaseScreen extends React.Component {
     window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
 
     const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
-    Connector.current.setReaderJs(readerJs, true);
-
+    Connector.current.setReaderJs(readerJs);
   }
 
   componentDidUpdate(prevProps) {
@@ -56,7 +55,7 @@ export default class BaseScreen extends React.Component {
       }
     }
     const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
-    Connector.current.setReaderJs(readerJs, true);
+    Connector.current.setReaderJs(readerJs);
   }
 
   componentWillUnmount() {

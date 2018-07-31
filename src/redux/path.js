@@ -51,16 +51,13 @@ export const initialState = {
   contents: [],
   calculations: {
     contents: [],
-    footer: {
-      isCalculated: false,
-      total: 0,
-    },
+    footer: { isCalculated: false, total: 0 },
     total: 0,
   },
   current: {
     contentIndex: 1,
     location: EMPTY_READ_POSITION,
-    position: 0, // EMPTY_READ_POSITION TODO reader.js 연동 필요, 현재는 일단 spine 내 %로 저장하고 있음
+    position: 0,
     offset: 0,  // page or scroll top
     viewType: ViewType.SCROLL,
   },

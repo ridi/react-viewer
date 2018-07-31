@@ -1,6 +1,5 @@
 import Connector from '../Connector';
 import {
-  selectReaderCalculationsTotal,
   selectReaderCurrent,
   selectReaderCurrentContentIndex,
   selectReaderSetting,
@@ -10,9 +9,8 @@ import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class CurrentConnector extends Connector {
-  setReaderJs(readerJs, isDebugMode) {
+  setReaderJs(readerJs) {
     this.readerJs = readerJs;
-    this.readerJs.setDebugMode(isDebugMode);
   }
 
   updateCurrentPosition(offset) {
@@ -22,7 +20,6 @@ class CurrentConnector extends Connector {
     const contentIndex = CalculationsConnector.getIndexAtOffset(offset);
 
     const total = CalculationsConnector.getTotal(contentIndex);
-    // TODO 현재는 스파인 내 비율로 저장
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     const location = this.readerJs.getNodeLocationOfCurrentPage();
     this.dispatch(updateCurrent({

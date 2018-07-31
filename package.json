@@ -7,7 +7,7 @@
   "scripts": {
     "install:demo": "cd demo && npm install",
     "lint": "npm run lint:src && npm run lint:demo",
-    "lint:src": "eslint --fix --ext .js,.jsx ./src/",
+    "lint:src": "eslint --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
     "build": "npm run build:src && npm run build:demo",

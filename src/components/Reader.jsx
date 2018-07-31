@@ -103,7 +103,7 @@ Reader.propTypes = {
   onMount: PropTypes.func,
   onUnmount: PropTypes.func,
   ignoreScroll: PropTypes.bool,
-  disableCalculation: PropTypes.bool, // TODO 꼭 필요한지 고민 필요
+  disableCalculation: PropTypes.bool,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   maxWidth: PropTypes.number,
 };
