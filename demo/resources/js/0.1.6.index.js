@@ -1416,13 +1416,13 @@ var initializeViewerScreen = exports.initializeViewerScreen = function initializ
   };
 };
 
-var onViewerScreenTouched = exports.onViewerScreenTouched = function onViewerScreenTouched() {
+var onViewerScreenTouched = exports.onScreenTouched = function onViewerScreenTouched() {
   return {
     type: actions.TOUCH_VIEWER_SCREEN
   };
 };
 
-var onViewerScreenScrolled = exports.onViewerScreenScrolled = function onViewerScreenScrolled() {
+var onViewerScreenScrolled = exports.onScreenScrolled = function onViewerScreenScrolled() {
   return {
     type: actions.SCROLLED_VIEWER_SCREEN
   };
@@ -5002,7 +5002,7 @@ exports.default = ViewerBaseScreen;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ViewerComicSpinType = exports.ViewerSpinType = exports.ViewerType = exports.ViewerFontType = exports.ViewerBodyThemeColorType = exports.ViewerThemeType = exports.AvailableViewerType = exports.BindingType = exports.ContentType = exports.selectViewerScreenSettings = exports.selectIsLoadingCompleted = exports.selectIsFullScreen = exports.selectIsEndingScreen = exports.selectPageViewPagination = exports.selectBindingType = exports.selectViewerType = exports.selectContentType = exports.selectSpines = exports.renderSpine = exports.updateSpineMetaData = exports.viewerScreenSettingChanged = exports.showCommentArea = exports.movePageViewer = exports.onViewerScreenTouched = exports.onViewerScreenScrolled = exports.initializeViewerScreen = exports.calculatedPageViewer = exports.ViewerHelper = exports.PageCalculator = exports.reducers = exports.selectors = exports.actionGenerators = exports.actions = undefined;
+exports.ViewerComicSpinType = exports.ViewerSpinType = exports.ViewerType = exports.ViewerFontType = exports.ViewerBodyThemeColorType = exports.ViewerThemeType = exports.AvailableViewerType = exports.BindingType = exports.ContentType = exports.selectViewerScreenSettings = exports.selectIsLoadingCompleted = exports.selectIsFullScreen = exports.selectIsEndingScreen = exports.selectPageViewPagination = exports.selectBindingType = exports.selectViewerType = exports.selectContentType = exports.selectSpines = exports.renderSpine = exports.updateSpineMetaData = exports.viewerScreenSettingChanged = exports.showCommentArea = exports.movePageViewer = exports.onScreenTouched = exports.onScreenScrolled = exports.initializeViewerScreen = exports.calculatedPageViewer = exports.ViewerHelper = exports.PageCalculator = exports.reducers = exports.selectors = exports.actionGenerators = exports.actions = undefined;
 
 var _ViewerScreen = __webpack_require__(28);
 
@@ -5063,8 +5063,8 @@ exports.PageCalculator = _PageCalculator2.default;
 exports.ViewerHelper = _ViewerHelper2.default;
 exports.calculatedPageViewer = _ViewerScreen3.calculatedPageViewer;
 exports.initializeViewerScreen = _ViewerScreen3.initializeViewerScreen;
-exports.onViewerScreenScrolled = _ViewerScreen3.onViewerScreenScrolled;
-exports.onViewerScreenTouched = _ViewerScreen3.onViewerScreenTouched;
+exports.onScreenScrolled = _ViewerScreen3.onViewerScreenScrolled;
+exports.onScreenTouched = _ViewerScreen3.onViewerScreenTouched;
 exports.movePageViewer = _ViewerScreen3.movePageViewer;
 exports.showCommentArea = _ViewerScreen3.showCommentArea;
 exports.viewerScreenSettingChanged = _ViewerScreen3.viewerScreenSettingChanged;
