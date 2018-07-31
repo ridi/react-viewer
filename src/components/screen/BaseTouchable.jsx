@@ -13,7 +13,7 @@ export default class BaseTouchable extends React.Component {
     event.preventDefault();
     event.stopPropagation();
 
-    if (Connector.calculations.isOnFooter()) {
+    if (Connector.current.isOnFooter()) {
       return;
     }
 

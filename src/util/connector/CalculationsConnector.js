@@ -2,7 +2,6 @@ import Connector from '../Connector';
 import {
   updateCalculationsTotal,
   invalidateCalculations,
-  updateCurrent,
   updateFooterCalculation,
   updateContentCalculations,
 } from '../../redux/action';
@@ -10,10 +9,7 @@ import {
   selectReaderFooterCalculations,
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
-  selectReaderCurrent,
-  selectReaderCurrentContentIndex,
   selectReaderIsCalculated,
-  selectReaderSetting,
   selectReaderContentFormat,
   selectReaderIsInitContents,
   selectReaderContents,
@@ -52,6 +48,14 @@ class CalculationsConnector extends Connector {
     return calculatedContents[index - 1].isCalculated;
   }
 
+  getStartOffset(index) {
+    return typeof this.startOffset[index] === 'number' ? this.startOffset[index] : PRE_CALCULATION;
+  }
+
+  setStartOffset(index, offset) {
+    this.startOffset[index] = offset;
+  }
+
   checkComplete() {
     const isInitContents = selectReaderIsInitContents(this.getState());
     if (!isInitContents) return;
@@ -65,9 +69,9 @@ class CalculationsConnector extends Connector {
 
     for (let i = 0; i < calculatedContents.length; i += 1) {
       const { index, isCalculated, total } = calculatedContents[i];
-      if (isCalculated && typeof this.startOffset[index] === 'number') {
+      if (isCalculated && typeof this.getStartOffset(index) === 'number') {
         const nextIndex = (index === calculatedContents.length) ? FOOTER_INDEX : index + 1;
-        this.startOffset[nextIndex] = this.startOffset[index] + total;
+        this.setStartOffset(nextIndex, this.getStartOffset(index) + total);
       } else {
         break;
       }
@@ -93,10 +97,6 @@ class CalculationsConnector extends Connector {
     return calculatedContents[index - 1].total;
   }
 
-  getStartOffset(index) {
-    return typeof this.startOffset[index] === 'number' ? this.startOffset[index] : PRE_CALCULATION;
-  }
-
   getContentIndexesInOffsetRange(startOffset, endOffset) {
     const total = selectReaderCalculationsTotal(this.getState());
     const calculations = selectReaderContentsCalculations(this.getState());
@@ -113,13 +113,13 @@ class CalculationsConnector extends Connector {
     for (let i = 1; i <= lastIndex; i += 1) {
       const index = i === lastIndex + 1 ? FOOTER_INDEX : i;
       const nextIndex = i === lastIndex ? FOOTER_INDEX : i + 1;
-      if (typeof this.startOffset[nextIndex] === 'undefined') {
+      if (typeof this.getStartOffset(nextIndex) === 'undefined') {
         break;
       }
-      const contentRange = [this.startOffset[index], index === FOOTER_INDEX ? total : this.startOffset[nextIndex]];
+      const contentRange = [this.getStartOffset(index), index === FOOTER_INDEX ? total : this.getStartOffset(nextIndex)];
       if (hasIntersect(range, contentRange)) {
         result.push(index);
-      } else if (this.startOffset[index] > endOffset) {
+      } else if (this.getStartOffset(index) > endOffset) {
         break;
       }
     }
@@ -135,49 +135,11 @@ class CalculationsConnector extends Connector {
       const index = i === lastIndex ? FOOTER_INDEX : i;
       const nextIndex = i >= lastIndex - 1 ? FOOTER_INDEX : i + 1;
       // index === lastIndex ==> isFooter
-      if (offset >= this.startOffset[index] && (index === FOOTER_INDEX || offset < this.startOffset[nextIndex])) {
+      if (offset >= this.getStartOffset(index) && (index === FOOTER_INDEX || offset < this.getStartOffset(nextIndex))) {
         return index;
       }
     }
     return null;
-  }
-
-  updateCurrentPosition(offset) {
-    // console.log('updateCurrentPosition');
-    if (!this.isCompleted()) return;
-
-    const { viewType } = selectReaderSetting(this.getState());
-    const contentIndex = this.getIndexAtOffset(offset);
-
-    const total = this.getTotal(contentIndex);
-    // TODO 현재는 스파인 내 비율로 저장
-    const position = (offset - this.startOffset[contentIndex]) / total;
-    this.dispatch(updateCurrent({
-      contentIndex,
-      offset,
-      position,
-      viewType,
-    }));
-  }
-
-  restoreCurrentOffset() {
-    if (!this.isCompleted()) return;
-
-    const { viewType } = selectReaderSetting(this.getState());
-    const { position, contentIndex } = selectReaderCurrent(this.getState());
-
-    const total = this.getTotal(contentIndex);
-    const maxOffset = this.startOffset[contentIndex] + (total - 1);
-    const offset = Math.min(Math.round(position * total) + this.startOffset[contentIndex], maxOffset);
-    this.dispatch(updateCurrent({ offset, viewType }));
-  }
-
-  isOnFooter() {
-    if (!this.hasFooter) return false;
-    if (!this.isCompleted()) return false;
-
-    const currentContentIndex = selectReaderCurrentContentIndex(this.getState());
-    return currentContentIndex === FOOTER_INDEX;
   }
 
   isLastContent(index) {

@@ -1,5 +1,5 @@
 import { BindingType, ContentFormat } from '../constants/ContentConstants';
-import { ReaderThemeType, ViewType } from '../constants/SettingConstants';
+import { EMPTY_READ_POSITION, ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import {
   DEFAULT_CONTENT_FOOTER_HEIGHT,
   DEFAULT_MAX_WIDTH,
@@ -59,6 +59,7 @@ export const initialState = {
   },
   current: {
     contentIndex: 1,
+    location: EMPTY_READ_POSITION,
     position: 0, // EMPTY_READ_POSITION TODO reader.js 연동 필요, 현재는 일단 spine 내 %로 저장하고 있음
     offset: 0,  // page or scroll top
     viewType: ViewType.SCROLL,
@@ -83,6 +84,7 @@ export default {
   current: () => ['current'],
   currentContentIndex: () => ['current', 'contentIndex'],
   currentPosition: () => ['current', 'position'],
+  currentLocation: () => ['current', 'location'],
   currentOffset: () => ['current', 'offset'],
 
   setting: () => ['setting'],

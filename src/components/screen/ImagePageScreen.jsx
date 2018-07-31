@@ -61,7 +61,7 @@ class ImagePageScreen extends BaseScreen {
     nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal));
     if (currentOffset === nextOffset) return;
 
-    Connector.calculations.updateCurrentPosition(nextOffset);
+    Connector.current.updateCurrentPosition(nextOffset);
   }
 
   getTouchableScreen() {

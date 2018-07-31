@@ -1,9 +1,7 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
-import PropTypes from 'prop-types';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { debounce } from '../../util/Util';
-import CalculationsConnector from '../../util/connector/CalculationsConnector';
 import {
   selectReaderContents,
   selectReaderCurrent,
@@ -12,9 +10,12 @@ import {
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { Position } from '../screen/BaseTouchable';
-import { ContentType, CurrentType, SettingType } from '../prop-types';
+import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
+import Connector from '../../util/connector/';
+import ReaderJsHelper from '../../util/ReaderJsHelper';
+import { ViewType } from '../../constants/SettingConstants';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -23,31 +24,39 @@ export default class BaseScreen extends React.Component {
   }
 
   componentDidMount() {
+    const { viewType } = this.props.setting;
     const { isCalculated, disableCalculation } = this.props;
     if (isCalculated && !disableCalculation) {
-      CalculationsConnector.restoreCurrentOffset();
+      Connector.current.restoreCurrentOffset();
     }
     this.moveToOffset();
 
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {
-        CalculationsConnector.invalidate();
+        Connector.calculations.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
     window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
+
+    const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
+    Connector.current.setReaderJs(readerJs, true);
+
   }
 
   componentDidUpdate(prevProps) {
+    const { viewType } = this.props.setting;
     const { isCalculated: prevIsCalculated, current: prevCurrent } = prevProps;
     const { isCalculated, current } = this.props;
     if (isCalculated) {
       if (!prevIsCalculated) {
-        CalculationsConnector.restoreCurrentOffset();
+        Connector.current.restoreCurrentOffset();
         this.moveToOffset();
       } else if (prevCurrent.offset !== current.offset) {
         this.moveToOffset();
       }
     }
+    const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
+    Connector.current.setReaderJs(readerJs, true);
   }
 
   componentWillUnmount() {

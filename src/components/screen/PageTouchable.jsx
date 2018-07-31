@@ -16,13 +16,13 @@ class PageTouchable extends BaseTouchable {
 
   handleScrollEvent() {
     const { forwardedRef } = this.props;
-    if (Connector.calculations.isOnFooter()) removeScrollEvent(forwardedRef.current);
+    if (Connector.current.isOnFooter()) removeScrollEvent(forwardedRef.current);
     else preventScrollEvent(forwardedRef.current);
   }
 
   renderContent() {
     const { children } = this.props;
-    const isFooter = Connector.calculations.isOnFooter();
+    const isFooter = Connector.current.isOnFooter();
     return (
       <React.Fragment>
         {!isFooter && <button className="page_move_button left_button" onClick={e => this.onTouchScreenHandle(e, Position.LEFT)} />}

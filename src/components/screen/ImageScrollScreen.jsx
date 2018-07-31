@@ -51,7 +51,7 @@ class ImageScrollScreen extends BaseScreen {
       return;
     }
     actionOnScreenScrolled();
-    Connector.calculations.updateCurrentPosition(scrollTop());
+    Connector.current.updateCurrentPosition(scrollTop());
   }
 
   moveToOffset() {
