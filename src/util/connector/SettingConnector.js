@@ -22,6 +22,22 @@ import {
   StyledImageScrollContent,
 } from '../../components/styled/StyledContent';
 import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
+import CalculationsConnector from './CalculationsConnector';
+
+const settingsAffectingCalculation = [
+  'viewType',
+  'font',
+  'fontSizeLevel',
+  'paddingLevel',
+  'contentWidthLevel',
+  'lineHeightLevel',
+  'columnsInPage',
+  'columnGap',
+  'startWithBlankPage',
+  'containerHorizontalMargin',
+  'containerVerticalMargin',
+  'maxWidth',
+];
 
 class SettingConnector extends Connector {
   getMaxWidth(withUnit = false) {
@@ -179,6 +195,9 @@ class SettingConnector extends Connector {
 
   updateSetting(setting) {
     this.dispatch(updateSetting(setting));
+    if (Object.keys(setting).some(s => settingsAffectingCalculation.includes(s))) {
+      CalculationsConnector.invalidate();
+    }
   }
 }
 

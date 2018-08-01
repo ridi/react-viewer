@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { selectReaderSetting, ViewType, Connector } from '../../../../lib';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
-const settingsAffectingPagination = ['viewType', 'font', 'fontSizeLevel', 'paddingLevel', 'contentWidthLevel', 'lineHeightLevel', 'columnsInPage', 'startWithBlankPage'];
-
 export default class BaseSettingPopup extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { colorTheme: nextTheme } = nextProps.setting;
@@ -15,21 +13,8 @@ export default class BaseSettingPopup extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    // recalculate pagination on some specific settings changed
-    if (this.shouldUpdatePagination(prevProps, this.props)) {
-      Connector.calculations.invalidate();
-    }
-  }
-
   onSettingChanged(settings) {
     Connector.setting.updateSetting(settings);
-  }
-
-  shouldUpdatePagination(currentProps, nextProps) {
-    const current = settingsAffectingPagination.map(key => currentProps.setting[key]);
-    const next = settingsAffectingPagination.map(key => nextProps.setting[key]);
-    return JSON.stringify(current) !== JSON.stringify(next);
   }
 
   renderSettings() {
