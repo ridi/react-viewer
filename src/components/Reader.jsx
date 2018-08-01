@@ -60,7 +60,6 @@ class Reader extends React.Component {
 
   render() {
     const {
-      maxWidth,
       footer,
       contentFooter,
       onMoveWrongDirection,
@@ -69,7 +68,6 @@ class Reader extends React.Component {
     } = this.props;
 
     const props = {
-      maxWidth,
       footer,
       contentFooter,
       ignoreScroll,
@@ -91,7 +89,6 @@ Reader.defaultProps = {
   onUnmount: null,
   ignoreScroll: false,
   disableCalculation: false,
-  maxWidth: DEFAULT_MAX_WIDTH,
 };
 
 Reader.propTypes = {
@@ -105,7 +102,6 @@ Reader.propTypes = {
   ignoreScroll: PropTypes.bool,
   disableCalculation: PropTypes.bool,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
-  maxWidth: PropTypes.number,
 };
 
 const mapStateToProps = state => ({

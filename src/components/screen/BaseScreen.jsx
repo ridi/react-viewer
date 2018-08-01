@@ -116,7 +116,6 @@ BaseScreen.propTypes = {
   onTouched: PropTypes.func,
   disableCalculation: PropTypes.bool.isRequired,
   setting: SettingType.isRequired,
-  maxWidth: PropTypes.number.isRequired,
   current: CurrentType.isRequired,
   contents: PropTypes.arrayOf(ContentType).isRequired,
   actionUpdateContent: PropTypes.func.isRequired,

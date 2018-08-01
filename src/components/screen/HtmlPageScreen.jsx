@@ -57,8 +57,7 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   getWidth() {
-    const { maxWidth } = this.props;
-    const { columnsInPage, containerHorizontalMargin } = this.props.setting;
+    const { columnsInPage, containerHorizontalMargin, maxWidth } = this.props.setting;
     if (columnsInPage > 1) {
       return screenWidth() - (containerHorizontalMargin * 2);
     }

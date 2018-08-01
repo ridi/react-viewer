@@ -54,8 +54,7 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   getWidth() {
-    const { maxWidth } = this.props;
-    const { containerHorizontalMargin } = this.props.setting;
+    const { maxWidth, containerHorizontalMargin } = this.props.setting;
     return Math.min(screenWidth() - (containerHorizontalMargin * 2), maxWidth);
   }
 
