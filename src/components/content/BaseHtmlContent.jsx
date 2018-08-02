@@ -30,6 +30,8 @@ export default class BaseHtmlContent extends React.Component {
           scrollWidth: current.scrollWidth,
           scrollHeight: current.scrollHeight,
         }));
+      } else if (!prevProps.isCalculated) {
+        this.moveToOffset(this.getLocalOffset());
       }
     }
     if (currentOffset !== prevProps.currentOffset) {
@@ -40,10 +42,6 @@ export default class BaseHtmlContent extends React.Component {
   getLocalOffset() {
     const { currentOffset, startOffset } = this.props;
     return currentOffset - startOffset;
-  }
-
-  getHeight() {
-    return 'auto';
   }
 
   fetch() {
@@ -91,11 +89,8 @@ export default class BaseHtmlContent extends React.Component {
   render() {
     const { index } = this.props.content;
     const {
-      width,
       startOffset,
       setting,
-      containerVerticalMargin,
-      containerHorizontalMargin,
     } = this.props;
     const StyledContent = Connector.setting.getStyledContent();
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
@@ -104,10 +99,6 @@ export default class BaseHtmlContent extends React.Component {
         id={`${Connector.setting.getChapterId(index)}`}
         className="chapter"
         setting={setting}
-        width={`${width}px`}
-        height={this.getHeight()}
-        containerVerticalMargin={containerVerticalMargin}
-        containerHorizontalMargin={containerHorizontalMargin}
         visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
         innerRef={this.wrapper}
@@ -130,9 +121,6 @@ BaseHtmlContent.propTypes = {
   onContentError: PropTypes.func,
   onContentRendered: PropTypes.func,
   setting: SettingType.isRequired,
-  containerHorizontalMargin: PropTypes.number.isRequired,
-  containerVerticalMargin: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
 };

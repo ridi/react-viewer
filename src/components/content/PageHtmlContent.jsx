@@ -2,19 +2,13 @@
 import React from 'react';
 /* eslint-enable no-unused-vars */
 import BaseHtmlContent from './BaseHtmlContent';
-import { screenHeight } from '../../util/BrowserWrapper';
+import Connector from '../../util/connector/index';
 
 export default class PageHtmlContent extends BaseHtmlContent {
-  getHeight() {
-    const { containerVerticalMargin } = this.props;
-    return `${screenHeight() - (containerVerticalMargin * 2)}px`;
-  }
-
   moveToOffset(offsetInSpine) {
-    const { width } = this.props;
     if (this.wrapper.current) {
       const { columnGap } = this.props.setting;
-      this.wrapper.current.scrollLeft = offsetInSpine * (width + columnGap);
+      this.wrapper.current.scrollLeft = offsetInSpine * (Connector.setting.getContainerWidth() + columnGap);
     }
   }
 }

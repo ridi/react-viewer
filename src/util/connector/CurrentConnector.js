@@ -13,6 +13,10 @@ class CurrentConnector extends Connector {
     this.readerJs = readerJs;
   }
 
+  getCurrent() {
+    return selectReaderCurrent(this.getState());
+  }
+
   updateCurrentPosition(offset) {
     if (!CalculationsConnector.isCompleted()) return;
 

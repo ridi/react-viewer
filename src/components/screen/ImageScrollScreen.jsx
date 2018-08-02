@@ -6,7 +6,7 @@ import {
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
 } from '../../redux/selector';
-import { screenWidth, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import { scrollTop, setScrollTop } from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
@@ -77,7 +77,7 @@ class ImageScrollScreen extends BaseScreen {
     );
   }
 
-  renderContent(content, contentWidth) {
+  renderContent(content) {
     const {
       current,
       contentFooter,
@@ -91,7 +91,6 @@ class ImageScrollScreen extends BaseScreen {
         content={content}
         currentOffset={current.offset}
         src={content.uri}
-        width={contentWidth}
         onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
         onContentError={(index, error) => this.onContentError(index, error)}
         contentFooter={Connector.calculations.isLastContent(content.index) ?
@@ -101,22 +100,17 @@ class ImageScrollScreen extends BaseScreen {
   }
 
   renderContents() {
-    const { contents, setting, maxWidth } = this.props;
-    const { containerHorizontalMargin } = this.props.setting;
-    const contentWidth = Math.min(screenWidth() - (containerHorizontalMargin * 2), maxWidth);
+    const { contents, setting } = this.props;
 
     return (
       <StyledImageScrollContent
         setting={setting}
         innerRef={this.wrapper}
-        width={`${contentWidth}px`}
-        containerVerticalMargin={setting.containerVerticalMargin}
-        containerHorizontalMargin={setting.containerHorizontalMargin}
         height="auto"
         visible
       >
         <div className="content_container">
-          {contents.map(content => this.renderContent(content, contentWidth))}
+          {contents.map(content => this.renderContent(content))}
         </div>
       </StyledImageScrollContent>
     );

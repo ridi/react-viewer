@@ -6,7 +6,7 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { screenWidth, setScrollTop } from '../../util/BrowserWrapper';
+import { setScrollTop } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -23,7 +23,7 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 class HtmlPageScreen extends BaseScreen {
   calculate(index, nodeInfo) {
     const { columnGap } = this.props.setting;
-    const pagesTotal = Math.ceil(nodeInfo.scrollWidth / (this.getWidth() + columnGap));
+    const pagesTotal = Math.ceil(nodeInfo.scrollWidth / (Connector.setting.getContainerWidth() + columnGap));
     Connector.calculations.setTotal(index, pagesTotal);
   }
 
@@ -54,14 +54,6 @@ class HtmlPageScreen extends BaseScreen {
     if (currentOffset === nextOffset) return;
 
     Connector.current.updateCurrentPosition(nextOffset);
-  }
-
-  getWidth() {
-    const { columnsInPage, containerHorizontalMargin, maxWidth } = this.props.setting;
-    if (columnsInPage > 1) {
-      return screenWidth() - (containerHorizontalMargin * 2);
-    }
-    return Math.min(screenWidth() - (containerHorizontalMargin * 2), maxWidth);
   }
 
   getTouchableScreen() {
@@ -115,9 +107,6 @@ class HtmlPageScreen extends BaseScreen {
         isCalculated={Connector.calculations.isCalculated(content.index)}
         setting={setting}
         currentOffset={current.offset}
-        width={this.getWidth()}
-        containerHorizontalMargin={(screenWidth() - this.getWidth()) / 2}
-        containerVerticalMargin={setting.containerVerticalMargin}
         onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
         onContentError={(index, error) => this.onContentError(index, error)}
         onContentRendered={(index, nodeInfo) => this.calculate(index, nodeInfo)}

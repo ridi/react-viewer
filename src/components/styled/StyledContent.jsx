@@ -4,8 +4,11 @@ import PropTypes, { SettingType } from '../prop-types';
 
 const StyledBaseContent = styled.article`
   box-sizing: border-box;
-  margin: ${({ containerVerticalMargin, containerHorizontalMargin }) => `${containerVerticalMargin}px ${containerHorizontalMargin}px`};
+  margin: ${() => `${Connector.setting.getContainerVerticalMargin(true)} ${Connector.setting.getContainerHorizontalMargin(true)}`};
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')}
+  
+  width: ${() => Connector.setting.getContainerWidth(true)};
+  height: ${() => Connector.setting.getContainerHeight(true)};
   
   .content_footer {
     overflow: hidden;
@@ -50,10 +53,7 @@ const StyledHtmlContent = ({ setting }) => `
   }
 `;
 
-const StyledImageContent = ({ width, height, visible }) => `
-  width: ${width};
-  height: ${height};
-  
+const StyledImageContent = ({ visible }) => `
   img {
     display: block;
     transition: opacity 1s linear;
@@ -62,12 +62,10 @@ const StyledImageContent = ({ width, height, visible }) => `
 `;
 
 const StyledScrollContent = () => `
-  padding: 0 ${Connector.setting.getHorizontalPadding(true)};
+  padding: 0 ${Connector.setting.getHorizontalPadding(true)} ${Connector.setting.getContainerVerticalMargin(true)};
 `;
 
-const StyledPageContent = ({ width, height }) => `
-  width: ${width};
-  height: ${height};
+const StyledPageContent = () => `
   vertical-align: top;
   white-space: initial;
   display: inline-block;
@@ -92,6 +90,10 @@ export const StyledHtmlScrollContent = StyledBaseContent.extend`
 export const StyledHtmlPageContent = StyledBaseContent.extend`
   ${StyledHtmlContent}
   ${StyledPageContent}
+  
+  .content_container {
+    width: ${() => Connector.setting.getContentWidth(true)}
+  }
 `;
 
 export const StyledImageScrollContent = StyledBaseContent.extend`
@@ -146,12 +148,8 @@ export const StyledImagePageContent = StyledBaseContent.extend`
 const propTypes = {
   index: PropTypes.number,
   visible: PropTypes.bool,
-  containerVerticalMargin: PropTypes.number,
-  containerHorizontalMargin: PropTypes.number,
   startOffset: PropTypes.number,
   setting: SettingType,
-  width: PropTypes.string,
-  height: PropTypes.string,
 };
 
 StyledHtmlScrollContent.propTypes = propTypes;

@@ -6,7 +6,7 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
-import { screenHeight, screenWidth, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import { screenHeight, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, {
   FooterCalculationsType,
@@ -51,11 +51,6 @@ class HtmlScrollScreen extends BaseScreen {
 
   calculate(index, nodeInfo) {
     Connector.calculations.setTotal(index, nodeInfo.scrollHeight);
-  }
-
-  getWidth() {
-    const { maxWidth, containerHorizontalMargin } = this.props.setting;
-    return Math.min(screenWidth() - (containerHorizontalMargin * 2), maxWidth);
   }
 
   moveToOffset() {
@@ -103,9 +98,6 @@ class HtmlScrollScreen extends BaseScreen {
         isCalculated={Connector.calculations.isCalculated(content.index)}
         currentOffset={current.offset}
         setting={setting}
-        width={this.getWidth()}
-        containerHorizontalMargin={(screenWidth() - this.getWidth()) / 2}
-        containerVerticalMargin={setting.containerVerticalMargin}
         onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
         onContentError={(index, error) => this.onContentError(index, error)}
         onContentRendered={(index, nodeInfo) => this.calculate(index, nodeInfo)}

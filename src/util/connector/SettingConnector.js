@@ -1,5 +1,5 @@
 import Connector from '../Connector';
-import { screenWidth } from '../BrowserWrapper';
+import { screenHeight, screenWidth } from '../BrowserWrapper';
 import {
   CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,
@@ -23,6 +23,7 @@ import {
 } from '../../components/styled/StyledContent';
 import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
 import CalculationsConnector from './CalculationsConnector';
+import CurrentConnector from './CurrentConnector';
 
 const settingsAffectingCalculation = [
   'viewType',
@@ -58,16 +59,74 @@ class SettingConnector extends Connector {
     return withUnit ? `${clientWidth * 0.25}px` : clientWidth * 0.25;
   }
 
-  getHorizontalPadding(withUnit = false) {
+  getContainerWidthInternal() {
     const contentFormat = selectReaderContentFormat(this.getState());
-    if (contentFormat === ContentFormat.IMAGE) return 0;
-    const { paddingLevel } = selectReaderSetting(this.getState());
-    return withUnit ? `${MAX_PADDING_LEVEL - Number(paddingLevel)}%` : MAX_PADDING_LEVEL - Number(paddingLevel);
+    const {
+      containerHorizontalMargin,
+      viewType,
+      paddingLevel,
+    } = selectReaderSetting(this.getState());
+
+    const width = screenWidth();
+
+    if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
+
+      return Math.min(width - (containerHorizontalMargin * 2), this.getMaxWidth());
+    }
+    if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
+      const containerWidth = screenWidth() - (containerHorizontalMargin * 2);
+      const extendedMarginRatio = (MAX_PADDING_LEVEL - Number(paddingLevel)) / 100;
+      const extendedMargin = containerWidth * extendedMarginRatio;
+      return containerWidth - (extendedMargin * 2);
+    }
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
+      return Math.min(width - (containerHorizontalMargin * 2), this.getMaxWidth());
+    }
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
+      return width;
+    }
+    return null;
+  }
+
+  getContainerWidth(withUnit = false) {
+    const result = this.getContainerWidthInternal();
+    if (result !== null) {
+      return withUnit ? `${result}px` : result;
+    }
+    return 'auto';
+  }
+
+  getContainerHeight(withUnit = false) {
+    const contentFormat = selectReaderContentFormat(this.getState());
+    const { viewType } = selectReaderSetting(this.getState());
+
+    const height = screenHeight();
+
+    if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
+      const result = height - (this.getContainerVerticalMargin() * 2);
+      return withUnit ? `${result}px` : result;
+    }
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE ) {
+      return withUnit ? `${height}px` : height;
+    }
+    return 'auto';
   }
 
   getContentWidth(withUnit = false) {
+    const { viewType, columnGap, columnsInPage } = selectReaderSetting(this.getState());
     const contentFormat = selectReaderContentFormat(this.getState());
-    if (contentFormat === ContentFormat.HTML) return '100%';
+    const { contentIndex } = CurrentConnector.getCurrent();
+
+    if (contentFormat === ContentFormat.HTML) {
+      if (viewType === ViewType.SCROLL) {
+        return withUnit ? '100%' : 100;
+      }
+      if (viewType === ViewType.PAGE) {
+        const total = CalculationsConnector.getTotal(contentIndex);
+        const fullWidth = (this.getContainerWidthInternal() * total) + (columnGap * (total - 1));
+        return withUnit ? `${fullWidth}px` : fullWidth;
+      }
+    }
     const { contentWidthLevel } = selectReaderSetting(this.getState());
     const result = (Number(contentWidthLevel) * 10) + 40;
     return withUnit ? `${result}%` : result;
@@ -119,23 +178,45 @@ class SettingConnector extends Connector {
     return withUnit ? '0px' : 0;
   }
 
-  getContainerHorizontalMargin(withUnit = false) {
+  /**
+   * `paddingLevel` 설정에 의해 계산된 콘텐츠 영역 내부의 좌우 패딩 값
+   * 이미지 콘텐츠인 경우 `paddingLevel` 설정은 무시되며
+   * 페이지 보기인 경우 `paddingLevel`은 `horizontalPadding`이 아니라 `containerHorizontalMargin`으로 계산된다.
+   * @param withUnit
+   * @returns {number|string}
+   */
+  getHorizontalPadding(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { containerHorizontalMargin, viewType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
+    const { viewType, paddingLevel } = selectReaderSetting(this.getState());
+    if (contentFormat === ContentFormat.IMAGE || viewType === ViewType.PAGE) {
       return withUnit ? '0px' : 0;
     }
-    return withUnit ? `${containerHorizontalMargin}px` : containerHorizontalMargin;
+    return withUnit ? `${MAX_PADDING_LEVEL - Number(paddingLevel)}%` : MAX_PADDING_LEVEL - Number(paddingLevel);
+  }
+
+  getContainerVerticalMargin(withUnit = false) {
+    const { containerVerticalMargin } = selectReaderSetting(this.getState());
+    return withUnit ? `${containerVerticalMargin}px` : containerVerticalMargin;
+  }
+
+  /**
+   * `containerHorizontalMargin` 설정에 의해 계산된 콘텐츠 영역 좌우 마진 값
+   * @param withUnit
+   * @returns {number|string}
+   */
+  getContainerHorizontalMargin(withUnit = false) {
+    const containerWidth = this.getContainerWidthInternal();
+    const result = (screenWidth() - containerWidth) / 2;
+    return withUnit ? `${result}px` : result;
   }
 
   getColumnWidth(withUnit = false) {
     const { columnsInPage } = selectReaderSetting(this.getState());
 
     const contentFormat = selectReaderContentFormat(this.getState());
-    const calculatedWidth = screenWidth() - (this.getContainerHorizontalMargin() * 2);
+    const calculatedWidth = this.getContainerWidthInternal();
     if (contentFormat === ContentFormat.HTML) {
-      const width = (columnsInPage > 1) ? calculatedWidth : Math.min(calculatedWidth, this.getMaxWidth());
-      return `${(width - (this.getColumnGap() * (columnsInPage - 1))) / columnsInPage}px`;
+      return `${(calculatedWidth - (this.getColumnGap() * (columnsInPage - 1))) / columnsInPage}px`;
     }
     return withUnit ? `${calculatedWidth / columnsInPage}px` : calculatedWidth / columnsInPage;
   }
