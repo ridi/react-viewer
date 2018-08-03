@@ -5,6 +5,12 @@ import { updateObject } from '../util/Util';
 export const EMPTY_READ_POSITION = '-1#-1';
 export const INVALID_PAGE = -1;
 
+export const FONT_SIZE_RANGE = [12.0, 48.9];
+export const CONTENT_PADDING_RANGE = [0.0, 25.0];
+export const CONTENT_WIDTH_RANGE = [50.0, 100.0];
+export const LINE_HEIGHT_RANGE = [1.0, 3.0];
+export const COLUMN_GAP_RANGE = [1.0, 20.0];
+
 const _ReaderThemeType = {
   WHITE: 'white_theme',
   IOS_SEPIA: 'ios_sepia_theme',

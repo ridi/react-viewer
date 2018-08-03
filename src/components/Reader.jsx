@@ -10,7 +10,6 @@ import SpineCalculator from '../util/connector/CalculationsConnector';
 import { isExist } from '../util/Util';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
-import { DEFAULT_MAX_WIDTH } from '../constants/StyledConstants';
 
 class Reader extends React.Component {
   constructor(props) {

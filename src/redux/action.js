@@ -1,3 +1,11 @@
+import { isExist } from '../util/Util';
+import {
+  COLUMN_GAP_RANGE,
+  CONTENT_PADDING_RANGE,
+  CONTENT_WIDTH_RANGE,
+  FONT_SIZE_RANGE,
+  LINE_HEIGHT_RANGE,
+} from '../constants/SettingConstants';
 
 export const actions = {
   SCROLLED: 'READER:SCROLLED',
@@ -28,10 +36,43 @@ export const updateCurrent = current => ({
   current,
 });
 
-export const updateSetting = setting => ({
-  type: actions.UPDATE_SETTING,
-  setting,
-});
+export const updateSetting = (setting) => {
+  const valid = {};
+  if (isExist(setting.fontSizeInPx)) {
+    valid.fontSizeInPx = Math.min(
+      Math.max(setting.fontSizeInPx, FONT_SIZE_RANGE[0]),
+      FONT_SIZE_RANGE[1],
+    );
+  }
+  if (isExist(setting.contentPaddingInPercent)) {
+    valid.contentPaddingInPercent = Math.min(
+      Math.max(setting.contentPaddingInPercent, CONTENT_PADDING_RANGE[0]),
+      CONTENT_PADDING_RANGE[1],
+    );
+  }
+  if (isExist(setting.contentWidthInPercent)) {
+    valid.contentWidthInPercent = Math.min(
+      Math.max(setting.contentWidthInPercent, CONTENT_WIDTH_RANGE[0]),
+      CONTENT_WIDTH_RANGE[1],
+    );
+  }
+  if (isExist(setting.lineHeightInEm)) {
+    valid.lineHeightInEm = Math.min(
+      Math.max(setting.lineHeightInEm, LINE_HEIGHT_RANGE[0]),
+      LINE_HEIGHT_RANGE[1],
+    );
+  }
+  if (isExist(setting.columnGapInPercent)) {
+    valid.columnGapInPercent = Math.min(
+      Math.max(setting.columnGapInPercent, COLUMN_GAP_RANGE[0]),
+      COLUMN_GAP_RANGE[1],
+    );
+  }
+  return {
+    type: actions.UPDATE_SETTING,
+    setting: { ...setting, ...valid },
+  };
+};
 
 export const updateContent = (index, content, isAllLoaded = false) => ({
   type: actions.UPDATE_CONTENT,

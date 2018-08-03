@@ -26,14 +26,14 @@ const onScreenScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-const movePageViewer = state => new ImmutableObjectBuilder(state)
-  .set(path.isVisibleSettingPopup(), false)
-  .build();
+// const movePageViewer = state => new ImmutableObjectBuilder(state)
+//   .set(path.isVisibleSettingPopup(), false)
+//   .build();
 
 export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
   [ViewerUiActions.TOUCHED]: onScreenTouched,
   [ReaderActions.SCROLLED]: onScreenScrolled,
-  [ReaderActions.UPDATE_CURRENT]: movePageViewer,
+//  [ReaderActions.UPDATE_CURRENT]: movePageViewer,
 });

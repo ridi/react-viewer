@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting } from '../../../../lib';
+import {
+  selectReaderSetting,
+  COLUMN_GAP_RANGE,
+} from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
+import SpinButton from './SpinButton';
 
 
 class ColumnSetting extends Component {
@@ -10,7 +14,7 @@ class ColumnSetting extends Component {
     const { onChanged } = this.props;
     const { columnsInPage, startWithBlankPage } = this.props.setting;
 
-    return [1, 2, 3].map(item => (
+    return [1, 2].map(item => (
       <li className="setting_button_list" key={item}>
         <button
           type="button"
@@ -25,7 +29,7 @@ class ColumnSetting extends Component {
   renderBlankPageOptionList() {
     const { onChanged } = this.props;
     const { columnsInPage, startWithBlankPage } = this.props.setting;
-    return [0, 1, 2].map(item => (
+    return [0, 1].map(item => (
       <li className="setting_button_list" key={item}>
         <button
           type="button"
@@ -38,7 +42,7 @@ class ColumnSetting extends Component {
   }
 
   render() {
-    const { columnsInPage } = this.props.setting;
+    const { columnsInPage, columnGapInPercent, onChanged } = this.props.setting;
     return (
       <React.Fragment>
         <li className="setting_list">
@@ -73,6 +77,22 @@ class ColumnSetting extends Component {
               </ul>
             </div>
           </div>
+        </li>
+        }
+        { columnsInPage > 1 &&
+        <li className="setting_list">
+          <SvgIcons
+            svgName="svg_column"
+            svgClass="setting_title_icon svg_column_icon"
+          />
+          <SpinButton
+            title="단 간격 (%)"
+            buttonTarget="set_columnGapInPercent"
+            initialValue={columnGapInPercent}
+            min={COLUMN_GAP_RANGE[0]}
+            max={COLUMN_GAP_RANGE[1]}
+            onChange={(old, value) => onChanged({ columnGapInPercent: value })}
+          />
         </li>
         }
       </React.Fragment>

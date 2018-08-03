@@ -9933,6 +9933,17 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     border-bottom-right-radius: 30px
 }
 
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list input {
+    position: relative;
+    z-index: 2;
+    width: 40px;
+    height: 27px;
+    padding-top: 1px;
+    border: 1px solid #dad9de;
+    font-size: 12px;
+    text-align: center;
+}
+
 #viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
     z-index: 1;
     cursor: default

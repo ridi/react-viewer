@@ -94,7 +94,6 @@ export default class BaseHtmlContent extends React.Component {
     const {
       startOffset,
       setting,
-      isCalculated,
     } = this.props;
     const StyledContent = Connector.setting.getStyledContent();
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
@@ -104,7 +103,7 @@ export default class BaseHtmlContent extends React.Component {
         index={index}
         className="chapter"
         setting={setting}
-        visible={startOffset !== PRE_CALCULATION && isCalculated}
+        visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
         innerRef={this.wrapper}
       >

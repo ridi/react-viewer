@@ -23,7 +23,6 @@ import {
 } from '../../components/styled/StyledContent';
 import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
 import CalculationsConnector from './CalculationsConnector';
-import CurrentConnector from './CurrentConnector';
 
 const settingsAffectingCalculation = [
   'viewType',
@@ -70,7 +69,6 @@ class SettingConnector extends Connector {
     const width = screenWidth();
 
     if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
-
       return Math.min(width - (containerHorizontalMargin * 2), this.getMaxWidth());
     }
     if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
@@ -106,7 +104,7 @@ class SettingConnector extends Connector {
       const result = height - (this.getContainerVerticalMargin() * 2);
       return withUnit ? `${result}px` : result;
     }
-    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE ) {
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
       return withUnit ? `${height}px` : height;
     }
     return 'auto';
@@ -125,9 +123,8 @@ class SettingConnector extends Connector {
           const total = CalculationsConnector.getTotal(index);
           const fullWidth = (this.getContainerWidthInternal() * total) + (columnGap * (total - 1));
           return withUnit ? `${fullWidth}px` : fullWidth;
-        } else {
-          return 'auto';
         }
+        return 'auto';
       }
     }
     const { contentWidthLevel } = selectReaderSetting(this.getState());
