@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
   reader: reader({
     setting: {
       font: 'kopup_dotum',
-      containerHorizontalMargin: 15,
+      containerHorizontalMargin: 30,
       containerVerticalMargin: 50,
     },
   }),

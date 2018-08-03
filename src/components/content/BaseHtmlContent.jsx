@@ -10,6 +10,7 @@ export default class BaseHtmlContent extends React.Component {
 
     this.wrapper = React.createRef();
     this.content = React.createRef();
+    this.listener = null;
   }
 
   componentDidMount() {
@@ -23,18 +24,20 @@ export default class BaseHtmlContent extends React.Component {
   componentDidUpdate(prevProps) {
     const { onContentRendered, currentOffset, isCalculated } = this.props;
     const { index, isContentLoaded } = this.props.content;
-    if (isContentLoaded) {
-      if (!isCalculated) {
-        const { current } = this.wrapper;
-        this.waitForResources().then(() => onContentRendered(index, {
+    if (!isContentLoaded) return;
+    if (!this.listener) {
+      const { current } = this.content;
+      this.listener = this.waitForResources()
+        .then(() => onContentRendered(index, {
           scrollWidth: current.scrollWidth,
           scrollHeight: current.scrollHeight,
         }));
-      } else if (!prevProps.isCalculated) {
-        this.moveToOffset(this.getLocalOffset());
-      }
     }
-    if (currentOffset !== prevProps.currentOffset) {
+    if (prevProps.isCalculated && !isCalculated) {
+      this.listener = null;
+    }
+    if ((!prevProps.isCalculated && isCalculated)
+      || (currentOffset !== prevProps.currentOffset)) {
       this.moveToOffset(this.getLocalOffset());
     }
   }
@@ -91,15 +94,17 @@ export default class BaseHtmlContent extends React.Component {
     const {
       startOffset,
       setting,
+      isCalculated,
     } = this.props;
     const StyledContent = Connector.setting.getStyledContent();
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
       <StyledContent
         id={`${Connector.setting.getChapterId(index)}`}
+        index={index}
         className="chapter"
         setting={setting}
-        visible={startOffset !== PRE_CALCULATION}
+        visible={startOffset !== PRE_CALCULATION && isCalculated}
         startOffset={startOffset}
         innerRef={this.wrapper}
       >

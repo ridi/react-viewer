@@ -75,8 +75,8 @@ class SettingConnector extends Connector {
     }
     if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
       const containerWidth = screenWidth() - (containerHorizontalMargin * 2);
-      const extendedMarginRatio = (MAX_PADDING_LEVEL - Number(paddingLevel)) / 100;
-      const extendedMargin = containerWidth * extendedMarginRatio;
+      const extendedMarginRatio = ((MAX_PADDING_LEVEL - Number(paddingLevel)) * 4) / 100;
+      const extendedMargin = Math.ceil(containerWidth * extendedMarginRatio);
       return containerWidth - (extendedMargin * 2);
     }
     if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
@@ -112,19 +112,22 @@ class SettingConnector extends Connector {
     return 'auto';
   }
 
-  getContentWidth(withUnit = false) {
-    const { viewType, columnGap, columnsInPage } = selectReaderSetting(this.getState());
+  getContentWidth(index, withUnit = false) {
+    const { viewType, columnGap } = selectReaderSetting(this.getState());
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { contentIndex } = CurrentConnector.getCurrent();
 
     if (contentFormat === ContentFormat.HTML) {
       if (viewType === ViewType.SCROLL) {
         return withUnit ? '100%' : 100;
       }
       if (viewType === ViewType.PAGE) {
-        const total = CalculationsConnector.getTotal(contentIndex);
-        const fullWidth = (this.getContainerWidthInternal() * total) + (columnGap * (total - 1));
-        return withUnit ? `${fullWidth}px` : fullWidth;
+        if (CalculationsConnector.isCalculated(index)) {
+          const total = CalculationsConnector.getTotal(index);
+          const fullWidth = (this.getContainerWidthInternal() * total) + (columnGap * (total - 1));
+          return withUnit ? `${fullWidth}px` : fullWidth;
+        } else {
+          return 'auto';
+        }
       }
     }
     const { contentWidthLevel } = selectReaderSetting(this.getState());

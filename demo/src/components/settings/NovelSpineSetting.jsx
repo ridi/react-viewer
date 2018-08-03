@@ -28,7 +28,7 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
       max={{
       [ViewerSpinType.FONT_SIZE]: 12,
       [ViewerSpinType.LINE_HEIGHT]: 6,
-      [ViewerSpinType.PADDING]: 6,
+      [ViewerSpinType.PADDING]: 8,
     }[item]}
       onChange={(oldLevel, newLevel) => onChanged({
       [ViewerSpinType.toReaderSettingType(item)]: newLevel,

@@ -92,7 +92,7 @@ export const StyledHtmlPageContent = StyledBaseContent.extend`
   ${StyledPageContent}
   
   .content_container {
-    width: ${() => Connector.setting.getContentWidth(true)}
+    width: ${({ index }) => Connector.setting.getContentWidth(index, true)}
   }
 `;
 
@@ -102,7 +102,7 @@ export const StyledImageScrollContent = StyledBaseContent.extend`
   margin: 0 auto;
   .content_container {
     margin: 0 auto;
-    width: ${() => Connector.setting.getContentWidth(true)};
+    width: ${() => Connector.setting.getContentWidth(1, true)};
     img {
       width: 100%;
     }
