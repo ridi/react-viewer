@@ -22,8 +22,8 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class HtmlPageScreen extends BaseScreen {
   calculate(index, nodeInfo) {
-    const { columnGap } = this.props.setting;
-    const pagesTotal = Math.ceil(nodeInfo.scrollWidth / (Connector.setting.getContainerWidth() + columnGap));
+    const pagesTotal = Math.ceil(nodeInfo.scrollWidth
+      / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
     Connector.calculations.setTotal(index, pagesTotal);
   }
 

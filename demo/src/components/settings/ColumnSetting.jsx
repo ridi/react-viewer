@@ -42,7 +42,8 @@ class ColumnSetting extends Component {
   }
 
   render() {
-    const { columnsInPage, columnGapInPercent, onChanged } = this.props.setting;
+    const { onChanged } = this.props;
+    const { columnsInPage, columnGapInPercent } = this.props.setting;
     return (
       <React.Fragment>
         <li className="setting_list">

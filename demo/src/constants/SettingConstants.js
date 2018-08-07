@@ -14,21 +14,21 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
     _ViewerSpinType.LINE_HEIGHT,
   ],
   _STRING_MAP: {
-    [_ViewerSpinType.FONT_SIZE]: '글자 크기',
-    [_ViewerSpinType.PADDING]: '문단 너비',
-    [_ViewerSpinType.LINE_HEIGHT]: '줄 간격',
+    [_ViewerSpinType.FONT_SIZE]: '글자 크기(px)',
+    [_ViewerSpinType.PADDING]: '문단 좌우 패딩(%)',
+    [_ViewerSpinType.LINE_HEIGHT]: '줄 간격(em)',
   },
 }), {
   toReaderSettingType: (type) => {
     switch (type) {
       case _ViewerSpinType.FONT_SIZE:
-        return 'fontSizeLevel';
+        return 'fontSizeInPx';
       case _ViewerSpinType.PADDING:
-        return 'paddingLevel';
+        return 'contentPaddingInPercent';
       case _ViewerSpinType.LINE_HEIGHT:
-        return 'lineHeightLevel';
+        return 'lineHeightInEm';
       default:
-        return 'fontSizeLevel';
+        return 'fontSizeInPx';
     }
   },
 });
@@ -42,7 +42,7 @@ export const ViewerComicSpinType = makeConstants(updateObject(_ViewerComicSpinTy
     _ViewerComicSpinType.CONTENT_WIDTH,
   ],
   _STRING_MAP: {
-    [_ViewerComicSpinType.CONTENT_WIDTH]: '콘텐츠 너비',
+    [_ViewerComicSpinType.CONTENT_WIDTH]: '콘텐츠 너비(%)',
   },
 }), {
   toReaderSettingType: (type) => {

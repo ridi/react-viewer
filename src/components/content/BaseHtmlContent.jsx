@@ -22,15 +22,21 @@ export default class BaseHtmlContent extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { onContentRendered, currentOffset, isCalculated } = this.props;
+    const {
+      onContentRendered,
+      currentOffset,
+      isCalculated,
+      contentFooter,
+    } = this.props;
     const { index, isContentLoaded } = this.props.content;
+    const { setting } = this.props;
     if (!isContentLoaded) return;
     if (!this.listener) {
       const { current } = this.content;
       this.listener = this.waitForResources()
         .then(() => onContentRendered(index, {
           scrollWidth: current.scrollWidth,
-          scrollHeight: current.scrollHeight,
+          scrollHeight: current.scrollHeight + (contentFooter ? setting.contentFooterHeight : 0),
         }));
     }
     if (prevProps.isCalculated && !isCalculated) {

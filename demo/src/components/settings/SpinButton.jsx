@@ -28,16 +28,12 @@ export default class SpinButton extends React.Component {
   }
 
   handleMinus() {
-    const value = this.state.value - 1;
-    this.setState({ value });
-    this.handleChange();
+    this.setState({ value: this.state.value - 1 }, () => this.handleChange());
     this.minusButton.blur();
   }
 
   handlePlus() {
-    const value = this.state.value + 1;
-    this.setState({ value });
-    this.handleChange();
+    this.setState({ value: this.state.value + 1 }, () => this.handleChange());
     this.plusButton.blur();
   }
 

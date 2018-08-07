@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting } from '../../../../lib';
+import {
+  selectReaderSetting,
+  FONT_SIZE_RANGE,
+  CONTENT_PADDING_RANGE,
+  LINE_HEIGHT_RANGE,
+} from '../../../../lib';
 import { ViewerSpinType } from '../../constants/SettingConstants';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
@@ -12,23 +17,24 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
       svgName={`svg_${item}_2`}
       svgClass={`setting_title_icon svg_${item}_icon`}
     />
+
     <SpinButton
       title={ViewerSpinType.toString(item)}
       buttonTarget={`set_${item}`}
       initialValue={{
-      [ViewerSpinType.FONT_SIZE]: setting.fontSizeLevel,
-      [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightLevel,
-      [ViewerSpinType.PADDING]: setting.paddingLevel,
+      [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
+      [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
+      [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
     }[item]}
       min={{
-      [ViewerSpinType.FONT_SIZE]: 1,
-      [ViewerSpinType.LINE_HEIGHT]: 1,
-      [ViewerSpinType.PADDING]: 1,
+      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[0],
+      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[0],
+      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[0],
     }[item]}
       max={{
-      [ViewerSpinType.FONT_SIZE]: 12,
-      [ViewerSpinType.LINE_HEIGHT]: 6,
-      [ViewerSpinType.PADDING]: 8,
+      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[1],
+      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[1],
+      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[1],
     }[item]}
       onChange={(oldLevel, newLevel) => onChanged({
       [ViewerSpinType.toReaderSettingType(item)]: newLevel,

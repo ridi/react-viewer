@@ -7,8 +7,8 @@ import Connector from '../../util/connector/index';
 export default class PageHtmlContent extends BaseHtmlContent {
   moveToOffset(offsetInSpine) {
     if (this.wrapper.current) {
-      const { columnGap } = this.props.setting;
-      this.wrapper.current.scrollLeft = offsetInSpine * (Connector.setting.getContainerWidth() + columnGap);
+      this.wrapper.current.scrollLeft = offsetInSpine
+        * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
     }
   }
 }

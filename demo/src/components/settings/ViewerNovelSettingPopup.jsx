@@ -27,6 +27,7 @@ class ViewerNovelSettingPopup extends BaseSettingPopup {
         <FontSetting
           onChanged={font => this.onSettingChanged({ font })}
         />
+
         {ViewerSpinType.toList().map(item => (
           <NovelSpineSetting
             item={item}

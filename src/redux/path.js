@@ -23,20 +23,13 @@ export const initialFooterCalculationsState = () => ({ isCalculated: false, tota
 export const initialSettingState = () => ({
   colorTheme: ReaderThemeType.WHITE,
   font: 'system',
-
   fontSizeInPx: 16,       // px (12px ~ 48px)
   contentPaddingInPercent: 12, // % (0 ~ 25%)
   contentWidthInPercent: 100,  // % (50% ~ 100%)
   lineHeightInEm: 1.67,   // em (1.0 ~ 3.0)
   columnGapInPercent: 5,  // % (1% ~ 20%)
-
-  fontSizeLevel: 6,
-  paddingLevel: 3,
-  contentWidthLevel: 6,
-  lineHeightLevel: 3,
-  viewType: ViewType.SCROLL,
   columnsInPage: 1,
-  columnGap: 40,
+  viewType: ViewType.SCROLL,
   startWithBlankPage: 0,
   maxWidth: DEFAULT_MAX_WIDTH,
   contentFooterHeight: DEFAULT_CONTENT_FOOTER_HEIGHT,
