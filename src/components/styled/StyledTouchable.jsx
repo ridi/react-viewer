@@ -37,7 +37,7 @@ const StyledPageTouchable = StyledBaseTouchable.extend`
 
 export const StyledHtmlScrollTouchable = StyledScrollTouchable.extend`
    min-height: calc(100vh + 100px);
-   height: ${({ total }) => `${total}px`};
+   height: ${({ total }) => `${total + (Connector.setting.getContainerVerticalMargin() * 2)}px`};
 `;
 export const StyledImageScrollTouchable = StyledScrollTouchable.extend``;
 export const StyledHtmlPageTouchable = StyledPageTouchable.extend``;
