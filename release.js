@@ -14,6 +14,7 @@ const exitWithErrorMsg = (msg) => {
 };
 
 const getGitBranch = () => new Promise(resolve => git.branch(branch => resolve(branch)));
+const gitAddAll = () => exec('git add .');
 const gitCheckout = branch => exec(`git checkout ${branch}`);
 const gitCommitAndPush = (commitMsg, branch) => exec(`git add . --all && git commit -m ${commitMsg} && git push origin ${branch}`);
 
@@ -31,7 +32,7 @@ const build = webpackConfig => new Promise((resolve, reject) => {
 });
 
 const renameDemoBundleWithVersion = ver =>
-  fs.rename('./demo/resources/js/index.js', `./demo/resources/js/${ver}.index.js`)
+  fs.copy('./demo/resources/js/index.js', `./demo/resources/js/${ver}.index.js`)
     .then(() => {
       const bundlesJson = require('./demo/resources/js/bundles.json');
       bundlesJson.bundles.push(`${ver}.index.js`);
@@ -58,7 +59,8 @@ const execArgs = (arg) => {
   } else if (arg === commands.BUILD) {
     return build(viewerWebpackConfig)
       .then(() => build(demoWebpackConfig))
-      .then(() => renameDemoBundleWithVersion(version));
+      .then(() => renameDemoBundleWithVersion(version))
+      .then(() => gitAddAll());
   } else if (arg === commands.RELEASED) {
     return getGitBranch().then(branch => gitCheckout('gh-pages')
       .then(() => gitCheckout(`${branch} ./demo/index.html`))
