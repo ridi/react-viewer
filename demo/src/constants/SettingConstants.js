@@ -48,9 +48,9 @@ export const ViewerComicSpinType = makeConstants(updateObject(_ViewerComicSpinTy
   toReaderSettingType: (type) => {
     switch (type) {
       case _ViewerComicSpinType.CONTENT_WIDTH:
-        return 'contentWidthLevel';
+        return 'contentWidthInPercent';
       default:
-        return 'contentWidthLevel';
+        return 'contentWidthInPercent';
     }
   },
 });

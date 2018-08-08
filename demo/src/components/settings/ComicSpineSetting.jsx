@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting } from '../../../../lib';
+import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '../../../../lib';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
@@ -22,13 +22,13 @@ class ComicSpineSetting extends Component {
           title={ViewerComicSpinType.toString(item)}
           buttonTarget={`set_${item}`}
           initialValue={{
-            [ViewerComicSpinType.CONTENT_WIDTH]: setting.contentWidthLevel,
+            [ViewerComicSpinType.CONTENT_WIDTH]: setting.contentWidthInPercent,
           }[item]}
           min={{
-            [ViewerComicSpinType.CONTENT_WIDTH]: 1,
+            [ViewerComicSpinType.CONTENT_WIDTH]: CONTENT_WIDTH_RANGE[0],
           }[item]}
           max={{
-            [ViewerComicSpinType.CONTENT_WIDTH]: 6,
+            [ViewerComicSpinType.CONTENT_WIDTH]: CONTENT_WIDTH_RANGE[1],
           }[item]}
           onChange={(oldLevel, newLevel) => onChanged({
             [ViewerComicSpinType.toReaderSettingType(item)]: newLevel,
