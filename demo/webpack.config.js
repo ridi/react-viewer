@@ -1,5 +1,6 @@
 
 module.exports = {
+  context: __dirname,
   entry: {
     index: `${__dirname}/src/index.jsx`,
     bundleLoader: [

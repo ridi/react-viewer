@@ -21,13 +21,26 @@ const gitCommitAndPush = (commitMsg, branch) => exec(`git add . --all && git com
 const checkPreconditions = () => npm(name);
 
 const build = webpackConfig => new Promise((resolve, reject) => {
-  const compiler = webpack(webpackConfig);
-  compiler.run((err, stats) => {
+  webpack(webpackConfig, (err, stats) => {
     if (err) {
-      reject(err);
+      reject(err.stack || err);
+      if (err.details) {
+        reject(err.details);
+      }
       return;
     }
-    resolve(stats);
+
+    const info = stats.toJson();
+
+    if (stats.hasErrors()) {
+      reject(info.errors);
+      return;
+    }
+
+    if (stats.hasWarnings()) {
+      console.warn(info.warnings);
+    }
+    resolve();
   });
 });
 
