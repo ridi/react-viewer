@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 
-export default class ImageContent extends React.Component {
+export default class ImageContent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();

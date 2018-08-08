@@ -19,8 +19,15 @@ import { BindingType } from '../../constants/ContentConstants';
 import { isExist } from '../../util/Util';
 import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
 
 class HtmlPageScreen extends BaseScreen {
+  constructor(props) {
+    super(props);
+    this.calculate = this.calculate.bind(this);
+    this.onContentFooterRendered = this.onContentFooterRendered.bind(this);
+  }
+
   calculate(index, nodeInfo) {
     const pagesTotal = Math.ceil(nodeInfo.scrollWidth
       / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
@@ -70,6 +77,11 @@ class HtmlPageScreen extends BaseScreen {
     }
   }
 
+  onContentFooterRendered() {
+    const hasFooter = Connector.calculations.getHasFooter();
+    Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
+  }
+
   needRender(content) {
     const { current } = this.props;
     const calculated = Connector.calculations.isCalculated(content.index);
@@ -81,12 +93,12 @@ class HtmlPageScreen extends BaseScreen {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
-    const hasFooter = Connector.calculations.getHasFooter();
+
     return (
       <Footer
         content={footer}
         startOffset={startOffset}
-        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0)}
+        onContentRendered={this.onContentFooterRendered}
         containerVerticalMargin={containerVerticalMargin}
       />
     );
@@ -95,22 +107,23 @@ class HtmlPageScreen extends BaseScreen {
   renderContent(content) {
     const {
       current,
-      setting,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
+    const isCurrentContent = current.contentIndex === content.index;
+    const isLastContent = Connector.calculations.isLastContent(content.index);
     return (
       <PageHtmlContent
+        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
-        startOffset={startOffset}
         isCalculated={Connector.calculations.isCalculated(content.index)}
-        setting={setting}
-        currentOffset={current.offset}
-        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
-        onContentError={(index, error) => this.onContentError(index, error)}
-        onContentRendered={(index, nodeInfo) => this.calculate(index, nodeInfo)}
-        contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
+        startOffset={startOffset}
+        localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
+        onContentLoaded={this.onContentLoaded}
+        onContentError={this.onContentError}
+        onContentRendered={this.calculate}
+        contentFooter={isLastContent ? contentFooter : null}
       />
     );
   }

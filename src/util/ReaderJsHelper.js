@@ -1,7 +1,7 @@
 import { Context, Reader, Util } from '@ridi/reader.js/web';
 import { isExist } from './Util';
 import { screenHeight, screenWidth } from './BrowserWrapper';
-import { EMPTY_READ_POSITION } from '../constants/SettingConstants';
+import { EMPTY_READ_LOCATION } from '../constants/SettingConstants';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
@@ -30,7 +30,7 @@ export default class ReaderJsHelper {
   }
 
   getOffsetFromNodeLocation(location) {
-    if (isExist(location) && location !== EMPTY_READ_POSITION) {
+    if (isExist(location) && location !== EMPTY_READ_LOCATION) {
       return this._readerJs.getOffsetFromNodeLocation(location, DETECTION_TYPE);
     }
     return null;

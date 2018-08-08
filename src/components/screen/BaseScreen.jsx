@@ -14,17 +14,17 @@ import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types'
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../util/connector/';
-import ReaderJsHelper from '../../util/ReaderJsHelper';
-import { ViewType } from '../../constants/SettingConstants';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
+
+    this.onContentLoaded = this.onContentLoaded.bind(this);
+    this.onContentError = this.onContentError.bind(this);
   }
 
   componentDidMount() {
-    const { viewType } = this.props.setting;
     const { isCalculated, disableCalculation } = this.props;
     if (isCalculated && !disableCalculation) {
       Connector.current.restoreCurrentOffset();
@@ -38,12 +38,10 @@ export default class BaseScreen extends React.Component {
     }, DOMEventDelayConstants.RESIZE);
     window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
 
-    const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
-    Connector.current.setReaderJs(readerJs);
+    Connector.current.setReaderJs();
   }
 
   componentDidUpdate(prevProps) {
-    const { viewType } = this.props.setting;
     const { isCalculated: prevIsCalculated, current: prevCurrent } = prevProps;
     const { isCalculated, current } = this.props;
     if (isCalculated) {
@@ -54,8 +52,7 @@ export default class BaseScreen extends React.Component {
         this.moveToOffset();
       }
     }
-    const readerJs = new ReaderJsHelper(this.wrapper.current, viewType === ViewType.SCROLL);
-    Connector.current.setReaderJs(readerJs);
+    Connector.current.setReaderJs();
   }
 
   componentWillUnmount() {

@@ -1,9 +1,10 @@
 import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
-
-export const EMPTY_READ_POSITION = '-1#-1';
+export const READERJS_CONTENT_WRAPPER = 'current_content';
+export const EMPTY_READ_LOCATION = '-1#-1';
 export const INVALID_PAGE = -1;
+export const INVALID_OFFSET = -1;
 
 export const FONT_SIZE_RANGE = [12.0, 48.9];
 export const CONTENT_PADDING_RANGE = [0.0, 25.0];

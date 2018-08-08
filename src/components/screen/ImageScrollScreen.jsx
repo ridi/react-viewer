@@ -18,11 +18,11 @@ import ScrollTouchable from './ScrollTouchable';
 import Footer from '../footer/Footer';
 import Connector from '../../util/connector/';
 import ImageContent from '../content/ImageContent';
-import ContentFooter from '../footer/ContentFooter';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { READERJS_CONTENT_WRAPPER } from '../../index';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
@@ -30,6 +30,7 @@ class ImageScrollScreen extends BaseScreen {
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    this.onContentRendered = this.onContentRendered.bind(this);
   }
 
   componentWillUnmount() {
@@ -63,6 +64,10 @@ class ImageScrollScreen extends BaseScreen {
     return ScrollTouchable;
   }
 
+  onContentRendered(footerNode) {
+    Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight);
+  }
+
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
@@ -72,7 +77,7 @@ class ImageScrollScreen extends BaseScreen {
         content={footer}
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
-        onContentRendered={footerNode => Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight)}
+        onContentRendered={this.onContentRendered}
       />
     );
   }
@@ -83,18 +88,15 @@ class ImageScrollScreen extends BaseScreen {
       contentFooter,
     } = this.props;
 
-    const { contentFooterHeight } = this.props.setting;
-
     return (
       <ImageContent
         key={`${content.uri}:${content.index}`}
         content={content}
         currentOffset={current.offset}
         src={content.uri}
-        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
-        onContentError={(index, error) => this.onContentError(index, error)}
-        contentFooter={Connector.calculations.isLastContent(content.index) ?
-          <ContentFooter content={contentFooter} height={contentFooterHeight} /> : null}
+        onContentLoaded={this.onContentLoaded}
+        onContentError={this.onContentError}
+        contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
       />
     );
   }
@@ -104,6 +106,7 @@ class ImageScrollScreen extends BaseScreen {
 
     return (
       <StyledImageScrollContent
+        className={READERJS_CONTENT_WRAPPER}
         setting={setting}
         innerRef={this.wrapper}
         height="auto"

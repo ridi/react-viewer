@@ -7,10 +7,19 @@ import {
 import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import ReaderJsHelper from '../ReaderJsHelper';
+import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends Connector {
-  setReaderJs(readerJs) {
-    this.readerJs = readerJs;
+  setReaderJs() {
+    const { viewType } = selectReaderSetting(this.getState());
+    const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
+    if (node) {
+      const readerJs = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
+      this.readerJs = readerJs;
+    } else {
+      this.readerJs = null;
+    }
   }
 
   updateCurrentPosition(offset) {
@@ -21,7 +30,10 @@ class CurrentConnector extends Connector {
 
     const total = CalculationsConnector.getTotal(contentIndex);
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
-    const location = this.readerJs.getNodeLocationOfCurrentPage();
+    let location = EMPTY_READ_LOCATION;
+    if (this.readerJs) {
+      location = this.readerJs.getNodeLocationOfCurrentPage();
+    }
     this.dispatch(updateCurrent({
       contentIndex,
       offset,

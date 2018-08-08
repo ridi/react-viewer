@@ -3,6 +3,7 @@ import { screenHeight, screenWidth } from '../BrowserWrapper';
 import {
   CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,
+  DEFAULT_FONT,
 } from '../../constants/StyledConstants';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { ViewType } from '../../constants/SettingConstants';
@@ -123,6 +124,11 @@ class SettingConnector extends Connector {
       }
     }
     return withUnit ? `${contentWidthInPercent}%` : contentWidthInPercent;
+  }
+
+  getFont() {
+    const { font } = selectReaderSetting(this.getState());
+    return font || DEFAULT_FONT;
   }
 
   getFontSize(withUnit = false) {

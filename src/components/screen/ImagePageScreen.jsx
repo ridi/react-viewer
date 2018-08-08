@@ -20,14 +20,15 @@ import PageTouchable, { Position } from './PageTouchable';
 import { BindingType } from '../../constants/ContentConstants';
 import { isExist, makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
-import ContentFooter from '../footer/ContentFooter';
 import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { READERJS_CONTENT_WRAPPER } from '../..';
 
 class ImagePageScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.container = React.createRef();
+    this.onContentRendered = this.onContentRendered.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -79,16 +80,21 @@ class ImagePageScreen extends BaseScreen {
     }
   }
 
+  onContentRendered() {
+    const hasFooter = Connector.calculations.getHasFooter();
+    Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
+  }
+
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
-    const hasFooter = Connector.calculations.getHasFooter();
+
     return (
       <Footer
         content={footer}
         startOffset={startOffset}
-        onContentRendered={() => Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0)}
+        onContentRendered={this.onContentRendered}
         containerVerticalMargin={containerVerticalMargin}
       />
     );
@@ -106,10 +112,9 @@ class ImagePageScreen extends BaseScreen {
         content={content}
         currentOffset={current.offset}
         src={content.uri}
-        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
-        onContentError={(index, error) => this.onContentError(index, error)}
-        contentFooter={Connector.calculations.isLastContent(content.index) ?
-          <ContentFooter content={contentFooter} /> : null}
+        onContentLoaded={this.onContentLoaded}
+        onContentError={this.onContentError}
+        contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
       />
     );
   }
@@ -153,6 +158,7 @@ class ImagePageScreen extends BaseScreen {
     const { columnsInPage } = this.props.setting;
     return (
       <StyledImagePageContent
+        className={READERJS_CONTENT_WRAPPER}
         setting={this.props.setting}
         innerRef={this.container}
         width={`${screenWidth()}px`}

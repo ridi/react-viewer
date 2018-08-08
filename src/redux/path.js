@@ -1,5 +1,5 @@
 import { BindingType, ContentFormat } from '../constants/ContentConstants';
-import { EMPTY_READ_POSITION, ReaderThemeType, ViewType } from '../constants/SettingConstants';
+import { EMPTY_READ_LOCATION, ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import {
   DEFAULT_CONTENT_FOOTER_HEIGHT,
   DEFAULT_MAX_WIDTH,
@@ -56,7 +56,7 @@ export const initialState = {
   },
   current: {
     contentIndex: 1,
-    location: EMPTY_READ_POSITION,
+    location: EMPTY_READ_LOCATION,
     position: 0,
     offset: 0,  // page or scroll top
     viewType: ViewType.SCROLL,

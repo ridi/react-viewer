@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Connector from '../../util/connector/';
-import PropTypes, { SettingType } from '../prop-types';
+import PropTypes from '../prop-types';
 
 const StyledBaseContent = styled.article`
   box-sizing: border-box;
@@ -22,7 +22,7 @@ const StyledBaseContent = styled.article`
   }
 `;
 
-const StyledHtmlContent = ({ setting }) => `
+const StyledHtmlContent = () => `
   @font-face {
     font-family: os_specific;
     font-style: normal;
@@ -39,7 +39,7 @@ const StyledHtmlContent = ({ setting }) => `
 
   font-size: ${Connector.setting.getFontSize(true)};
   line-height: ${Connector.setting.getLineHeight(true)};
-  font-family: ${setting.font ? setting.font : 'os_specific'};
+  font-family: ${Connector.setting.getFont()};
   
   h1, h2, h3, h4, h5, h6, p, th, td, div, label, textarea, a, li, input, button, textarea, select, address {
     font-size: 1em;
@@ -149,7 +149,6 @@ const propTypes = {
   index: PropTypes.number,
   visible: PropTypes.bool,
   startOffset: PropTypes.number,
-  setting: SettingType,
 };
 
 StyledHtmlScrollContent.propTypes = propTypes;

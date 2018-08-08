@@ -10,6 +10,7 @@ import SpineCalculator from '../util/connector/CalculationsConnector';
 import { isExist } from '../util/Util';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
+import ContentFooter from './footer/ContentFooter';
 
 class Reader extends React.Component {
   constructor(props) {
@@ -74,6 +75,10 @@ class Reader extends React.Component {
       onTouched: () => this.onScreenTouched(),
       onMoveWrongDirection,
     };
+
+    if (contentFooter) {
+      props.contentFooter = <ContentFooter content={contentFooter} />;
+    }
     const Screen = this.getScreen();
     return <Screen {...props} />;
   }

@@ -23,13 +23,20 @@ import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
+import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
 
 class HtmlScrollScreen extends BaseScreen {
+  constructor(props) {
+    super(props);
+    this.calculate = this.calculate.bind(this);
+  }
+
   componentDidMount() {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    this.onFooterRendered = this.onFooterRendered.bind(this);
   }
 
   componentWillUnmount() {
@@ -70,13 +77,17 @@ class HtmlScrollScreen extends BaseScreen {
     return !calculated || contentIndexesInScreen.includes(content.index);
   }
 
+  onFooterRendered(footerNode) {
+    Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight);
+  }
+
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
         content={footer}
-        onContentRendered={footerNode => Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight)}
+        onContentRendered={this.onFooterRendered}
         containerVerticalMargin={containerVerticalMargin}
         startOffset={Connector.calculations.getStartOffset(FOOTER_INDEX)}
       />
@@ -86,22 +97,23 @@ class HtmlScrollScreen extends BaseScreen {
   renderContent(content) {
     const {
       current,
-      setting,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
+    const isCurrentContent = current.contentIndex === content.index;
+    const isLastContent = Connector.calculations.isLastContent(content.index);
     return (
       <ScrollHtmlContent
+        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
-        startOffset={startOffset}
         isCalculated={Connector.calculations.isCalculated(content.index)}
-        currentOffset={current.offset}
-        setting={setting}
-        onContentLoaded={(index, c) => this.onContentLoaded(index, c)}
-        onContentError={(index, error) => this.onContentError(index, error)}
-        onContentRendered={(index, nodeInfo) => this.calculate(index, nodeInfo)}
-        contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
+        startOffset={startOffset}
+        localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
+        onContentLoaded={this.onContentLoaded}
+        onContentError={this.onContentError}
+        onContentRendered={this.calculate}
+        contentFooter={isLastContent ? contentFooter : null}
       />
     );
   }

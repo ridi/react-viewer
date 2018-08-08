@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes, { ContentType, SettingType } from '../prop-types';
-import ContentFooter from '../footer/ContentFooter';
+import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../util/connector/';
 
-export default class BaseHtmlContent extends React.Component {
+export default class BaseHtmlContent extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -18,39 +17,34 @@ export default class BaseHtmlContent extends React.Component {
     if (!isContentLoaded) {
       this.fetch();
     }
-    this.moveToOffset(this.getLocalOffset());
+    this.moveToOffset();
   }
 
   componentDidUpdate(prevProps) {
     const {
       onContentRendered,
-      currentOffset,
+      localOffset,
       isCalculated,
       contentFooter,
     } = this.props;
     const { index, isContentLoaded } = this.props.content;
-    const { setting } = this.props;
+    const contentFooterHeight = contentFooter ? Connector.setting.getContentFooterHeight() : 0;
     if (!isContentLoaded) return;
     if (!this.listener) {
       const { current } = this.content;
       this.listener = this.waitForResources()
         .then(() => onContentRendered(index, {
           scrollWidth: current.scrollWidth,
-          scrollHeight: current.scrollHeight + (contentFooter ? setting.contentFooterHeight : 0),
+          scrollHeight: current.scrollHeight + contentFooterHeight,
         }));
     }
     if (prevProps.isCalculated && !isCalculated) {
       this.listener = null;
     }
     if ((!prevProps.isCalculated && isCalculated)
-      || (currentOffset !== prevProps.currentOffset)) {
-      this.moveToOffset(this.getLocalOffset());
+      || (localOffset !== prevProps.localOffset)) {
+      this.moveToOffset();
     }
-  }
-
-  getLocalOffset() {
-    const { currentOffset, startOffset } = this.props;
-    return currentOffset - startOffset;
   }
 
   fetch() {
@@ -81,12 +75,16 @@ export default class BaseHtmlContent extends React.Component {
 
   renderContent(contentPrefix = '') {
     const { isContentLoaded, isContentOnError, content } = this.props.content;
-    const { contentFooter, setting } = this.props;
+    const { contentFooter, className } = this.props;
     if (isContentLoaded) {
       return (
         <React.Fragment>
-          <section ref={this.content} className="content_container" dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }} />
-          {contentFooter ? <ContentFooter content={contentFooter} height={setting.contentFooterHeight} /> : null}
+          <section
+            ref={this.content}
+            className={`content_container ${className}`}
+            dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
+          />
+          {contentFooter}
         </React.Fragment>
       );
     } else if (isContentOnError) {
@@ -97,10 +95,7 @@ export default class BaseHtmlContent extends React.Component {
 
   render() {
     const { index } = this.props.content;
-    const {
-      startOffset,
-      setting,
-    } = this.props;
+    const { startOffset } = this.props;
     const StyledContent = Connector.setting.getStyledContent();
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
@@ -108,7 +103,6 @@ export default class BaseHtmlContent extends React.Component {
         id={`${Connector.setting.getChapterId(index)}`}
         index={index}
         className="chapter"
-        setting={setting}
         visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
         innerRef={this.wrapper}
@@ -121,16 +115,17 @@ export default class BaseHtmlContent extends React.Component {
 
 BaseHtmlContent.defaultProps = {
   contentFooter: null,
+  className: '',
 };
 
 BaseHtmlContent.propTypes = {
   content: ContentType,
+  className: PropTypes.string,
   startOffset: PropTypes.number.isRequired,
-  currentOffset: PropTypes.number.isRequired,
+  localOffset: PropTypes.number.isRequired,
   onContentLoaded: PropTypes.func,
   onContentError: PropTypes.func,
   onContentRendered: PropTypes.func,
-  setting: SettingType.isRequired,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
 };
