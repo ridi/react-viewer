@@ -29,9 +29,11 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   calculate(index, nodeInfo) {
-    const pagesTotal = Math.ceil(nodeInfo.scrollWidth
-      / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
-    Connector.calculations.setTotal(index, pagesTotal);
+    window.requestAnimationFrame(() => {
+      const pagesTotal = Math.ceil(nodeInfo.scrollWidth
+        / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
+      Connector.calculations.setTotal(index, pagesTotal);
+    });
   }
 
   onTouchableScreenTouched({ position }) {

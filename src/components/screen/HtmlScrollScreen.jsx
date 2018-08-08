@@ -35,7 +35,7 @@ class HtmlScrollScreen extends BaseScreen {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll, { passive: true });
     this.onFooterRendered = this.onFooterRendered.bind(this);
   }
 
@@ -57,7 +57,7 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   calculate(index, nodeInfo) {
-    Connector.calculations.setTotal(index, nodeInfo.scrollHeight);
+    window.requestAnimationFrame(() => Connector.calculations.setTotal(index, nodeInfo.scrollHeight));
   }
 
   moveToOffset() {

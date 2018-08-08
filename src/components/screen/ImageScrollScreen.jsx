@@ -29,7 +29,7 @@ class ImageScrollScreen extends BaseScreen {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll, { passive: true });
     this.onContentRendered = this.onContentRendered.bind(this);
   }
 
