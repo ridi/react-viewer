@@ -26,11 +26,11 @@ module.exports = {
             ['transform-proto-to-assign'],
           ],
         },
-      }
+      },
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
   },
-  mode: 'development',
+  mode: 'production',
 };

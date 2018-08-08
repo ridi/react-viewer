@@ -13,17 +13,12 @@ const exitWithErrorMsg = (msg) => {
   process.exit(1);
 };
 
-const getGitBranch = () => new Promise((resolve, reject) => git.branch(branch => resolve(branch)));
+const getGitBranch = () => new Promise(resolve => git.branch(branch => resolve(branch)));
+const gitAddAll = () => exec('git add .');
 const gitCheckout = branch => exec(`git checkout ${branch}`);
 const gitCommitAndPush = (commitMsg, branch) => exec(`git add . --all && git commit -m ${commitMsg} && git push origin ${branch}`);
 
-const checkPreconditions = () => getGitBranch()
-  .then(branch => {
-    if (branch !== 'master') {
-      exitWithErrorMsg('branch must be master');
-    }
-    return npm(name);
-  });
+const checkPreconditions = () => npm(name);
 
 const build = webpackConfig => new Promise((resolve, reject) => {
   const compiler = webpack(webpackConfig);
@@ -37,7 +32,7 @@ const build = webpackConfig => new Promise((resolve, reject) => {
 });
 
 const renameDemoBundleWithVersion = ver =>
-  fs.rename('./demo/resources/js/index.js', `./demo/resources/js/${ver}.index.js`)
+  fs.copy('./demo/resources/js/index.js', `./demo/resources/js/${ver}.index.js`)
     .then(() => {
       const bundlesJson = require('./demo/resources/js/bundles.json');
       bundlesJson.bundles.push(`${ver}.index.js`);
@@ -58,24 +53,25 @@ if (args === null || args.length === 0) {
   exitWithErrorMsg('args required for release.js');
 }
 
-const execArgs = arg => {
+const execArgs = (arg) => {
   if (arg === commands.CHECK_PRECONDITIONS) {
     return checkPreconditions();
   } else if (arg === commands.BUILD) {
     return build(viewerWebpackConfig)
       .then(() => build(demoWebpackConfig))
-      .then(() => renameDemoBundleWithVersion(version));
+      .then(() => renameDemoBundleWithVersion(version))
+      .then(() => gitAddAll());
   } else if (arg === commands.RELEASED) {
-    return gitCheckout('gh-pages')
-      .then(() => gitCheckout('master ./demo/index.html'))
-      .then(() => gitCheckout('master ./demo/resources/js/'))
-      .then(() => gitCheckout('master ./demo/resources/css/'))
-      .then(() => gitCheckout('master ./demo/resources/contents/'))
+    return getGitBranch().then(branch => gitCheckout('gh-pages')
+      .then(() => gitCheckout(`${branch} ./demo/index.html`))
+      .then(() => gitCheckout(`${branch} ./demo/resources/js/`))
+      .then(() => gitCheckout(`${branch} ./demo/resources/css/`))
+      .then(() => gitCheckout(`${branch} ./demo/resources/fonts/`))
+      .then(() => gitCheckout(`${branch} ./demo/resources/contents/`))
       .then(() => gitCommitAndPush(`"Demo version update ${version}"`, 'gh-pages'))
-      .then(() => gitCheckout('master'));
+      .then(() => gitCheckout(`${branch}`)));
   }
-  return Promise.reject('invalid args');
+  return Promise.reject(new Error('invalid args'));
 };
 
-execArgs(args[0])
-  .catch(err => exitWithErrorMsg(err));
+execArgs(args[0]).catch(err => exitWithErrorMsg(err));

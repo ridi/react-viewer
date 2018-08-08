@@ -1,9 +1,10 @@
-import { renderSpine, renderImages } from '../../../lib/index';
+import { setContents } from '../../../lib';
 import { getJson } from '../utils/Api';
 
 export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',
   VIEWER_SETTING_CHANGED: 'VIEWER:SETTING_CHANGED',
+  TOUCHED: 'VIEWER:TOUCHED',
 };
 
 export const onToggleViewerSetting = () => ({
@@ -19,17 +20,15 @@ export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
 };
 
-export const requestLoadEpisodeEpub = (spine, index) => (dispatch) => {
-  getJson(spine).then(({ value }) => dispatch(renderSpine(index, value)));
+export const requestLoadContent = ({
+  id,
+  contentFormat,
+  bindingType,
+}) => (dispatch) => {
+  getJson(`./resources/contents/${id}/spine.json`)
+    .then(({ contents }) => dispatch(setContents(contentFormat, bindingType, contents)));
 };
 
-export const requestLoadEpisode = (contentId, episodeId) => (dispatch) => {
-  const spineUrl = `./resources/contents/${contentId}/${episodeId}/spine.json`;
-  getJson(spineUrl).then(({ spines, images }) => {
-    if (spines) {
-      spines.forEach((spine, index) => dispatch(requestLoadEpisodeEpub(spine, index)));
-    } else if (images) {
-      dispatch(renderImages(images));
-    }
-  });
-};
+export const onScreenTouched = () => ({
+  type: ViewerUiActions.TOUCHED,
+});

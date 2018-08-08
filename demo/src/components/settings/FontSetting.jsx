@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectViewerScreenSettings } from '../../../../lib/index';
-import { ViewerFontType } from '../../../../src/constants/ViewerScreenConstants';
+import { selectReaderSetting } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
-import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
+
+const Fonts = [
+  { name: 'KoPup 돋움', family: 'kopup_dotum' },
+  { name: 'KoPup 바탕', family: 'kopup_batang' },
+];
 
 class FontSetting extends Component {
   renderFontList() {
     const { onChanged, viewerScreenSettings } = this.props;
 
-    return ViewerFontType.toList().map(item => (
-      <li className="font_list setting_button_list" key={item}>
+    return Fonts.map(item => (
+      <li className="font_list setting_button_list" key={item.family}>
         <button
           type="button"
-          className={`font_button setting_button ${item} ${viewerScreenSettings.font === item ? 'active' : ''}`}
-          onClick={() => onChanged && onChanged(item)}
-        >{ViewerFontType.toString(item)}
+          // TODO ${item.family} style
+          className={`font_button setting_button ${item.family} ${viewerScreenSettings.font === item.family ? 'active' : ''}`}
+          onClick={() => onChanged && onChanged(item.family)}
+        >{item.name}
         </button>
       </li>
     ));
@@ -25,7 +29,7 @@ class FontSetting extends Component {
 
   render() {
     return (
-      <li className="setting_list" ref={(list) => { preventScrollEvent(list); }}>
+      <li className="setting_list">
         <SvgIcons
           svgName="svg_font_2"
           svgClass="setting_title_icon svg_font_icon"
@@ -56,7 +60,7 @@ FontSetting.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectViewerScreenSettings(state),
+  viewerScreenSettings: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(FontSetting);

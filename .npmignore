@@ -8,3 +8,5 @@ demo/
 .babelrc
 watch.js
 webpack.config.js
+release.js
+.travis.yml

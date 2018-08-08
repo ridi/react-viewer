@@ -24,7 +24,7 @@ export const preventScrollEvent = (ref) => {
   if (isExist(ref)) {
     ref.addEventListener(DOMEventConstants.SCROLL, _preventDefault, { passive: false });
     ref.addEventListener(DOMEventConstants.TOUCH_MOVE, _preventDefault, { passive: false });
-    ref.addEventListener(DOMEventConstants.MOUSE_WHEEL, _preventDefault);
+    ref.addEventListener(DOMEventConstants.MOUSE_WHEEL, _preventDefault, { passive: false });
   }
 };
 

@@ -161,3 +161,13 @@ export function throttle(fn, limit = 100, delayed = false) {
     }
   };
 }
+
+export const hasIntersect = (r1, r2) => (r1[0] < r2[0] ? r1[1] > r2[0] : r2[1] > r1[0]);
+
+export const makeSequence = (limit, offset = 0) => {
+  const seq = [...Array(limit).keys()];
+  if (offset > 0) {
+    return seq.map(number => number + offset);
+  }
+  return seq;
+};

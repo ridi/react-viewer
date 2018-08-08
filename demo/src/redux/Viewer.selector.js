@@ -9,3 +9,8 @@ export const selectIsVisibleSettingPopup = createSelector(
   [getViewer],
   viewer => nullSafeGet(viewer, path.isVisibleSettingPopup(), false),
 );
+
+export const selectIsFullScreen = createSelector(
+  [getViewer],
+  viewer => nullSafeGet(viewer, path.isFullScreen(), false),
+);

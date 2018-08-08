@@ -2,45 +2,32 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ThemeSetting from './ThemeSetting';
-import ViewerTypeSetting from './ViewerTypeSetting';
+import ViewTypeSetting from './ViewTypeSetting';
 import FontSetting from './FontSetting';
 import NovelSpineSetting from './NovelSpineSetting';
-import { PageCalculator } from '../../../../lib/index';
-import { ViewerSpinType } from '../../../../src/constants/ViewerScreenConstants';
-import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
-
-const settingsAffectingPagination = ['font', 'fontSizeLevel', 'paddingLevel', 'contentWidthLevel', 'lineHeightLevel'];
+import ColumnSetting from './ColumnSetting';
+import { ViewType } from '../../../../lib';
+import { ViewerSpinType } from '../../constants/SettingConstants';
+import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerNovelSettingPopup extends BaseSettingPopup {
-  componentWillReceiveProps(nextProps) {
-    super.componentWillReceiveProps(nextProps);
-
-    // recalculate pagination on some specific settings changed
-    if (this.shouldUpdatePagination(this.props, nextProps)) {
-      PageCalculator.updatePagination(true);
-    }
-  }
-
-  shouldUpdatePagination(currentProps, nextProps) {
-    const current = settingsAffectingPagination.map(key => currentProps.viewerScreenSettings[key]);
-    const next = settingsAffectingPagination.map(key => nextProps.viewerScreenSettings[key]);
-    return JSON.stringify(current) !== JSON.stringify(next);
-  }
-
   renderSettings() {
-    const { content } = this.props;
+    const { content, setting } = this.props;
     return (
       <ul className="setting_group">
         <ThemeSetting
           onChanged={colorTheme => this.onSettingChanged({ colorTheme })}
         />
-        <ViewerTypeSetting
-          onChanged={viewerType => this.onSettingChanged({ viewerType })}
-          contentViewerType={content.viewer_type}
+        <ViewTypeSetting
+          onChanged={viewType => this.onSettingChanged({ viewType })}
+          contentViewType={content.viewType}
         />
+        { setting.viewType === ViewType.PAGE
+        ? <ColumnSetting onChanged={changedSetting => this.onSettingChanged(changedSetting)} /> : null }
         <FontSetting
           onChanged={font => this.onSettingChanged({ font })}
         />
+
         {ViewerSpinType.toList().map(item => (
           <NovelSpineSetting
             item={item}
@@ -57,7 +44,4 @@ ViewerNovelSettingPopup.propTypes = {
   content: PropTypes.object.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ViewerNovelSettingPopup);
+export default connect(mapStateToProps)(ViewerNovelSettingPopup);

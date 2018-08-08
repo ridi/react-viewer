@@ -15,10 +15,14 @@ module.exports = {
         loader: 'babel-loader',
         include: `${__dirname}/src/`,
         query: {
-          presets: ['env', 'react'],
+          presets: [
+            ['env', { useBuiltIns: true }],
+            'react',
+          ],
           plugins: [
             ['transform-es2015-classes', { loose: true }],
             ['transform-proto-to-assign'],
+            ['transform-object-rest-spread', { useBuiltIns: true }],
           ],
         },
       },
@@ -33,5 +37,5 @@ module.exports = {
     'react-dom': 'react-dom',
     'react-redux': 'react-redux',
   },
-  mode: 'development',
+  mode: 'production',
 };
