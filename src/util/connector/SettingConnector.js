@@ -69,12 +69,12 @@ class SettingConnector extends Connector {
     const width = screenWidth();
     const containerWidth = width - (containerHorizontalMargin * 2);
 
-    if (viewType === ViewType.SCROLL) {
-      return Math.min(containerWidth, this.getMaxWidth());
-    }
-    if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
+    if (contentFormat === ContentFormat.HTML) {
       const extendedMargin = Math.ceil(containerWidth * (contentPaddingInPercent / 100));
       return width - (extendedMargin * 2);
+    }
+    if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
+      return containerWidth;
     }
     if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
       return width;
@@ -149,22 +149,6 @@ class SettingConnector extends Connector {
       return withUnit ? `${columnGap}px` : columnGap;
     }
     return withUnit ? '0px' : 0;
-  }
-
-  /**
-   * `contentPaddingInPercent` 설정에 의해 계산된 콘텐츠 영역 내부의 좌우 패딩 값
-   * 이미지 콘텐츠인 경우 `contentPaddingInPercent` 설정은 무시되며
-   * 페이지 보기인 경우 `contentPaddingInPercent`은 `horizontalPadding`이 아니라 `containerHorizontalMargin`으로 계산된다.
-   * @param withUnit
-   * @returns {number|string}
-   */
-  getHorizontalPadding(withUnit = false) {
-    const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewType, contentPaddingInPercent } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.IMAGE || viewType === ViewType.PAGE) {
-      return withUnit ? '0' : 0;
-    }
-    return withUnit ? `${contentPaddingInPercent}%` : contentPaddingInPercent;
   }
 
   getContainerVerticalMargin(withUnit = false) {

@@ -62,7 +62,6 @@ const StyledImageContent = ({ visible }) => `
 `;
 
 const StyledScrollContent = () => `
-  padding: 0 ${Connector.setting.getHorizontalPadding(true)} ${Connector.setting.getContainerVerticalMargin(true)};
 `;
 
 const StyledPageContent = () => `
