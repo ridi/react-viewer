@@ -127,7 +127,7 @@ export const StyledImagePageContent = StyledBaseContent.extend`
         width: auto; height: auto;
         max-width: 100%; max-height: 100%;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translate3d(0, -50%, 0);
         position: relative;
         margin: 0 auto;
       }
