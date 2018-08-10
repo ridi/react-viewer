@@ -5,7 +5,6 @@ import {
   DEFAULT_MAX_WIDTH,
   DEFAULT_VERTICAL_MARGIN,
   DEFAULT_HORIZONTAL_MARGIN,
-  DEFAULT_EXTENDED_SIDE_TOUCH_WIDTH,
 } from '../constants/StyledConstants';
 
 export const initialContentState = (index, uri) => ({
@@ -35,7 +34,6 @@ export const initialSettingState = () => ({
   contentFooterHeight: DEFAULT_CONTENT_FOOTER_HEIGHT,
   containerHorizontalMargin: DEFAULT_HORIZONTAL_MARGIN,
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
-  extendedSideTouchWidth: DEFAULT_EXTENDED_SIDE_TOUCH_WIDTH,
 });
 
 export const initialState = {

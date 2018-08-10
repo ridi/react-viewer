@@ -14,9 +14,7 @@ import BaseScreen, {
 } from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
-import PageTouchable, { Position } from './PageTouchable';
 import { BindingType } from '../../constants/ContentConstants';
-import { isExist } from '../../util/Util';
 import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
@@ -29,44 +27,12 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   calculate(index, nodeInfo) {
-    window.requestAnimationFrame(() => {
+    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
+    waitThenRun(() => {
       const pagesTotal = Math.ceil(nodeInfo.scrollWidth
         / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
       Connector.calculations.setTotal(index, pagesTotal);
     });
-  }
-
-  onTouchableScreenTouched({ position }) {
-    super.onTouchableScreenTouched({ position });
-
-    const { bindingType, calculationsTotal, onMoveWrongDirection } = this.props;
-    const { offset: currentOffset } = this.props.current;
-
-    if (position === Position.MIDDLE) return;
-    if (position === Position.RIGHT
-      && bindingType === BindingType.RIGHT
-      && currentOffset === 0) {
-      if (isExist(onMoveWrongDirection)) {
-        onMoveWrongDirection();
-      }
-      return;
-    }
-
-    let nextOffset = currentOffset;
-    if (position === Position.LEFT) {
-      nextOffset = bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
-    } else if (position === Position.RIGHT) {
-      nextOffset = bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
-    }
-
-    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
-    if (currentOffset === nextOffset) return;
-
-    Connector.current.updateCurrentPosition(nextOffset);
-  }
-
-  getTouchableScreen() {
-    return PageTouchable;
   }
 
   moveToOffset() {
@@ -142,7 +108,6 @@ HtmlPageScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   footer: null,
   contentFooter: null,
-  onMoveWrongDirection: null,
 };
 
 HtmlPageScreen.propTypes = {

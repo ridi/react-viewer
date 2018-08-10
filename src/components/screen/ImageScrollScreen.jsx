@@ -14,7 +14,6 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import ScrollTouchable from './ScrollTouchable';
 import Footer from '../footer/Footer';
 import Connector from '../../util/connector/';
 import ImageContent from '../content/ImageContent';
@@ -58,10 +57,6 @@ class ImageScrollScreen extends BaseScreen {
   moveToOffset() {
     const { offset } = this.props.current;
     setScrollTop(offset);
-  }
-
-  getTouchableScreen() {
-    return ScrollTouchable;
   }
 
   onContentRendered(footerNode) {

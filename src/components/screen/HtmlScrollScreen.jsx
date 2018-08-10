@@ -17,7 +17,6 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import ScrollTouchable from './ScrollTouchable';
 import Connector from '../../util/connector/index';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -57,16 +56,13 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   calculate(index, nodeInfo) {
-    window.requestAnimationFrame(() => Connector.calculations.setTotal(index, nodeInfo.scrollHeight));
+    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
+    waitThenRun(() => Connector.calculations.setTotal(index, nodeInfo.scrollHeight));
   }
 
   moveToOffset() {
     const { offset } = this.props.current;
     setScrollTop(offset);
-  }
-
-  getTouchableScreen() {
-    return ScrollTouchable;
   }
 
   needRender(content) {
