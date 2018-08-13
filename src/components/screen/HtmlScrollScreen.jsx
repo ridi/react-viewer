@@ -6,7 +6,13 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
-import { screenHeight, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  screenHeight,
+  scrollTop,
+  setScrollTop,
+  addEventListener,
+  removeEventListener,
+} from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, {
   FooterCalculationsType,
@@ -23,7 +29,6 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
-import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 
 class HtmlScrollScreen extends BaseScreen {
   constructor(props) {

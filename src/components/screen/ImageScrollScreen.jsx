@@ -6,7 +6,12 @@ import {
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
 } from '../../redux/selector';
-import { scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  scrollTop,
+  setScrollTop,
+  addEventListener,
+  removeEventListener,
+} from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
@@ -22,7 +27,6 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { READERJS_CONTENT_WRAPPER } from '../../index';
-import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {

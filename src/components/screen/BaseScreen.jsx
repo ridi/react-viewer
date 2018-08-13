@@ -39,22 +39,25 @@ export default class BaseScreen extends React.Component {
       }
     }, DOMEventDelayConstants.RESIZE);
     addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-
-    Connector.current.setReaderJs();
   }
 
   componentDidUpdate(prevProps) {
     const { isCalculated: prevIsCalculated, current: prevCurrent } = prevProps;
     const { isCalculated, current } = this.props;
+
     if (isCalculated) {
-      if (!prevIsCalculated) {
-        Connector.current.restoreCurrentOffset();
-        this.moveToOffset();
-      } else if (prevCurrent.offset !== current.offset) {
-        this.moveToOffset();
-      }
+      const isCurrentMoved = prevCurrent.offset !== current.offset
+        || prevCurrent.contentIndex !== current.contentIndex
+        || prevCurrent.viewType !== current.viewType;
+      const isNeededRestore = !prevIsCalculated;
+      const isNeededMoveToOffset = isNeededRestore || isCurrentMoved;
+      const isNeededUpdateReaderJs = prevCurrent.contentIndex !== current.contentIndex
+        || prevCurrent.viewType !== current.viewType;
+
+      if (isNeededRestore) Connector.current.restoreCurrentOffset();
+      if (isNeededMoveToOffset) this.moveToOffset();
+      if (isNeededUpdateReaderJs) Connector.current.setReaderJs();
     }
-    Connector.current.setReaderJs();
   }
 
   componentWillUnmount() {

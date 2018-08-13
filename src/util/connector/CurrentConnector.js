@@ -11,14 +11,22 @@ import ReaderJsHelper from '../ReaderJsHelper';
 import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends Connector {
+  constructor() {
+    super();
+    this.readerJs = null;
+  }
+
   setReaderJs() {
     const { viewType } = selectReaderSetting(this.getState());
+    if (this.readerJs) {
+      this.readerJs.unmount();
+      this.readerJs = null;
+    }
     const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
     if (node) {
-      const readerJs = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
-      this.readerJs = readerJs;
-    } else {
-      this.readerJs = null;
+      this.readerJs = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
+      const location = this.readerJs.getNodeLocationOfCurrentPage();
+      this.dispatch(updateCurrent({ location }));
     }
   }
 
