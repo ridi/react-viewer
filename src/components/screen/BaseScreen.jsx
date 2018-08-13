@@ -14,6 +14,7 @@ import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../util/connector/';
 import TouchableScreen from './TouchableScreen';
+import { addEventListener, removeEventListener } from '../../util/CommonUi';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ export default class BaseScreen extends React.Component {
         Connector.calculations.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
-    window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
+    addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
 
     Connector.current.setReaderJs();
   }
@@ -57,7 +58,7 @@ export default class BaseScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeReader);
+    removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
   }
 
   onTouchableScreenTouched(event) {

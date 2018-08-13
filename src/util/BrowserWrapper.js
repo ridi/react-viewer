@@ -1,17 +1,9 @@
 import { debounce } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
+import { cached, clearCache } from './CacheStore';
+import { addEventListener } from './CommonUi';
 
-// TODO 리팩토링
-let cache = {};
-
-const cached = (cacheName, func) => () => {
-  if (typeof cache[cacheName] === 'undefined') {
-    cache[cacheName] = func();
-  }
-  return cache[cacheName];
-};
-
-window.addEventListener(DOMEventConstants.RESIZE, debounce(() => { cache = {}; }, 0));
+addEventListener(window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
 
 export const screenWidth = cached('screenWidth', () => window.innerWidth);
 
@@ -48,10 +40,6 @@ export const documentAddClassList = classList => document.body.classList.add(cla
 
 export const documentAppendChild = dom => document.body.appendChild(dom);
 
-export const documentAddEventListener = (type, listener, useCapture) => document.addEventListener(type, listener, useCapture);
-
-export const documentRemoveEventListener = (type, listener, useCapture) => document.removeEventListener(type, listener, useCapture);
-
 export default {
   screenWidth,
   screenHeight,
@@ -62,6 +50,4 @@ export default {
   offsetHeight,
   documentAddClassList,
   documentAppendChild,
-  documentAddEventListener,
-  documentRemoveEventListener,
 };

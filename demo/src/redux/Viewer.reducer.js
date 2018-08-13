@@ -4,7 +4,10 @@ import path, { initialState } from './Viewer.path';
 import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
 import createReducer from '../../../src/util/Reducer';
-import { isScrolledToBottom, isScrolledToTop } from '../../../src/util/CommonUi';
+import * as BrowserWrapper from '../../../src/util/BrowserWrapper';
+
+const isScrolledToTop = () => BrowserWrapper.scrollTop() <= 100;
+const isScrolledToBottom = () => BrowserWrapper.scrollTop() >= BrowserWrapper.scrollHeight() - BrowserWrapper.screenHeight() - 100;
 
 const isEdgeOfScreen = () => (isScrolledToTop() || isScrolledToBottom());
 

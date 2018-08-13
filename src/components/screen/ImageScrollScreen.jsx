@@ -22,19 +22,20 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { READERJS_CONTENT_WRAPPER } from '../../index';
+import { addEventListener, removeEventListener } from '../../util/CommonUi';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
     this.onContentRendered = this.onContentRendered.bind(this);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    window.removeEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
   }
 
   componentDidUpdate(prevProps) {

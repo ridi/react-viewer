@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../util/connector/';
+import { addEventListener } from '../../util/CommonUi';
 
 export default class BaseHtmlContent extends React.PureComponent {
   constructor(props) {
@@ -60,8 +61,8 @@ export default class BaseHtmlContent extends React.PureComponent {
     const images = [...this.content.current.querySelectorAll('img')]
       .filter(img => !img.complete)
       .map(img => new Promise((resolve) => {
-        img.addEventListener('load', () => resolve());
-        img.addEventListener('error', () => resolve());
+        addEventListener(img, 'load', () => resolve());
+        addEventListener(img, 'error', () => resolve());
       }));
     // fonts
     const fonts = [];
