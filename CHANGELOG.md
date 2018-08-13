@@ -6,14 +6,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+## [v1.0.0-alpha.6]
+
+### Fixed
+
+- Adaptively using `useCapture` or `options` parameter for `addEventListener`, `removeEventListener` according to browser supports
+- Manage properly `Reader.js` lifecycle
+
 ### Changed
 
 - `onTouched(event)` property will be called with `event` parameter.
+- `CommonUi` -> `BrowserWrapper`
 
 ### Removed
 
 - `onMoveWrongDirection` property was removed.
 - No more handling current offset triggered by click, touch and keyboard events.
+- `CommonUi`
 
 ## [v1.0.0-alpha.5]
 
@@ -88,7 +97,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.5...HEAD
+[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.6...HEAD
+[v1.0.0-alpha.6]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.5...1.0.0-alpha.6
 [v1.0.0-alpha.5]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.4...1.0.0-alpha.5
 [v1.0.0-alpha.4]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.3...1.0.0-alpha.4
 [v1.0.0-alpha.3]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.2...1.0.0-alpha.3
