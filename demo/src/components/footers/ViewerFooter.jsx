@@ -10,7 +10,7 @@ import ViewerNovelSettingPopup from '../settings/ViewerNovelSettingPopup';
 import ViewerComicSettingPopup from '../settings/ViewerComicSettingPopup';
 import ViewerFooterTabbar from '../tabbars/ViewerFooterTabbar';
 import ViewerFooterTabItem from '../tabbars/ViewerFooterTabItem';
-import { preventScrollEvent } from '../../../../src/util/CommonUi';
+import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
 
 
 class ViewerFooter extends Component {

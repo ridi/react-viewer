@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { selectReaderSetting, ViewType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 import { AvailableViewType } from '../../constants/ContentConstants';
-import { preventScrollEvent } from '../../../../src/util/CommonUi';
+import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
 
 
 class ViewTypeSetting extends Component {

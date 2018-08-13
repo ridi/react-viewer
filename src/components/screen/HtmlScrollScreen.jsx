@@ -23,7 +23,7 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
-import { addEventListener, removeEventListener } from '../../util/CommonUi';
+import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 
 class HtmlScrollScreen extends BaseScreen {
   constructor(props) {

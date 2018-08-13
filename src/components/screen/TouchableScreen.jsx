@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from '../prop-types';
 import Connector from '../../util/connector/';
-import { preventScrollEvent, removeScrollEvent } from '../../util/CommonUi';
+import { preventScrollEvent, allowScrollEvent } from '../../util/BrowserWrapper';
 import { ViewType } from '../../constants/SettingConstants';
 
 class TouchableScreen extends React.Component {
@@ -16,7 +16,7 @@ class TouchableScreen extends React.Component {
   handleScrollEvent() {
     const { viewType, forwardedRef } = this.props;
     if (viewType === ViewType.PAGE) {
-      if (Connector.current.isOnFooter()) removeScrollEvent(forwardedRef.current);
+      if (Connector.current.isOnFooter()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
   }

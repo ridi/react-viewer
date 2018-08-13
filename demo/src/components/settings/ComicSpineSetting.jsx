@@ -5,7 +5,7 @@ import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '../../../../lib';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
-import { preventScrollEvent } from '../../../../src/util/CommonUi';
+import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
 
 
 class ComicSpineSetting extends Component {

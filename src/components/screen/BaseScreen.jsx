@@ -14,7 +14,7 @@ import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../util/connector/';
 import TouchableScreen from './TouchableScreen';
-import { addEventListener, removeEventListener } from '../../util/CommonUi';
+import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {

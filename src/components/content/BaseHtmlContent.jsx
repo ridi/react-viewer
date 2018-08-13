@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../util/connector/';
-import { addEventListener } from '../../util/CommonUi';
+import { addEventListener } from '../../util/BrowserWrapper';
 
 export default class BaseHtmlContent extends React.PureComponent {
   constructor(props) {
