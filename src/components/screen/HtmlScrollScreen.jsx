@@ -6,7 +6,13 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
-import { screenHeight, scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  screenHeight,
+  scrollTop,
+  setScrollTop,
+  addEventListener,
+  removeEventListener,
+} from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, {
   FooterCalculationsType,
@@ -17,7 +23,6 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import ScrollTouchable from './ScrollTouchable';
 import Connector from '../../util/connector/index';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -35,19 +40,16 @@ class HtmlScrollScreen extends BaseScreen {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
     this.onFooterRendered = this.onFooterRendered.bind(this);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    window.removeEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
   }
 
-  onScrollHandle(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
+  onScrollHandle() {
     const { ignoreScroll, actionOnScreenScrolled } = this.props;
     if (ignoreScroll) {
       return;
@@ -57,16 +59,13 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   calculate(index, nodeInfo) {
-    window.requestAnimationFrame(() => Connector.calculations.setTotal(index, nodeInfo.scrollHeight));
+    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
+    waitThenRun(() => Connector.calculations.setTotal(index, nodeInfo.scrollHeight));
   }
 
   moveToOffset() {
     const { offset } = this.props.current;
     setScrollTop(offset);
-  }
-
-  getTouchableScreen() {
-    return ScrollTouchable;
   }
 
   needRender(content) {

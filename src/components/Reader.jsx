@@ -32,12 +32,12 @@ class Reader extends React.Component {
     }
   }
 
-  onScreenTouched() {
+  onScreenTouched(e) {
     const {
       onTouched,
     } = this.props;
     if (isExist(onTouched)) {
-      onTouched();
+      onTouched(e);
     }
   }
 
@@ -62,7 +62,6 @@ class Reader extends React.Component {
     const {
       footer,
       contentFooter,
-      onMoveWrongDirection,
       ignoreScroll,
       disableCalculation,
     } = this.props;
@@ -72,8 +71,7 @@ class Reader extends React.Component {
       contentFooter,
       ignoreScroll,
       disableCalculation,
-      onTouched: () => this.onScreenTouched(),
-      onMoveWrongDirection,
+      onTouched: e => this.onScreenTouched(e),
     };
 
     if (contentFooter) {
@@ -88,7 +86,6 @@ Reader.defaultProps = {
   footer: null,
   contentFooter: null,
   onTouched: null,
-  onMoveWrongDirection: null,
   onMount: null,
   onUnmount: null,
   ignoreScroll: false,
@@ -100,7 +97,6 @@ Reader.propTypes = {
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
   onTouched: PropTypes.func,
-  onMoveWrongDirection: PropTypes.func,
   onMount: PropTypes.func,
   onUnmount: PropTypes.func,
   ignoreScroll: PropTypes.bool,

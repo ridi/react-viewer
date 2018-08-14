@@ -45,19 +45,6 @@ class SettingConnector extends Connector {
     return withUnit ? `${maxWidth}px` : maxWidth;
   }
 
-  getExtendedSideTouchWidth(withUnit = false) {
-    const { extendedSideTouchWidth } = selectReaderSetting(this.getState());
-    return withUnit ? `${extendedSideTouchWidth}px` : extendedSideTouchWidth;
-  }
-
-  getSideTouchWidth(withUnit = false) {
-    const clientWidth = screenWidth();
-    if (clientWidth >= (this.getMaxWidth() - this.getExtendedSideTouchWidth()) * 2) {
-      return `${((clientWidth - this.getMaxWidth()) / 2) + this.getExtendedSideTouchWidth()}px`;
-    }
-    return withUnit ? `${clientWidth * 0.25}px` : clientWidth * 0.25;
-  }
-
   getContainerWidthInternal() {
     const contentFormat = selectReaderContentFormat(this.getState());
     const {

@@ -16,9 +16,8 @@ import BaseScreen, {
 } from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
-import PageTouchable, { Position } from './PageTouchable';
 import { BindingType } from '../../constants/ContentConstants';
-import { isExist, makeSequence } from '../../util/Util';
+import { makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -34,39 +33,6 @@ class ImagePageScreen extends BaseScreen {
   componentDidUpdate(prevProps) {
     super.componentDidUpdate(prevProps);
     Connector.calculations.setTotal(1, Math.ceil(this.container.current.scrollWidth / screenWidth()));
-  }
-
-  onTouchableScreenTouched({ position }) {
-    super.onTouchableScreenTouched({ position });
-
-    const { bindingType, calculationsTotal, onMoveWrongDirection } = this.props;
-    const { offset: currentOffset } = this.props.current;
-
-    if (position === Position.MIDDLE) return;
-    if (position === Position.RIGHT
-      && bindingType === BindingType.RIGHT
-      && currentOffset === 0) {
-      if (isExist(onMoveWrongDirection)) {
-        onMoveWrongDirection();
-      }
-      return;
-    }
-
-    let nextOffset = currentOffset;
-    if (position === Position.LEFT) {
-      nextOffset = bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
-    } else if (position === Position.RIGHT) {
-      nextOffset = bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
-    }
-
-    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal));
-    if (currentOffset === nextOffset) return;
-
-    Connector.current.updateCurrentPosition(nextOffset);
-  }
-
-  getTouchableScreen() {
-    return PageTouchable;
   }
 
   moveToOffset() {
@@ -177,7 +143,6 @@ ImagePageScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   footer: null,
   contentFooter: null,
-  onMoveWrongDirection: null,
 };
 
 ImagePageScreen.propTypes = {
@@ -192,7 +157,6 @@ ImagePageScreen.propTypes = {
   footerCalculations: FooterCalculationsType.isRequired,
   bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
   calculationsTotal: PropTypes.number.isRequired,
-  onMoveWrongDirection: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

@@ -9,6 +9,10 @@ import Reader, {
   reducers as reader,
   Connector,
   selectReaderCurrentContentIndex,
+  selectReaderCurrentOffset,
+  selectReaderSetting,
+  ViewType,
+  selectReaderCalculationsTotal,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -18,7 +22,14 @@ import { selectIsFullScreen } from './redux/Viewer.selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
 import { requestLoadContent, onScreenTouched } from './redux/Viewer.action';
+import { screenWidth } from './utils/BrowserWrapper';
+import { BindingType } from '../../src/constants/ContentConstants';
 
+const Position = {
+  LEFT: 1,
+  MIDDLE: 2,
+  RIGHT: 3,
+};
 
 const rootReducer = combineReducers({
   viewer,
@@ -37,9 +48,65 @@ const store = createStore(rootReducer, {}, enhancer);
 Connector.connect(store);
 
 class DemoViewer extends Component {
+  constructor(props) {
+    super(props);
+    this.onReaderTouched = this.onReaderTouched.bind(this);
+  }
+
   componentWillMount() {
     const { content, actionRequestLoadContent } = this.props;
     actionRequestLoadContent(content);
+  }
+
+  onMoveWrongDirection() {
+    alert('move to the wrong direction');
+  }
+
+  onPositionTouched(position) {
+    const {
+      actionOnScreenTouched,
+      content,
+      currentOffset,
+      calculationsTotal,
+    } = this.props;
+
+    if (position === Position.MIDDLE) {
+      actionOnScreenTouched();
+      return;
+    }
+
+    if (position === Position.RIGHT
+      && content.bindingType === BindingType.RIGHT
+      && currentOffset === 0) {
+      this.onMoveWrongDirection();
+      return;
+    }
+
+    let nextOffset = currentOffset;
+    if (position === Position.LEFT) {
+      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
+    } else if (position === Position.RIGHT) {
+      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
+    }
+
+    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
+    if (currentOffset === nextOffset) return;
+
+    Connector.current.updateCurrentPosition(nextOffset);
+  }
+
+  onReaderTouched(event) {
+    if (Connector.current.isOnFooter()) return;
+    const { setting } = this.props;
+
+    const width = screenWidth();
+    let position = Position.MIDDLE;
+    if (setting.viewType === ViewType.PAGE) {
+      if (event.screenX <= width * 0.2) position = Position.LEFT;
+      if (event.screenX >= width * 0.8) position = Position.RIGHT;
+    }
+
+    this.onPositionTouched(position);
   }
 
   render() {
@@ -47,18 +114,29 @@ class DemoViewer extends Component {
       isFullScreen,
       content,
       currentContentIndex,
-      actionOnScreenTouched,
     } = this.props;
     return (
-      <section id="viewer_page">
+      <section
+        id="viewer_page"
+        role="button"
+        tabIndex="-1"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            this.onPositionTouched(Position.MIDDLE);
+          } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+            this.onPositionTouched(Position.LEFT);
+          } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+            this.onPositionTouched(Position.RIGHT);
+          }
+        }}
+      >
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
         <Reader
           footer={<ViewerScreenFooter content={content} />}
           contentFooter={<small>content footer area...</small>}
-          onMoveWrongDirection={() => alert('move to the wrong direction')}
           onMount={() => console.log('onMount')}
           onUnmount={() => console.log('onUnmount')}
-          onTouched={() => actionOnScreenTouched()}
+          onTouched={this.onReaderTouched}
         />
         <ViewerFooter content={content} />
         <IconsSprite />
@@ -73,6 +151,9 @@ DemoViewer.propTypes = {
   isFullScreen: PropTypes.bool.isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
   actionOnScreenTouched: PropTypes.func.isRequired,
+  currentOffset: PropTypes.number.isRequired,
+  setting: PropTypes.object.isRequired,
+  calculationsTotal: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -83,6 +164,9 @@ const mapStateToProps = (state) => {
     isFullScreen: selectIsFullScreen(state),
     isVisibleSettingPopup,
     currentContentIndex: selectReaderCurrentContentIndex(state),
+    currentOffset: selectReaderCurrentOffset(state),
+    setting: selectReaderSetting(state),
+    calculationsTotal: selectReaderCalculationsTotal(state),
   };
 };
 

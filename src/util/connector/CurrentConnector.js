@@ -11,14 +11,22 @@ import ReaderJsHelper from '../ReaderJsHelper';
 import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends Connector {
+  constructor() {
+    super();
+    this.readerJsHelper = null;
+  }
+
   setReaderJs() {
     const { viewType } = selectReaderSetting(this.getState());
+    if (this.readerJsHelper) {
+      this.readerJsHelper.unmount();
+      this.readerJsHelper = null;
+    }
     const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
     if (node) {
-      const readerJs = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
-      this.readerJs = readerJs;
-    } else {
-      this.readerJs = null;
+      this.readerJsHelper = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
+      const location = this.readerJsHelper.getNodeLocationOfCurrentPage();
+      this.dispatch(updateCurrent({ location }));
     }
   }
 
@@ -31,8 +39,8 @@ class CurrentConnector extends Connector {
     const total = CalculationsConnector.getTotal(contentIndex);
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     let location = EMPTY_READ_LOCATION;
-    if (this.readerJs) {
-      location = this.readerJs.getNodeLocationOfCurrentPage();
+    if (this.readerJsHelper) {
+      location = this.readerJsHelper.getNodeLocationOfCurrentPage();
     }
     this.dispatch(updateCurrent({
       contentIndex,

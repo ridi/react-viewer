@@ -9,11 +9,12 @@ import {
   selectReaderSetting,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { Position } from '../screen/BaseTouchable';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../util/connector/';
+import TouchableScreen from './TouchableScreen';
+import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class BaseScreen extends React.Component {
 
     this.onContentLoaded = this.onContentLoaded.bind(this);
     this.onContentError = this.onContentError.bind(this);
+    this.onTouchableScreenTouched = this.onTouchableScreenTouched.bind(this);
   }
 
   componentDidMount() {
@@ -36,34 +38,35 @@ export default class BaseScreen extends React.Component {
         Connector.calculations.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
-    window.addEventListener(DOMEventConstants.RESIZE, this.resizeReader);
-
-    Connector.current.setReaderJs();
+    addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
   }
 
   componentDidUpdate(prevProps) {
     const { isCalculated: prevIsCalculated, current: prevCurrent } = prevProps;
     const { isCalculated, current } = this.props;
+
     if (isCalculated) {
-      if (!prevIsCalculated) {
-        Connector.current.restoreCurrentOffset();
-        this.moveToOffset();
-      } else if (prevCurrent.offset !== current.offset) {
-        this.moveToOffset();
-      }
+      const isCurrentMoved = prevCurrent.offset !== current.offset
+        || prevCurrent.contentIndex !== current.contentIndex
+        || prevCurrent.viewType !== current.viewType;
+      const isNeededRestore = !prevIsCalculated;
+      const isNeededMoveToOffset = isNeededRestore || isCurrentMoved;
+      const isNeededUpdateReaderJs = prevCurrent.contentIndex !== current.contentIndex
+        || prevCurrent.viewType !== current.viewType;
+
+      if (isNeededRestore) Connector.current.restoreCurrentOffset();
+      if (isNeededMoveToOffset) this.moveToOffset();
+      if (isNeededUpdateReaderJs) Connector.current.setReaderJs();
     }
-    Connector.current.setReaderJs();
   }
 
   componentWillUnmount() {
-    window.removeEventListener(DOMEventConstants.RESIZE, this.resizeReader);
+    removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
   }
 
-  onTouchableScreenTouched({ position }) {
-    if (position === Position.MIDDLE) {
-      const { onTouched } = this.props;
-      onTouched();
-    }
+  onTouchableScreenTouched(event) {
+    const { onTouched } = this.props;
+    onTouched(event);
   }
 
   onContentLoaded(index, content) {
@@ -78,10 +81,6 @@ export default class BaseScreen extends React.Component {
     actionUpdateContentError(index, error, isAllLoaded);
   }
 
-  getTouchableScreen() {
-    return null;
-  }
-
   moveToOffset() {}
 
   renderContents() { return null; }
@@ -89,13 +88,13 @@ export default class BaseScreen extends React.Component {
   renderFooter() { return null; }
 
   render() {
-    const { calculationsTotal } = this.props;
-    const TouchableScreen = this.getTouchableScreen();
+    const { setting, calculationsTotal } = this.props;
     return (
       <TouchableScreen
         ref={this.wrapper}
         total={calculationsTotal}
-        onTouched={position => this.onTouchableScreenTouched(position)}
+        onTouched={this.onTouchableScreenTouched}
+        viewType={setting.viewType}
       >
         { this.renderContents() }
         { this.renderFooter() }

@@ -45,7 +45,7 @@ export default class ImageContent extends React.PureComponent {
     return (
       <section
         ref={this.wrapper}
-        className={`comic_page lazy_load ${isContentLoaded ? 'loaded' : ''} ${contentFooter ? 'has_content_footer' : ''}`}
+        className={`comic_page ${isContentLoaded ? 'loaded' : ''} ${contentFooter ? 'has_content_footer' : ''}`}
       >
         {this.renderImage()}
         {contentFooter}

@@ -6,7 +6,12 @@ import {
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
 } from '../../redux/selector';
-import { scrollTop, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  scrollTop,
+  setScrollTop,
+  addEventListener,
+  removeEventListener,
+} from '../../util/BrowserWrapper';
 import { onScreenScrolled } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
@@ -14,7 +19,6 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import ScrollTouchable from './ScrollTouchable';
 import Footer from '../footer/Footer';
 import Connector from '../../util/connector/';
 import ImageContent from '../content/ImageContent';
@@ -29,13 +33,13 @@ class ImageScrollScreen extends BaseScreen {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    window.addEventListener(DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
     this.onContentRendered = this.onContentRendered.bind(this);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    window.removeEventListener(DOMEventConstants.SCROLL, this.onScroll);
+    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
   }
 
   componentDidUpdate(prevProps) {
@@ -58,10 +62,6 @@ class ImageScrollScreen extends BaseScreen {
   moveToOffset() {
     const { offset } = this.props.current;
     setScrollTop(offset);
-  }
-
-  getTouchableScreen() {
-    return ScrollTouchable;
   }
 
   onContentRendered(footerNode) {

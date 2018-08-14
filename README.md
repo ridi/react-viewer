@@ -58,7 +58,6 @@ export default ViewerPage extends React.Component {
 * `onMount`(func): called after reader is mounted
 * `onUnmount`(func): called after reader is unmounted
 * `onTouched`(func): called when user touches the reader screen
-* `onMoveWrongDirection`(func): called when user tries to tap wrong direction to the next page (on `page` viewType)
 * `footer`(node): markup for the footer area
 * `contentFooter`(node): markup for the content footer area
 * `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewType)
