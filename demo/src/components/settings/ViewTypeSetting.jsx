@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { selectReaderSetting, ViewType } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
 import { AvailableViewType } from '../../constants/ContentConstants';
-import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
 
 
 class ViewTypeSetting extends Component {
@@ -34,7 +33,7 @@ class ViewTypeSetting extends Component {
 
   render() {
     return (
-      <li className="setting_list" ref={(list) => { preventScrollEvent(list); }}>
+      <li className="setting_list">
         <SvgIcons
           svgName="svg_view_type_1"
           svgClass="setting_title_icon svg_view_type_icon"

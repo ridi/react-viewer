@@ -10,8 +10,6 @@ import ViewerNovelSettingPopup from '../settings/ViewerNovelSettingPopup';
 import ViewerComicSettingPopup from '../settings/ViewerComicSettingPopup';
 import ViewerFooterTabbar from '../tabbars/ViewerFooterTabbar';
 import ViewerFooterTabItem from '../tabbars/ViewerFooterTabItem';
-import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
-
 
 class ViewerFooter extends Component {
   render() {
@@ -24,17 +22,14 @@ class ViewerFooter extends Component {
     const { viewType } = this.props.setting;
 
     return (
-      <section /* ref={(footer) => { preventScrollEvent(footer); }} */>
+      <section>
         {content.contentType === ContentType.WEB_NOVEL ?
           <ViewerNovelSettingPopup content={content} /> :
           <ViewerComicSettingPopup content={content} />
         }
         <footer
           className={`viewer_footer ${isFullScreen ? '' : 'active'}`}
-          ref={(footer) => {
-            this.footer = footer;
-            preventScrollEvent(footer);
-          }}
+          ref={(footer) => { this.footer = footer; }}
         >
           {viewType === ViewType.PAGE ? <ViewerPageFooterToolbar /> : null}
           <ViewerFooterTabbar>

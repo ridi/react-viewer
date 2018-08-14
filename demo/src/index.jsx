@@ -22,7 +22,7 @@ import { selectIsFullScreen } from './redux/Viewer.selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
 import { requestLoadContent, onScreenTouched } from './redux/Viewer.action';
-import { screenWidth } from '../../src/util/BrowserWrapper';
+import { screenWidth } from './utils/BrowserWrapper';
 import { BindingType } from '../../src/constants/ContentConstants';
 
 const Position = {

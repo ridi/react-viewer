@@ -83,14 +83,6 @@ export const preventScrollEvent = (ref) => {
   }
 };
 
-export const redirect = (url) => {
-  document.location = url;
-  document.location.href = url;
-  window.location = url;
-  window.location.href = url;
-  location.href = url;
-};
-
 addEventListener(window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
 
 export default {
@@ -105,5 +97,4 @@ export default {
   removeEventListener,
   allowScrollEvent,
   preventScrollEvent,
-  redirect,
 };

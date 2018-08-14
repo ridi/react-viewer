@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { redirect } from '../../../../src/util/BrowserWrapper';
+import { redirect } from '../../utils/BrowserWrapper';
 
 
 const ExternalLink = (props) => {

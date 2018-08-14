@@ -5,15 +5,13 @@ import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '../../../../lib';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
 import SpinButton from './SpinButton';
 import SvgIcons from '../icons/SvgIcons';
-import { preventScrollEvent } from '../../../../src/util/BrowserWrapper';
-
 
 class ComicSpineSetting extends Component {
   render() {
     const { item, onChanged, setting } = this.props;
 
     return (
-      <li className="setting_list" key={item} ref={(list) => { preventScrollEvent(list); }}>
+      <li className="setting_list" key={item}>
         <SvgIcons
           svgName={`svg_${item}_1`}
           svgClass={`setting_title_icon svg_${item}_icon`}
