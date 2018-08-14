@@ -13,19 +13,19 @@ import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../c
 class CurrentConnector extends Connector {
   constructor() {
     super();
-    this.readerJs = null;
+    this.readerJsHelper = null;
   }
 
   setReaderJs() {
     const { viewType } = selectReaderSetting(this.getState());
-    if (this.readerJs) {
-      this.readerJs.unmount();
-      this.readerJs = null;
+    if (this.readerJsHelper) {
+      this.readerJsHelper.unmount();
+      this.readerJsHelper = null;
     }
     const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
     if (node) {
-      this.readerJs = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
-      const location = this.readerJs.getNodeLocationOfCurrentPage();
+      this.readerJsHelper = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
+      const location = this.readerJsHelper.getNodeLocationOfCurrentPage();
       this.dispatch(updateCurrent({ location }));
     }
   }
@@ -39,8 +39,8 @@ class CurrentConnector extends Connector {
     const total = CalculationsConnector.getTotal(contentIndex);
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     let location = EMPTY_READ_LOCATION;
-    if (this.readerJs) {
-      location = this.readerJs.getNodeLocationOfCurrentPage();
+    if (this.readerJsHelper) {
+      location = this.readerJsHelper.getNodeLocationOfCurrentPage();
     }
     this.dispatch(updateCurrent({
       contentIndex,
