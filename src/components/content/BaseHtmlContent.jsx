@@ -88,7 +88,8 @@ export default class BaseHtmlContent extends React.PureComponent {
           {contentFooter}
         </React.Fragment>
       );
-    } else if (isContentOnError) {
+    }
+    if (isContentOnError) {
       return <div>Error</div>; // TODO 에러 화면으로 변경
     }
     return <div>Loading...</div>; // TODO 로딩 화면으로 변경
@@ -96,8 +97,7 @@ export default class BaseHtmlContent extends React.PureComponent {
 
   render() {
     const { index } = this.props.content;
-    const { startOffset } = this.props;
-    const StyledContent = Connector.setting.getStyledContent();
+    const { startOffset, StyledContent } = this.props;
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
       <StyledContent
@@ -117,6 +117,7 @@ export default class BaseHtmlContent extends React.PureComponent {
 BaseHtmlContent.defaultProps = {
   contentFooter: null,
   className: '',
+  StyledContent: () => {},
 };
 
 BaseHtmlContent.propTypes = {
@@ -129,4 +130,5 @@ BaseHtmlContent.propTypes = {
   onContentRendered: PropTypes.func,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
+  StyledContent: PropTypes.func,
 };

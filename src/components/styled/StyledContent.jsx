@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector/index';
 import PropTypes from '../prop-types';
 
 const StyledBaseContent = styled.article`

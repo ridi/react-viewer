@@ -8,7 +8,7 @@ const ViewerHeader = ({ title, isVisible, chapter }) => (
       <div className="nav_first_line">
         <div className="page_title">
           <h2 className="title_text">
-            {title} (Chapter {chapter})
+            {`${title} (Chapter ${chapter})`}
           </h2>
         </div>
       </div>

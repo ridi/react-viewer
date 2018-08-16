@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint max-len: 0, react/jsx-one-expression-per-line: 0 */
 import React from 'react';
 
 const IconsSprite = () => (

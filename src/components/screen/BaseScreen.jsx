@@ -7,7 +7,7 @@ import {
   selectReaderCurrent,
   selectReaderIsCalculated,
   selectReaderSetting,
-  selectReaderCalculationsTotal,
+  selectReaderCalculationsTotal, selectReaderContentFormat,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
@@ -15,6 +15,8 @@ import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../util/connector/';
 import TouchableScreen from './TouchableScreen';
 import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
+import { getStyledTouchable } from '../styled';
+import { ContentFormat } from '../../constants/ContentConstants';
 
 export default class BaseScreen extends React.Component {
   constructor(props) {
@@ -88,13 +90,14 @@ export default class BaseScreen extends React.Component {
   renderFooter() { return null; }
 
   render() {
-    const { setting, calculationsTotal } = this.props;
+    const { setting, calculationsTotal, contentFormat } = this.props;
     return (
       <TouchableScreen
         ref={this.wrapper}
         total={calculationsTotal}
         onTouched={this.onTouchableScreenTouched}
         viewType={setting.viewType}
+        StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
       >
         { this.renderContents() }
         { this.renderFooter() }
@@ -117,6 +120,7 @@ BaseScreen.propTypes = {
   actionUpdateContent: PropTypes.func.isRequired,
   actionUpdateContentError: PropTypes.func.isRequired,
   calculationsTotal: PropTypes.number.isRequired,
+  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
 };
 
 export const mapStateToProps = state => ({
@@ -125,6 +129,7 @@ export const mapStateToProps = state => ({
   current: selectReaderCurrent(state),
   contents: selectReaderContents(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
+  contentFormat: selectReaderContentFormat(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

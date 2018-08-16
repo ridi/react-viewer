@@ -84,6 +84,7 @@ export default class ViewerFooterTabItem extends Component {
     return (
       <div className="viewer_footer_tabitem">
         <button
+          type="button"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

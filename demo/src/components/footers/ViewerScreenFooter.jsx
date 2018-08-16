@@ -59,7 +59,7 @@ class ViewerScreenFooter extends Component {
           }}
         >
           {this.renderBestComments()}
-          <button className="more_comment_button">
+          <button type="button" className="more_comment_button">
             전체 댓글 보러가기
             <SvgIcons
               svgName="svg_arrow_4_right"
@@ -70,6 +70,7 @@ class ViewerScreenFooter extends Component {
         <div className="viewer_bottom_button_wrapper">
           {this.checkIsPageView() ? (
             <button
+              type="button"
               className="move_prev_page_button"
               onClick={() => Connector.current.updateCurrentPosition(calculationsTotal - 2)}
             >

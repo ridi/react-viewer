@@ -9,19 +9,6 @@ import { ContentFormat } from '../../constants/ContentConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { selectReaderContentFormat, selectReaderSetting } from '../../redux/selector';
 import { updateSetting } from '../../redux/action';
-import {
-  StyledHtmlPageTouchable,
-  StyledHtmlScrollTouchable,
-  StyledImagePageTouchable,
-  StyledImageScrollTouchable,
-} from '../../components/styled/StyledTouchable';
-import {
-  StyledHtmlPageContent,
-  StyledHtmlScrollContent,
-  StyledImagePageContent,
-  StyledImageScrollContent,
-} from '../../components/styled/StyledContent';
-import { StyledPageFooter, StyledScrollFooter } from '../../components/styled/StyledFooter';
 import CalculationsConnector from './CalculationsConnector';
 
 const settingsAffectingCalculation = [
@@ -176,46 +163,6 @@ class SettingConnector extends Connector {
 
   getChapterId(chapterNum) {
     return `${CHAPTER_ID_PREFIX}${chapterNum}`;
-  }
-
-  getStyledTouchable() {
-    const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
-      return StyledHtmlScrollTouchable;
-    } else if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
-      return StyledHtmlPageTouchable;
-    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
-      return StyledImageScrollTouchable;
-    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
-      return StyledImagePageTouchable;
-    }
-    return null;
-  }
-
-  getStyledContent() {
-    const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewType } = selectReaderSetting(this.getState());
-    if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) {
-      return StyledHtmlScrollContent;
-    } else if (contentFormat === ContentFormat.HTML && viewType === ViewType.PAGE) {
-      return StyledHtmlPageContent;
-    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
-      return StyledImageScrollContent;
-    } else if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.PAGE) {
-      return StyledImagePageContent;
-    }
-    return null;
-  }
-
-  getStyledFooter() {
-    const { viewType } = selectReaderSetting(this.getState());
-    if (viewType === ViewType.SCROLL) {
-      return StyledScrollFooter;
-    } else if (viewType === ViewType.PAGE) {
-      return StyledPageFooter;
-    }
-    return null;
   }
 
   updateSetting(setting) {

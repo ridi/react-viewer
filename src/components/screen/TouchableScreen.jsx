@@ -27,9 +27,9 @@ class TouchableScreen extends React.Component {
       total,
       children,
       onTouched,
+      StyledTouchable,
     } = this.props;
 
-    const StyledTouchable = Connector.setting.getStyledTouchable();
     return (
       <StyledTouchable
         role="button"
@@ -50,6 +50,7 @@ TouchableScreen.defaultProps = {
   onTouched: () => {},
   children: null,
   total: null,
+  StyledTouchable: () => {},
 };
 
 TouchableScreen.propTypes = {
@@ -58,6 +59,7 @@ TouchableScreen.propTypes = {
   forwardedRef: PropTypes.object,
   total: PropTypes.number,
   viewType: PropTypes.string.isRequired,
+  StyledTouchable: PropTypes.func,
 };
 
 export default React.forwardRef((props, ref) => <TouchableScreen {...props} forwardedRef={ref} />);

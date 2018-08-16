@@ -23,9 +23,9 @@ class ViewerFooter extends Component {
 
     return (
       <section>
-        {content.contentType === ContentType.WEB_NOVEL ?
-          <ViewerNovelSettingPopup content={content} /> :
-          <ViewerComicSettingPopup content={content} />
+        {content.contentType === ContentType.WEB_NOVEL
+          ? <ViewerNovelSettingPopup content={content} />
+          : <ViewerComicSettingPopup content={content} />
         }
         <footer
           className={`viewer_footer ${isFullScreen ? '' : 'active'}`}

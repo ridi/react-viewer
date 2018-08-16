@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Connector from '../../util/connector/';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
 
@@ -24,8 +23,12 @@ export default class Footer extends React.PureComponent {
   }
 
   render() {
-    const { content, containerVerticalMargin, startOffset } = this.props;
-    const StyledFooter = Connector.setting.getStyledFooter();
+    const {
+      content,
+      containerVerticalMargin,
+      startOffset,
+      StyledFooter,
+    } = this.props;
     return (
       <StyledFooter
         innerRef={this.wrapper}
@@ -43,6 +46,7 @@ export default class Footer extends React.PureComponent {
 Footer.defaultProps = {
   content: null,
   onContentRendered: () => {},
+  StyledFooter: () => {},
 };
 
 Footer.propTypes = {
@@ -50,5 +54,5 @@ Footer.propTypes = {
   onContentRendered: PropTypes.func,
   startOffset: PropTypes.number.isRequired,
   containerVerticalMargin: PropTypes.number.isRequired,
+  StyledFooter: PropTypes.func,
 };
-

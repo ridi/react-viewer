@@ -1,22 +1,8 @@
 module.exports = {
   'extends': '@ridi',
-  'globals': {
-    'jQuery': true,
-    '$': true,
-    'React': true,
-    'ReactDOM': true,
-    'ContentInfo': true,
-    'EpisodeInfo': true,
-    'EtcInfo': true,
-    'PageInitialize': true,
-    'jwplayer': true,
-    'AndroidBridge': true,
-    'CommonConfig': true,
-    'IMP': true,
-  },
   'env': {
     'browser': true,
-    'node': true
+    'node': true,
   },
   'rules': {
     'import/prefer-default-export': 0,
@@ -24,5 +10,15 @@ module.exports = {
     'react/forbid-prop-types': 0,
     'import/no-extraneous-dependencies': 0,
     'no-underscore-dangle': 0,
+    'react/destructuring-assignment': 0,
+    'jsx-a11y/no-noninteractive-element-to-interactive-role': ['error', {
+      ul: ['listbox', 'menu', 'menubar', 'radiogroup', 'tablist', 'tree', 'treegrid'],
+      ol: ['listbox', 'menu', 'menubar', 'radiogroup', 'tablist', 'tree', 'treegrid'],
+      li: ['menuitem', 'option', 'row', 'tab', 'treeitem'],
+      table: ['grid'],
+      td: ['gridcell'],
+      section: ['button'],
+      article: ['button'],
+    }],
   },
 };

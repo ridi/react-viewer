@@ -26,7 +26,7 @@ class ViewTypeSetting extends Component {
 
     return (
       <p className="setting_info_text">
-        이 콘텐츠는 {contentViewType === AvailableViewType.PAGE ? '페이지 넘김' : '스크롤 보기'}만 지원됩니다.
+        {`이 콘텐츠는 ${contentViewType === AvailableViewType.PAGE ? '페이지 넘김' : '스크롤 보기'}만 지원됩니다.`}
       </p>
     );
   }
@@ -40,7 +40,8 @@ class ViewTypeSetting extends Component {
         />
         <div className="table_wrapper">
           <p className="setting_title">
-            보기 방식<span className="indent_hidden">변경</span>
+            보기 방식
+            <span className="indent_hidden">변경</span>
           </p>
           <div className="setting_buttons_wrapper view_type_setting">
             <ul className="setting_buttons view_type_buttons">

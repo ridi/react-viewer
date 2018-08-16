@@ -15,12 +15,13 @@ export default class SpinButton extends React.Component {
 
   handleChange() {
     const { min, max, onChange } = this.props;
-    const n = parseFloat(this.state.value);
-    if (this.state.value >= min && this.state.value <= max) {
+    const { value } = this.state;
+    const n = parseFloat(value);
+    if (value >= min && value <= max) {
       onChange(null, n);
     } else {
       this.setState({
-        value: Math.min(Math.max(this.state.value, min), max),
+        value: Math.min(Math.max(value, min), max),
       });
     }
     this.minusButton.disabled = (n === min);
@@ -28,20 +29,24 @@ export default class SpinButton extends React.Component {
   }
 
   handleMinus() {
-    this.setState({ value: this.state.value - 1 }, () => this.handleChange());
+    const { value } = this.state;
+    this.setState({ value: value - 1 }, () => this.handleChange());
     this.minusButton.blur();
   }
 
   handlePlus() {
-    this.setState({ value: this.state.value + 1 }, () => this.handleChange());
+    const { value } = this.state;
+    this.setState({ value: value + 1 }, () => this.handleChange());
     this.plusButton.blur();
   }
 
   render() {
     return (
       <div className="table_wrapper">
-        <div className="setting_title">{this.props.title}
-          <span className="indent_hidden">변경, 현재 </span><span className="setting_num">{this.state.value}</span>
+        <div className="setting_title">
+          {this.props.title}
+          <span className="indent_hidden">변경, 현재 </span>
+          <span className="setting_num">{this.state.value}</span>
         </div>
         <div className="setting_buttons_wrapper spin_setting">
           <ul className={`spin_button_wrapper ${this.props.buttonTarget}`}>

@@ -14,10 +14,11 @@ import BaseScreen, {
 } from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
-import { BindingType } from '../../constants/ContentConstants';
+import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
+import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { getStyledContent, getStyledFooter } from '../styled';
 
 class HtmlPageScreen extends BaseScreen {
   constructor(props) {
@@ -68,11 +69,12 @@ class HtmlPageScreen extends BaseScreen {
         startOffset={startOffset}
         onContentRendered={this.onContentFooterRendered}
         containerVerticalMargin={containerVerticalMargin}
+        StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.PAGE)}
       />
     );
   }
 
-  renderContent(content) {
+  renderContent(content, StyledContent) {
     const {
       current,
       contentFooter,
@@ -92,15 +94,17 @@ class HtmlPageScreen extends BaseScreen {
         onContentError={this.onContentError}
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
+        StyledContent={StyledContent}
       />
     );
   }
 
   renderContents() {
     const { contents } = this.props;
+    const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.PAGE);
     return contents
       .filter(content => this.needRender(content))
-      .map(content => this.renderContent(content));
+      .map(content => this.renderContent(content, StyledContent));
   }
 }
 

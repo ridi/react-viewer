@@ -1,3 +1,4 @@
+/* eslint react/jsx-one-expression-per-line: 0, operator-linebreak: 0, react/jsx-wrap-multilines: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -116,4 +117,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(ColumnSetting);
-

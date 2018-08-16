@@ -28,7 +28,9 @@ import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER } from '../../index';
+import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { getStyledContent, getStyledFooter } from '../styled';
+import { ContentFormat } from '../../constants/ContentConstants';
 
 class HtmlScrollScreen extends BaseScreen {
   constructor(props) {
@@ -89,11 +91,12 @@ class HtmlScrollScreen extends BaseScreen {
         onContentRendered={this.onFooterRendered}
         containerVerticalMargin={containerVerticalMargin}
         startOffset={Connector.calculations.getStartOffset(FOOTER_INDEX)}
+        StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.SCROLL)}
       />
     );
   }
 
-  renderContent(content) {
+  renderContent(content, StyledContent) {
     const {
       current,
       contentFooter,
@@ -113,15 +116,17 @@ class HtmlScrollScreen extends BaseScreen {
         onContentError={this.onContentError}
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
+        StyledContent={StyledContent}
       />
     );
   }
 
   renderContents() {
     const { contents } = this.props;
+    const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.SCROLL);
     return contents
       .filter(content => this.needRender(content))
-      .map(content => this.renderContent(content));
+      .map(content => this.renderContent(content, StyledContent));
   }
 }
 

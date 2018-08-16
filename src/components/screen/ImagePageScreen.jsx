@@ -9,19 +9,25 @@ import {
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
 import { screenHeight, screenWidth, setScrollTop } from '../../util/BrowserWrapper';
-import PropTypes, { FooterCalculationsType, ContentCalculationsType, CurrentType, ContentType } from '../prop-types';
+import PropTypes, {
+  FooterCalculationsType,
+  ContentCalculationsType,
+  CurrentType,
+  ContentType,
+} from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
 import Connector from '../../util/connector/';
 import Footer from '../footer/Footer';
-import { BindingType } from '../../constants/ContentConstants';
+import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { READERJS_CONTENT_WRAPPER } from '../..';
+import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { getStyledFooter } from '../styled';
 
 class ImagePageScreen extends BaseScreen {
   constructor(props) {
@@ -62,6 +68,7 @@ class ImagePageScreen extends BaseScreen {
         startOffset={startOffset}
         onContentRendered={this.onContentRendered}
         containerVerticalMargin={containerVerticalMargin}
+        StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.PAGE)}
       />
     );
   }
@@ -85,8 +92,8 @@ class ImagePageScreen extends BaseScreen {
     );
   }
 
-  getBlankPage() {
-    return <section className="comic_page" />;
+  getBlankPage(index) {
+    return <section className="comic_page" key={`blank:${index}`} />;
   }
 
   getContents() {
@@ -95,7 +102,7 @@ class ImagePageScreen extends BaseScreen {
     let result = [];
 
     if (startWithBlankPage > 0) {
-      result = makeSequence(startWithBlankPage).map(() => this.getBlankPage());
+      result = makeSequence(startWithBlankPage).map(index => this.getBlankPage(index + 1));
     }
     result = [
       ...result,
@@ -106,7 +113,7 @@ class ImagePageScreen extends BaseScreen {
       if (imagesInLastScreen > 0) {
         result = [
           ...result,
-          ...makeSequence(columnsInPage - imagesInLastScreen).map(() => this.getBlankPage()),
+          ...makeSequence(columnsInPage - imagesInLastScreen).map(index => this.getBlankPage(result.length + index)),
         ];
       }
 

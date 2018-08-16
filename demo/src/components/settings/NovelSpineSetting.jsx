@@ -22,23 +22,23 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
       title={ViewerSpinType.toString(item)}
       buttonTarget={`set_${item}`}
       initialValue={{
-      [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
-      [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
-      [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
-    }[item]}
+        [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
+        [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
+        [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
+      }[item]}
       min={{
-      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[0],
-      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[0],
-      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[0],
-    }[item]}
+        [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[0],
+        [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[0],
+        [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[0],
+      }[item]}
       max={{
-      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[1],
-      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[1],
-      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[1],
-    }[item]}
+        [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[1],
+        [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[1],
+        [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[1],
+      }[item]}
       onChange={(oldLevel, newLevel) => onChanged({
-      [ViewerSpinType.toReaderSettingType(item)]: newLevel,
-    })}
+        [ViewerSpinType.toReaderSettingType(item)]: newLevel,
+      })}
     />
   </li>
 );

@@ -9,7 +9,7 @@ import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
 import { updateObject } from '../util/Util';
 import * as BrowserWrapper from '../util/BrowserWrapper';
-import { ContentFormat } from '..';
+import { ContentFormat } from '../constants/ContentConstants';
 
 const onScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.currentOffset(), BrowserWrapper.scrollTop())

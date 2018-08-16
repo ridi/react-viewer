@@ -26,7 +26,9 @@ import { StyledImageScrollContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { READERJS_CONTENT_WRAPPER } from '../../index';
+import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { getStyledFooter } from '../styled';
+import { ContentFormat } from '../../constants/ContentConstants';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
@@ -78,6 +80,7 @@ class ImageScrollScreen extends BaseScreen {
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
         onContentRendered={this.onContentRendered}
+        StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.SCROLL)}
       />
     );
   }
