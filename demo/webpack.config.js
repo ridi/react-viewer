@@ -1,5 +1,6 @@
 
 module.exports = {
+  context: __dirname,
   entry: {
     index: `${__dirname}/src/index.jsx`,
     bundleLoader: [
@@ -26,11 +27,11 @@ module.exports = {
             ['transform-proto-to-assign'],
           ],
         },
-      }
+      },
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
   },
-  mode: 'development',
+  mode: 'production',
 };

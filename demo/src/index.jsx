@@ -5,100 +5,140 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import {
-  reducers as viewerScreen,
-  selectViewerScreenSettings,
-  selectIsFullScreen,
-  selectIsLoadingCompleted,
-  updateSpineMetaData as updateSpineMetaDataAction,
-  ViewerHelper,
-  PageCalculator,
-  ReadPositionHelper,
-} from '../../lib/index';
+import Reader, {
+  reducers as reader,
+  Connector,
+  selectReaderCurrentContentIndex,
+  selectReaderCurrentOffset,
+  selectReaderSetting,
+  ViewType,
+  selectReaderCalculationsTotal,
+} from '../../lib';
 import viewer from './redux/Viewer.reducer';
-import { ContentType, BindingType } from '../../src/constants/ContentConstants';
 import ViewerHeader from './components/headers/ViewerHeader';
-import ViewerDummyBody from './components/bodies/ViewerDummyBody';
-import ViewerBody from './components/bodies/ViewerBody';
 import ViewerFooter from './components/footers/ViewerFooter';
-import ContentsData from '../resources/contents/contents.json';
-import { requestLoadEpisode } from './redux/Viewer.action';
 import { IconsSprite } from './components/icons/IconsSprite';
+import { selectIsFullScreen } from './redux/Viewer.selector';
+import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
+import ContentsData from '../resources/contents/contents.json';
+import { requestLoadContent, onScreenTouched } from './redux/Viewer.action';
+import { screenWidth } from './utils/BrowserWrapper';
+import { BindingType } from '../../src/constants/ContentConstants';
 
+const Position = {
+  LEFT: 1,
+  MIDDLE: 2,
+  RIGHT: 3,
+};
 
 const rootReducer = combineReducers({
   viewer,
-  viewerScreen,
+  reader: reader({
+    setting: {
+      font: 'kopup_dotum',
+      containerHorizontalMargin: 30,
+      containerVerticalMargin: 50,
+    },
+  }),
 });
-
 
 const enhancer = composeWithDevTools(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, {}, enhancer);
-ViewerHelper.connect(store);
-PageCalculator.connect(store);
-ReadPositionHelper.connect(store);
-
-window.setDebugMode = ReadPositionHelper.setDebugMode.bind(ReadPositionHelper);
+Connector.connect(store);
 
 class DemoViewer extends Component {
-  componentWillMount() {
-    const {
-      content, episode, requestViewerData, updateSpineMetaData,
-    } = this.props;
-
-    ReadPositionHelper.setDebugMode(true);
-    updateSpineMetaData(content.content_type, content.viewer_type, content.binding_type);
-    requestViewerData(content.id, episode.id);
+  constructor(props) {
+    super(props);
+    this.onReaderTouched = this.onReaderTouched.bind(this);
   }
 
-  contentTypeClassName() {
-    const { content } = this.props;
-    switch (content.content_type) {
-      case ContentType.COMIC:
-        return 'comic_content';
-      case ContentType.WEBTOON:
-        return 'webtoon_content';
-      case ContentType.WEB_NOVEL:
-        return 'web_novel_content';
-      default:
-        return '';
+  componentWillMount() {
+    const { content, actionRequestLoadContent } = this.props;
+    actionRequestLoadContent(content);
+  }
+
+  onMoveWrongDirection() {
+    alert('move to the wrong direction');
+  }
+
+  onPositionTouched(position) {
+    const {
+      actionOnScreenTouched,
+      content,
+      currentOffset,
+      calculationsTotal,
+    } = this.props;
+
+    if (position === Position.MIDDLE) {
+      actionOnScreenTouched();
+      return;
     }
+
+    if (position === Position.RIGHT
+      && content.bindingType === BindingType.RIGHT
+      && currentOffset === 0) {
+      this.onMoveWrongDirection();
+      return;
+    }
+
+    let nextOffset = currentOffset;
+    if (position === Position.LEFT) {
+      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
+    } else if (position === Position.RIGHT) {
+      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
+    }
+
+    nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
+    if (currentOffset === nextOffset) return;
+
+    Connector.current.updateCurrentPosition(nextOffset);
+  }
+
+  onReaderTouched(event) {
+    if (Connector.current.isOnFooter()) return;
+    const { setting } = this.props;
+
+    const width = screenWidth();
+    let position = Position.MIDDLE;
+    if (setting.viewType === ViewType.PAGE) {
+      if (event.screenX <= width * 0.2) position = Position.LEFT;
+      if (event.screenX >= width * 0.8) position = Position.RIGHT;
+    }
+
+    this.onPositionTouched(position);
   }
 
   render() {
     const {
-      colorTheme,
-      viewerType,
-    } = this.props.viewerScreenSettings;
-    const {
-      content,
-      episode,
       isFullScreen,
-      isVisibleSettingPopup,
-      isLoadingCompleted,
+      content,
+      currentContentIndex,
     } = this.props;
-
     return (
       <section
         id="viewer_page"
-        className={`${colorTheme} view_type_${viewerType} ${this.contentTypeClassName()}`}
+        role="button"
+        tabIndex="-1"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            this.onPositionTouched(Position.MIDDLE);
+          } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+            this.onPositionTouched(Position.LEFT);
+          } else if (e.key === 'ArrowRight' || e.key === 'Right') {
+            this.onPositionTouched(Position.RIGHT);
+          }
+        }}
       >
-        <ViewerHeader
-          title={content.title}
-          isVisible={!isFullScreen || isVisibleSettingPopup}
+        <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
+        <Reader
+          footer={<ViewerScreenFooter content={content} />}
+          contentFooter={<small>content footer area...</small>}
+          onMount={() => console.log('onMount')}
+          onUnmount={() => console.log('onUnmount')}
+          onTouched={this.onReaderTouched}
         />
-        {isLoadingCompleted ?
-          <ViewerBody
-            content={content}
-            episode={episode}
-          /> :
-          <ViewerDummyBody />
-        }
-        <ViewerFooter
-          content={content}
-          episode={episode}
-        />
+        <ViewerFooter content={content} />
         <IconsSprite />
       </section>
     );
@@ -107,17 +147,13 @@ class DemoViewer extends Component {
 
 DemoViewer.propTypes = {
   content: PropTypes.object.isRequired,
-  episode: PropTypes.object.isRequired,
-  viewerScreenSettings: PropTypes.object,
+  currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   isFullScreen: PropTypes.bool.isRequired,
-  isVisibleSettingPopup: PropTypes.bool.isRequired,
-  isLoadingCompleted: PropTypes.bool.isRequired,
-  requestViewerData: PropTypes.func.isRequired,
-  updateSpineMetaData: PropTypes.func.isRequired,
-};
-
-DemoViewer.defaultProps = {
-  viewerScreenSettings: {},
+  actionRequestLoadContent: PropTypes.func.isRequired,
+  actionOnScreenTouched: PropTypes.func.isRequired,
+  currentOffset: PropTypes.number.isRequired,
+  setting: PropTypes.object.isRequired,
+  calculationsTotal: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -125,17 +161,18 @@ const mapStateToProps = (state) => {
   const { isVisibleSettingPopup } = ui;
 
   return {
-    viewerScreenSettings: selectViewerScreenSettings(state),
     isFullScreen: selectIsFullScreen(state),
     isVisibleSettingPopup,
-    isLoadingCompleted: selectIsLoadingCompleted(state),
+    currentContentIndex: selectReaderCurrentContentIndex(state),
+    currentOffset: selectReaderCurrentOffset(state),
+    setting: selectReaderSetting(state),
+    calculationsTotal: selectReaderCalculationsTotal(state),
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
-  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) =>
-    dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
+  actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
+  actionOnScreenTouched: () => dispatch(onScreenTouched()),
 });
 
 const DemoViewerPage = connect(
@@ -144,20 +181,16 @@ const DemoViewerPage = connect(
 )(DemoViewer);
 
 
-const { contents, episodes } = ContentsData;
+const { contents } = ContentsData;
 const queryParam = new URLSearchParams(window.location.search);
 
 const contentId = queryParam.get('contentId');
 const selected = contents.filter(content => content.id.toString() === contentId);
 const content = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
-const episode = episodes[content.id];
 
 ReactDOM.render(
   <Provider store={store}>
-    <DemoViewerPage
-      content={content}
-      episode={episode}
-    />
+    <DemoViewerPage content={content} />
   </Provider>,
   document.getElementById('app'),
 );

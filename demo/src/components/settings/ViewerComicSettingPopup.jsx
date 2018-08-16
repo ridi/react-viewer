@@ -2,23 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ThemeSetting from './ThemeSetting';
-import ViewerTypeSetting from './ViewerTypeSetting';
+import ViewTypeSetting from './ViewTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
-import { ViewerComicSpinType } from '../../../../src/constants/ViewerScreenConstants';
-import BaseSettingPopup, { mapStateToProps, mapDispatchToProps } from './BaseSettingPopup';
+import ColumnSetting from './ColumnSetting';
+import { ViewType } from '../../../../lib';
+import { ViewerComicSpinType } from '../../constants/SettingConstants';
+import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerComicSettingPopup extends BaseSettingPopup {
   renderSettings() {
-    const { content } = this.props;
+    const { content, setting } = this.props;
     return (
       <ul className="setting_group">
         <ThemeSetting
           onChanged={colorTheme => this.onSettingChanged({ colorTheme })}
         />
-        <ViewerTypeSetting
-          onChanged={viewerType => this.onSettingChanged({ viewerType })}
-          contentViewerType={content.viewer_type}
+        <ViewTypeSetting
+          onChanged={viewType => this.onSettingChanged({ viewType })}
+          contentViewType={content.viewType}
         />
+        { setting.viewType === ViewType.PAGE
+          ? <ColumnSetting onChanged={changedSetting => this.onSettingChanged(changedSetting)} /> : null }
         {ViewerComicSpinType.toList().map(item => (
           <ComicSpineSetting
             item={item}
@@ -35,7 +39,4 @@ ViewerComicSettingPopup.propTypes = {
   content: PropTypes.object.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ViewerComicSettingPopup);
+export default connect(mapStateToProps)(ViewerComicSettingPopup);

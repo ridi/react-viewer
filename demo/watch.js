@@ -2,7 +2,7 @@ const WebpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
 const webpackDevConfig = require('./webpack.config.js');
 
-const compiler = webpack(webpackDevConfig);
+const compiler = webpack({ ...webpackDevConfig, mode: 'development' });
 const server = new WebpackDevServer(compiler, {
   hot: true,
   filename: 'index.js',

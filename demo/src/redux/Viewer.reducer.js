@@ -1,10 +1,15 @@
 import { ViewerUiActions } from './Viewer.action';
-import { actions as ViewerScreenActions } from '../../../lib/index';
+import { actions as ReaderActions } from '../../../lib';
 import path, { initialState } from './Viewer.path';
 import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
 import createReducer from '../../../src/util/Reducer';
+import { scrollTop, scrollHeight, screenHeight } from '../utils/BrowserWrapper';
 
+const isScrolledToTop = () => scrollTop() <= 100;
+const isScrolledToBottom = () => scrollTop() >= scrollHeight() - screenHeight() - 100;
+
+const isEdgeOfScreen = () => (isScrolledToTop() || isScrolledToBottom());
 
 const onToggleViewerSetting = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), !state.ui.isVisibleSettingPopup)
@@ -15,23 +20,23 @@ const viewerSettingChanged = (state, action) => new ImmutableObjectBuilder(state
   .build();
 
 const onScreenTouched = state => new ImmutableObjectBuilder(state)
+  .set(path.isFullScreen(), !state.ui.isFullScreen)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
 const onScreenScrolled = state => new ImmutableObjectBuilder(state)
+  .set(path.isFullScreen(), !isEdgeOfScreen())
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-const movePageViewer = state => new ImmutableObjectBuilder(state)
-  .set(path.isVisibleSettingPopup(), false)
-  .build();
-
+// const movePageViewer = state => new ImmutableObjectBuilder(state)
+//   .set(path.isVisibleSettingPopup(), false)
+//   .build();
 
 export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
-
-  [ViewerScreenActions.TOUCH_VIEWER_SCREEN]: onScreenTouched,
-  [ViewerScreenActions.SCROLLED_VIEWER_SCREEN]: onScreenScrolled,
-  [ViewerScreenActions.MOVE_PAGE_VIEWER]: movePageViewer,
+  [ViewerUiActions.TOUCHED]: onScreenTouched,
+  [ReaderActions.SCROLLED]: onScreenScrolled,
+//  [ReaderActions.UPDATE_CURRENT]: movePageViewer,
 });

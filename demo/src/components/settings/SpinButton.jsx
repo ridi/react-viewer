@@ -13,31 +13,27 @@ export default class SpinButton extends React.Component {
     this.handlePlus = this.handlePlus.bind(this);
   }
 
-  handleMinus() {
-    const oldLevel = this.state.value;
-    if (this.state.value > this.props.min) {
-      const newLevel = this.state.value - 1;
-      this.props.onChange(oldLevel, newLevel);
-      this.setState({ value: newLevel });
-
-      this.minusButton.disabled = (newLevel === this.props.min);
-      this.plusButton.disabled = false;
+  handleChange() {
+    const { min, max, onChange } = this.props;
+    const n = parseFloat(this.state.value);
+    if (this.state.value >= min && this.state.value <= max) {
+      onChange(null, n);
+    } else {
+      this.setState({
+        value: Math.min(Math.max(this.state.value, min), max),
+      });
     }
+    this.minusButton.disabled = (n === min);
+    this.plusButton.disabled = (n === max);
+  }
 
+  handleMinus() {
+    this.setState({ value: this.state.value - 1 }, () => this.handleChange());
     this.minusButton.blur();
   }
 
   handlePlus() {
-    const oldLevel = this.state.value;
-    if (this.state.value < this.props.max) {
-      const newLevel = this.state.value + 1;
-      this.props.onChange(oldLevel, newLevel);
-      this.setState({ value: newLevel });
-
-      this.minusButton.disabled = false;
-      this.plusButton.disabled = (newLevel === this.props.max);
-    }
-
+    this.setState({ value: this.state.value + 1 }, () => this.handleChange());
     this.plusButton.blur();
   }
 
@@ -65,6 +61,22 @@ export default class SpinButton extends React.Component {
                 />
                 <span className="indent_hidden">감소</span>
               </button>
+            </li>
+            <li className="spin_button_list">
+              <input
+                type="number"
+                value={this.state.value}
+                onKeyDown={({ key }) => {
+                  if (key === 'Enter' || key === ' ') {
+                    this.handleChange();
+                  } else if (key === 'ArrowUp' || key === 'Up') {
+                    this.handleMinus();
+                  } else if (key === 'ArrowDown' || key === 'Down') {
+                    this.handlePlus();
+                  }
+                }}
+                onChange={({ target }) => this.setState({ value: target.value })}
+              />
             </li>
             <li className="spin_button_list">
               <button

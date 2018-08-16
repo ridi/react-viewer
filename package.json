@@ -1,17 +1,17 @@
 {
   "name": "@ridi/react-viewer",
-  "version": "0.3.9-alpha.1",
+  "version": "1.0.0-alpha.6",
   "license": "MIT",
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",
   "scripts": {
     "install:demo": "cd demo && npm install",
     "lint": "npm run lint:src && npm run lint:demo",
-    "lint:src": "eslint --fix --ext .js,.jsx ./src/",
+    "lint:src": "eslint --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
     "build": "npm run build:src && npm run build:demo",
-    "build:src": "webpack --mode production",
+    "build:src": "webpack",
     "build:demo": "cd demo && npm run build",
     "release": "release-it",
     "prepublishOnly": "npm run build"
@@ -25,7 +25,7 @@
     "prop-types": "^15.6.1",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
-    "styled-components": "^3.2.5"
+    "styled-components": "^3.3.3"
   },
   "devDependencies": {
     "@ridi/eslint-config": "^4.0.1",
@@ -33,8 +33,9 @@
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-es2015-classes": "^6.8.0",
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-polyfill": "^6.16.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "del": "^3.0.0",
     "eslint": "^4.19.1",
@@ -45,8 +46,8 @@
     "fs-extra": "^6.0.1",
     "git-rev": "^0.2.1",
     "package-json": "^5.0.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-devtools": "^3.4.1",

@@ -1,14 +1,12 @@
-import { isExist, updateObject } from './Util';
+import { isExist } from './Util';
 
 class Connector {
   constructor() {
     this.store = undefined;
   }
 
-  connect(store, options = {}) {
+  connect(store) {
     this.store = store;
-
-    this._options = updateObject(this._options, options);
     this.afterConnected();
   }
 

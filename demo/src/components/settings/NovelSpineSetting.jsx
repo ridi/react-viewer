@@ -1,62 +1,60 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectViewerScreenSettings } from '../../../../lib/index';
+import {
+  selectReaderSetting,
+  FONT_SIZE_RANGE,
+  CONTENT_PADDING_RANGE,
+  LINE_HEIGHT_RANGE,
+} from '../../../../lib';
+import { ViewerSpinType } from '../../constants/SettingConstants';
 import SpinButton from './SpinButton';
-import { ViewerSpinType } from '../../../../src/constants/ViewerScreenConstants';
 import SvgIcons from '../icons/SvgIcons';
-import { preventScrollEvent } from '../../../../src/util/CommonUi';
 
+const NovelSpineSetting = ({ item, onChanged, setting }) => (
+  <li className="setting_list" key={item}>
+    <SvgIcons
+      svgName={`svg_${item}_2`}
+      svgClass={`setting_title_icon svg_${item}_icon`}
+    />
 
-class NovelSpineSetting extends Component {
-  render() {
-    const { item, onChanged, viewerScreenSettings } = this.props;
-
-    return (
-      <li className="setting_list" key={item} ref={(list) => { preventScrollEvent(list); }}>
-        <SvgIcons
-          svgName={`svg_${item}_2`}
-          svgClass={`setting_title_icon svg_${item}_icon`}
-        />
-        <SpinButton
-          title={ViewerSpinType.toString(item)}
-          buttonTarget={`set_${item}`}
-          initialValue={{
-            [ViewerSpinType.FONT_SIZE]: viewerScreenSettings.fontSizeLevel,
-            [ViewerSpinType.LINE_HEIGHT]: viewerScreenSettings.lineHeightLevel,
-            [ViewerSpinType.PADDING]: viewerScreenSettings.paddingLevel,
-          }[item]}
-          min={{
-            [ViewerSpinType.FONT_SIZE]: 1,
-            [ViewerSpinType.LINE_HEIGHT]: 1,
-            [ViewerSpinType.PADDING]: 1,
-          }[item]}
-          max={{
-            [ViewerSpinType.FONT_SIZE]: 12,
-            [ViewerSpinType.LINE_HEIGHT]: 6,
-            [ViewerSpinType.PADDING]: 6,
-          }[item]}
-          onChange={(oldLevel, newLevel) => onChanged({
-            [ViewerSpinType.toReaderSettingType(item)]: newLevel,
-          })}
-        />
-      </li>
-    );
-  }
-}
+    <SpinButton
+      title={ViewerSpinType.toString(item)}
+      buttonTarget={`set_${item}`}
+      initialValue={{
+      [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
+      [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
+      [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
+    }[item]}
+      min={{
+      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[0],
+      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[0],
+      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[0],
+    }[item]}
+      max={{
+      [ViewerSpinType.FONT_SIZE]: FONT_SIZE_RANGE[1],
+      [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[1],
+      [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[1],
+    }[item]}
+      onChange={(oldLevel, newLevel) => onChanged({
+      [ViewerSpinType.toReaderSettingType(item)]: newLevel,
+    })}
+    />
+  </li>
+);
 
 NovelSpineSetting.propTypes = {
   item: PropTypes.string.isRequired,
   onChanged: PropTypes.func.isRequired,
-  viewerScreenSettings: PropTypes.object,
+  setting: PropTypes.object,
 };
 
 NovelSpineSetting.defaultProps = {
-  viewerScreenSettings: {},
+  setting: {},
 };
 
 const mapStateToProps = state => ({
-  viewerScreenSettings: selectViewerScreenSettings(state),
+  setting: selectReaderSetting(state),
 });
 
 export default connect(mapStateToProps)(NovelSpineSetting);
