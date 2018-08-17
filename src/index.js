@@ -1,6 +1,6 @@
 import Reader from './components/Reader';
 import reducers from './redux/reducer';
-import Connector from './util/connector/index';
+import Connector from './util/connector';
 
 export * from './redux/action';
 export * from './redux/selector';

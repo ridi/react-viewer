@@ -1,4 +1,4 @@
-import Connector from '../Connector';
+import BaseConnector from './BaseConnector';
 import {
   selectReaderCurrent,
   selectReaderCurrentContentIndex,
@@ -10,7 +10,7 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import ReaderJsHelper from '../ReaderJsHelper';
 import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
-class CurrentConnector extends Connector {
+class CurrentConnector extends BaseConnector {
   constructor() {
     super();
     this.readerJsHelper = null;

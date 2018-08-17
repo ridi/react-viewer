@@ -1,4 +1,4 @@
-import Connector from '../Connector';
+import BaseConnector from './BaseConnector';
 import { screenHeight, screenWidth } from '../BrowserWrapper';
 import {
   CHAPTER_INDICATOR_ID_PREFIX,
@@ -26,7 +26,7 @@ const settingsAffectingCalculation = [
   'maxWidth',
 ];
 
-class SettingConnector extends Connector {
+class SettingConnector extends BaseConnector {
   getMaxWidth(withUnit = false) {
     const { maxWidth } = selectReaderSetting(this.getState());
     return withUnit ? `${maxWidth}px` : maxWidth;

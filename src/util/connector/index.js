@@ -1,16 +1,16 @@
-import CalculationsConnector from './CalculationsConnector';
-import SettingConnector from './SettingConnector';
-import CurrentConnector from './CurrentConnector';
+import calculations from './CalculationsConnector';
+import setting from './SettingConnector';
+import current from './CurrentConnector';
 
 export const connect = (store) => {
-  CalculationsConnector.connect(store);
-  SettingConnector.connect(store);
-  CurrentConnector.connect(store);
+  calculations.connect(store);
+  setting.connect(store);
+  current.connect(store);
 };
 
 export default {
   connect,
-  calculations: CalculationsConnector,
-  setting: SettingConnector,
-  current: CurrentConnector,
+  calculations,
+  setting,
+  current,
 };

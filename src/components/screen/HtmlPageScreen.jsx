@@ -12,7 +12,7 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import PageHtmlContent from '../content/PageHtmlContent';

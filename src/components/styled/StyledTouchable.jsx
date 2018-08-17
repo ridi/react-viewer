@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector';
 import { screenHeight } from '../../util/BrowserWrapper';
 
 const StyledBaseTouchable = styled.div`

@@ -30,6 +30,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    mainFiles: ['index'],
   },
   externals: {
     react: 'react',

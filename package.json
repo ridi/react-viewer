@@ -30,7 +30,7 @@
   "devDependencies": {
     "@ridi/eslint-config": "^4.1.1",
     "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-es2015-classes": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-proto-to-assign": "^6.9.0",
@@ -39,7 +39,6 @@
     "babel-preset-react": "^6.24.1",
     "del": "^3.0.0",
     "eslint": "^5.0.0",
-    "eslint-loader": "^2.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",

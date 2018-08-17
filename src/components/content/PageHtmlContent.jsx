@@ -2,7 +2,7 @@
 import React from 'react';
 /* eslint-enable no-unused-vars */
 import BaseHtmlContent from './BaseHtmlContent';
-import Connector from '../../util/connector/index';
+import Connector from '../../util/connector';
 
 export default class PageHtmlContent extends BaseHtmlContent {
   moveToOffset() {

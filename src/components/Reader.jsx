@@ -6,7 +6,7 @@ import { selectReaderContentFormat, selectReaderSetting } from '../redux/selecto
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
-import SpineCalculator from '../util/connector/CalculationsConnector';
+import Connector from '../util/connector';
 import { isExist } from '../util/Util';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
@@ -15,7 +15,7 @@ import ContentFooter from './footer/ContentFooter';
 class Reader extends React.Component {
   constructor(props) {
     super(props);
-    SpineCalculator.setHasFooter(!!props.footer);
+    Connector.calculations.setHasFooter(!!props.footer);
   }
 
   componentDidMount() {

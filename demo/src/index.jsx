@@ -102,8 +102,8 @@ class DemoViewer extends Component {
     const width = screenWidth();
     let position = Position.MIDDLE;
     if (setting.viewType === ViewType.PAGE) {
-      if (event.screenX <= width * 0.2) position = Position.LEFT;
-      if (event.screenX >= width * 0.8) position = Position.RIGHT;
+      if (event.clientX <= width * 0.2) position = Position.LEFT;
+      if (event.clientX >= width * 0.8) position = Position.RIGHT;
     }
 
     this.onPositionTouched(position);

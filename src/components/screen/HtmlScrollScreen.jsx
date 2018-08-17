@@ -23,7 +23,7 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import Connector from '../../util/connector/index';
+import Connector from '../../util/connector';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';

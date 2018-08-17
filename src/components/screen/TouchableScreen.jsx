@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from '../prop-types';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector';
 import { preventScrollEvent, allowScrollEvent } from '../../util/BrowserWrapper';
 import { ViewType } from '../../constants/SettingConstants';
 

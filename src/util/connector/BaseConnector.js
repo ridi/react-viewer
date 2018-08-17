@@ -1,6 +1,6 @@
-import { isExist } from './Util';
+import { isExist } from '../Util';
 
-class Connector {
+class BaseConnector {
   constructor() {
     this.store = undefined;
   }
@@ -33,4 +33,4 @@ class Connector {
   }
 }
 
-export default Connector;
+export default BaseConnector;

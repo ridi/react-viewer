@@ -12,7 +12,7 @@ import {
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector';
 import TouchableScreen from './TouchableScreen';
 import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 import { getStyledTouchable } from '../styled';

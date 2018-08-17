@@ -20,7 +20,7 @@ import BaseScreen, {
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
 import Footer from '../footer/Footer';
-import Connector from '../../util/connector/';
+import Connector from '../../util/connector';
 import ImageContent from '../content/ImageContent';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';

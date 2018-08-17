@@ -1,4 +1,4 @@
-import Connector from '../Connector';
+import BaseConnector from './BaseConnector';
 import {
   updateCalculationsTotal,
   invalidateCalculations,
@@ -19,7 +19,7 @@ import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 
 // TODO 테스트 작성
-class CalculationsConnector extends Connector {
+class CalculationsConnector extends BaseConnector {
   constructor() {
     super();
     this.startOffset = { 1: 0 };
