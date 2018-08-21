@@ -1,4 +1,4 @@
-import { setContents } from '../../../lib';
+import { setContentsByUri, setContentsByValue } from '../../../lib';
 import { getJson } from '../utils/Api';
 
 export const ViewerUiActions = {
@@ -24,9 +24,19 @@ export const requestLoadContent = ({
   id,
   contentFormat,
   bindingType,
+  hasLoadedContent,
 }) => (dispatch) => {
-  getJson(`./resources/contents/${id}/spine.json`)
-    .then(({ contents }) => dispatch(setContents(contentFormat, bindingType, contents)));
+  if (hasLoadedContent) {
+    getJson(`./resources/contents/${id}/spine.json`)
+      .then((contents) => {
+        dispatch(setContentsByValue(contentFormat, bindingType, contents.map(content => content.content)));
+      });
+  } else {
+    getJson(`./resources/contents/${id}/spine.json`)
+      .then(({ contents: uris }) => {
+        dispatch(setContentsByUri(contentFormat, bindingType, uris));
+      });
+  }
 };
 
 export const onScreenTouched = () => ({

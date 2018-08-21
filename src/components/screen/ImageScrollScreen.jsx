@@ -96,7 +96,7 @@ class ImageScrollScreen extends BaseScreen {
         key={`${content.uri}:${content.index}`}
         content={content}
         currentOffset={current.offset}
-        src={content.uri}
+        src={content.uri || content.content}
         onContentLoaded={this.onContentLoaded}
         onContentError={this.onContentError}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}

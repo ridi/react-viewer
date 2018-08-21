@@ -14,8 +14,8 @@ export default class BaseHtmlContent extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { isContentLoaded } = this.props.content;
-    if (!isContentLoaded) {
+    const { isContentLoaded, uri } = this.props.content;
+    if (!isContentLoaded && uri) {
       this.fetch();
     }
     this.moveToOffset();

@@ -7,9 +7,9 @@ import {
   DEFAULT_HORIZONTAL_MARGIN,
 } from '../constants/StyledConstants';
 
-export const initialContentState = (index, uri) => ({
+export const initialContentState = index => ({
   index,
-  uri,
+  uri: null,
   content: null,
   error: null,
   isContentLoaded: false,

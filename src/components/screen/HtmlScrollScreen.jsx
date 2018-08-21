@@ -79,7 +79,9 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   onFooterRendered(footerNode) {
-    Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight);
+    if (!Connector.calculations.isCalculated(FOOTER_INDEX)) {
+      Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight);
+    }
   }
 
   renderFooter() {

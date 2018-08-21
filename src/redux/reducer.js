@@ -1,13 +1,14 @@
 import path, {
   initialFooterCalculationsState,
-  initialContentCalculationsState, initialSettingState,
+  initialContentCalculationsState,
+  initialSettingState,
   initialContentState,
   initialState,
 } from './path';
 import createReducer from '../util/Reducer';
 import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
-import { updateObject } from '../util/Util';
+import { makeSequence, updateObject } from '../util/Util';
 import * as BrowserWrapper from '../util/BrowserWrapper';
 import { ContentFormat } from '../constants/ContentConstants';
 
@@ -15,22 +16,38 @@ const onScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.currentOffset(), BrowserWrapper.scrollTop())
   .build();
 
-const updateCurrent = (state, action) => new ImmutableObjectBuilder(state)
-  .set(path.current(), updateObject(state.current, action.current))
-  .build();
-
-const updateSetting = (state, action) => new ImmutableObjectBuilder(state)
-  .set(path.setting(), updateObject(state.setting, action.setting))
-  .build();
-
-const setContents = (state, action) => new ImmutableObjectBuilder(state)
+const setContentMetadata = (state, { contentFormat, bindingType, contentCount }) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
-  .set(path.contentFormat(), action.contentFormat)
-  .set(path.bindingType(), action.bindingType)
-  .set(path.contents(), action.contents.map((uri, i) => initialContentState(i + 1, uri)))
-  .set(path.contentsCalculations(), action.contentFormat === ContentFormat.HTML
-    ? action.contents.map((_, i) => initialContentCalculationsState(i + 1))
+  .set(path.contentFormat(), contentFormat)
+  .set(path.bindingType(), bindingType)
+  .set(path.contents(), makeSequence(contentCount, 1).map(initialContentState))
+  .set(path.contentsCalculations(), contentFormat === ContentFormat.HTML
+    ? makeSequence(contentCount, 1).map(initialContentCalculationsState)
     : [initialContentCalculationsState(1)])
+  .build();
+
+const setContents = (state, {
+  type,
+  contentFormat,
+  bindingType,
+  contents,
+}) => new ImmutableObjectBuilder(state)
+  .set(path.isInitContents(), true)
+  .set(path.contentFormat(), contentFormat)
+  .set(path.bindingType(), bindingType)
+  .set(path.contents(), contents.map((content, i) => updateObject(initialContentState(i + 1), content)))
+  .set(path.isContentsLoaded(), type === actions.SET_CONTENTS_BY_VALUE)
+  .set(path.contentsCalculations(), contentFormat === ContentFormat.HTML
+    ? contents.map((_, i) => initialContentCalculationsState(i + 1))
+    : [initialContentCalculationsState(1)])
+  .build();
+
+const updateCurrent = (state, { current }) => new ImmutableObjectBuilder(state)
+  .set(path.current(), updateObject(state.current, current))
+  .build();
+
+const updateSetting = (state, { setting }) => new ImmutableObjectBuilder(state)
+  .set(path.setting(), updateObject(state.setting, setting))
   .build();
 
 const updateContent = (state, action) => new ImmutableObjectBuilder(state)
@@ -76,7 +93,9 @@ export default ({
   const setting = { ...initialSettingState(), ...customSetting };
   return createReducer({ ...initialState, setting }, {
     [actions.SCROLLED]: onScrolled,
-    [actions.SET_CONTENTS]: setContents,
+    [actions.SET_CONTENT_METADATA]: setContentMetadata,
+    [actions.SET_CONTENTS_BY_VALUE]: setContents,
+    [actions.SET_CONTENTS_BY_URI]: setContents,
     [actions.UPDATE_SETTING]: updateSetting,
     [actions.UPDATE_CONTENT]: updateContent,
     [actions.UPDATE_CONTENT_ERROR]: updateContentError,

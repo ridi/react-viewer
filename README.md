@@ -65,16 +65,32 @@ export default ViewerPage extends React.Component {
 
 ### Render Contents
 
-#### `setContents`
-
-Dispatch `setContents` action with content's metadata and URIs to render content into the reader.
+#### `setContentMetadata`
+ 
+Dispatch `setContentMetadata` before setting content metadata.
 
 ```js
-import { setContents, ContentFormat, BindingType } from '@ridi/react-viewer';
+import { setContentMetadata, ContentFormat, BindingType } from '@ridi/react-viewer';
 
-dispatch(setContents(ContentFormat.HTML, BindingType.LEFT, [
+dispatch(setContentMetadata(ContentFormat.HTML, BindingType.LEFT, 50));
+```
+ 
+#### `setContentsByValue`, `setContentsByUri`
+
+Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs to render into the reader.
+
+```js
+import { setContentsByValue, setContentsByUri } from '@ridi/react-viewer';
+
+dispatch(setContentsByUri([
   './uri1.json',
   './uri2.json',
+  ...
+]));
+
+dispatch(setContentsByValue([
+  '<p>...</p>',
+  '<p>...</p>',
   ...
 ]));
 ```
