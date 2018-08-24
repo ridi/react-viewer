@@ -45,7 +45,7 @@ export const selectReaderContentsCalculations = createSelector(
   reader => nullSafeGet(reader, path.contentsCalculations(), []),
 );
 
-export const selectReaderIsCalculated = createSelector(
+export const selectReaderIsAllCalculated = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isAllCalculated(), false),
 );
@@ -63,4 +63,9 @@ export const selectReaderFooterCalculations = createSelector(
 export const selectReaderIsInitContents = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isInitContents(), false),
+);
+
+export const selectReaderIsReadyToRead = createSelector(
+  [getReader],
+  reader => nullSafeGet(reader, path.isReadyToRead(), false),
 );

@@ -83,6 +83,10 @@ const updateFooterCalculation = (state, action) => new ImmutableObjectBuilder(st
   .set(path.footerCalculationsTotal(), action.total)
   .build();
 
+const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(state)
+  .set(path.isReadyToRead(), isReadyToRead)
+  .build();
+
 export default ({
   setting: customSetting = {},
 } = {}) => {
@@ -91,6 +95,7 @@ export default ({
     [actions.SET_CONTENT_METADATA]: setContentMetadata,
     [actions.SET_CONTENTS_BY_VALUE]: setContents,
     [actions.SET_CONTENTS_BY_URI]: setContents,
+    [actions.SET_READY_TO_READ]: setReadyToRead,
     [actions.UPDATE_SETTING]: updateSetting,
     [actions.UPDATE_CONTENT]: updateContent,
     [actions.UPDATE_CONTENT_ERROR]: updateContentError,

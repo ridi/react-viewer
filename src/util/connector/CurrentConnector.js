@@ -30,18 +30,17 @@ class CurrentConnector extends BaseConnector {
     }
   }
 
-  updateCurrentPosition(offset) {
-    if (!CalculationsConnector.isCompleted()) return;
-
+  updateCurrentOffset(offset) {
     const { viewType } = selectReaderSetting(this.getState());
     const contentIndex = CalculationsConnector.getIndexAtOffset(offset);
 
-    const total = CalculationsConnector.getTotal(contentIndex);
+    const total = CalculationsConnector.getContentTotal(contentIndex);
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     let location = EMPTY_READ_LOCATION;
     if (this.readerJsHelper) {
       location = this.readerJsHelper.getNodeLocationOfCurrentPage();
     }
+
     this.dispatch(updateCurrent({
       contentIndex,
       offset,
@@ -52,15 +51,17 @@ class CurrentConnector extends BaseConnector {
   }
 
   restoreCurrentOffset() {
-    if (!CalculationsConnector.isCompleted()) return;
-
     const { viewType } = selectReaderSetting(this.getState());
-    const { position, contentIndex } = selectReaderCurrent(this.getState());
+    const { position, contentIndex, offset } = selectReaderCurrent(this.getState());
 
-    const total = CalculationsConnector.getTotal(contentIndex);
+    if (!CalculationsConnector.isContentCalculated(contentIndex)) return;
+
+    const total = CalculationsConnector.getContentTotal(contentIndex);
     const maxOffset = CalculationsConnector.getStartOffset(contentIndex) + (total - 1);
-    const offset = Math.min(Math.round(position * total) + CalculationsConnector.getStartOffset(contentIndex), maxOffset);
-    this.dispatch(updateCurrent({ offset, viewType }));
+    const newOffset = Math.min(Math.round(position * total) + CalculationsConnector.getStartOffset(contentIndex), maxOffset);
+    if (newOffset !== offset) {
+      this.dispatch(updateCurrent({ offset: newOffset, viewType }));
+    }
   }
 
   isOnFooter() {

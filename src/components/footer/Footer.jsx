@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
+import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
 
 export default class Footer extends React.PureComponent {
@@ -19,7 +19,7 @@ export default class Footer extends React.PureComponent {
 
   onContentRendered() {
     const { onContentRendered } = this.props;
-    onContentRendered(this.wrapper.current);
+    onContentRendered(FOOTER_INDEX, this.wrapper.current);
   }
 
   render() {
@@ -47,12 +47,13 @@ Footer.defaultProps = {
   content: null,
   onContentRendered: () => {},
   StyledFooter: () => {},
+  startOffset: 0,
 };
 
 Footer.propTypes = {
   content: PropTypes.node,
   onContentRendered: PropTypes.func,
-  startOffset: PropTypes.number.isRequired,
+  startOffset: PropTypes.number,
   containerVerticalMargin: PropTypes.number.isRequired,
   StyledFooter: PropTypes.func,
 };

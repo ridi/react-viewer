@@ -14,31 +14,25 @@ export default class BaseHtmlContent extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { isContentLoaded, uri } = this.props.content;
-    if (!isContentLoaded && uri) {
-      this.fetch();
+    const { isContentLoaded } = this.props.content;
+    if (!isContentLoaded) {
+      this.loadContent();
+      return;
     }
-    this.moveToOffset();
+
+    this.afterContentLoaded();
   }
 
   componentDidUpdate(prevProps) {
     const {
-      onContentRendered,
       localOffset,
       isCalculated,
-      contentFooter,
     } = this.props;
-    const { index, isContentLoaded } = this.props.content;
-    const contentFooterHeight = contentFooter ? Connector.setting.getContentFooterHeight() : 0;
+    const { isContentLoaded } = this.props.content;
     if (!isContentLoaded) return;
-    if (!this.listener) {
-      const { current } = this.content;
-      this.listener = this.waitForResources()
-        .then(() => onContentRendered(index, {
-          scrollWidth: current.scrollWidth,
-          scrollHeight: current.scrollHeight + contentFooterHeight,
-        }));
-    }
+
+    this.afterContentLoaded();
+
     if (prevProps.isCalculated && !isCalculated) {
       this.listener = null;
     }
@@ -48,12 +42,27 @@ export default class BaseHtmlContent extends React.PureComponent {
     }
   }
 
-  fetch() {
+  loadContent() {
     const { uri, index } = this.props.content;
     const { onContentLoaded, onContentError } = this.props;
+
+    if (!uri) onContentError(index, 'no uri');
     fetch(uri).then(response => response.json())
       .then(data => onContentLoaded(index, data.value))
       .catch(error => onContentError(index, error));
+  }
+
+  afterContentLoaded() {
+    const { onContentRendered } = this.props;
+    const { index } = this.props.content;
+    if (!this.listener) {
+      const { current } = this.content;
+      this.listener = this.waitForResources()
+        .then(() => {
+          if (!current.isConnected) return;
+          onContentRendered(index, current);
+        });
+    }
   }
 
   waitForResources() {
@@ -76,10 +85,11 @@ export default class BaseHtmlContent extends React.PureComponent {
 
   renderContent(contentPrefix = '') {
     const { isContentLoaded, isContentOnError, content } = this.props.content;
-    const { contentFooter, className } = this.props;
+    const { contentFooter, className, isCalculated } = this.props;
     if (isContentLoaded) {
       return (
         <React.Fragment>
+          {!isCalculated && <div style={{ position: 'relative', textAlign: 'center' }}>Loading...</div>}
           <section
             ref={this.content}
             className={`content_container ${className}`}
@@ -90,9 +100,9 @@ export default class BaseHtmlContent extends React.PureComponent {
       );
     }
     if (isContentOnError) {
-      return <div>Error</div>; // TODO 에러 화면으로 변경
+      return <div style={{ position: 'relative', textAlign: 'center' }}>Error</div>; // TODO 에러 화면으로 변경
     }
-    return <div>Loading...</div>; // TODO 로딩 화면으로 변경
+    return <div style={{ position: 'relative', textAlign: 'center' }}>Loading...</div>; // TODO 로딩 화면으로 변경
   }
 
   render() {

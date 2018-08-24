@@ -50,20 +50,20 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   onScrollHandle(e) {
-    const { ignoreScroll, onScrolled } = this.props;
-    if (ignoreScroll) return;
+    const { ignoreScroll, onScrolled, isReadyToRead } = this.props;
+    if (ignoreScroll || !isReadyToRead) return;
     onScrolled(e);
     Connector.current.updateCurrentOffset(scrollTop());
   }
 
   calculate(index, node) {
     if (index === FOOTER_INDEX) {
-      Connector.calculations.setTotal(FOOTER_INDEX, node.scrollHeight);
+      Connector.calculations.setContentTotal(FOOTER_INDEX, node.scrollHeight);
     }
     const isLastContent = Connector.calculations.isLastContent(index);
     const { contentFooter } = this.props;
     const waitThenRun = window.requestAnimationFrame || window.setTimeout;
-    waitThenRun(() => Connector.calculations.setTotal(
+    waitThenRun(() => Connector.calculations.setContentTotal(
       index,
       node.scrollHeight + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),
     ));
@@ -76,7 +76,7 @@ class HtmlScrollScreen extends BaseScreen {
 
   needRender(contentIndex) {
     const { current } = this.props;
-    const calculated = Connector.calculations.isCalculated(contentIndex);
+    const calculated = Connector.calculations.isContentCalculated(contentIndex);
     const [top, height] = [current.offset, screenHeight()];
     const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
     return calculated && contentIndexesInScreen.includes(contentIndex);
@@ -104,7 +104,7 @@ class HtmlScrollScreen extends BaseScreen {
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
-    const isCalculated = Connector.calculations.isCalculated(content.index);
+    const isCalculated = Connector.calculations.isContentCalculated(content.index);
     return (
       <ScrollHtmlContent
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}

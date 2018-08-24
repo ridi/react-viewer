@@ -30,18 +30,25 @@ import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class ImageScrollScreen extends BaseScreen {
+  constructor(props) {
+    super(props);
+    this.calculate = this.calculate.bind(this);
+  }
+
   componentDidMount() {
     super.componentDidMount();
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
-    Connector.calculations.setTotal(1, 0);
-    Connector.calculations.setTotal(FOOTER_INDEX, 0);
-  }
 
-  componentDidUpdate() {
-    super.componentDidUpdate();
-
+    if (!this.listener) {
+      const { current } = this.wrapper;
+      this.listener = this.waitForResources()
+        .then(() => {
+          if (!current.isConnected) return;
+          this.calculate(1, current);
+        });
+    }
   }
 
   componentWillUnmount() {
@@ -53,10 +60,34 @@ class ImageScrollScreen extends BaseScreen {
     e.preventDefault();
     e.stopPropagation();
 
-    const { ignoreScroll, onScrolled } = this.props;
-    if (ignoreScroll) return;
+    const { ignoreScroll, onScrolled, isReadyToRead } = this.props;
+    if (ignoreScroll || !isReadyToRead) return;
     onScrolled(e);
     Connector.current.updateCurrentOffset(scrollTop());
+  }
+
+  calculate(index, node) {
+    if (index === FOOTER_INDEX) {
+      Connector.calculations.setContentTotal(FOOTER_INDEX, node.scrollHeight);
+    }
+    const isLastContent = Connector.calculations.isLastContent(index);
+    const { contentFooter } = this.props;
+    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
+    waitThenRun(() => Connector.calculations.setContentTotal(
+      index,
+      node.scrollHeight + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),
+    ));
+  }
+
+  waitForResources() {
+    // images
+    const images = [...this.wrapper.current.querySelectorAll('img')]
+      .filter(img => !img.complete)
+      .map(img => new Promise((resolve) => {
+        addEventListener(img, 'load', () => resolve());
+        addEventListener(img, 'error', () => resolve());
+      }));
+    return Promise.all([...images]);
   }
 
   moveToOffset() {
@@ -71,6 +102,7 @@ class ImageScrollScreen extends BaseScreen {
       <Footer
         content={footer}
         containerVerticalMargin={containerVerticalMargin}
+        onContentRendered={this.calculate}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.SCROLL)}
       />
     );

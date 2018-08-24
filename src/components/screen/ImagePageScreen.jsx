@@ -33,12 +33,13 @@ class ImagePageScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.container = React.createRef();
-    this.onContentRendered = this.onContentRendered.bind(this);
   }
 
-  componentDidUpdate(prevProps) {
-    super.componentDidUpdate(prevProps);
-    Connector.calculations.setTotal(1, Math.ceil(this.container.current.scrollWidth / screenWidth()));
+  componentDidMount() {
+    const { contents } = this.props;
+    const { columnsInPage, startWithBlankPage } = this.props.setting;
+    Connector.calculations.setContentTotal(1, Math.ceil((contents.length + startWithBlankPage) / columnsInPage));
+    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.getHasFooter() ? 1 : 0);
   }
 
   moveToOffset() {
@@ -52,11 +53,6 @@ class ImagePageScreen extends BaseScreen {
     }
   }
 
-  onContentRendered() {
-    const hasFooter = Connector.calculations.getHasFooter();
-    Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
-  }
-
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
@@ -66,7 +62,6 @@ class ImagePageScreen extends BaseScreen {
       <Footer
         content={footer}
         startOffset={startOffset}
-        onContentRendered={this.onContentRendered}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.PAGE)}
       />

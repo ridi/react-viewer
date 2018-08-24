@@ -11,6 +11,7 @@ export const actions = {
   SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
   SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
   SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
+  SET_READY_TO_READ: 'READER:SET_READY_TO_READ',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
   UPDATE_CURRENT: 'READER:UPDATE_CURRENT',
   UPDATE_CONTENT: 'READER:UPDATE_CONTENT',
@@ -118,4 +119,9 @@ export const updateCalculationsTotal = (calculationsTotal, isCompleted = false) 
   type: actions.UPDATE_CALCULATIONS_TOTAL,
   calculationsTotal,
   isCompleted,
+});
+
+export const setReadyToRead = isReadyToRead => ({
+  type: actions.SET_READY_TO_READ,
+  isReadyToRead,
 });

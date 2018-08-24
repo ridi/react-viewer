@@ -41,6 +41,7 @@ export const initialState = {
     isInitContents: false,
     isContentsLoaded: false,
     isAllCalculated: false,
+    isReadyToRead: false, // current.contentIndex 가 읽을 수 있는 상태(isCalculated = true)가 되었는지를 표시
   },
   metadata: {
     format: ContentFormat.HTML,
@@ -75,6 +76,7 @@ export default {
   isInitContents: () => ['status', 'isInitContents'],
   isContentsLoaded: () => ['status', 'isContentsLoaded'],
   isAllCalculated: () => ['status', 'isAllCalculated'],
+  isReadyToRead: () => ['status', 'isReadyToRead'],
 
   current: () => ['current'],
   currentContentIndex: () => ['current', 'contentIndex'],

@@ -89,8 +89,8 @@ class SettingConnector extends BaseConnector {
         return withUnit ? '100%' : 100;
       }
       if (viewType === ViewType.PAGE) {
-        if (CalculationsConnector.isCalculated(index)) {
-          const total = CalculationsConnector.getTotal(index);
+        if (CalculationsConnector.isContentCalculated(index)) {
+          const total = CalculationsConnector.getContentTotal(index);
           const fullWidth = (this.getContainerWidthInternal() * total) + (this.getColumnGap() * (total - 1));
           return withUnit ? `${fullWidth}px` : fullWidth;
         }
