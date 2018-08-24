@@ -12,7 +12,6 @@ import {
   addEventListener,
   removeEventListener,
 } from '../../util/BrowserWrapper';
-import { onScreenScrolled } from '../../redux/action';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -23,12 +22,12 @@ import Footer from '../footer/Footer';
 import Connector from '../../util/connector';
 import ImageContent from '../content/ImageContent';
 import { StyledImageScrollContent } from '../styled/StyledContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
@@ -36,7 +35,13 @@ class ImageScrollScreen extends BaseScreen {
 
     this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
     addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
-    this.onContentRendered = this.onContentRendered.bind(this);
+    Connector.calculations.setTotal(1, 0);
+    Connector.calculations.setTotal(FOOTER_INDEX, 0);
+  }
+
+  componentDidUpdate() {
+    super.componentDidUpdate();
+
   }
 
   componentWillUnmount() {
@@ -44,21 +49,14 @@ class ImageScrollScreen extends BaseScreen {
     removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
   }
 
-  componentDidUpdate(prevProps) {
-    super.componentDidUpdate(prevProps);
-    Connector.calculations.setTotal(1, this.wrapper.current.scrollHeight);
-  }
-
   onScrollHandle(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    const { ignoreScroll, actionOnScreenScrolled } = this.props;
-    if (ignoreScroll) {
-      return;
-    }
-    actionOnScreenScrolled();
-    Connector.current.updateCurrentPosition(scrollTop());
+    const { ignoreScroll, onScrolled } = this.props;
+    if (ignoreScroll) return;
+    onScrolled(e);
+    Connector.current.updateCurrentOffset(scrollTop());
   }
 
   moveToOffset() {
@@ -66,20 +64,13 @@ class ImageScrollScreen extends BaseScreen {
     setScrollTop(offset);
   }
 
-  onContentRendered(footerNode) {
-    Connector.calculations.setTotal(FOOTER_INDEX, footerNode.scrollHeight);
-  }
-
   renderFooter() {
     const { footer } = this.props;
     const { containerVerticalMargin } = this.props.setting;
-    const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
     return (
       <Footer
         content={footer}
-        startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
-        onContentRendered={this.onContentRendered}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.SCROLL)}
       />
     );
@@ -137,7 +128,7 @@ ImageScrollScreen.propTypes = {
   actionUpdateContentError: PropTypes.func.isRequired,
   footerCalculations: FooterCalculationsType.isRequired,
   contentFooter: PropTypes.node,
-  actionOnScreenScrolled: PropTypes.func.isRequired,
+  onScrolled: PropTypes.func.isRequired,
   ignoreScroll: PropTypes.bool.isRequired,
 };
 
@@ -151,7 +142,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   ...readerBaseScreenMapDispatchToProps(dispatch),
-  actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 
 export default connect(

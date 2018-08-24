@@ -8,7 +8,6 @@ import {
 } from '../constants/SettingConstants';
 
 export const actions = {
-  SCROLLED: 'READER:SCROLLED',
   SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
   SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
   SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
@@ -21,10 +20,6 @@ export const actions = {
   UPDATE_FOOTER_CALCULATIONS: 'READER:COMPLETE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
 };
-
-export const onScreenScrolled = () => ({
-  type: actions.SCROLLED,
-});
 
 export const setContentMetadata = (contentFormat, bindingType, contentCount) => ({
   type: actions.SET_CONTENT_METADATA,

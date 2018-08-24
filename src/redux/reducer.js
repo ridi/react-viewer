@@ -9,12 +9,7 @@ import createReducer from '../util/Reducer';
 import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
 import { makeSequence, updateObject } from '../util/Util';
-import * as BrowserWrapper from '../util/BrowserWrapper';
 import { ContentFormat } from '../constants/ContentConstants';
-
-const onScrolled = state => new ImmutableObjectBuilder(state)
-  .set(path.currentOffset(), BrowserWrapper.scrollTop())
-  .build();
 
 const setContentMetadata = (state, { contentFormat, bindingType, contentCount }) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
@@ -73,6 +68,7 @@ const updateContentCalculations = (state, action) => new ImmutableObjectBuilder(
 
 const invalidateCalculations = state => new ImmutableObjectBuilder(state)
   .set(path.isAllCalculated(), false)
+  .set(path.isReadyToRead(), false)
   .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
   .build();
@@ -92,7 +88,6 @@ export default ({
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
   return createReducer({ ...initialState, setting }, {
-    [actions.SCROLLED]: onScrolled,
     [actions.SET_CONTENT_METADATA]: setContentMetadata,
     [actions.SET_CONTENTS_BY_VALUE]: setContents,
     [actions.SET_CONTENTS_BY_URI]: setContents,

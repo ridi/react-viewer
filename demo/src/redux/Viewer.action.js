@@ -5,6 +5,7 @@ export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',
   VIEWER_SETTING_CHANGED: 'VIEWER:SETTING_CHANGED',
   TOUCHED: 'VIEWER:TOUCHED',
+  SCROLLED: 'VIEWER:SCROLLED',
 };
 
 export const onToggleViewerSetting = () => ({
@@ -41,4 +42,8 @@ export const requestLoadContent = ({
 
 export const onScreenTouched = () => ({
   type: ViewerUiActions.TOUCHED,
+});
+
+export const onScreenScrolled = () => ({
+  type: ViewerUiActions.SCROLLED,
 });
