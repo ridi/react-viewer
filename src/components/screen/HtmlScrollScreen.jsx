@@ -87,6 +87,7 @@ class HtmlScrollScreen extends BaseScreen {
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
+        key="footer"
         content={footer}
         onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}

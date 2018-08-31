@@ -52,6 +52,7 @@ class DemoViewer extends Component {
     super(props);
     this.onReaderTouched = this.onReaderTouched.bind(this);
     this.onReaderScrolled = this.onReaderScrolled(this);
+    this.footer = <ViewerScreenFooter content={props.content} />;
   }
 
   componentWillMount() {
@@ -138,7 +139,7 @@ class DemoViewer extends Component {
       >
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
         <Reader
-          footer={<ViewerScreenFooter content={content} />}
+          footer={this.footer}
           contentFooter={<small>content footer area...</small>}
           onMount={() => console.log('onMount')}
           onUnmount={() => console.log('onUnmount')}

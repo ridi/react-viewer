@@ -63,6 +63,7 @@ class HtmlPageScreen extends BaseScreen {
 
     return (
       <Footer
+        key="footer"
         content={footer}
         startOffset={startOffset}
         onContentRendered={this.calculate}
