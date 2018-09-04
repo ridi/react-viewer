@@ -65,30 +65,48 @@ export default ViewerPage extends React.Component {
 
 ### Render Contents
 
-#### `setContentMetadata`
+There are 2 ways to set contents in this reader.
+
+#### Use `setContentMetadata` and `updateContent`
  
-Dispatch `setContentMetadata` before setting content metadata.
+First of all, dispatch `setContentMetadata` for setting content metadata.
+Then each content updated by one at a time.
 
 ```js
-import { setContentMetadata, ContentFormat, BindingType } from '@ridi/react-viewer';
+import {
+  updateContent, 
+  setContentMetadata,
+  ContentFormat,
+  BindingType,
+} from '@ridi/react-viewer';
 
 dispatch(setContentMetadata(ContentFormat.HTML, BindingType.LEFT, 50));
-```
- 
-#### `setContentsByValue`, `setContentsByUri`
 
-Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs to render into the reader.
+dispatch(updateContent(1, '<p>...</p>', false));
+//... 1 ~ 50
+dispatch(updateContent(50, '<p>...</p>', true));
+```
+
+#### `setContentsByValue` or `setContentsByUri`
+
+Using this way, whole contents including metadata are set in a time.
+Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs.
 
 ```js
-import { setContentsByValue, setContentsByUri } from '@ridi/react-viewer';
+import {
+  setContentsByValue,
+  setContentsByUri,
+  ContentFormat,
+  BindingType,
+} from '@ridi/react-viewer';
 
-dispatch(setContentsByUri([
+dispatch(setContentsByUri(ContentFormat.HTML, BindingType.LEFT,[
   './uri1.json',
   './uri2.json',
   ...
 ]));
 
-dispatch(setContentsByValue([
+dispatch(setContentsByValue(ContentFormat.HTML, BindingType.LEFT,[
   '<p>...</p>',
   '<p>...</p>',
   ...
