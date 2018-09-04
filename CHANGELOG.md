@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+### Added
+
+- `status.isReadyToRead` in Redux store to improvement on user-side performance
+    - Though page calculation is not completed, `status.isReadyToRead` can be true when current content(`current.contentIndex`) is ready to read.
+
+### Changed
+
+- Separate action of loading contents
+    - `setContents` action -> `setContentsByUri`, `setContentsByValue` actions 
+- `READER:SCROLLED` action -> `onScrolled` property of `<Reader>`
+
+
 ## [v1.0.0-alpha.6]
 
 ### Fixed
