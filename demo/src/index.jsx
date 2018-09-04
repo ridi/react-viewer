@@ -51,7 +51,7 @@ class DemoViewer extends Component {
   constructor(props) {
     super(props);
     this.onReaderTouched = this.onReaderTouched.bind(this);
-    this.onReaderScrolled = this.onReaderScrolled(this);
+    this.onReaderScrolled = this.onReaderScrolled.bind(this);
     this.footer = <ViewerScreenFooter content={props.content} />;
   }
 
