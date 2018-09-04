@@ -62,6 +62,7 @@ export default ViewerPage extends React.Component {
 * `contentFooter`(node): markup for the content footer area
 * `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewType)
 * `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewType)
+* `onScrolled`(func): called when scrolling event is triggered on screen (on `scroll` viewType)
 
 ### Render Contents
 
