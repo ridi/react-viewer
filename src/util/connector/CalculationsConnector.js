@@ -145,8 +145,6 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getIndexAtOffset(offset) {
-    // if (!this.isCompleted()) return null;
-
     const lastIndex = Object.keys(this.startOffset).length;
     for (let i = 1; i <= lastIndex; i += 1) {
       const index = i === lastIndex ? FOOTER_INDEX : i;
