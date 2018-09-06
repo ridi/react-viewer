@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+## [v1.0.0-alpha.7]
+
 ### Added
 
 - `status.isReadyToRead` in Redux store to improvement on user-side performance
@@ -109,7 +111,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.6...HEAD
+[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.7...HEAD
+[v1.0.0-alpha.7]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.6...1.0.0-alpha.7
 [v1.0.0-alpha.6]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.5...1.0.0-alpha.6
 [v1.0.0-alpha.5]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.4...1.0.0-alpha.5
 [v1.0.0-alpha.4]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.3...1.0.0-alpha.4
