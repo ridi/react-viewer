@@ -1,6 +1,6 @@
 {
   "name": "@ridi/react-viewer",
-  "version": "0.3.9-alpha.1",
+  "version": "0.3.9",
   "license": "MIT",
   "description": "React-Redux based comics viewer",
   "main": "lib/index.js",

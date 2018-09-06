@@ -13,17 +13,10 @@ const exitWithErrorMsg = (msg) => {
   process.exit(1);
 };
 
-const getGitBranch = () => new Promise((resolve, reject) => git.branch(branch => resolve(branch)));
 const gitCheckout = branch => exec(`git checkout ${branch}`);
 const gitCommitAndPush = commitMsg => exec(`git add . --all && git commit -m ${commitMsg} && git push`);
 
-const checkPreconditions = () => getGitBranch()
-  .then(branch => {
-    if (branch !== 'master') {
-      exitWithErrorMsg('branch must be master');
-    }
-    return npm(name);
-  });
+const checkPreconditions = () => npm(name);
 
 const build = webpackConfig => new Promise((resolve, reject) => {
   const compiler = webpack(webpackConfig);
