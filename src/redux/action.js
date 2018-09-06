@@ -8,8 +8,10 @@ import {
 } from '../constants/SettingConstants';
 
 export const actions = {
-  SCROLLED: 'READER:SCROLLED',
-  SET_CONTENTS: 'READER:SET_CONTENTS',
+  SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
+  SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
+  SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
+  SET_READY_TO_READ: 'READER:SET_READY_TO_READ',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
   UPDATE_CURRENT: 'READER:UPDATE_CURRENT',
   UPDATE_CONTENT: 'READER:UPDATE_CONTENT',
@@ -20,15 +22,25 @@ export const actions = {
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
 };
 
-export const onScreenScrolled = () => ({
-  type: actions.SCROLLED,
-});
-
-export const setContents = (contentFormat, bindingType, contents) => ({
-  type: actions.SET_CONTENTS,
+export const setContentMetadata = (contentFormat, bindingType, contentCount) => ({
+  type: actions.SET_CONTENT_METADATA,
   contentFormat,
   bindingType,
-  contents,
+  contentCount,
+});
+
+export const setContentsByValue = (contentFormat, bindingType, contents) => ({
+  type: actions.SET_CONTENTS_BY_VALUE,
+  contentFormat,
+  bindingType,
+  contents: contents.map(content => ({ content, isContentLoaded: true })),
+});
+
+export const setContentsByUri = (contentFormat, bindingType, uris) => ({
+  type: actions.SET_CONTENTS_BY_URI,
+  contentFormat,
+  bindingType,
+  contents: uris.map(uri => ({ uri, isContentLoaded: false })),
 });
 
 export const updateCurrent = current => ({
@@ -107,4 +119,9 @@ export const updateCalculationsTotal = (calculationsTotal, isCompleted = false) 
   type: actions.UPDATE_CALCULATIONS_TOTAL,
   calculationsTotal,
   isCompleted,
+});
+
+export const setReadyToRead = isReadyToRead => ({
+  type: actions.SET_READY_TO_READ,
+  isReadyToRead,
 });

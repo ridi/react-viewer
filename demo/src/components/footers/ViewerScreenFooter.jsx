@@ -72,7 +72,7 @@ class ViewerScreenFooter extends Component {
             <button
               type="button"
               className="move_prev_page_button"
-              onClick={() => Connector.current.updateCurrentPosition(calculationsTotal - 2)}
+              onClick={() => Connector.current.updateCurrentOffset(calculationsTotal - 2)}
             >
               <SvgIcons
                 svgName="svg_arrow_6_left"

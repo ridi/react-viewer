@@ -14,9 +14,13 @@ class TouchableScreen extends React.Component {
   }
 
   handleScrollEvent() {
-    const { viewType, forwardedRef } = this.props;
+    const { viewType, forwardedRef, isReadyToRead } = this.props;
     if (viewType === ViewType.PAGE) {
       if (Connector.current.isOnFooter()) allowScrollEvent(forwardedRef.current);
+      else preventScrollEvent(forwardedRef.current);
+    }
+    if (viewType === ViewType.SCROLL) {
+      if (isReadyToRead) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
   }
@@ -60,6 +64,7 @@ TouchableScreen.propTypes = {
   total: PropTypes.number,
   viewType: PropTypes.string.isRequired,
   StyledTouchable: PropTypes.func,
+  isReadyToRead: PropTypes.bool.isRequired,
 };
 
 export default React.forwardRef((props, ref) => <TouchableScreen {...props} forwardedRef={ref} />);

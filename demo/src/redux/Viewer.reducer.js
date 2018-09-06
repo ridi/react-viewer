@@ -1,5 +1,4 @@
 import { ViewerUiActions } from './Viewer.action';
-import { actions as ReaderActions } from '../../../lib';
 import path, { initialState } from './Viewer.path';
 import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
@@ -29,14 +28,9 @@ const onScreenScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
-// const movePageViewer = state => new ImmutableObjectBuilder(state)
-//   .set(path.isVisibleSettingPopup(), false)
-//   .build();
-
 export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
   [ViewerUiActions.TOUCHED]: onScreenTouched,
-  [ReaderActions.SCROLLED]: onScreenScrolled,
-//  [ReaderActions.UPDATE_CURRENT]: movePageViewer,
+  [ViewerUiActions.SCROLLED]: onScreenScrolled,
 });

@@ -24,15 +24,18 @@ class HtmlPageScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
-    this.onContentFooterRendered = this.onContentFooterRendered.bind(this);
   }
 
-  calculate(index, nodeInfo) {
+  calculate(index, contentNode) {
+    if (index === FOOTER_INDEX) {
+      const hasFooter = Connector.calculations.getHasFooter();
+      Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
+    }
     const waitThenRun = window.requestAnimationFrame || window.setTimeout;
     waitThenRun(() => {
-      const pagesTotal = Math.ceil(nodeInfo.scrollWidth
+      const pagesTotal = Math.ceil(contentNode.scrollWidth
         / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
-      Connector.calculations.setTotal(index, pagesTotal);
+      Connector.calculations.setContentTotal(index, pagesTotal);
     });
   }
 
@@ -46,16 +49,11 @@ class HtmlPageScreen extends BaseScreen {
     }
   }
 
-  onContentFooterRendered() {
-    const hasFooter = Connector.calculations.getHasFooter();
-    Connector.calculations.setTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
-  }
-
-  needRender(content) {
+  needRender(index) {
     const { current } = this.props;
-    const calculated = Connector.calculations.isCalculated(content.index);
-    const visible = current.contentIndex === content.index;
-    return visible || !calculated;
+    const calculated = Connector.calculations.isContentCalculated(index);
+    const visible = current.contentIndex === index;
+    return calculated && visible;
   }
 
   renderFooter() {
@@ -65,9 +63,10 @@ class HtmlPageScreen extends BaseScreen {
 
     return (
       <Footer
+        key="footer"
         content={footer}
         startOffset={startOffset}
-        onContentRendered={this.onContentFooterRendered}
+        onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.PAGE)}
       />
@@ -82,12 +81,13 @@ class HtmlPageScreen extends BaseScreen {
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
+    const isCalculated = Connector.calculations.isContentCalculated(content.index);
     return (
       <PageHtmlContent
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
-        isCalculated={Connector.calculations.isCalculated(content.index)}
+        isCalculated={isCalculated}
         startOffset={startOffset}
         localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
         onContentLoaded={this.onContentLoaded}
@@ -102,8 +102,9 @@ class HtmlPageScreen extends BaseScreen {
   renderContents() {
     const { contents } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.PAGE);
+    const calculatedTarget = Connector.calculations.getCalculationTargetContents();
     return contents
-      .filter(content => this.needRender(content))
+      .filter(({ index }) => this.needRender(index) || calculatedTarget.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }

@@ -5,6 +5,10 @@ const StyledBaseFooter = styled.section`
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `;
 
+const StyledScrollFooter = StyledBaseFooter.extend`
+  margin: ${({ containerVerticalMargin }) => `${containerVerticalMargin}px 0`};
+`;
+
 export const StyledPageFooter = StyledBaseFooter.extend`
   vertical-align: top;
   white-space: initial;
@@ -13,9 +17,10 @@ export const StyledPageFooter = StyledBaseFooter.extend`
   width: ${({ width }) => width};
 `;
 
-export const StyledScrollFooter = StyledBaseFooter.extend`
+export const StyledHtmlScrollFooter = StyledScrollFooter.extend`
   position: absolute;
   top: ${({ startOffset }) => `${startOffset}px`};
-  margin: ${({ containerVerticalMargin }) => `${containerVerticalMargin}px 0`};
   width: 100%;
 `;
+
+export const StyledImageScrollFooter = StyledScrollFooter.extend``;

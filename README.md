@@ -62,19 +62,54 @@ export default ViewerPage extends React.Component {
 * `contentFooter`(node): markup for the content footer area
 * `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewType)
 * `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewType)
+* `onScrolled`(func): called when scrolling event is triggered on screen (on `scroll` viewType)
 
 ### Render Contents
 
-#### `setContents`
+There are 2 ways to set contents in this reader.
 
-Dispatch `setContents` action with content's metadata and URIs to render content into the reader.
+#### Use `setContentMetadata` and `updateContent`
+ 
+First of all, dispatch `setContentMetadata` for setting content metadata.
+Then each content updated by one at a time.
 
 ```js
-import { setContents, ContentFormat, BindingType } from '@ridi/react-viewer';
+import {
+  updateContent, 
+  setContentMetadata,
+  ContentFormat,
+  BindingType,
+} from '@ridi/react-viewer';
 
-dispatch(setContents(ContentFormat.HTML, BindingType.LEFT, [
+dispatch(setContentMetadata(ContentFormat.HTML, BindingType.LEFT, 50));
+
+dispatch(updateContent(1, '<p>...</p>', false));
+//... 1 ~ 50
+dispatch(updateContent(50, '<p>...</p>', true));
+```
+
+#### `setContentsByValue` or `setContentsByUri`
+
+Using this way, whole contents including metadata are set in a time.
+Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs.
+
+```js
+import {
+  setContentsByValue,
+  setContentsByUri,
+  ContentFormat,
+  BindingType,
+} from '@ridi/react-viewer';
+
+dispatch(setContentsByUri(ContentFormat.HTML, BindingType.LEFT,[
   './uri1.json',
   './uri2.json',
+  ...
+]));
+
+dispatch(setContentsByValue(ContentFormat.HTML, BindingType.LEFT,[
+  '<p>...</p>',
+  '<p>...</p>',
   ...
 ]));
 ```

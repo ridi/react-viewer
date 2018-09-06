@@ -12,7 +12,7 @@ import {
   StyledImagePageContent,
   StyledImageScrollContent,
 } from './StyledContent';
-import { StyledPageFooter, StyledScrollFooter } from './StyledFooter';
+import { StyledPageFooter, StyledHtmlScrollFooter, StyledImageScrollFooter } from './StyledFooter';
 
 export const getStyledTouchable = (contentFormat, viewType) => {
   if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) return StyledHtmlScrollTouchable;
@@ -31,7 +31,8 @@ export const getStyledContent = (contentFormat, viewType) => {
 };
 
 export const getStyledFooter = (contentFormat, viewType) => {
-  if (viewType === ViewType.SCROLL) return StyledScrollFooter;
+  if (contentFormat === ContentFormat.HTML && viewType === ViewType.SCROLL) return StyledHtmlScrollFooter;
+  if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) return StyledImageScrollFooter;
   if (viewType === ViewType.PAGE) return StyledPageFooter;
   return null;
 };

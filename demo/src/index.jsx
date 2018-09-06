@@ -21,7 +21,7 @@ import { IconsSprite } from './components/icons/IconsSprite';
 import { selectIsFullScreen } from './redux/Viewer.selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
-import { requestLoadContent, onScreenTouched } from './redux/Viewer.action';
+import { requestLoadContent, onScreenTouched, onScreenScrolled } from './redux/Viewer.action';
 import { screenWidth } from './utils/BrowserWrapper';
 import { BindingType } from '../../src/constants/ContentConstants';
 
@@ -51,6 +51,8 @@ class DemoViewer extends Component {
   constructor(props) {
     super(props);
     this.onReaderTouched = this.onReaderTouched.bind(this);
+    this.onReaderScrolled = this.onReaderScrolled.bind(this);
+    this.footer = <ViewerScreenFooter content={props.content} />;
   }
 
   componentWillMount() {
@@ -92,7 +94,7 @@ class DemoViewer extends Component {
     nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
     if (currentOffset === nextOffset) return;
 
-    Connector.current.updateCurrentPosition(nextOffset);
+    Connector.current.updateCurrentOffset(nextOffset);
   }
 
   onReaderTouched(event) {
@@ -107,6 +109,11 @@ class DemoViewer extends Component {
     }
 
     this.onPositionTouched(position);
+  }
+
+  onReaderScrolled() {
+    const { actionOnScreenScrolled } = this.props;
+    actionOnScreenScrolled();
   }
 
   render() {
@@ -132,11 +139,12 @@ class DemoViewer extends Component {
       >
         <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
         <Reader
-          footer={<ViewerScreenFooter content={content} />}
+          footer={this.footer}
           contentFooter={<small>content footer area...</small>}
           onMount={() => console.log('onMount')}
           onUnmount={() => console.log('onUnmount')}
           onTouched={this.onReaderTouched}
+          onScrolled={this.onReaderScrolled}
         />
         <ViewerFooter content={content} />
         <IconsSprite />
@@ -151,6 +159,7 @@ DemoViewer.propTypes = {
   isFullScreen: PropTypes.bool.isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
   actionOnScreenTouched: PropTypes.func.isRequired,
+  actionOnScreenScrolled: PropTypes.func.isRequired,
   currentOffset: PropTypes.number.isRequired,
   setting: PropTypes.object.isRequired,
   calculationsTotal: PropTypes.number.isRequired,
@@ -173,6 +182,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => ({
   actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
   actionOnScreenTouched: () => dispatch(onScreenTouched()),
+  actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 
 const DemoViewerPage = connect(

@@ -4,10 +4,10 @@ export default PropTypes;
 
 export const ContentType = PropTypes.shape({
   index: PropTypes.number.isRequired,
-  uri: PropTypes.string.isRequired,
+  uri: PropTypes.string,
+  content: PropTypes.string,
   isContentLoaded: PropTypes.bool.isRequired,
   isContentOnError: PropTypes.bool.isRequired,
-  content: PropTypes.string,
 });
 
 export const ContentCalculationsType = PropTypes.shape({

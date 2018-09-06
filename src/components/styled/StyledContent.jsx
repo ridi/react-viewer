@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Connector from '../../util/connector';
 import PropTypes from '../prop-types';
+import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 
 const StyledBaseContent = styled.article`
   box-sizing: border-box;
@@ -83,7 +84,7 @@ export const StyledHtmlScrollContent = StyledBaseContent.extend`
   ${StyledScrollContent}
 
   position: absolute;
-  top: ${({ visible, startOffset }) => `${visible ? startOffset : -999}px`};
+  top: ${({ startOffset }) => `${startOffset !== PRE_CALCULATION ? startOffset : -999}px`};
 `;
 
 export const StyledHtmlPageContent = StyledBaseContent.extend`

@@ -9,14 +9,18 @@ export default class ImageContent extends React.PureComponent {
 
   imageOnErrorHandler() {
     const { onContentError } = this.props;
-    const { index } = this.props.content;
-    onContentError(index, '');
+    const { index, isContentOnError } = this.props.content;
+    if (!isContentOnError) {
+      onContentError(index, '');
+    }
   }
 
   imageOnLoadHandler() {
     const { onContentLoaded } = this.props;
-    const { index } = this.props.content;
-    onContentLoaded(index, '');
+    const { index, isContentLoaded } = this.props.content;
+    if (!isContentLoaded) {
+      onContentLoaded(index, '');
+    }
   }
 
   renderImage() {
@@ -59,7 +63,7 @@ ImageContent.defaultProps = {
 };
 
 ImageContent.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   content: ContentType.isRequired,
   onContentLoaded: PropTypes.func,
   onContentError: PropTypes.func,
