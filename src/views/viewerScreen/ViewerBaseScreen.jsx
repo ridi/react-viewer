@@ -25,6 +25,7 @@ export default class ViewerBaseScreen extends React.Component {
       contentFormat,
       spines,
       images,
+      lazyLoadMargin,
     } = this.props;
 
     if (contentFormat === ContentFormat.EPUB) {
@@ -39,12 +40,14 @@ export default class ViewerBaseScreen extends React.Component {
           />
         );
       });
-    } else if (contentFormat === ContentFormat.IMAGE) {
+    }
+    if (contentFormat === ContentFormat.IMAGE) {
       return images.map((image, index) => (
         <LazyLoadImage
           key={image.src}
           src={image.src}
           className={`${index === 0 ? ' first' : ''}${index === images.length - 1 ? ' last' : ''}`}
+          lazyLoadMargin={lazyLoadMargin}
         />
       ));
     }
@@ -57,6 +60,7 @@ ViewerBaseScreen.propTypes = {
   contentFormat: PropTypes.string,
   spines: PropTypes.object,
   images: PropTypes.array,
+  lazyLoadMargin: PropTypes.number.isRequired,
 };
 
 ViewerBaseScreen.defaultProps = {

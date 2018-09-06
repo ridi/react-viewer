@@ -44,8 +44,10 @@ export default class SpinButton extends React.Component {
   render() {
     return (
       <div className="table_wrapper">
-        <div className="setting_title">{this.props.title}
-          <span className="indent_hidden">변경, 현재 </span><span className="setting_num">{this.state.value}</span>
+        <div className="setting_title">
+          {this.props.title}
+          <span className="indent_hidden">변경, 현재 </span>
+          <span className="setting_num">{this.state.value}</span>
         </div>
         <div className="setting_buttons_wrapper spin_setting">
           <ul className={`spin_button_wrapper ${this.props.buttonTarget}`}>

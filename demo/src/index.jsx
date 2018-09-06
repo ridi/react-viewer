@@ -88,12 +88,14 @@ class DemoViewer extends Component {
           title={content.title}
           isVisible={!isFullScreen || isVisibleSettingPopup}
         />
-        {isLoadingCompleted ?
-          <ViewerBody
-            content={content}
-            episode={episode}
-          /> :
-          <ViewerDummyBody />
+        {isLoadingCompleted
+          ? (
+            <ViewerBody
+              content={content}
+              episode={episode}
+            />
+          )
+          : <ViewerDummyBody />
         }
         <ViewerFooter
           content={content}
@@ -134,8 +136,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
   requestViewerData: (contentId, episodeId) => dispatch(requestLoadEpisode(contentId, episodeId)),
-  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) =>
-    dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
+  updateSpineMetaData: (contentType, viewerType, bindingType = BindingType.LEFT) => dispatch(updateSpineMetaDataAction(contentType, viewerType, bindingType)),
 });
 
 const DemoViewerPage = connect(

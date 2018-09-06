@@ -23,5 +23,8 @@ module.exports = {
     'react/require-default-props': 0,
     'react/forbid-prop-types': 0,
     'import/no-extraneous-dependencies': 0,
+    'react/destructuring-assignment': 0,
+    'react/no-access-state-in-setstate': 0,
+    'react/button-has-type': 0,
   },
 };

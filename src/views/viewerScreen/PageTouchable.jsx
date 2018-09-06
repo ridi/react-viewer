@@ -53,8 +53,8 @@ class PageTouchable extends Component {
         }}
         onClick={e => this.onTouchScreenHandle(e, Position.MIDDLE)}
       >
-        {!isEndingScreen && <button className="left_area" onClick={e => this.onTouchScreenHandle(e, Position.LEFT)} />}
-        {!isEndingScreen && <button className="right_area" onClick={e => this.onTouchScreenHandle(e, Position.RIGHT)} />}
+        {!isEndingScreen && <button type="button" className="left_area" onClick={e => this.onTouchScreenHandle(e, Position.LEFT)} />}
+        {!isEndingScreen && <button type="button" className="right_area" onClick={e => this.onTouchScreenHandle(e, Position.RIGHT)} />}
         {isEndingScreen && footer ? footer : null}
         <SizingWrapper
           contentType={contentType}

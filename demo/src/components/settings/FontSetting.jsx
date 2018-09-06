@@ -17,7 +17,8 @@ class FontSetting extends Component {
           type="button"
           className={`font_button setting_button ${item} ${viewerScreenSettings.font === item ? 'active' : ''}`}
           onClick={() => onChanged && onChanged(item)}
-        >{ViewerFontType.toString(item)}
+        >
+          {ViewerFontType.toString(item)}
         </button>
       </li>
     ));
@@ -32,7 +33,8 @@ class FontSetting extends Component {
         />
         <div className="table_wrapper">
           <p className="setting_title">
-            글꼴<span className="indent_hidden">변경</span>
+            글꼴
+            <span className="indent_hidden">변경</span>
           </p>
           <div className="setting_buttons_wrapper font_family_setting">
             <ul className="setting_buttons font_family_buttons">
@@ -60,4 +62,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(FontSetting);
-

@@ -128,6 +128,7 @@ const createStyledViewerScreen = ({
         fontDomain,
         ignoreScroll,
         disablePageCalculation = false,
+        lazyLoadMargin = 1000,
       } = this.props;
 
       return (
@@ -141,6 +142,7 @@ const createStyledViewerScreen = ({
           fontDomain={fontDomain}
           ignoreScroll={ignoreScroll}
           disablePageCalculation={disablePageCalculation}
+          lazyLoadMargin={lazyLoadMargin}
           {...components}
         />
       );
@@ -168,6 +170,7 @@ const createStyledViewerScreen = ({
     viewerType: PropTypes.oneOf(AvailableViewerType.toList()),
     contentType: PropTypes.oneOf(ContentType.toList()),
     disablePageCalculation: PropTypes.bool,
+    lazyLoadMargin: PropTypes.number,
   };
 
   const mapStateToProps = state => ({

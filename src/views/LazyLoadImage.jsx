@@ -32,6 +32,7 @@ export default class LazyLoadImage extends React.Component {
       return;
     }
 
+    const { lazyLoadMargin } = this.props;
     this.observer = new IntersectionObserver((entries, observer) => {
       if (entries.some(({ isIntersecting, intersectionRatio }) => isIntersecting || intersectionRatio > 0)) {
         this.setState({ inView: true });
@@ -39,7 +40,7 @@ export default class LazyLoadImage extends React.Component {
       }
     }, {
       threshold: 0,
-      rootMargin: '250%', // load 2 pages in advance
+      rootMargin: `${lazyLoadMargin}%`,
     });
     this.observer.observe(this.node);
   }
@@ -92,4 +93,5 @@ export default class LazyLoadImage extends React.Component {
 LazyLoadImage.propTypes = {
   src: PropTypes.string.isRequired,
   className: PropTypes.string,
+  lazyLoadMargin: PropTypes.number.isRequired,
 };

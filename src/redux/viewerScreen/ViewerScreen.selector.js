@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect';
 import path from './ViewerScreen.path';
 import { nullSafeGet } from '../../util/Util';
-import { AvailableViewerType, BindingType, ContentType, ContentFormat } from '../../constants/ContentConstants';
+import {
+  AvailableViewerType, BindingType, ContentType, ContentFormat,
+} from '../../constants/ContentConstants';
 import { VIEWER_EMPTY_READ_POSITION, ViewerThemeType } from '../../constants/ViewerScreenConstants';
 
 

@@ -76,4 +76,3 @@ fetch('./resources/contents/contents.json')
       contentsDropdown.appendChild(bundleOption);
     });
   });
-

@@ -184,4 +184,3 @@ class ViewerHelper extends Connector {
 }
 const viewerHelper = new ViewerHelper();
 export default viewerHelper;
-

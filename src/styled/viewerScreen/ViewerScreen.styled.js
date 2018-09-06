@@ -268,4 +268,6 @@ ScrollContents.defaultProps = {
   fontDomain: '',
 };
 
-export { ScrollScreen, PageScreen, SizingWrapper, PageContents, ScrollContents };
+export {
+  ScrollScreen, PageScreen, SizingWrapper, PageContents, ScrollContents,
+};
