@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
 
-export default class Footer extends React.Component {
+export default class Footer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
