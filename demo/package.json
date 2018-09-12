@@ -1,9 +1,7 @@
 {
   "name": "@ridi/react-viewer-demo",
-  "version": "0.1.5",
-  "license": "MIT",
   "description": "React-Redux based comics viewer demo page",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.jsx ./src/",
     "build": "webpack"
@@ -46,10 +44,10 @@
     "redux-devtools-multiple-monitors": "^1.0.1",
     "styled-components": "^3.2.6",
     "url-search-params-polyfill": "^2.0.1",
-    "webpack": "^4.16.5",
-    "webpack-dev-server": "^3.1.5",
-    "webpack-manifest-plugin": "^2.0.2",
-    "webpack-stream": "^5.0.0",
+    "webpack": "^4.18.0",
+    "webpack-dev-server": "^3.1.8",
+    "webpack-manifest-plugin": "^2.0.3",
+    "webpack-stream": "^5.1.1",
     "whatwg-fetch": "^2.0.4"
   },
   "bugs": {

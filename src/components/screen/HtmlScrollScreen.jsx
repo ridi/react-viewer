@@ -12,6 +12,7 @@ import {
   setScrollTop,
   addEventListener,
   removeEventListener,
+  waitThenRun,
 } from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
@@ -62,7 +63,6 @@ class HtmlScrollScreen extends BaseScreen {
     }
     const isLastContent = Connector.calculations.isLastContent(index);
     const { contentFooter } = this.props;
-    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
     waitThenRun(() => Connector.calculations.setContentTotal(
       index,
       node.scrollHeight + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),

@@ -3,18 +3,31 @@
   "version": "1.0.0-alpha.7",
   "license": "MIT",
   "description": "React-Redux based comics viewer",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "actions.js",
+    "connectors.js",
+    "reader.js",
+    "reducer.js",
+    "selectors.js",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
+    "clean": "rimraf ./lib",
     "install:demo": "cd demo && npm install",
     "lint": "npm run lint:src && npm run lint:demo",
     "lint:src": "eslint --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
-    "build": "npm run build:src && npm run build:demo",
+    "build": "npm run clean && npm run build:src && npm run build:demo",
     "build:src": "webpack",
     "build:demo": "cd demo && npm run build",
-    "release": "release-it",
-    "prepublishOnly": "npm run build"
+    "release": "release-it"
   },
   "repository": {
     "type": "git",
@@ -44,7 +57,6 @@
     "eslint-plugin-react": "^7.11.1",
     "fs-extra": "^7.0.0",
     "git-rev": "^0.2.1",
-    "package-json": "^5.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
@@ -56,11 +68,12 @@
     "redux-devtools-inspector": "^0.11.3",
     "redux-devtools-log-monitor": "^1.4.0",
     "redux-devtools-multiple-monitors": "^1.0.1",
-    "webpack": "^4.6.0",
-    "webpack-cli": "^3.0.0",
-    "webpack-dev-server": "^3.1.5",
-    "webpack-manifest-plugin": "^2.0.2",
-    "webpack-stream": "^5.0.0"
+    "release-it": "^7.6.1",
+    "webpack": "^4.18.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8",
+    "webpack-manifest-plugin": "^2.0.3",
+    "webpack-stream": "^5.1.1"
   },
   "peerDependencies": {
     "react": ">=15.0.0",

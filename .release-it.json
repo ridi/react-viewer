@@ -1,10 +1,15 @@
 {
+  "npm": {
+    "publish": true,
+    "publishPath": "lib"
+  },
+  "dry-run": true,
   "requireCleanWorkingDir": false,
   "src": {
-    "beforeStartCommand": "node release.js check-preconditions"
+    "afterReleaseCommand": "cp -rf package.json README.md CHANGELOG.md lib"
   },
-  "buildCommand": "node release.js build",
+  "buildCommand": "node ./script/release.js build",
   "dist": {
-    "afterReleaseCommand": "node release.js released"
+    "afterReleaseCommand": "node ./script/release.js released"
   }
 }

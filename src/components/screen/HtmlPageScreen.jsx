@@ -6,7 +6,7 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -31,7 +31,6 @@ class HtmlPageScreen extends BaseScreen {
       const hasFooter = Connector.calculations.getHasFooter();
       Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
     }
-    const waitThenRun = window.requestAnimationFrame || window.setTimeout;
     waitThenRun(() => {
       const pagesTotal = Math.ceil(contentNode.scrollWidth
         / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
