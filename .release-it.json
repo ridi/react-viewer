@@ -3,12 +3,9 @@
     "publish": true,
     "publishPath": "lib"
   },
-  "dry-run": true,
+  "dry-run": false,
   "requireCleanWorkingDir": false,
-  "src": {
-    "afterReleaseCommand": "cp -rf package.json README.md CHANGELOG.md lib"
-  },
-  "buildCommand": "node ./script/release.js build",
+  "buildCommand": "node ./script/release.js build && cp -rf package.json README.md CHANGELOG.md lib",
   "dist": {
     "afterReleaseCommand": "node ./script/release.js released"
   }
