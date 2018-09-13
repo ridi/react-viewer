@@ -3,32 +3,35 @@ import { debounce, isExist } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
 import { cached, clearCache } from './CacheStore';
 
-export const screenWidth = cached('screenWidth', () => window.innerWidth);
+const Window = isExist(window) ? window : { addEventListener: () => {} };
+const Document = isExist(document) ? document : { body: {}, scrollingElement: {}, documentElement: {} };
 
-export const screenHeight = cached('screenHeight', () => window.innerHeight);
+export const screenWidth = cached('screenWidth', () => Window.innerWidth);
+
+export const screenHeight = cached('screenHeight', () => Window.innerHeight);
 
 export const scrollTop = () => {
-  if (document.scrollingElement) return document.scrollingElement.scrollTop;
-  return document.documentElement.scrollTop || document.body.scrollTop;
+  if (Document.scrollingElement) return Document.scrollingElement.scrollTop;
+  return Document.documentElement.scrollTop || Document.body.scrollTop;
 };
 
 export const scrollHeight = () => {
-  if (document.scrollingElement) return document.scrollingElement.scrollHeight;
-  return document.documentElement.scrollHeight || document.body.scrollHeight;
+  if (Document.scrollingElement) return Document.scrollingElement.scrollHeight;
+  return Document.documentElement.scrollHeight || Document.body.scrollHeight;
 };
 
 export const setScrollTop = (top) => {
-  if (document.scrollingElement) {
-    document.scrollingElement.scrollTop = top;
+  if (Document.scrollingElement) {
+    Document.scrollingElement.scrollTop = top;
   } else {
-    document.body.scrollTop = top;
-    document.documentElement.scrollTop = top;
+    Document.body.scrollTop = top;
+    Document.documentElement.scrollTop = top;
   }
 };
 
-export const offsetWidth = () => document.body.offsetWidth;
+export const offsetWidth = () => Document.body.offsetWidth;
 
-export const offsetHeight = () => document.body.offsetHeight;
+export const offsetHeight = () => Document.body.offsetHeight;
 
 /**
  * @see https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md#feature-detection
@@ -40,8 +43,8 @@ const testSupportsPassive = cached('testSupportsPassive', () => {
     /* eslint getter-return: 0 */
     const opts = Object.defineProperty({}, 'passive', { get: () => { supportsPassive = true; } });
     /* eslint getter-return: 1 */
-    window.addEventListener('testPassive', null, opts);
-    window.removeEventListener('testPassive', null, opts);
+    Window.addEventListener('testPassive', null, opts);
+    Window.removeEventListener('testPassive', null, opts);
   } catch (e) { /* nothing */ }
   return supportsPassive;
 });
@@ -83,7 +86,9 @@ export const preventScrollEvent = (ref) => {
   }
 };
 
-addEventListener(window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
+export const waitThenRun = requestAnimationFrame || setTimeout || (func => func());
+
+addEventListener(Window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
 
 export default {
   screenWidth,
@@ -97,4 +102,5 @@ export default {
   removeEventListener,
   allowScrollEvent,
   preventScrollEvent,
+  waitThenRun,
 };

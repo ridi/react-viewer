@@ -1,12 +1,19 @@
 module.exports = {
   entry: {
     index: `${__dirname}/src/index.js`,
+    connectors: `${__dirname}/src/util/connector/index.js`,
+    actions: `${__dirname}/src/redux/action.js`,
+    selectors: `${__dirname}/src/redux/selector.js`,
+    reducer: `${__dirname}/src/redux/reducer.js`,
+    reader: `${__dirname}/src/components/Reader.jsx`,
   },
   output: {
     path: `${__dirname}/lib/`,
     filename: '[name].js',
-    library: 'shared-components',
+    library: 'reader',
     libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: 'this',
   },
   module: {
     rules: [

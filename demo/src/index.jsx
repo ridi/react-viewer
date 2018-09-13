@@ -31,6 +31,7 @@ const Position = {
   RIGHT: 3,
 };
 
+
 const rootReducer = combineReducers({
   viewer,
   reader: reader({
