@@ -117,6 +117,7 @@ export default class BaseScreen extends React.Component {
       calculationsTotal,
       contentFormat,
       isReadyToRead,
+      children,
     } = this.props;
     return (
       <TouchableScreen
@@ -130,6 +131,7 @@ export default class BaseScreen extends React.Component {
         { this.renderContents() }
         { this.renderFooter() }
         { this.renderLoading() }
+        { children }
       </TouchableScreen>
     );
   }
@@ -137,6 +139,7 @@ export default class BaseScreen extends React.Component {
 
 BaseScreen.defaultProps = {
   onTouched: () => {},
+  children: null,
 };
 
 BaseScreen.propTypes = {
@@ -150,6 +153,7 @@ BaseScreen.propTypes = {
   calculationsTotal: PropTypes.number.isRequired,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
+  children: PropTypes.node,
 };
 
 export const mapStateToProps = state => ({

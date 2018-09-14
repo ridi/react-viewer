@@ -122,6 +122,7 @@ class DemoViewer extends Component {
       isFullScreen,
       content,
       currentContentIndex,
+      setting,
     } = this.props;
     return (
       <section
@@ -146,7 +147,16 @@ class DemoViewer extends Component {
           onUnmount={() => console.log('onUnmount')}
           onTouched={this.onReaderTouched}
           onScrolled={this.onReaderScrolled}
-        />
+        >
+          {setting.viewType === ViewType.PAGE
+            && (
+              <>
+                <button type="button" className="left_button" />
+                <button type="button" className="right_button" />
+              </>
+            )
+          }
+        </Reader>
         <ViewerFooter content={content} />
         <IconsSprite />
       </section>

@@ -13983,3 +13983,20 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     margin-right: 8px;
     content: '';
 }
+
+.left_button, .right_button {
+    width: 25%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+}
+.left_button:hover, .right_button:hover {
+    background-color: #dddddd55;
+}
+
+.left_button {
+    left: 0;
+}
+.right_button {
+    right: 0;
+}
