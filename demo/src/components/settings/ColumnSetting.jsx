@@ -46,7 +46,7 @@ class ColumnSetting extends Component {
     const { onChanged } = this.props;
     const { columnsInPage, columnGapInPercent } = this.props.setting;
     return (
-      <React.Fragment>
+      <>
         <li className="setting_list">
           <SvgIcons
             svgName="svg_column"
@@ -97,7 +97,7 @@ class ColumnSetting extends Component {
           />
         </li>
         }
-      </React.Fragment>
+      </>
     );
   }
 }

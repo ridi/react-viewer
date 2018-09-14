@@ -88,7 +88,7 @@ export default class BaseHtmlContent extends React.PureComponent {
     const { contentFooter, className, isCalculated } = this.props;
     if (isContentLoaded) {
       return (
-        <React.Fragment>
+        <>
           {!isCalculated && <div style={{ position: 'relative', textAlign: 'center' }}>Loading...</div>}
           <section
             ref={this.content}
@@ -96,7 +96,7 @@ export default class BaseHtmlContent extends React.PureComponent {
             dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
           />
           {contentFooter}
-        </React.Fragment>
+        </>
       );
     }
     if (isContentOnError) {
