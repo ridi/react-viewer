@@ -84,12 +84,11 @@ export default class BaseHtmlContent extends React.PureComponent {
   moveToOffset() {}
 
   renderContent(contentPrefix = '') {
-    const { isContentLoaded, isContentOnError, content } = this.props.content;
-    const { contentFooter, className, isCalculated } = this.props;
+    const { isContentLoaded, content } = this.props.content;
+    const { contentFooter, className } = this.props;
     if (isContentLoaded) {
       return (
         <>
-          {!isCalculated && <div style={{ position: 'relative', textAlign: 'center' }}>Loading...</div>}
           <section
             ref={this.content}
             className={`content_container ${className}`}
@@ -99,10 +98,7 @@ export default class BaseHtmlContent extends React.PureComponent {
         </>
       );
     }
-    if (isContentOnError) {
-      return <div style={{ position: 'relative', textAlign: 'center' }}>Error</div>; // TODO 에러 화면으로 변경
-    }
-    return <div style={{ position: 'relative', textAlign: 'center' }}>Loading...</div>; // TODO 로딩 화면으로 변경
+    return null;
   }
 
   render() {
