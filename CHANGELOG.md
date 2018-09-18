@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+## [v1.0.0-alpha.9]
+
+### Changed
+- `<Reader>` allows its children
+- Babel upgraded v7.0
+
+### Removed
+- Remove internal loading/error indicators
+
+## [v1.0.0-alpha.8]
+
+### Changed
+- Published as multiple modules
+
 ## [v1.0.0-alpha.7]
 
 ### Added
@@ -111,7 +125,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.7...HEAD
+[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.9...HEAD
+[v1.0.0-alpha.9]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.8...1.0.0-alpha.9
+[v1.0.0-alpha.8]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.7...1.0.0-alpha.8
 [v1.0.0-alpha.7]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.6...1.0.0-alpha.7
 [v1.0.0-alpha.6]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.5...1.0.0-alpha.6
 [v1.0.0-alpha.5]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.4...1.0.0-alpha.5
