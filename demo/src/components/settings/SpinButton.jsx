@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SvgIcons from '../icons/SvgIcons';
 
-
+// TODO 외부에서 initialValue 값이 변경되었을 경우에 대한 처리가 필요하다.
 export default class SpinButton extends React.Component {
   constructor(props) {
     super(props);

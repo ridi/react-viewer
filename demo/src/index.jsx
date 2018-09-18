@@ -13,6 +13,8 @@ import Reader, {
   selectReaderSetting,
   ViewType,
   selectReaderCalculationsTotal,
+  load,
+  unload,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -24,6 +26,7 @@ import ContentsData from '../resources/contents/contents.json';
 import { requestLoadContent, onScreenTouched, onScreenScrolled } from './redux/Viewer.action';
 import { screenWidth } from './utils/BrowserWrapper';
 import { BindingType } from '../../src/constants/ContentConstants';
+import Cache from './utils/Cache';
 
 const Position = {
   LEFT: 1,
@@ -51,14 +54,37 @@ Connector.connect(store);
 class DemoViewer extends Component {
   constructor(props) {
     super(props);
+    this.cache = null;
     this.onReaderTouched = this.onReaderTouched.bind(this);
     this.onReaderScrolled = this.onReaderScrolled.bind(this);
+    this.onReaderLoaded = this.onReaderLoaded.bind(this);
+    this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.footer = <ViewerScreenFooter content={props.content} />;
   }
 
-  componentWillMount() {
-    const { content, actionRequestLoadContent } = this.props;
-    actionRequestLoadContent(content);
+  onReaderLoaded() {
+    const {
+      content,
+      actionLoad,
+      actionRequestLoadContent,
+    } = this.props;
+    this.cache = new Cache(content.id);
+    const status = this.cache.get();
+    if (status) {
+      actionLoad(status);
+    } else {
+      actionRequestLoadContent(content);
+    }
+  }
+
+  onReaderUnloaded() {
+    const {
+      actionUnload,
+    } = this.props;
+    if (!Connector.core.isReaderLoaded() || !Connector.core.isReaderAllCalculated()) return;
+    const currentState = Connector.core.getReaderState();
+    this.cache.set(currentState);
+    actionUnload();
   }
 
   onMoveWrongDirection() {
@@ -143,8 +169,8 @@ class DemoViewer extends Component {
         <Reader
           footer={this.footer}
           contentFooter={<small>content footer area...</small>}
-          onMount={() => console.log('onMount')}
-          onUnmount={() => console.log('onUnmount')}
+          onMount={this.onReaderLoaded}
+          onUnmount={this.onReaderUnloaded}
           onTouched={this.onReaderTouched}
           onScrolled={this.onReaderScrolled}
         >
@@ -174,26 +200,25 @@ DemoViewer.propTypes = {
   currentOffset: PropTypes.number.isRequired,
   setting: PropTypes.object.isRequired,
   calculationsTotal: PropTypes.number.isRequired,
+  actionLoad: PropTypes.func.isRequired,
+  actionUnload: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  const { ui } = state.viewer;
-  const { isVisibleSettingPopup } = ui;
-
-  return {
-    isFullScreen: selectIsFullScreen(state),
-    isVisibleSettingPopup,
-    currentContentIndex: selectReaderCurrentContentIndex(state),
-    currentOffset: selectReaderCurrentOffset(state),
-    setting: selectReaderSetting(state),
-    calculationsTotal: selectReaderCalculationsTotal(state),
-  };
-};
+const mapStateToProps = state => ({
+  isFullScreen: selectIsFullScreen(state),
+  isVisibleSettingPopup: state.viewer.ui.isVisibleSettingPopup,
+  currentContentIndex: selectReaderCurrentContentIndex(state),
+  currentOffset: selectReaderCurrentOffset(state),
+  setting: selectReaderSetting(state),
+  calculationsTotal: selectReaderCalculationsTotal(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
   actionOnScreenTouched: () => dispatch(onScreenTouched()),
   actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
+  actionLoad: state => dispatch(load(state)),
+  actionUnload: () => dispatch(unload()),
 });
 
 const DemoViewerPage = connect(

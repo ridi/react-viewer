@@ -24,7 +24,7 @@ export const actions = {
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
 };
 
-export const load = (fullState) => ({
+export const load = fullState => ({
   type: actions.LOAD,
   state: fullState,
 });

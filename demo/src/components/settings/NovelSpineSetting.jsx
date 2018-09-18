@@ -46,11 +46,7 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
 NovelSpineSetting.propTypes = {
   item: PropTypes.string.isRequired,
   onChanged: PropTypes.func.isRequired,
-  setting: PropTypes.object,
-};
-
-NovelSpineSetting.defaultProps = {
-  setting: {},
+  setting: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
