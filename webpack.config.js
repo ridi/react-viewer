@@ -23,13 +23,15 @@ module.exports = {
         include: `${__dirname}/src/`,
         query: {
           presets: [
-            ['env', { useBuiltIns: true }],
-            'react',
+            ['@babel/preset-env', { useBuiltIns: 'entry' }],
+            '@babel/preset-react',
           ],
           plugins: [
-            ['transform-es2015-classes', { loose: true }],
-            ['transform-proto-to-assign'],
-            ['transform-object-rest-spread', { useBuiltIns: true }],
+            ['@babel/plugin-transform-classes', { loose: true }],
+            ['@babel/plugin-proposal-class-properties'],
+            ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
+            ['@babel/plugin-transform-react-jsx'],
+            ['@babel/plugin-transform-proto-to-assign'],
           ],
         },
       },

@@ -71,6 +71,7 @@ class Reader extends React.Component {
       contentFooter,
       ignoreScroll,
       disableCalculation,
+      children,
     } = this.props;
 
     const props = {
@@ -86,7 +87,7 @@ class Reader extends React.Component {
       props.contentFooter = <ContentFooter content={contentFooter} />;
     }
     const Screen = this.getScreen();
-    return <Screen {...props} />;
+    return <Screen {...props}>{children}</Screen>;
   }
 }
 

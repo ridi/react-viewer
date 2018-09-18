@@ -88,35 +88,13 @@ export default class BaseScreen extends React.Component {
 
   renderFooter() { return null; }
 
-  renderLoading() {
-    const { isReadyToRead } = this.props;
-    if (!isReadyToRead) {
-      return (
-        // TODO change to property
-        <div
-          style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            textAlign: 'center',
-            width: '100%',
-            height: '100vh',
-            backgroundColor: '#fff',
-          }}
-        >
-          <p style={{ position: 'relative', top: '50%' }}>Loading...</p>
-        </div>
-      );
-    }
-    return null;
-  }
-
   render() {
     const {
       setting,
       calculationsTotal,
       contentFormat,
       isReadyToRead,
+      children,
     } = this.props;
     return (
       <TouchableScreen
@@ -129,7 +107,7 @@ export default class BaseScreen extends React.Component {
       >
         { this.renderContents() }
         { this.renderFooter() }
-        { this.renderLoading() }
+        { children }
       </TouchableScreen>
     );
   }
@@ -137,6 +115,7 @@ export default class BaseScreen extends React.Component {
 
 BaseScreen.defaultProps = {
   onTouched: () => {},
+  children: null,
 };
 
 BaseScreen.propTypes = {
@@ -150,6 +129,7 @@ BaseScreen.propTypes = {
   calculationsTotal: PropTypes.number.isRequired,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
+  children: PropTypes.node,
 };
 
 export const mapStateToProps = state => ({
