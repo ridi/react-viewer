@@ -69,3 +69,10 @@ export const selectReaderIsReadyToRead = createSelector(
   [getReader],
   reader => nullSafeGet(reader, path.isReadyToRead(), false),
 );
+
+export const selectReaderIsLoaded = createSelector(
+  [getReader],
+  reader => nullSafeGet(reader, path.isLoaded(), true),
+);
+
+export const selectReader = getReader;
