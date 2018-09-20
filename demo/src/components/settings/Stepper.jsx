@@ -2,59 +2,55 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SvgIcons from '../icons/SvgIcons';
 
-// TODO 외부에서 initialValue 값이 변경되었을 경우에 대한 처리가 필요하다.
-export default class SpinButton extends React.Component {
+export default class Stepper extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      value: props.initialValue,
-    };
     this.handleMinus = this.handleMinus.bind(this);
     this.handlePlus = this.handlePlus.bind(this);
   }
 
-  handleChange() {
+  handleChange(newValue) {
     const { min, max, onChange } = this.props;
-    const { value } = this.state;
-    const n = parseFloat(value);
-    if (value >= min && value <= max) {
-      onChange(null, n);
-    } else {
-      this.setState({
-        value: Math.min(Math.max(value, min), max),
-      });
+    const n = parseFloat(newValue);
+    if (newValue >= min && newValue <= max) {
+      onChange(n);
     }
     this.minusButton.disabled = (n === min);
     this.plusButton.disabled = (n === max);
   }
 
   handleMinus() {
-    const { value } = this.state;
-    this.setState({ value: value - 1 }, () => this.handleChange());
+    this.handleChange(this.props.value - 1);
     this.minusButton.blur();
   }
 
   handlePlus() {
-    const { value } = this.state;
-    this.setState({ value: value + 1 }, () => this.handleChange());
+    this.handleChange(this.props.value + 1);
     this.plusButton.blur();
   }
 
   render() {
+    const {
+      value,
+      min,
+      max,
+      buttonTarget,
+      title,
+    } = this.props;
     return (
       <div className="table_wrapper">
         <div className="setting_title">
-          {this.props.title}
+          {title}
           <span className="indent_hidden">변경, 현재 </span>
-          <span className="setting_num">{this.state.value}</span>
+          <span className="setting_num">{value}</span>
         </div>
-        <div className="setting_buttons_wrapper spin_setting">
-          <ul className={`spin_button_wrapper ${this.props.buttonTarget}`}>
-            <li className="spin_button_list">
+        <div className="setting_buttons_wrapper stepper_setting">
+          <ul className={`stepper_button_wrapper ${buttonTarget}`}>
+            <li className="stepper_button_list">
               <button
                 type="button"
-                className="spin_button minus_button"
-                disabled={this.state.value === this.props.min}
+                className="stepper_button minus_button"
+                disabled={value === min}
                 onClick={this.handleMinus}
                 ref={(c) => {
                   this.minusButton = c;
@@ -62,32 +58,19 @@ export default class SpinButton extends React.Component {
               >
                 <SvgIcons
                   svgName="svg_minus_1"
-                  svgClass="spin_icon"
+                  svgClass="stepper_icon"
                 />
                 <span className="indent_hidden">감소</span>
               </button>
             </li>
-            <li className="spin_button_list">
-              <input
-                type="number"
-                value={this.state.value}
-                onKeyDown={({ key }) => {
-                  if (key === 'Enter' || key === ' ') {
-                    this.handleChange();
-                  } else if (key === 'ArrowUp' || key === 'Up') {
-                    this.handleMinus();
-                  } else if (key === 'ArrowDown' || key === 'Down') {
-                    this.handlePlus();
-                  }
-                }}
-                onChange={({ target }) => this.setState({ value: target.value })}
-              />
+            <li className="stepper_button_list">
+              <input type="number" value={value} readOnly />
             </li>
-            <li className="spin_button_list">
+            <li className="stepper_button_list">
               <button
                 type="button"
-                className="spin_button plus_button"
-                disabled={this.state.value === this.props.max}
+                className="stepper_button plus_button"
+                disabled={value === max}
                 onClick={this.handlePlus}
                 ref={(c) => {
                   this.plusButton = c;
@@ -95,7 +78,7 @@ export default class SpinButton extends React.Component {
               >
                 <SvgIcons
                   svgName="svg_plus_1"
-                  svgClass="spin_icon"
+                  svgClass="stepper_icon"
                 />
                 <span className="indent_hidden">증가</span>
               </button>
@@ -107,15 +90,15 @@ export default class SpinButton extends React.Component {
   }
 }
 
-SpinButton.propTypes = {
+Stepper.propTypes = {
   title: PropTypes.string.isRequired,
   buttonTarget: PropTypes.string.isRequired,
-  initialValue: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
   onChange: PropTypes.func,
 };
 
-SpinButton.defaultProps = {
+Stepper.defaultProps = {
   onChange: () => {},
 };
