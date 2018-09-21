@@ -9,7 +9,7 @@ import { ViewType } from '../constants/SettingConstants';
 import Events from '../constants/DOMEventConstants';
 import Connector from '../util/connector';
 import { isExist } from '../util/Util';
-import { addEventListener, removeEventListener } from '../util/BrowserWrapper';
+import { addEventListener, removeEventListener } from '../util/EventHandler';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
@@ -100,25 +100,29 @@ class Reader extends React.Component {
 Reader.defaultProps = {
   footer: null,
   contentFooter: null,
-  onTouched: null,
-  onMount: null,
-  onUnmount: null,
   ignoreScroll: false,
   disableCalculation: false,
   onScrolled: null,
+  onTouched: null,
+  onMount: null,
+  onUnmount: null,
+  onTouchItem: null,
+  onSelect: null,
 };
 
 Reader.propTypes = {
   setting: SettingType,
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
+  ignoreScroll: PropTypes.bool,
+  disableCalculation: PropTypes.bool,
+  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   onTouched: PropTypes.func,
   onMount: PropTypes.func,
   onUnmount: PropTypes.func,
   onScrolled: PropTypes.func,
-  ignoreScroll: PropTypes.bool,
-  disableCalculation: PropTypes.bool,
-  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
+  onTouchItem: PropTypes.func,
+  onSelect: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

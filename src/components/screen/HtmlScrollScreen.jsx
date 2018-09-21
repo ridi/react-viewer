@@ -10,10 +10,12 @@ import {
   screenHeight,
   scrollTop,
   setScrollTop,
-  addEventListener,
-  removeEventListener,
   waitThenRun,
 } from '../../util/BrowserWrapper';
+import {
+  addEventListener,
+  removeEventListener,
+} from '../../util/EventHandler';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
