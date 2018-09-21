@@ -1,16 +1,48 @@
 import React from 'react';
 import PropTypes from '../prop-types';
 import Connector from '../../util/connector';
-import { preventScrollEvent, allowScrollEvent } from '../../util/EventHandler';
+import {
+  preventScrollEvent,
+  allowScrollEvent,
+  addEventListener,
+  removeEventListener,
+} from '../../util/EventHandler';
+import ReaderGestureEventHandler from '../../util/event/ReaderGestureEventHandler';
 import { ViewType } from '../../constants/SettingConstants';
 
 class TouchableScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.gestureHandler = null;
+    this.handleGestureEvent = this.handleGestureEvent.bind(this);
+  }
+
   componentDidMount() {
+    const { forwardedRef } = this.props;
+    addEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionStart, this.handleGestureEvent);
+    addEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionExpand, this.handleGestureEvent);
+    addEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionEnd, this.handleGestureEvent);
+    addEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.Touch, this.handleGestureEvent);
+    this.gestureHandler = new ReaderGestureEventHandler(forwardedRef.current);
+    this.gestureHandler.attach();
     this.handleScrollEvent();
   }
 
   componentDidUpdate() {
     this.handleScrollEvent();
+  }
+
+  componentWillUnmount() {
+    const { forwardedRef } = this.props;
+    this.gestureHandler.detach();
+    removeEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionStart, this.handleGestureEvent);
+    removeEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionExpand, this.handleGestureEvent);
+    removeEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.SelectionEnd, this.handleGestureEvent);
+    removeEventListener(forwardedRef.current, ReaderGestureEventHandler.EVENT_TYPE.Touch, this.handleGestureEvent);
+  }
+
+  handleGestureEvent(event) {
+    console.log(event.type, event);
   }
 
   handleScrollEvent() {
