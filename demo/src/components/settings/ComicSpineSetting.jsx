@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '../../../../lib';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
-import SpinButton from './SpinButton';
+import Stepper from './Stepper';
 import SvgIcons from '../icons/SvgIcons';
 
 const ComicSpineSetting = ({ item, onChanged, setting }) => (
@@ -12,10 +12,10 @@ const ComicSpineSetting = ({ item, onChanged, setting }) => (
       svgName={`svg_${item}_1`}
       svgClass={`setting_title_icon svg_${item}_icon`}
     />
-    <SpinButton
+    <Stepper
       title={ViewerComicSpinType.toString(item)}
       buttonTarget={`set_${item}`}
-      initialValue={{
+      value={{
         [ViewerComicSpinType.CONTENT_WIDTH]: setting.contentWidthInPercent,
       }[item]}
       min={{
@@ -24,9 +24,7 @@ const ComicSpineSetting = ({ item, onChanged, setting }) => (
       max={{
         [ViewerComicSpinType.CONTENT_WIDTH]: CONTENT_WIDTH_RANGE[1],
       }[item]}
-      onChange={(oldLevel, newLevel) => onChanged({
-        [ViewerComicSpinType.toReaderSettingType(item)]: newLevel,
-      })}
+      onChange={newLevel => onChanged({ [ViewerComicSpinType.toReaderSettingType(item)]: newLevel })}
     />
   </li>
 );

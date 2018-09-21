@@ -11,6 +11,11 @@ import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
 import { makeSequence, updateObject } from '../util/Util';
 import { ContentFormat } from '../constants/ContentConstants';
 
+const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState).build();
+const unload = state => new ImmutableObjectBuilder(state)
+  .set(path.isLoaded(), false)
+  .build();
+
 const setContentMetadata = (state, { contentFormat, bindingType, contentCount }) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
   .set(path.contentFormat(), contentFormat)
@@ -61,9 +66,18 @@ const updateContentError = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.isContentsLoaded(), action.isAllLoaded)
   .build();
 
-const updateContentCalculations = (state, action) => new ImmutableObjectBuilder(state)
-  .set(path.isContentsCalculated(action.index), true)
-  .set(path.contentCalculationsTotal(action.index), action.total)
+const updateContentCalculation = (state, { calculation }) => new ImmutableObjectBuilder(state)
+  .set(
+    path.contentsCalculation(calculation.index),
+    updateObject(state.calculations.contents[calculation.index - 1], { ...state.calculations.contents[calculation.index - 1], ...calculation }),
+  )
+  .build();
+
+const updateFooterCalculation = (state, { calculation }) => new ImmutableObjectBuilder(state)
+  .set(
+    path.footerCalculations(),
+    updateObject(state.calculations.footer, { ...state.calculations.footer, ...calculation }),
+  )
   .build();
 
 const invalidateCalculations = state => new ImmutableObjectBuilder(state)
@@ -78,11 +92,6 @@ const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(st
   .set(path.calculationsTotal(), action.calculationsTotal)
   .build();
 
-const updateFooterCalculation = (state, action) => new ImmutableObjectBuilder(state)
-  .set(path.isFooterCalculated(), true)
-  .set(path.footerCalculationsTotal(), action.total)
-  .build();
-
 const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(state)
   .set(path.isReadyToRead(), isReadyToRead)
   .build();
@@ -92,6 +101,8 @@ export default ({
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
   return createReducer({ ...initialState, setting }, {
+    [actions.LOAD]: load,
+    [actions.UNLOAD]: unload,
     [actions.SET_CONTENT_METADATA]: setContentMetadata,
     [actions.SET_CONTENTS_BY_VALUE]: setContents,
     [actions.SET_CONTENTS_BY_URI]: setContents,
@@ -101,7 +112,7 @@ export default ({
     [actions.UPDATE_CONTENT_ERROR]: updateContentError,
     [actions.UPDATE_CURRENT]: updateCurrent,
     [actions.INVALIDATE_CALCULATIONS]: invalidateCalculations,
-    [actions.UPDATE_CONTENT_CALCULATIONS]: updateContentCalculations,
+    [actions.UPDATE_CONTENT_CALCULATIONS]: updateContentCalculation,
     [actions.UPDATE_FOOTER_CALCULATIONS]: updateFooterCalculation,
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
   });

@@ -4,12 +4,12 @@ import { selectReaderSetting, ViewType, Connector } from '../../../../lib';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
 export default class BaseSettingPopup extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    const { colorTheme: nextTheme } = nextProps.setting;
-    const { colorTheme: currentTheme } = this.props.setting;
+  componentDidUpdate(prevProps) {
+    const { colorTheme: theme } = this.props.setting;
+    const { colorTheme: prevTheme } = prevProps.setting;
 
-    if (nextTheme !== currentTheme) {
-      document.body.className = nextTheme;
+    if (theme !== prevTheme) {
+      document.body.className = theme;
     }
   }
 

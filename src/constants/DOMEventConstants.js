@@ -14,4 +14,5 @@ export default {
   ANIMATION_END: 'animationend',
   TRANSITION_END: 'transitionend',
   WEBKIT_TRANSITION_END: 'webkitTransitionEnd',
+  BEFORE_UNLOAD: 'beforeunload',
 };

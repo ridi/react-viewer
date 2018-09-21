@@ -6,6 +6,7 @@ import {
   DEFAULT_VERTICAL_MARGIN,
   DEFAULT_HORIZONTAL_MARGIN,
 } from '../constants/StyledConstants';
+import { PRE_CALCULATION } from '../constants/CalculationsConstants';
 
 export const initialContentState = index => ({
   index,
@@ -16,8 +17,13 @@ export const initialContentState = index => ({
   isContentOnError: false,
 });
 
-export const initialContentCalculationsState = index => ({ index, isCalculated: false, total: 0 });
-export const initialFooterCalculationsState = () => ({ isCalculated: false, total: 0 });
+export const initialContentCalculationsState = index => ({
+  index,
+  isCalculated: false,
+  offset: index === 1 ? 0 : PRE_CALCULATION,
+  total: 0,
+});
+export const initialFooterCalculationsState = () => ({ isCalculated: false, offset: PRE_CALCULATION, total: 0 });
 
 export const initialSettingState = () => ({
   colorTheme: ReaderThemeType.WHITE,
@@ -38,6 +44,7 @@ export const initialSettingState = () => ({
 
 export const initialState = {
   status: {
+    isLoaded: true,
     isInitContents: false,
     isContentsLoaded: false,
     isAllCalculated: false,
@@ -50,7 +57,7 @@ export const initialState = {
   contents: [],
   calculations: {
     contents: [],
-    footer: { isCalculated: false, total: 0 },
+    footer: initialFooterCalculationsState(),
     total: 0,
   },
   current: {
@@ -73,6 +80,7 @@ export default {
   contentFormat: () => ['metadata', 'format'],
   bindingType: () => ['metadata', 'binding'],
 
+  isLoaded: () => ['status', 'isLoaded'],
   isInitContents: () => ['status', 'isInitContents'],
   isContentsLoaded: () => ['status', 'isContentsLoaded'],
   isAllCalculated: () => ['status', 'isAllCalculated'],
@@ -91,6 +99,7 @@ export default {
 
   calculationsTotal: () => ['calculations', 'total'],
   contentsCalculations: () => ['calculations', 'contents'],
+  contentsCalculation: index => ['calculations', 'contents', index - 1],
   isContentsCalculated: index => ['calculations', 'contents', index - 1, 'isCalculated'],
   contentCalculationsTotal: index => ['calculations', 'contents', index - 1, 'total'],
   footerCalculations: () => ['calculations', 'footer'],

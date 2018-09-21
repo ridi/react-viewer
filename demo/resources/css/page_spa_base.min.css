@@ -6374,25 +6374,25 @@ body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .set
     color: #040b14
 }
 
-body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #dad9de;
     color: #dad9de
 }
 
-body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #868a8e
 }
 
-body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #f8f8f8
 }
 
-body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #ced2d6;
     color: #ced2d6
 }
 
-body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.white_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #ced2d6
 }
 
@@ -6685,25 +6685,25 @@ body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .set
     color: #040b14
 }
 
-body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #dad9de;
     color: #dad9de
 }
 
-body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #868a8e
 }
 
-body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #f8f8f8
 }
 
-body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #ced2d6;
     color: #ced2d6
 }
 
-body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #ced2d6
 }
 
@@ -7000,25 +7000,25 @@ body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper 
     color: #040b14
 }
 
-body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #dad9de;
     color: #dad9de
 }
 
-body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #868a8e
 }
 
-body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #f8f8f8
 }
 
-body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #ced2d6;
     color: #ced2d6
 }
 
-body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.ios_sepia_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #ced2d6
 }
 
@@ -7315,25 +7315,25 @@ body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper
     color: #bdc1c6
 }
 
-body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #656565;
     color: #656565
 }
 
-body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #bdc1c6
 }
 
-body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #303030
 }
 
-body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #666;
     color: #666
 }
 
-body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.blackboard_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #666
 }
 
@@ -7692,25 +7692,25 @@ body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .
     color: #bdc1c6
 }
 
-body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #656565;
     color: #656565
 }
 
-body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #bdc1c6
 }
 
-body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #303030
 }
 
-body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #666;
     color: #666
 }
 
-body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.darkgray_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #666
 }
 
@@ -8069,25 +8069,25 @@ body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .set
     color: #bdc1c6
 }
 
-body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #656565;
     color: #656565
 }
 
-body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #bdc1c6
 }
 
-body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #303030
 }
 
-body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #666;
     color: #666
 }
 
-body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.black_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #666
 }
 
@@ -8447,25 +8447,25 @@ body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .set
     color: #040b14
 }
 
-body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #dad9de;
     color: #dad9de
 }
 
-body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #868a8e
 }
 
-body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #f8f8f8
 }
 
-body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #ced2d6;
     color: #ced2d6
 }
 
-body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #ced2d6
 }
 
@@ -8763,25 +8763,25 @@ body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapp
     color: #040b14
 }
 
-body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     border: 1px solid #dad9de;
     color: #dad9de
 }
 
-body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     fill: #868a8e
 }
 
-body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:active {
+body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:active {
     background: #f8f8f8
 }
 
-body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     border-color: #ced2d6;
     color: #ced2d6
 }
 
-body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled .spin_icon {
+body.korean_paper_theme #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled .stepper_icon {
     fill: #ced2d6
 }
 
@@ -8839,11 +8839,11 @@ body.pc_browser #viewer_page.white_theme #setting_popup .font_family_buttons .fo
     color: #1f8ee6
 }
 
-body.pc_browser #viewer_page.white_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.white_theme #setting_popup .stepper_button:hover {
     background: #cbf0ff
 }
 
-body.pc_browser #viewer_page.white_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.white_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8855,11 +8855,11 @@ body.pc_browser #viewer_page.ios_sepia_theme #setting_popup .font_family_buttons
     color: #457ad3
 }
 
-body.pc_browser #viewer_page.ios_sepia_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.ios_sepia_theme #setting_popup .stepper_button:hover {
     background: #98aed4
 }
 
-body.pc_browser #viewer_page.ios_sepia_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.ios_sepia_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8871,11 +8871,11 @@ body.pc_browser #viewer_page.sepia_theme #setting_popup .font_family_buttons .fo
     color: #457ad3
 }
 
-body.pc_browser #viewer_page.sepia_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.sepia_theme #setting_popup .stepper_button:hover {
     background: #98aed4
 }
 
-body.pc_browser #viewer_page.sepia_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.sepia_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8887,11 +8887,11 @@ body.pc_browser #viewer_page.blackboard_theme #setting_popup .font_family_button
     color: #2ea2ff
 }
 
-body.pc_browser #viewer_page.blackboard_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.blackboard_theme #setting_popup .stepper_button:hover {
     background: #283f51
 }
 
-body.pc_browser #viewer_page.blackboard_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.blackboard_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8903,11 +8903,11 @@ body.pc_browser #viewer_page.darkgray_theme #setting_popup .font_family_buttons 
     color: #2ea2ff
 }
 
-body.pc_browser #viewer_page.darkgray_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.darkgray_theme #setting_popup .stepper_button:hover {
     background: #283f51
 }
 
-body.pc_browser #viewer_page.darkgray_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.darkgray_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8919,11 +8919,11 @@ body.pc_browser #viewer_page.paper_theme #setting_popup .font_family_buttons .fo
     color: #1f8ee6
 }
 
-body.pc_browser #viewer_page.paper_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.paper_theme #setting_popup .stepper_button:hover {
     background: #cbf0ff
 }
 
-body.pc_browser #viewer_page.paper_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.paper_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8935,11 +8935,11 @@ body.pc_browser #viewer_page.korean_paper_theme #setting_popup .font_family_butt
     color: #1f8ee6
 }
 
-body.pc_browser #viewer_page.korean_paper_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.korean_paper_theme #setting_popup .stepper_button:hover {
     background: #cbf0ff
 }
 
-body.pc_browser #viewer_page.korean_paper_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.korean_paper_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -8951,11 +8951,11 @@ body.pc_browser #viewer_page.black_theme #setting_popup .font_family_buttons .fo
     color: #2ea2ff
 }
 
-body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:hover {
+body.pc_browser #viewer_page.black_theme #setting_popup .stepper_button:hover {
     background: #283f51
 }
 
-body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:hover {
+body.pc_browser #viewer_page.black_theme #setting_popup .stepper_button:disabled:hover {
     background: none
 }
 
@@ -9895,16 +9895,16 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     font-family: kopub_dotum, sans-serif
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list {
     display: inline-block;
     margin-left: -1px
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list:first-child {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list:first-child {
     margin-left: 0
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button {
     position: relative;
     z-index: 2;
     width: 45px;
@@ -9914,26 +9914,26 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     box-sizing: border-box
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button .spin_icon {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button .stepper_icon {
     width: 10px;
     height: 10px;
     margin-top: 1px;
     vertical-align: top
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button.minus_button {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button.minus_button {
     padding-left: 2px;
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button.plus_button {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button.plus_button {
     padding-right: 2px;
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list input {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list input {
     position: relative;
     z-index: 2;
     width: 40px;
@@ -9944,16 +9944,16 @@ body.pc_browser #viewer_page.black_theme #setting_popup .spin_button:disabled:ho
     text-align: center;
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled {
     z-index: 1;
     cursor: default
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .spin_button_wrapper .spin_button_list .spin_button:disabled:active {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .stepper_button_wrapper .stepper_button_list .stepper_button:disabled:active {
     background: none
 }
 
-#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.spin_setting .toggle_slider .cui_slider_checkbox_label {
+#viewer_page #setting_popup .setting_group .setting_list .table_wrapper .setting_buttons_wrapper.stepper_setting .toggle_slider .cui_slider_checkbox_label {
     margin-right: -5px
 }
 

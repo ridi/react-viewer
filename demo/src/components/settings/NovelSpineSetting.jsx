@@ -8,7 +8,7 @@ import {
   LINE_HEIGHT_RANGE,
 } from '../../../../lib';
 import { ViewerSpinType } from '../../constants/SettingConstants';
-import SpinButton from './SpinButton';
+import Stepper from './Stepper';
 import SvgIcons from '../icons/SvgIcons';
 
 const NovelSpineSetting = ({ item, onChanged, setting }) => (
@@ -18,10 +18,10 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
       svgClass={`setting_title_icon svg_${item}_icon`}
     />
 
-    <SpinButton
+    <Stepper
       title={ViewerSpinType.toString(item)}
       buttonTarget={`set_${item}`}
-      initialValue={{
+      value={{
         [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
         [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
         [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
@@ -36,9 +36,7 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
         [ViewerSpinType.LINE_HEIGHT]: LINE_HEIGHT_RANGE[1],
         [ViewerSpinType.PADDING]: CONTENT_PADDING_RANGE[1],
       }[item]}
-      onChange={(oldLevel, newLevel) => onChanged({
-        [ViewerSpinType.toReaderSettingType(item)]: newLevel,
-      })}
+      onChange={newLevel => onChanged({ [ViewerSpinType.toReaderSettingType(item)]: newLevel })}
     />
   </li>
 );
@@ -46,11 +44,7 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
 NovelSpineSetting.propTypes = {
   item: PropTypes.string.isRequired,
   onChanged: PropTypes.func.isRequired,
-  setting: PropTypes.object,
-};
-
-NovelSpineSetting.defaultProps = {
-  setting: {},
+  setting: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -6,8 +6,10 @@ import { selectReaderContentFormat, selectReaderSetting } from '../redux/selecto
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
+import Events from '../constants/DOMEventConstants';
 import Connector from '../util/connector';
 import { isExist } from '../util/Util';
+import { addEventListener, removeEventListener } from '../util/BrowserWrapper';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
@@ -21,9 +23,12 @@ class Reader extends React.Component {
   }
 
   componentDidMount() {
-    const { onMount } = this.props;
+    const { onMount, onUnmount } = this.props;
     if (isExist(onMount)) {
       onMount();
+    }
+    if (isExist(onUnmount)) {
+      addEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
     }
   }
 
@@ -31,6 +36,7 @@ class Reader extends React.Component {
     const { onUnmount } = this.props;
     if (isExist(onUnmount)) {
       onUnmount();
+      removeEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
     }
   }
 

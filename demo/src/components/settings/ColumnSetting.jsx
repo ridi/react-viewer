@@ -7,7 +7,7 @@ import {
   COLUMN_GAP_RANGE,
 } from '../../../../lib';
 import SvgIcons from '../icons/SvgIcons';
-import SpinButton from './SpinButton';
+import Stepper from './Stepper';
 
 
 class ColumnSetting extends Component {
@@ -87,13 +87,13 @@ class ColumnSetting extends Component {
             svgName="svg_column"
             svgClass="setting_title_icon svg_column_icon"
           />
-          <SpinButton
+          <Stepper
             title="단 간격 (%)"
             buttonTarget="set_columnGapInPercent"
-            initialValue={columnGapInPercent}
+            value={columnGapInPercent}
             min={COLUMN_GAP_RANGE[0]}
             max={COLUMN_GAP_RANGE[1]}
-            onChange={(old, value) => onChanged({ columnGapInPercent: value })}
+            onChange={value => onChanged({ columnGapInPercent: value })}
           />
         </li>
         }

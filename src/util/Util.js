@@ -9,6 +9,10 @@ export function isEmpty(object) {
     return true;
   }
 
+  if (object.constructor === Object && Object.keys(object).length === 0) {
+    return true;
+  }
+
   if (typeof object === 'string' || object instanceof String) {
     return object.trim() === '';
   }

@@ -8,6 +8,8 @@ import {
 } from '../constants/SettingConstants';
 
 export const actions = {
+  LOAD: 'READER:LOAD',
+  UNLOAD: 'READER:UNLOAD',
   SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
   SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
   SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
@@ -18,9 +20,18 @@ export const actions = {
   UPDATE_CONTENT_ERROR: 'READER:UPDATE_CONTENT_ERROR',
   INVALIDATE_CALCULATIONS: 'READER:INVALIDATE_CALCULATIONS',
   UPDATE_CONTENT_CALCULATIONS: 'READER:UPDATE_CONTENT_CALCULATIONS',
-  UPDATE_FOOTER_CALCULATIONS: 'READER:COMPLETE_FOOTER_CALCULATIONS',
+  UPDATE_FOOTER_CALCULATIONS: 'READER:UPDATE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
 };
+
+export const load = fullState => ({
+  type: actions.LOAD,
+  state: fullState,
+});
+
+export const unload = () => ({
+  type: actions.UNLOAD,
+});
 
 export const setContentMetadata = (contentFormat, bindingType, contentCount) => ({
   type: actions.SET_CONTENT_METADATA,
@@ -104,15 +115,14 @@ export const invalidateCalculations = () => ({
   type: actions.INVALIDATE_CALCULATIONS,
 });
 
-export const updateContentCalculations = (index, total) => ({
+export const updateContentCalculation = calculation => ({
   type: actions.UPDATE_CONTENT_CALCULATIONS,
-  index,
-  total,
+  calculation,
 });
 
-export const updateFooterCalculation = total => ({
+export const updateFooterCalculation = calculation => ({
   type: actions.UPDATE_FOOTER_CALCULATIONS,
-  total,
+  calculation,
 });
 
 export const updateCalculationsTotal = (calculationsTotal, isCompleted = false) => ({

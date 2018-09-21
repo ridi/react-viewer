@@ -3,7 +3,7 @@ import {
   updateCalculationsTotal,
   invalidateCalculations,
   updateFooterCalculation,
-  updateContentCalculations,
+  updateContentCalculation,
   setReadyToRead,
 } from '../../redux/action';
 import {
@@ -25,7 +25,6 @@ import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConst
 class CalculationsConnector extends BaseConnector {
   constructor() {
     super();
-    this.startOffset = { 1: 0 };
     this.hasFooter = false;
   }
 
@@ -38,7 +37,6 @@ class CalculationsConnector extends BaseConnector {
   }
 
   invalidate() {
-    this.startOffset = { 1: 0 };
     this.dispatch(invalidateCalculations());
   }
 
@@ -57,11 +55,21 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getStartOffset(index) {
-    return typeof this.startOffset[index] === 'number' ? this.startOffset[index] : PRE_CALCULATION;
+    if (index === FOOTER_INDEX) {
+      const { offset } = selectReaderFooterCalculations(this.getState());
+      return offset;
+    }
+    if (!selectReaderIsInitContents(this.getState())) return false;
+    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    return calculatedContents[index - 1].offset;
   }
 
   setStartOffset(index, offset) {
-    this.startOffset[index] = offset;
+    if (index === FOOTER_INDEX) {
+      this.dispatch(updateFooterCalculation({ offset }));
+    } else {
+      this.dispatch(updateContentCalculation({ index, offset }));
+    }
   }
 
   checkAllCompleted() {
@@ -100,7 +108,9 @@ class CalculationsConnector extends BaseConnector {
 
   setContentTotal(index, total) {
     if (!this.isContentCalculated(index)) {
-      this.dispatch(index === FOOTER_INDEX ? updateFooterCalculation(total) : updateContentCalculations(index, total));
+      this.dispatch(index === FOOTER_INDEX
+        ? updateFooterCalculation({ total, isCalculated: true })
+        : updateContentCalculation({ index, total, isCalculated: true }));
       this.checkAllCompleted();
     }
   }
@@ -145,7 +155,8 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getIndexAtOffset(offset) {
-    const lastIndex = Object.keys(this.startOffset).length;
+    const calculations = selectReaderContentsCalculations(this.getState());
+    const lastIndex = calculations.length;
     for (let i = 1; i <= lastIndex; i += 1) {
       const index = i === lastIndex ? FOOTER_INDEX : i;
       const nextIndex = i >= lastIndex - 1 ? FOOTER_INDEX : i + 1;
