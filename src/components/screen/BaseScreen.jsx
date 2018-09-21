@@ -13,7 +13,7 @@ import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
-import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
+import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 

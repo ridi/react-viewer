@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from '../prop-types';
 import Connector from '../../service/connector';
-import { preventScrollEvent, allowScrollEvent } from '../../util/BrowserWrapper';
+import { preventScrollEvent, allowScrollEvent } from '../../util/EventHandler';
 import { ViewType } from '../../constants/SettingConstants';
 
 class TouchableScreen extends React.Component {
