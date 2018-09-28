@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { screenHeight, scrollBy } from '../BrowserWrapper';
 import {
@@ -15,8 +16,11 @@ export default class ReaderGestureEventHandler {
     SelectionExpand: 'ReaderSelectionExpand',
     SelectionEnd: 'ReaderSelectionEnd',
   };
+
   static DELAY_FOR_TOUCHMOVE = 300;
+
   static SCROLLING_EDGE = 60;
+
   static SCROLLING_AMOUNT = 120;
 
   constructor(element) {
@@ -37,13 +41,12 @@ export default class ReaderGestureEventHandler {
     ].includes(event.type));
   }
 
-  static getPoint(event) {
-    const { clientX, clientY, pageX, pageY } = ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
-    return { clientX, clientY, pageX, pageY };
+  static getCurrentEvent(event) {
+    return ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
   }
 
   static scrollingInEdge(event) {
-    const { clientY: y } = ReaderGestureEventHandler.getPoint(event);
+    const { clientY: y } = ReaderGestureEventHandler.getCurrentEvent(event);
     const halfHeight = screenHeight() / 2;
     const normalizedY = halfHeight - Math.abs(halfHeight - y);
     if (normalizedY < ReaderGestureEventHandler.SCROLLING_EDGE) {
@@ -62,7 +65,7 @@ export default class ReaderGestureEventHandler {
   }
 
   emitEvent(type, originalEvent, details = {}) {
-    const currentPoint = ReaderGestureEventHandler.getPoint(originalEvent);
+    const currentPoint = ReaderGestureEventHandler.getCurrentEvent(originalEvent);
     const event = new CustomEvent(type, {
       detail: {
         originalEvent,
@@ -78,9 +81,9 @@ export default class ReaderGestureEventHandler {
     return (this.isTouchMode ^ ReaderGestureEventHandler.isTouchEvent(event)) === 1;
   }
 
-  enterSelectionMode() {
-    if(!this.isMoved && (
-      (this.isTouchMode&& Date.now() - this.startTime >= ReaderGestureEventHandler.DELAY_FOR_TOUCHMOVE)
+  enterSelectionMode(event) {
+    if (!this.isMoved && (
+      (this.isTouchMode && Date.now() - this.startTime >= ReaderGestureEventHandler.DELAY_FOR_TOUCHMOVE)
       || (!this.isTouchMode)
     )) {
       this.isSelectMode = true;
@@ -94,7 +97,7 @@ export default class ReaderGestureEventHandler {
 
   start(event) {
     this.isTouchMode = event.type === DOMEventConstants.TOUCH_START;
-    this.startPoint = ReaderGestureEventHandler.getPoint(event);
+    this.startPoint = ReaderGestureEventHandler.getCurrentEvent(event);
     this.startTime = Date.now();
     this.isStarted = true;
   }
