@@ -21,6 +21,7 @@ export default class BaseHtmlContent extends React.PureComponent {
     }
 
     this.afterContentLoaded();
+    this.moveToOffset();
   }
 
   componentDidUpdate(prevProps) {
