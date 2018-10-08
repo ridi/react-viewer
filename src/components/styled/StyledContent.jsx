@@ -85,6 +85,7 @@ export const StyledHtmlScrollContent = StyledBaseContent.extend`
 
   position: absolute;
   top: ${({ startOffset }) => `${startOffset !== PRE_CALCULATION ? startOffset : -999}px`};
+  padding-top: 36px; padding-bottom: 36px;
 `;
 
 export const StyledHtmlPageContent = StyledBaseContent.extend`

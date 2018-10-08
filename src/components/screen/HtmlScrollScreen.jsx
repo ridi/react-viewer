@@ -59,7 +59,7 @@ class HtmlScrollScreen extends BaseScreen {
 
   calculate(index, node) {
     if (index === FOOTER_INDEX) {
-      Connector.calculations.setContentTotal(FOOTER_INDEX, node.scrollHeight);
+      Connector.calculations.setContentTotal(FOOTER_INDEX, node.offsetHeight);
     }
     const isLastContent = Connector.calculations.isLastContent(index);
     const { contentFooter } = this.props;
