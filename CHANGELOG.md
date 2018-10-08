@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+### Added
+
+- Provide new actions (`load` and `unload`) to be available saving/restore current states
+- Add new Redux states (`status.isLoaded`, `calculations.contents[].offset`, `calculations.footer.offset`)
+
+### Changed
+
+- Add default gap between contents on scroll mode
+
+### Fixed
+  
+- Make sure `moveToOffset()` be called whenever current content is changed on page mode
+- Fix calculation error on getting height from scrolled contents
+
 ## [v1.0.0-alpha.9]
 
 ### Changed
