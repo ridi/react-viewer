@@ -57,7 +57,7 @@ export default class BaseHtmlContent extends React.PureComponent {
     const { onContentRendered } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
-      const { current } = this.content;
+      const { current } = this.wrapper;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
