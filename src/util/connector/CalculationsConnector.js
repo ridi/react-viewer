@@ -68,16 +68,20 @@ class CalculationsConnector extends BaseConnector {
     if (index === FOOTER_INDEX) {
       this.dispatch(updateFooterCalculation({ offset }));
     } else {
-      this.dispatch(updateContentCalculation({ index, offset }));
+      const calculationOffset = this.getStartOffset(index);
+      if (calculationOffset !== offset) {
+        this.dispatch(updateContentCalculation({ index, offset }));
+      }
     }
   }
 
   checkAllCompleted() {
-    const isInitContents = selectReaderIsInitContents(this.getState());
+    const state = this.getState();
+    const isInitContents = selectReaderIsInitContents(state);
     if (!isInitContents) return;
-    const calculatedContents = selectReaderContentsCalculations(this.getState());
-    const calculatedFooter = selectReaderFooterCalculations(this.getState());
-    const contentFormat = selectReaderContentFormat(this.getState());
+    const calculatedContents = selectReaderContentsCalculations(state);
+    const calculatedFooter = selectReaderFooterCalculations(state);
+    const contentFormat = selectReaderContentFormat(state);
     const isAllCalculated = contentFormat === ContentFormat.HTML
       ? calculatedContents.every(content => content.isCalculated)
       : calculatedContents[0].isCalculated;
@@ -96,9 +100,9 @@ class CalculationsConnector extends BaseConnector {
     const calculatedTotal = calculatedContents.reduce((sum, content) => sum + content.total, calculatedFooter.total);
     this.dispatch(updateCalculationsTotal(calculatedTotal, isAllCalculated && isFooterCalculated));
 
-    const isReadyToRead = selectReaderIsReadyToRead(this.getState());
+    const isReadyToRead = selectReaderIsReadyToRead(state);
     if (!isReadyToRead) {
-      const currentContentIndex = selectReaderCurrentContentIndex(this.getState());
+      const currentContentIndex = selectReaderCurrentContentIndex(state);
       if (this.getStartOffset(currentContentIndex) !== PRE_CALCULATION
         && this.isContentCalculated(currentContentIndex)) {
         this.dispatch(setReadyToRead(true));
