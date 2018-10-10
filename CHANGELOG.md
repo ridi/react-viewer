@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+### Fixed
+- Remove duplicated action for calculation offset update [PR#83](https://github.com/ridi/react-viewer/pull/83)
+
 ## [v1.0.0-alpha.10]
 
 ### Added
