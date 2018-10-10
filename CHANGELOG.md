@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
+## [v1.0.0-alpha.11]
+
 ### Fixed
 - Remove duplicated action for calculation offset update [PR#83](https://github.com/ridi/react-viewer/pull/83)
 
@@ -144,7 +146,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.10...HEAD
+[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.11...HEAD
+[v1.0.0-alpha.11]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.10...1.0.0-alpha.11
 [v1.0.0-alpha.10]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.9...1.0.0-alpha.10
 [v1.0.0-alpha.9]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.8...1.0.0-alpha.9
 [v1.0.0-alpha.8]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.7...1.0.0-alpha.8
