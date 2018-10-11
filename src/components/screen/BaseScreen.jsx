@@ -11,7 +11,7 @@ import {
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
 import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
 import { getStyledTouchable } from '../styled';
@@ -33,6 +33,7 @@ export default class BaseScreen extends React.Component {
       Connector.current.restoreCurrentOffset();
     }
     this.moveToOffset();
+    Connector.current.setReaderJs();
 
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {

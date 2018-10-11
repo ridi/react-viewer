@@ -17,7 +17,7 @@ import {
   selectReaderCurrentContentIndex,
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
-import { hasIntersect } from '../Util';
+import { hasIntersect } from '../../util/Util';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 

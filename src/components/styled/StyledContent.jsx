@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import PropTypes from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 

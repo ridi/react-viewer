@@ -1,19 +1,45 @@
 import { Context, Reader, Util } from '@ridi/reader.js/web';
-import { isExist } from './Util';
-import { screenHeight, screenWidth } from './BrowserWrapper';
-import { EMPTY_READ_LOCATION } from '../constants/SettingConstants';
+import { isExist } from '../../util/Util';
+import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
+import { EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
-export default class ReaderJsHelper {
-  constructor(node, isScrollMode) {
+class ReaderJsHelper {
+  constructor() {
+    this._readerJs = null;
+    this.node = null;
+  }
+
+  get readerJs() {
+    if (this._readerJs === null) {
+      throw new Error('Readerjs is not initialized. Use `ReaderJsHelper.mount()`.');
+    }
+    return this._readerJs;
+  }
+
+  set readerJs(readerJs) {
+    this._readerJs = readerJs;
+  }
+
+  get sel() {
+    return this.readerJs.sel;
+  }
+
+  mount(node, isScrollMode) {
     this.node = node;
     this.readerJs = new Reader(this.node, this._createContext(isScrollMode));
     this.setDebugMode(process.env.NODE_ENV === 'development');
   }
 
   unmount() {
-    this.readerJs.unmount();
+    try {
+      this.readerJs.unmount();
+    } catch (e) {
+      /* ignore */
+    }
+    this.readerJs = null;
+    this.node = null;
   }
 
   _createContext(isScrollMode) {
@@ -42,3 +68,5 @@ export default class ReaderJsHelper {
     return this.readerJs.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
 }
+
+export default new ReaderJsHelper();

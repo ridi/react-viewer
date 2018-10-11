@@ -1,5 +1,5 @@
 import BaseConnector from './BaseConnector';
-import { screenHeight, screenWidth } from '../BrowserWrapper';
+import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
 import {
   CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,

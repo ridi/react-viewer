@@ -7,7 +7,7 @@ import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
 import Events from '../constants/DOMEventConstants';
-import Connector from '../util/connector';
+import Connector from '../service/connector';
 import { isExist } from '../util/Util';
 import { addEventListener, removeEventListener } from '../util/BrowserWrapper';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';

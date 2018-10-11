@@ -7,28 +7,27 @@ import {
 import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import ReaderJsHelper from '../ReaderJsHelper';
+import ReaderJsHelper from '../readerjs/ReaderJsHelper';
 import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends BaseConnector {
-  constructor() {
-    super();
-    this.readerJsHelper = null;
-  }
-
   setReaderJs() {
     const { viewType } = selectReaderSetting(this.getState());
-    if (this.readerJsHelper) {
-      this.readerJsHelper.unmount();
-      this.readerJsHelper = null;
-    }
-    const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
-    if (node) {
-      this.readerJsHelper = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
-      const location = this.readerJsHelper.getNodeLocationOfCurrentPage();
-      this.dispatch(updateCurrent({ location }));
+    try {
+      ReaderJsHelper.unmount();
+
+      const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
+      if (node) {
+        ReaderJsHelper.mount(node, viewType === ViewType.SCROLL);
+        const location = ReaderJsHelper.getNodeLocationOfCurrentPage();
+        this.dispatch(updateCurrent({ location }));
+      }
+    } catch (e) {
+      // ignore error
+      console.warn(e);
     }
   }
+
 
   updateCurrentOffset(offset) {
     const { viewType } = selectReaderSetting(this.getState());
