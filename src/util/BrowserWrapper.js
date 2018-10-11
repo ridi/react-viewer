@@ -4,7 +4,7 @@ import DOMEventConstants from '../constants/DOMEventConstants';
 import { cached, clearCache } from './CacheStore';
 import { addEventListener } from './EventHandler';
 
-const Window = isExist(window) ? window : { addEventListener: () => {} };
+const Window = isExist(window) ? window : { addEventListener: () => {}, scrollBy: () => {} };
 const Document = isExist(document) ? document : { body: {}, scrollingElement: {}, documentElement: {} };
 
 export const screenWidth = cached('screenWidth', () => Window.innerWidth);
@@ -32,6 +32,8 @@ export const setScrollTop = (top) => {
   }
 };
 
+export const { scrollBy } = Window;
+
 export const offsetWidth = () => Document.body.offsetWidth;
 
 export const offsetHeight = () => Document.body.offsetHeight;
@@ -43,6 +45,7 @@ export default {
   screenHeight,
   scrollTop,
   scrollHeight,
+  scrollBy,
   setScrollTop,
   offsetWidth,
   offsetHeight,

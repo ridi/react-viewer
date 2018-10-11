@@ -47,6 +47,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@ridi/eslint-config": "^4.1.1",
+    "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.2",
     "del": "^3.0.0",
     "eslint": "^5.0.0",
