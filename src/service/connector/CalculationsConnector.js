@@ -161,9 +161,8 @@ class CalculationsConnector extends BaseConnector {
   getIndexAtOffset(offset) {
     const calculations = selectReaderContentsCalculations(this.getState());
     const lastIndex = calculations.length;
-    for (let i = 1; i <= lastIndex; i += 1) {
-      const index = i === lastIndex ? FOOTER_INDEX : i;
-      const nextIndex = i >= lastIndex - 1 ? FOOTER_INDEX : i + 1;
+    for (let index = 1; index <= lastIndex; index += 1) {
+      const nextIndex = index === lastIndex ? FOOTER_INDEX : index + 1;
       // index === lastIndex ==> isFooter
       if (offset >= this.getStartOffset(index) && (index === FOOTER_INDEX || offset < this.getStartOffset(nextIndex))) {
         return index;
