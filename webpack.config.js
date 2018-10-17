@@ -1,7 +1,7 @@
 module.exports = {
   entry: {
     index: `${__dirname}/src/index.js`,
-    connectors: `${__dirname}/src/util/connector/index.js`,
+    connectors: `${__dirname}/src/service/connector/index.js`,
     actions: `${__dirname}/src/redux/action.js`,
     selectors: `${__dirname}/src/redux/selector.js`,
     reducer: `${__dirname}/src/redux/reducer.js`,
