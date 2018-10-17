@@ -148,9 +148,9 @@ class DemoViewer extends Component {
     }
     if (event.type === 'ReaderTouchEnd') {
       if (SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY)) {
-        const {rects} = SelectionHelper.getSelectionInfo();
+        const { rects } = SelectionHelper.getSelectionInfo();
         console.log(rects);
-        this.setState({selections: rects});
+        this.setState({ selections: rects });
       }
       console.log(SelectionHelper.getSelectionInfo());
       return;
