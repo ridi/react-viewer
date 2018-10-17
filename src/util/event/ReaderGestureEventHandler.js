@@ -42,6 +42,7 @@ export default class ReaderGestureEventHandler {
       clientY,
       pageX,
       pageY,
+      type,
     } = ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
     return {
       screenX,
@@ -50,6 +51,7 @@ export default class ReaderGestureEventHandler {
       clientY,
       pageX,
       pageY,
+      type,
     };
   }
 
@@ -119,7 +121,6 @@ export default class ReaderGestureEventHandler {
     addEventListener(this.element, DOMEventConstants.MOUSE_DOWN, this.start);
     addEventListener(this.element, DOMEventConstants.MOUSE_MOVE, this.move);
     addEventListener(this.element, DOMEventConstants.MOUSE_UP, this.end);
-    addEventListener(this.element, DOMEventConstants.MOUSE_OUT, this.end);
 
     // prevent entering to selection mode and default context menu
     this.element.oncontextmenu = () => false;
@@ -135,6 +136,5 @@ export default class ReaderGestureEventHandler {
     removeEventListener(this.element, DOMEventConstants.MOUSE_DOWN, this.start);
     removeEventListener(this.element, DOMEventConstants.MOUSE_MOVE, this.move);
     removeEventListener(this.element, DOMEventConstants.MOUSE_UP, this.end);
-    removeEventListener(this.element, DOMEventConstants.MOUSE_OUT, this.end);
   }
 }
