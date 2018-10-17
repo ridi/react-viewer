@@ -41,7 +41,9 @@ class Reader extends React.Component {
   }
 
   onTouched(e) {
-    const { onTouched } = this.props;
+    const {
+      onTouched,
+    } = this.props;
     if (isExist(onTouched)) {
       onTouched(e);
     }
@@ -103,11 +105,10 @@ Reader.defaultProps = {
   ignoreScroll: false,
   disableCalculation: false,
   onScrolled: null,
-  onTouched: null,
   onMount: null,
   onUnmount: null,
   onTouchItem: null,
-  onSelect: null,
+  onTouched: null,
 };
 
 Reader.propTypes = {
@@ -122,7 +123,6 @@ Reader.propTypes = {
   onUnmount: PropTypes.func,
   onScrolled: PropTypes.func,
   onTouchItem: PropTypes.func,
-  onSelect: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

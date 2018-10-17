@@ -2,48 +2,43 @@ import ReaderJsHelper from './ReaderJsHelper';
 
 class SelectionHelper {
   constructor() {
-    this.isSelectMode = true;
+    this.isSelectMode = false;
   }
 
   isInSelectionMode() {
-    return this.isInSelectionMode();
-  }
-
-  getSelectedRangeRects() {
-    return ReaderJsHelper.sel.getSelectedRangeRects();
+    return this.isSelectMode;
   }
 
   startSelectionMode(x, y, unit) {
-    if (this.isSelectMode) {
-      this.endSelectionMode();
-    }
-    if (ReaderJsHelper.sel.startSelectionMode(x, y, unit)) {
-      this.isSelectMode = true;
-      return this.getSelectedRangeRects();
-    }
-    return null;
+    console.log(this.isSelectMode);
+    this.endSelectionMode();
+    this.isSelectMode = true;
+    return ReaderJsHelper.sel.startSelectionMode(x, y, unit);
   }
 
-  endSelectionMode() {
+  endSelectionMode(x, y, unit) {
     if (this.isSelectMode) {
+      const rects = this.expandLower(x, y, unit);
       this.isSelectMode = false;
-      return this.getSelectedRangeRects();
+      return rects;
     }
-    return null;
+    return [];
   }
 
   expandUpper(x, y, unit) {
-    if (ReaderJsHelper.sel.expandUpperSelection(x, y, unit)) {
-      return this.getSelectedRangeRects();
-    }
-    return null;
+    return ReaderJsHelper.sel.expandUpperSelection(x, y, unit);
   }
 
   expandLower(x, y, unit) {
-    if (ReaderJsHelper.sel.expandLowerSelection(x, y, unit)) {
-      return this.getSelectedRangeRects();
-    }
-    return null;
+    return ReaderJsHelper.sel.expandLowerSelection(x, y, unit);
+  }
+
+  getSelectionInfo() {
+    return {
+      serializedRange: ReaderJsHelper.sel.getSelectedSerializedRange(),
+      rects: ReaderJsHelper.sel.getSelectedRangeRects(),
+      text: ReaderJsHelper.sel.getSelectedText(),
+    };
   }
 }
 

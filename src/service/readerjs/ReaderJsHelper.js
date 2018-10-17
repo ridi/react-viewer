@@ -42,11 +42,12 @@ class ReaderJsHelper {
     this.node = null;
   }
 
-  _createContext(isScrollMode) {
+  // TODO maxSelectionLength as configuration
+  _createContext(isScrollMode, maxSelectionLength = 1000) {
     const columnGap = Util.getStylePropertyIntValue(this.node, 'column-gap');
     const width = screenWidth() - columnGap;
     const height = screenHeight();
-    return new Context(width, height, columnGap, false, isScrollMode);
+    return new Context(width, height, columnGap, false, isScrollMode, maxSelectionLength);
   }
 
   invalidateContext(isScrollMode) {

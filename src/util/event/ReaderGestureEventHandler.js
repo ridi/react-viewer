@@ -34,8 +34,23 @@ export default class ReaderGestureEventHandler {
     ].includes(event.type));
   }
 
-  static getCurrentEvent(event) {
-    return ReaderGestureEventHandler.isTouchEvent(event) ? {...event, ...event.changedTouches[0] } : event;
+  static getDetail(event) {
+    const {
+      screenX,
+      screenY,
+      clientX,
+      clientY,
+      pageX,
+      pageY,
+    } = ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
+    return {
+      screenX,
+      screenY,
+      clientX,
+      clientY,
+      pageX,
+      pageY,
+    };
   }
 
   init() {
@@ -48,7 +63,7 @@ export default class ReaderGestureEventHandler {
   }
 
   addEvent(type, event) {
-    this.eventQueue.push({ type, event: ReaderGestureEventHandler.getCurrentEvent(event) });
+    this.eventQueue.push({ type, detail: ReaderGestureEventHandler.getDetail(event) });
   }
 
   resetEvent() {
@@ -56,8 +71,8 @@ export default class ReaderGestureEventHandler {
   }
 
   emitEvents() {
-    this.eventQueue.forEach(({ type, event: originalEvent }) => {
-      this.element.dispatchEvent(new CustomEvent(type, { detail: { originalEvent } }));
+    this.eventQueue.forEach(({ type, detail }) => {
+      this.element.dispatchEvent(new CustomEvent(type, { detail }));
     });
     this.resetEvent();
   }

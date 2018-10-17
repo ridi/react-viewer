@@ -15,6 +15,7 @@ import Reader, {
   selectReaderCalculationsTotal,
   load,
   unload,
+  SelectionHelper,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -27,6 +28,7 @@ import { requestLoadContent, onScreenTouched, onScreenScrolled } from './redux/V
 import { screenWidth } from './utils/BrowserWrapper';
 import { BindingType } from '../../src/constants/ContentConstants';
 import Cache from './utils/Cache';
+import Selection from './components/Selection';
 
 const Position = {
   LEFT: 1,
@@ -60,6 +62,7 @@ class DemoViewer extends Component {
     this.onReaderLoaded = this.onReaderLoaded.bind(this);
     this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.footer = <ViewerScreenFooter content={props.content} />;
+    this.state = { selections: [] };
   }
 
   onReaderLoaded() {
@@ -125,14 +128,35 @@ class DemoViewer extends Component {
   }
 
   onReaderTouched(event) {
+    console.log(event);
     if (Connector.current.isOnFooter()) return;
+    if (event.type === 'ReaderTouchStart') {
+      const selections = SelectionHelper.startSelectionMode(event.detail.clientX, event.detail.clientY);
+      console.log(selections);
+      this.setState({ selections });
+      return;
+    }
+    if (event.type === 'ReaderTouchMove') {
+      const selections = SelectionHelper.expandLower(event.detail.clientX, event.detail.clientY);
+      console.log(selections);
+      this.setState({ selections });
+      return;
+    }
+    if (event.type === 'ReaderTouchEnd') {
+      const selections = SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY);
+      console.log(selections);
+      this.setState({ selections });
+      console.log(SelectionHelper.getSelectionInfo());
+      return;
+    }
+
     const { setting } = this.props;
 
     const width = screenWidth();
     let position = Position.MIDDLE;
     if (setting.viewType === ViewType.PAGE) {
-      if (event.clientX <= width * 0.2) position = Position.LEFT;
-      if (event.clientX >= width * 0.8) position = Position.RIGHT;
+      if (event.detail.clientX <= width * 0.2) position = Position.LEFT;
+      if (event.detail.clientX >= width * 0.8) position = Position.RIGHT;
     }
 
     this.onPositionTouched(position);
@@ -150,6 +174,7 @@ class DemoViewer extends Component {
       currentContentIndex,
       setting,
     } = this.props;
+    const { selections } = this.state;
     return (
       <section
         id="viewer_page"
@@ -174,6 +199,7 @@ class DemoViewer extends Component {
           onTouched={this.onReaderTouched}
           onScrolled={this.onReaderScrolled}
         >
+          <Selection color="rgb(231, 216, 124)" rects={selections} />
           {setting.viewType === ViewType.PAGE
             && (
               <>

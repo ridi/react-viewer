@@ -102,6 +102,9 @@ export default class BaseScreen extends React.Component {
         ref={this.wrapper}
         total={calculationsTotal}
         onTouched={this.onTouchableScreenTouched}
+        onTouchStart={this.onTouchableScreenTouched}
+        onTouchMove={this.onTouchableScreenTouched}
+        onTouchEnd={this.onTouchableScreenTouched}
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}
