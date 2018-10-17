@@ -131,21 +131,27 @@ class DemoViewer extends Component {
     console.log(event);
     if (Connector.current.isOnFooter()) return;
     if (event.type === 'ReaderTouchStart') {
-      const selections = SelectionHelper.startSelectionMode(event.detail.clientX, event.detail.clientY);
-      console.log(selections);
-      this.setState({ selections });
+      if (SelectionHelper.startSelectionMode(event.detail.clientX, event.detail.clientY)) {
+        const { rects } = SelectionHelper.getSelectionInfo();
+        console.log(rects);
+        this.setState({ selections: rects });
+      }
       return;
     }
     if (event.type === 'ReaderTouchMove') {
-      const selections = SelectionHelper.expandLower(event.detail.clientX, event.detail.clientY);
-      console.log(selections);
-      this.setState({ selections });
+      if (SelectionHelper.expandLower(event.detail.clientX, event.detail.clientY)) {
+        const { rects } = SelectionHelper.getSelectionInfo();
+        console.log(rects);
+        this.setState({ selections: rects });
+      }
       return;
     }
     if (event.type === 'ReaderTouchEnd') {
-      const selections = SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY);
-      console.log(selections);
-      this.setState({ selections });
+      if (SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY)) {
+        const {rects} = SelectionHelper.getSelectionInfo();
+        console.log(rects);
+        this.setState({selections: rects});
+      }
       console.log(SelectionHelper.getSelectionInfo());
       return;
     }

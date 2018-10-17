@@ -9,28 +9,28 @@ class SelectionHelper {
     return this.isSelectMode;
   }
 
-  startSelectionMode(x, y, unit) {
+  startSelectionMode(x, y) {
     console.log(this.isSelectMode);
     this.endSelectionMode();
     this.isSelectMode = true;
-    return ReaderJsHelper.sel.startSelectionMode(x, y, unit);
+    return ReaderJsHelper.sel.startSelectionMode(x, y);
   }
 
-  endSelectionMode(x, y, unit) {
+  endSelectionMode(x, y) {
     if (this.isSelectMode) {
-      const rects = this.expandLower(x, y, unit);
+      const expanded = this.expandLower(x, y);
       this.isSelectMode = false;
-      return rects;
+      return expanded;
     }
-    return [];
+    return false;
   }
 
-  expandUpper(x, y, unit) {
-    return ReaderJsHelper.sel.expandUpperSelection(x, y, unit);
+  expandUpper(x, y) {
+    return ReaderJsHelper.sel.expandUpperSelection(x, y);
   }
 
-  expandLower(x, y, unit) {
-    return ReaderJsHelper.sel.expandLowerSelection(x, y, unit);
+  expandLower(x, y) {
+    return ReaderJsHelper.sel.expandLowerSelection(x, y);
   }
 
   getSelectionInfo() {
