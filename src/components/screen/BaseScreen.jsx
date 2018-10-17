@@ -53,7 +53,8 @@ export default class BaseScreen extends React.Component {
       || prevCurrent.viewType !== current.viewType);
     const isNeededRestore = hasJustCalculatedCurrent;
     const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
-    const isNeededUpdateReaderJs = prevCurrent.contentIndex !== current.contentIndex
+    const isNeededUpdateReaderJs = (!prevIsReadyToRead && isReadyToRead)
+      || prevCurrent.contentIndex !== current.contentIndex
       || prevCurrent.viewType !== current.viewType;
 
     if (isNeededRestore) Connector.current.restoreCurrentOffset();
