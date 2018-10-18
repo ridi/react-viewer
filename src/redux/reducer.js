@@ -11,8 +11,11 @@ import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
 import { makeSequence, updateObject } from '../util/Util';
 import { ContentFormat } from '../constants/ContentConstants';
 
-const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState).build();
-const unload = state => new ImmutableObjectBuilder(state)
+const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState)
+  .set(path.isLoaded(), true)
+  .build();
+
+const unload = () => new ImmutableObjectBuilder(initialState)
   .set(path.isLoaded(), false)
   .build();
 
