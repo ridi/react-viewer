@@ -14,7 +14,8 @@ class TouchableScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    allowScrollEvent();
+    const { forwardedRef } = this.props;
+    allowScrollEvent(forwardedRef.current);
   }
 
   handleScrollEvent() {
