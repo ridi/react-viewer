@@ -13,6 +13,10 @@ class TouchableScreen extends React.Component {
     this.handleScrollEvent();
   }
 
+  componentWillUnmount() {
+    allowScrollEvent();
+  }
+
   handleScrollEvent() {
     const { viewType, forwardedRef, isReadyToRead } = this.props;
     if (viewType === ViewType.PAGE) {
