@@ -10,10 +10,10 @@ class SelectionHelper {
   }
 
   startSelectionMode(x, y) {
-    console.log(this.isSelectMode);
     this.endSelectionMode();
-    this.isSelectMode = true;
-    return ReaderJsHelper.sel.startSelectionMode(x, y);
+    if (ReaderJsHelper.sel.startSelectionMode(x, y)) {
+      this.isSelectMode = true;
+    }
   }
 
   endSelectionMode(x, y) {

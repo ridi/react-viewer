@@ -9,8 +9,14 @@ import {
 } from '../../util/EventHandler';
 import TouchEventHandler from '../../util/event/ReaderGestureEventHandler';
 import { ViewType } from '../../constants/SettingConstants';
+import SelectionHelper from '../../service/readerjs/SelectionHelper';
+import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 
 class TouchableScreen extends React.Component {
+  static SCROLLING_EDGE = 60;
+
+  static SCROLLING_AMOUNT = 120;
+
   constructor(props) {
     super(props);
     this.touchHandler = null;
@@ -54,12 +60,15 @@ class TouchableScreen extends React.Component {
         break;
       case TouchEventHandler.EVENT_TYPE.TouchStart:
         onTouchStart(event);
+        this.handleScrollEvent();
         break;
       case TouchEventHandler.EVENT_TYPE.TouchMove:
         onTouchMove(event);
+        this.handleTouchMoveInEdge(event);
         break;
       case TouchEventHandler.EVENT_TYPE.TouchEnd:
         onTouchEnd(event);
+        this.handleScrollEvent();
         break;
       default: break;
     }
@@ -68,12 +77,23 @@ class TouchableScreen extends React.Component {
   handleScrollEvent() {
     const { viewType, forwardedRef, isReadyToRead } = this.props;
     if (viewType === ViewType.PAGE) {
-      if (Connector.current.isOnFooter()) allowScrollEvent(forwardedRef.current);
+      if (Connector.current.isOnFooter() || !SelectionHelper.isInSelectionMode()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
     if (viewType === ViewType.SCROLL) {
-      if (isReadyToRead) allowScrollEvent(forwardedRef.current);
+      if (isReadyToRead || !SelectionHelper.isInSelectionMode()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
+    }
+  }
+
+  handleTouchMoveInEdge(event) {
+    const halfHeight = screenHeight() / 2;
+    const normalizedY = halfHeight - Math.abs(halfHeight - event.detail.clientY);
+    if (normalizedY < TouchableScreen.SCROLLING_EDGE) {
+      scrollBy({
+        top: TouchableScreen.SCROLLING_AMOUNT * (event.detail.clientY > halfHeight ? 1 : -1),
+        behavior: 'smooth',
+      });
     }
   }
 

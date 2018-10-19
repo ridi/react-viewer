@@ -54,14 +54,17 @@ class CalculationsConnector extends BaseConnector {
     return calculatedContents[index - 1].isCalculated;
   }
 
-  getStartOffset(index) {
+  getCalculation(index) {
     if (index === FOOTER_INDEX) {
-      const { offset } = selectReaderFooterCalculations(this.getState());
-      return offset;
+      return selectReaderFooterCalculations(this.getState());
     }
     if (!selectReaderIsInitContents(this.getState())) return false;
     const calculatedContents = selectReaderContentsCalculations(this.getState());
-    return calculatedContents[index - 1].offset;
+    return calculatedContents[index - 1];
+  }
+
+  getStartOffset(index) {
+    return this.getCalculation(index).offset;
   }
 
   setStartOffset(index, offset) {

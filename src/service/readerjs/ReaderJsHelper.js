@@ -26,6 +26,10 @@ class ReaderJsHelper {
     return this.readerJs.sel;
   }
 
+  get content() {
+    return this.readerJs.content;
+  }
+
   mount(node, isScrollMode) {
     this.node = node;
     this.readerJs = new Reader(this.node, this._createContext(isScrollMode));

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
@@ -16,6 +16,7 @@ import Reader, {
   load,
   unload,
   SelectionHelper,
+  ContentHelper,
 } from '../../lib';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -25,10 +26,10 @@ import { selectIsFullScreen } from './redux/Viewer.selector';
 import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
 import { requestLoadContent, onScreenTouched, onScreenScrolled } from './redux/Viewer.action';
-import { screenWidth } from './utils/BrowserWrapper';
+import { screenHeight, screenWidth, scrollTop } from './utils/BrowserWrapper';
 import { BindingType } from '../../src/constants/ContentConstants';
 import Cache from './utils/Cache';
-import Selection from './components/Selection';
+import Selection, { SelectionMode } from './components/Selection';
 
 const Position = {
   LEFT: 1,
@@ -53,7 +54,7 @@ const enhancer = composeWithDevTools(applyMiddleware(thunk));
 const store = createStore(rootReducer, {}, enhancer);
 Connector.connect(store);
 
-class DemoViewer extends Component {
+class DemoViewer extends React.Component {
   constructor(props) {
     super(props);
     this.cache = null;
@@ -62,7 +63,8 @@ class DemoViewer extends Component {
     this.onReaderLoaded = this.onReaderLoaded.bind(this);
     this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.footer = <ViewerScreenFooter content={props.content} />;
-    this.state = { selections: [] };
+
+    this.state = { selections: [], selectionMode: SelectionMode.NONE };
   }
 
   onReaderLoaded() {
@@ -132,30 +134,34 @@ class DemoViewer extends Component {
     if (Connector.current.isOnFooter()) return;
     if (event.type === 'ReaderTouchStart') {
       if (SelectionHelper.startSelectionMode(event.detail.clientX, event.detail.clientY)) {
-        const { rects } = SelectionHelper.getSelectionInfo();
-        console.log(rects);
-        this.setState({ selections: rects });
+        const info = SelectionHelper.getSelectionInfo();
+        console.log(info);
+        this.setSelectionRects(info);
       }
       return;
     }
     if (event.type === 'ReaderTouchMove') {
       if (SelectionHelper.expandLower(event.detail.clientX, event.detail.clientY)) {
-        const { rects } = SelectionHelper.getSelectionInfo();
-        console.log(rects);
-        this.setState({ selections: rects });
+        const info = SelectionHelper.getSelectionInfo();
+        console.log(info);
+        this.setSelectionRects(info);
       }
       return;
     }
     if (event.type === 'ReaderTouchEnd') {
       if (SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY)) {
-        const { rects } = SelectionHelper.getSelectionInfo();
-        console.log(rects);
-        this.setState({ selections: rects });
+        const info = SelectionHelper.getSelectionInfo();
+        console.log(info);
+        this.setSelectionRects(info);
       }
-      console.log(SelectionHelper.getSelectionInfo());
       return;
     }
 
+    const link = ContentHelper.getLinkFromElement(event.detail.target);
+    if (link) {
+      console.log(link);
+      return;
+    }
     const { setting } = this.props;
 
     const width = screenWidth();
@@ -173,14 +179,46 @@ class DemoViewer extends Component {
     actionOnScreenScrolled();
   }
 
+  setSelectionRects({ rects, text }) {
+    const {
+      currentContentIndex,
+      setting,
+      currentOffset,
+    } = this.props;
+    const calculation = Connector.calculations.getCalculation(currentContentIndex);
+    const selections = rects.map(({
+      top,
+      left,
+      width,
+      height,
+    }) => ({
+      top: setting.viewType === ViewType.SCROLL ? (scrollTop() - calculation.offset) + top : top,
+      left: setting.viewType === ViewType.PAGE ? (currentOffset - calculation.offset) * screenWidth() + left : left,
+      width,
+      height,
+    }));
+    this.setState({
+      selections,
+      selectionMode: text.split(/[^\w/\u3131-\uD79D]/).length > 2 ? SelectionMode.AUTO_HIGHLIGHT : SelectionMode.SELECTION,
+    });
+  }
+
   render() {
     const {
       isFullScreen,
       content,
       currentContentIndex,
       setting,
+      currentOffset,
     } = this.props;
-    const { selections } = this.state;
+    const { selections, selectionMode } = this.state;
+    const calculation = Connector.calculations.getCalculation(currentContentIndex);
+    const selectionPosition = {
+      top: setting.viewType === ViewType.SCROLL ? calculation.offset : 0,
+      left: setting.viewType === ViewType.PAGE ? (calculation.offset - currentOffset) * screenWidth() : 0,
+      width: setting.viewType === ViewType.PAGE ? calculation.offset * screenWidth() : screenWidth(),
+      height: setting.viewType === ViewType.SCROLL ? calculation.total : screenHeight(),
+    };
     return (
       <section
         id="viewer_page"
@@ -205,7 +243,13 @@ class DemoViewer extends Component {
           onTouched={this.onReaderTouched}
           onScrolled={this.onReaderScrolled}
         >
-          <Selection color="rgb(231, 216, 124)" rects={selections} />
+          <Selection
+            selectionColor="rgb(31, 140, 230)"
+            highlightColor="rgb(231, 216, 124)"
+            rects={selections}
+            position={selectionPosition}
+            selectionMode={selectionMode}
+          />
           {setting.viewType === ViewType.PAGE
             && (
               <>

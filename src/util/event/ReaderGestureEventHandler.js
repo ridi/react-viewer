@@ -43,6 +43,7 @@ export default class ReaderGestureEventHandler {
       pageX,
       pageY,
       type,
+      target,
     } = ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
     return {
       screenX,
@@ -52,6 +53,7 @@ export default class ReaderGestureEventHandler {
       pageX,
       pageY,
       type,
+      target,
     };
   }
 
