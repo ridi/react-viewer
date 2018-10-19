@@ -40,6 +40,7 @@ class TouchableScreen extends React.Component {
 
   componentWillUnmount() {
     const { current: node } = this.props.forwardedRef;
+    this.handleScrollEvent(true);
     this.touchHandler.detach();
     removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
     removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
@@ -74,8 +75,12 @@ class TouchableScreen extends React.Component {
     }
   }
 
-  handleScrollEvent() {
+  handleScrollEvent(forceAllow = false) {
     const { viewType, forwardedRef, isReadyToRead } = this.props;
+    if (forceAllow) {
+      allowScrollEvent(forwardedRef.current);
+      return;
+    }
     if (viewType === ViewType.PAGE) {
       if (Connector.current.isOnFooter() || !SelectionHelper.isInSelectionMode()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);

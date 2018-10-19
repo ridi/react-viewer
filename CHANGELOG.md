@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [Unreleased]
 
 ## [v1.0.0-alpha.11]
 
@@ -146,7 +146,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.11...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.11...HEAD
 [v1.0.0-alpha.11]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.10...1.0.0-alpha.11
 [v1.0.0-alpha.10]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.9...1.0.0-alpha.10
 [v1.0.0-alpha.9]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.8...1.0.0-alpha.9
