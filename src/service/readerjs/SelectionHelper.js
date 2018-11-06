@@ -11,7 +11,7 @@ class SelectionHelper {
 
   startSelectionMode(x, y) {
     this.endSelectionMode();
-    if (ReaderJsHelper.sel.startSelectionMode(x, y)) {
+    if (ReaderJsHelper.sel.start(x, y)) {
       this.isSelectMode = true;
     }
   }
@@ -26,18 +26,18 @@ class SelectionHelper {
   }
 
   expandUpper(x, y) {
-    return ReaderJsHelper.sel.expandUpperSelection(x, y);
+    return ReaderJsHelper.sel.expandIntoUpper(x, y);
   }
 
   expandLower(x, y) {
-    return ReaderJsHelper.sel.expandLowerSelection(x, y);
+    return ReaderJsHelper.sel.expandIntoLower(x, y);
   }
 
   getSelectionInfo() {
     return {
-      serializedRange: ReaderJsHelper.sel.getSelectedSerializedRange(),
-      rects: ReaderJsHelper.sel.getSelectedRangeRects(),
-      text: ReaderJsHelper.sel.getSelectedText(),
+      serializedRange: ReaderJsHelper.sel.getRange().toSerializedString(),
+      rects: ReaderJsHelper.sel.getRects(),
+      text: ReaderJsHelper.sel.getText(),
     };
   }
 }
