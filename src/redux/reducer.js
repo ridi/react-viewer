@@ -88,6 +88,7 @@ const invalidateCalculations = state => new ImmutableObjectBuilder(state)
   .set(path.isReadyToRead(), false)
   .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
+  .set(path.annotationCalculations(), {})
   .build();
 
 const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(state)
@@ -97,6 +98,15 @@ const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(st
 
 const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(state)
   .set(path.isReadyToRead(), isReadyToRead)
+  .build();
+
+const updateSelection = (state, { selection, selectionMode }) => new ImmutableObjectBuilder(state)
+  .set(path.selection(), selection)
+  .set(path.selectionMode(), selectionMode)
+  .build();
+
+const updateAnnotationCalculation = (state, { annotationId, calculation }) => new ImmutableObjectBuilder(state)
+  .set(path.annotationCalculation(annotationId), calculation)
   .build();
 
 export default ({
@@ -118,5 +128,7 @@ export default ({
     [actions.UPDATE_CONTENT_CALCULATIONS]: updateContentCalculation,
     [actions.UPDATE_FOOTER_CALCULATIONS]: updateFooterCalculation,
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
+    [actions.UPDATE_SELECTION]: updateSelection,
+    [actions.UPDATE_ANNOTATION_CALCULATIONS]: updateAnnotationCalculation,
   });
 };

@@ -28,7 +28,7 @@ const settingsAffectingCalculation = [
 
 class SettingConnector extends BaseConnector {
   getMaxWidth(withUnit = false) {
-    const { maxWidth } = selectReaderSetting(this.getState());
+    const { maxWidth } = this.getSetting();
     return withUnit ? `${maxWidth}px` : maxWidth;
   }
 
@@ -38,7 +38,7 @@ class SettingConnector extends BaseConnector {
       containerHorizontalMargin,
       viewType,
       contentPaddingInPercent,
-    } = selectReaderSetting(this.getState());
+    } = this.getSetting();
 
     const width = screenWidth();
     const containerWidth = width - (containerHorizontalMargin * 2);
@@ -66,7 +66,7 @@ class SettingConnector extends BaseConnector {
 
   getContainerHeight(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
-    const { viewType } = selectReaderSetting(this.getState());
+    const { viewType } = this.getSetting();
 
     const height = screenHeight();
 
@@ -81,7 +81,7 @@ class SettingConnector extends BaseConnector {
   }
 
   getContentWidth(index, withUnit = false) {
-    const { viewType, contentWidthInPercent } = selectReaderSetting(this.getState());
+    const { viewType, contentWidthInPercent } = this.getSetting();
     const contentFormat = selectReaderContentFormat(this.getState());
 
     if (contentFormat === ContentFormat.HTML) {
@@ -101,24 +101,24 @@ class SettingConnector extends BaseConnector {
   }
 
   getFont() {
-    const { font } = selectReaderSetting(this.getState());
+    const { font } = this.getSetting();
     return font || DEFAULT_FONT;
   }
 
   getFontSize(withUnit = false) {
-    const { fontSizeInPx } = selectReaderSetting(this.getState());
+    const { fontSizeInPx } = this.getSetting();
     return withUnit ? `${fontSizeInPx}px` : fontSizeInPx;
   }
 
   getLineHeight(withUnit = false) {
-    const { lineHeightInEm } = selectReaderSetting(this.getState());
+    const { lineHeightInEm } = this.getSetting();
     return withUnit ? `${lineHeightInEm}em` : lineHeightInEm;
   }
 
   getColumnGap(withUnit = false) {
     const contentFormat = selectReaderContentFormat(this.getState());
     if (contentFormat === ContentFormat.HTML) {
-      const { columnGapInPercent } = selectReaderSetting(this.getState());
+      const { columnGapInPercent } = this.getSetting();
       const columnGap = Math.ceil(screenWidth() * (columnGapInPercent / 100));
       return withUnit ? `${columnGap}px` : columnGap;
     }
@@ -126,7 +126,7 @@ class SettingConnector extends BaseConnector {
   }
 
   getContainerVerticalMargin(withUnit = false) {
-    const { containerVerticalMargin } = selectReaderSetting(this.getState());
+    const { containerVerticalMargin } = this.getSetting();
     return withUnit ? `${containerVerticalMargin}px` : containerVerticalMargin;
   }
 
@@ -142,7 +142,7 @@ class SettingConnector extends BaseConnector {
   }
 
   getColumnWidth(withUnit = false) {
-    const { columnsInPage } = selectReaderSetting(this.getState());
+    const { columnsInPage } = this.getSetting();
 
     const contentFormat = selectReaderContentFormat(this.getState());
     const calculatedWidth = this.getContainerWidthInternal();
@@ -153,8 +153,12 @@ class SettingConnector extends BaseConnector {
   }
 
   getContentFooterHeight(withUnit = false) {
-    const { contentFooterHeight } = selectReaderSetting(this.getState());
+    const { contentFooterHeight } = this.getSetting();
     return withUnit ? `${contentFooterHeight}px` : contentFooterHeight;
+  }
+
+  getScrollingContentGap(withUnit = false) {
+    return withUnit ? '50px' : 50;
   }
 
   getChapterIndicatorId(chapterNum) {
@@ -163,6 +167,10 @@ class SettingConnector extends BaseConnector {
 
   getChapterId(chapterNum) {
     return `${CHAPTER_ID_PREFIX}${chapterNum}`;
+  }
+
+  getSetting() {
+    return selectReaderSetting(this.getState());
   }
 
   updateSetting(setting) {

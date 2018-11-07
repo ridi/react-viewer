@@ -11,6 +11,10 @@ import ReaderJsHelper from '../readerjs/ReaderJsHelper';
 import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends BaseConnector {
+  getCurrent() {
+    return selectReaderCurrent(this.getState());
+  }
+
   setReaderJs() {
     const { viewType } = selectReaderSetting(this.getState());
     try {

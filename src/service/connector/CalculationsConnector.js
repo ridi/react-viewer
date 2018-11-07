@@ -5,6 +5,7 @@ import {
   updateFooterCalculation,
   updateContentCalculation,
   setReadyToRead,
+  updateAnnotationCalculation,
 } from '../../redux/action';
 import {
   selectReaderFooterCalculations,
@@ -16,10 +17,12 @@ import {
   selectReaderContents,
   selectReaderCurrentContentIndex,
   selectReaderIsReadyToRead,
+  selectReaderAnnotationCalculations,
 } from '../../redux/selector';
 import { hasIntersect } from '../../util/Util';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
+import SelectionConnector from './SelectionConnector';
 
 // TODO 테스트 작성
 class CalculationsConnector extends BaseConnector {
@@ -190,6 +193,14 @@ class CalculationsConnector extends BaseConnector {
       .map(({ index }) => index)
       .slice(0, contentCountAtATime);
     return result;
+  }
+
+  getAnnotationCalculation(annotation) {
+    const calculatedAnnotations = selectReaderAnnotationCalculations(this.getState());
+    if (calculatedAnnotations[annotation.id]) {
+      return calculatedAnnotations[annotation.id];
+    }
+    this.dispatch(updateAnnotationCalculation(annotation.id, { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) }));
   }
 }
 

@@ -8,6 +8,7 @@ const DETECTION_TYPE = 'top'; // bottom or top
 class ReaderJsHelper {
   constructor() {
     this._readerJs = null;
+    this.isMounted = false;
     this.node = null;
   }
 
@@ -34,6 +35,7 @@ class ReaderJsHelper {
     this.node = node;
     this.readerJs = new Reader(this.node, this._createContext(isScrollMode));
     this.setDebugMode(process.env.NODE_ENV === 'development');
+    this.isMounted = true;
   }
 
   unmount() {
@@ -44,6 +46,7 @@ class ReaderJsHelper {
     }
     this.readerJs = null;
     this.node = null;
+    this.isMounted = false;
   }
 
   // TODO maxSelectionLength as configuration

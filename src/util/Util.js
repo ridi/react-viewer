@@ -175,3 +175,7 @@ export const makeSequence = (limit, offset = 0) => {
   }
   return seq;
 };
+
+export const wordCount = (text) => {
+  return text.split(/[^\w/\u3131-\uD79D]/).length;
+};

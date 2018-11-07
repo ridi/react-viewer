@@ -22,6 +22,8 @@ export const actions = {
   UPDATE_CONTENT_CALCULATIONS: 'READER:UPDATE_CONTENT_CALCULATIONS',
   UPDATE_FOOTER_CALCULATIONS: 'READER:UPDATE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
+  UPDATE_SELECTION: 'READER:UPDATE_SELECTION',
+  UPDATE_ANNOTATION_CALCULATIONS: 'READER:UPDATE_ANNOTATION_CALCULATIONS',
 };
 
 export const load = fullState => ({
@@ -134,4 +136,16 @@ export const updateCalculationsTotal = (calculationsTotal, isCompleted = false) 
 export const setReadyToRead = isReadyToRead => ({
   type: actions.SET_READY_TO_READ,
   isReadyToRead,
+});
+
+export const updateSelection = (selection, selectionMode) => ({
+  type: actions.UPDATE_SELECTION,
+  selection,
+  selectionMode,
+});
+
+export const updateAnnotationCalculation = (annotationId, calculation) => ({
+  type: actions.UPDATE_ANNOTATION_CALCULATIONS,
+  annotationId,
+  calculation,
 });

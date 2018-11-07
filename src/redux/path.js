@@ -7,6 +7,7 @@ import {
   DEFAULT_HORIZONTAL_MARGIN,
 } from '../constants/StyledConstants';
 import { PRE_CALCULATION } from '../constants/CalculationsConstants';
+import { SelectionMode } from '../constants/SelectionConstants';
 
 export const initialContentState = index => ({
   index,
@@ -58,7 +59,8 @@ export const initialState = {
   calculations: {
     contents: [],
     footer: initialFooterCalculationsState(),
-    total: 0,
+    contentTotal: 0,
+    annotations: {},
   },
   current: {
     contentIndex: 1,
@@ -68,6 +70,8 @@ export const initialState = {
     viewType: ViewType.SCROLL,
   },
   setting: initialSettingState(),
+  selection: null,
+  selectionMode: SelectionMode.NORMAL,
 };
 
 export default {
@@ -97,7 +101,7 @@ export default {
   columnsInPage: () => ['setting', 'columnsInPage'],
   columnGap: () => ['setting', 'columnGap'],
 
-  calculationsTotal: () => ['calculations', 'total'],
+  calculationsTotal: () => ['calculations', 'contentTotal'],
   contentsCalculations: () => ['calculations', 'contents'],
   contentsCalculation: index => ['calculations', 'contents', index - 1],
   isContentsCalculated: index => ['calculations', 'contents', index - 1, 'isCalculated'],
@@ -105,4 +109,9 @@ export default {
   footerCalculations: () => ['calculations', 'footer'],
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
+  annotationCalculations: () => ['calculations', 'annotations'],
+  annotationCalculation: id => ['calculations', 'annotations', id],
+
+  selection: () => ['selection'],
+  selectionMode: () => ['selectionMode'],
 };

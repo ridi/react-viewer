@@ -66,6 +66,7 @@ const StyledScrollContent = () => `
 `;
 
 const StyledPageContent = () => `
+  position: relative;
   vertical-align: top;
   white-space: initial;
   display: inline-block;
@@ -85,7 +86,8 @@ export const StyledHtmlScrollContent = StyledBaseContent.extend`
 
   position: absolute;
   top: ${({ startOffset }) => `${startOffset !== PRE_CALCULATION ? startOffset : -999}px`};
-  padding-top: 25px; padding-bottom: 25px;
+  padding-top: ${() => Connector.setting.getScrollingContentGap() / 2}px;
+  padding-bottom: ${() => Connector.setting.getScrollingContentGap() / 2}px;
 `;
 
 export const StyledHtmlPageContent = StyledBaseContent.extend`
