@@ -19,11 +19,13 @@ import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
+import withSelection from '../selection/WithSelection';
 
 class HtmlPageScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
+    this.Content = props.annotationable ? withSelection(PageHtmlContent) : PageHtmlContent;
   }
 
   calculate(index, contentNode) {
@@ -76,13 +78,19 @@ class HtmlPageScreen extends BaseScreen {
     const {
       current,
       contentFooter,
+      annotationable,
+      annotations,
+      onTouched,
+      onSelectionChanged,
+      onAnnotationTouched,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
+
     return (
-      <PageHtmlContent
+      <this.Content
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
@@ -94,6 +102,13 @@ class HtmlPageScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
+        annotations={annotations}
+        onContentMount={this.onContentMount}
+        viewType={ViewType.PAGE}
+        annotationable={annotationable}
+        onTouched={onTouched}
+        onSelectionChanged={onSelectionChanged}
+        onAnnotationTouched={onAnnotationTouched}
       />
     );
   }
@@ -112,6 +127,7 @@ HtmlPageScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   footer: null,
   contentFooter: null,
+  additionalContent: null,
 };
 
 HtmlPageScreen.propTypes = {

@@ -114,6 +114,7 @@ class ImageScrollScreen extends BaseScreen {
     const {
       current,
       contentFooter,
+      additionalContent,
     } = this.props;
 
     return (
@@ -125,6 +126,7 @@ class ImageScrollScreen extends BaseScreen {
         onContentLoaded={this.onContentLoaded}
         onContentError={this.onContentError}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
+        additionalContent={additionalContent}
       />
     );
   }
@@ -151,6 +153,7 @@ class ImageScrollScreen extends BaseScreen {
 ImageScrollScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   contentFooter: null,
+  additionalContent: null,
 };
 
 ImageScrollScreen.propTypes = {
@@ -164,6 +167,7 @@ ImageScrollScreen.propTypes = {
   contentFooter: PropTypes.node,
   onScrolled: PropTypes.func.isRequired,
   ignoreScroll: PropTypes.bool.isRequired,
+  additionalContent: PropTypes.node,
 };
 
 const mapStateToProps = state => ({

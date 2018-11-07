@@ -79,7 +79,11 @@ class Reader extends React.Component {
       contentFooter,
       ignoreScroll,
       disableCalculation,
-      children,
+      selectable,
+      annotationable,
+      annotations,
+      onSelectionChanged,
+      onAnnotationTouched,
     } = this.props;
 
     const props = {
@@ -89,13 +93,18 @@ class Reader extends React.Component {
       disableCalculation,
       onTouched: this.onTouched,
       onScrolled: this.onScrolled,
+      selectable,
+      annotationable,
+      annotations,
+      onSelectionChanged,
+      onAnnotationTouched,
     };
 
     if (contentFooter) {
       props.contentFooter = <ContentFooter content={contentFooter} />;
     }
     const Screen = this.getScreen();
-    return <Screen {...props}>{children}</Screen>;
+    return <Screen {...props} />;
   }
 }
 
@@ -107,8 +116,12 @@ Reader.defaultProps = {
   onScrolled: null,
   onMount: null,
   onUnmount: null,
-  onTouchItem: null,
   onTouched: null,
+  selectable: false,
+  annotationable: false,
+  annotations: [],
+  onSelectionChanged: null,
+  onAnnotationTouched: null,
 };
 
 Reader.propTypes = {
@@ -122,7 +135,11 @@ Reader.propTypes = {
   onMount: PropTypes.func,
   onUnmount: PropTypes.func,
   onScrolled: PropTypes.func,
-  onTouchItem: PropTypes.func,
+  selectable: PropTypes.bool,
+  annotationable: PropTypes.bool,
+  annotations: PropTypes.array,
+  onSelectionChanged: PropTypes.func,
+  onAnnotationTouched: PropTypes.func,
 };
 
 const mapStateToProps = state => ({

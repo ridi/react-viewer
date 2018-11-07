@@ -33,11 +33,13 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
+import withSelection from '../selection/WithSelection';
 
 class HtmlScrollScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
+    this.Content = props.annotationable ? withSelection(ScrollHtmlContent) : ScrollHtmlContent;
   }
 
   componentDidMount() {
@@ -103,13 +105,19 @@ class HtmlScrollScreen extends BaseScreen {
     const {
       current,
       contentFooter,
+      annotationable,
+      annotations,
+      onTouched,
+      onSelectionChanged,
+      onAnnotationTouched,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
+
     return (
-      <ScrollHtmlContent
+      <this.Content
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
@@ -121,6 +129,13 @@ class HtmlScrollScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
+        annotations={annotations}
+        onContentMount={this.onContentMount}
+        viewType={ViewType.SCROLL}
+        annotationable={annotationable}
+        onTouched={onTouched}
+        onSelectionChanged={onSelectionChanged}
+        onAnnotationTouched={onAnnotationTouched}
       />
     );
   }

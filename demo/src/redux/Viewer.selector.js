@@ -14,3 +14,8 @@ export const selectIsFullScreen = createSelector(
   [getViewer],
   viewer => nullSafeGet(viewer, path.isFullScreen(), false),
 );
+
+export const selectAnnotations = createSelector(
+  [getViewer],
+  viewer => nullSafeGet(viewer, path.annotations(), {}),
+);

@@ -4,11 +4,11 @@ import React from 'react';
 import BaseHtmlContent from './BaseHtmlContent';
 import Connector from '../../service/connector';
 
-export default class PageHtmlContent extends BaseHtmlContent {
+class PageHtmlContent extends BaseHtmlContent {
   moveToOffset() {
-    const { localOffset } = this.props;
-    if (this.wrapper.current && localOffset >= 0) {
-      this.wrapper.current.scrollLeft = localOffset
+    const { localOffset, forwardedRef } = this.props;
+    if (forwardedRef.current && localOffset >= 0) {
+      forwardedRef.current.scrollLeft = localOffset
         * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
     }
   }
@@ -21,3 +21,5 @@ PageHtmlContent.defaultProps = {
 PageHtmlContent.propTypes = {
   ...BaseHtmlContent.propTypes,
 };
+
+export default React.forwardRef((props, ref) => <PageHtmlContent forwardedRef={ref} {...props} />);

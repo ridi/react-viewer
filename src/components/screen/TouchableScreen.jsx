@@ -4,33 +4,15 @@ import Connector from '../../service/connector';
 import {
   preventScrollEvent,
   allowScrollEvent,
-  addEventListener,
-  removeEventListener,
 } from '../../util/EventHandler';
-import TouchEventHandler from '../../util/event/ReaderGestureEventHandler';
 import { ViewType } from '../../constants/SettingConstants';
-import SelectionHelper from '../../service/readerjs/SelectionHelper';
-import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 
 class TouchableScreen extends React.Component {
-  static SCROLLING_EDGE = 60;
-
-  static SCROLLING_AMOUNT = 120;
-
   constructor(props) {
     super(props);
-    this.touchHandler = null;
-    this.handleTouchEvent = this.handleTouchEvent.bind(this);
   }
 
   componentDidMount() {
-    const { current: node } = this.props.forwardedRef;
-    addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
-    addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
-    addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchEnd, this.handleTouchEvent);
-    addEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
-    this.touchHandler = new TouchEventHandler(node);
-    this.touchHandler.attach();
     this.handleScrollEvent();
   }
 
@@ -39,41 +21,35 @@ class TouchableScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    const { current: node } = this.props.forwardedRef;
     this.handleScrollEvent(true);
-    this.touchHandler.detach();
-    removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
-    removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
-    removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchEnd, this.handleTouchEvent);
-    removeEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
   }
 
-  handleTouchEvent(event) {
-    const {
-      onTouched,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-    } = this.props;
-    switch (event.type) {
-      case TouchEventHandler.EVENT_TYPE.Touch:
-        onTouched(event);
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchStart:
-        onTouchStart(event);
-        this.handleScrollEvent();
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchMove:
-        onTouchMove(event);
-        this.handleTouchMoveInEdge(event);
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchEnd:
-        onTouchEnd(event);
-        this.handleScrollEvent();
-        break;
-      default: break;
-    }
-  }
+  // handleTouchEvent(event) {
+  //   const {
+  //     onTouched,
+  //     onTouchStart,
+  //     onTouchMove,
+  //     onTouchEnd,
+  //   } = this.props;
+  //   switch (event.type) {
+  //     case TouchEventHandler.EVENT_TYPE.Touch:
+  //       onTouched(event);
+  //       break;
+  //     case TouchEventHandler.EVENT_TYPE.TouchStart:
+  //       onTouchStart(event);
+  //       this.handleScrollEvent();
+  //       break;
+  //     case TouchEventHandler.EVENT_TYPE.TouchMove:
+  //       onTouchMove(event);
+  //       this.handleTouchMoveInEdge(event);
+  //       break;
+  //     case TouchEventHandler.EVENT_TYPE.TouchEnd:
+  //       onTouchEnd(event);
+  //       this.handleScrollEvent();
+  //       break;
+  //     default: break;
+  //   }
+  // }
 
   handleScrollEvent(forceAllow = false) {
     const { viewType, forwardedRef, isReadyToRead } = this.props;
@@ -81,24 +57,14 @@ class TouchableScreen extends React.Component {
       allowScrollEvent(forwardedRef.current);
       return;
     }
+
     if (viewType === ViewType.PAGE) {
-      if (Connector.current.isOnFooter() || !SelectionHelper.isInSelectionMode()) allowScrollEvent(forwardedRef.current);
+      if (Connector.current.isOnFooter() || !Connector.selection.isSelectMode()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
     if (viewType === ViewType.SCROLL) {
-      if (isReadyToRead || !SelectionHelper.isInSelectionMode()) allowScrollEvent(forwardedRef.current);
+      if (isReadyToRead && !Connector.selection.isSelectMode()) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
-    }
-  }
-
-  handleTouchMoveInEdge(event) {
-    const halfHeight = screenHeight() / 2;
-    const normalizedY = halfHeight - Math.abs(halfHeight - event.detail.clientY);
-    if (normalizedY < TouchableScreen.SCROLLING_EDGE) {
-      scrollBy({
-        top: TouchableScreen.SCROLLING_AMOUNT * (event.detail.clientY > halfHeight ? 1 : -1),
-        behavior: 'smooth',
-      });
     }
   }
 
@@ -127,9 +93,6 @@ class TouchableScreen extends React.Component {
 TouchableScreen.defaultProps = {
   forwardedRef: React.createRef(),
   onTouched: () => {},
-  onTouchStart: () => {},
-  onTouchMove: () => {},
-  onTouchEnd: () => {},
   children: null,
   total: null,
   StyledTouchable: () => {},
@@ -137,9 +100,6 @@ TouchableScreen.defaultProps = {
 
 TouchableScreen.propTypes = {
   onTouched: PropTypes.func,
-  onTouchStart: PropTypes.func,
-  onTouchMove: PropTypes.func,
-  onTouchEnd: PropTypes.func,
   children: PropTypes.node,
   forwardedRef: PropTypes.object,
   total: PropTypes.number,
@@ -148,4 +108,4 @@ TouchableScreen.propTypes = {
   isReadyToRead: PropTypes.bool.isRequired,
 };
 
-export default React.forwardRef((props, ref) => <TouchableScreen {...props} forwardedRef={ref} />);
+export default React.forwardRef((props, ref) => <TouchableScreen forwardedRef={ref} {...props} />);

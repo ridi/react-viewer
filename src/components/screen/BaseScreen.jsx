@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { debounce } from '../../util/Util';
+import { debounce, isExist } from '../../util/Util';
 import {
   selectReaderContents,
   selectReaderCurrent,
@@ -25,6 +25,7 @@ export default class BaseScreen extends React.Component {
     this.onContentLoaded = this.onContentLoaded.bind(this);
     this.onContentError = this.onContentError.bind(this);
     this.onTouchableScreenTouched = this.onTouchableScreenTouched.bind(this);
+    this.onContentMount = this.onContentMount.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +33,7 @@ export default class BaseScreen extends React.Component {
     if (isReadyToRead && !disableCalculation) {
       Connector.current.restoreCurrentOffset();
     }
-    this.moveToOffset();
+    // this.moveToOffset();
     Connector.current.setReaderJs();
 
     this.resizeReader = debounce(() => {
@@ -69,7 +70,9 @@ export default class BaseScreen extends React.Component {
   onTouchableScreenTouched(event) {
     const { onTouched, isReadyToRead } = this.props;
     if (!isReadyToRead) return;
-    onTouched(event);
+    if (isExist(onTouched)) {
+      onTouched(event);
+    }
   }
 
   onContentLoaded(index, content) {
@@ -84,6 +87,13 @@ export default class BaseScreen extends React.Component {
     actionUpdateContentError(index, error, isAllLoaded);
   }
 
+  onContentMount(index) {
+    const { current } = this.props;
+    if (index === current.contentIndex) {
+      Connector.current.setReaderJs();
+    }
+  }
+
   moveToOffset() {}
 
   renderContents() { return null; }
@@ -96,35 +106,36 @@ export default class BaseScreen extends React.Component {
       calculationsTotal,
       contentFormat,
       isReadyToRead,
-      children,
+      additionalTouchableScreen,
+      selectable,
     } = this.props;
+
     return (
       <TouchableScreen
         ref={this.wrapper}
         total={calculationsTotal}
         onTouched={this.onTouchableScreenTouched}
-        onTouchStart={this.onTouchableScreenTouched}
-        onTouchMove={this.onTouchableScreenTouched}
-        onTouchEnd={this.onTouchableScreenTouched}
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}
+        selectable={selectable}
       >
         { this.renderContents() }
         { this.renderFooter() }
-        { children }
+        { additionalTouchableScreen }
       </TouchableScreen>
     );
   }
 }
 
 BaseScreen.defaultProps = {
-  onTouched: () => {},
-  children: null,
+  additionalTouchableScreen: null,
+  onTouched: null,
+  onSelectionChanged: null,
+  onAnnotationTouched: null,
 };
 
 BaseScreen.propTypes = {
-  onTouched: PropTypes.func,
   disableCalculation: PropTypes.bool.isRequired,
   setting: SettingType.isRequired,
   current: CurrentType.isRequired,
@@ -134,7 +145,13 @@ BaseScreen.propTypes = {
   calculationsTotal: PropTypes.number.isRequired,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
-  children: PropTypes.node,
+  additionalTouchableScreen: PropTypes.node,
+  selectable: PropTypes.bool.isRequired,
+  onTouched: PropTypes.func,
+  onSelectionChanged: PropTypes.func,
+  onAnnotationTouched: PropTypes.func,
+  annotationable: PropTypes.bool.isRequired,
+  annotations: PropTypes.array.isRequired,
 };
 
 export const mapStateToProps = state => ({

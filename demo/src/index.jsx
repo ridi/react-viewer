@@ -5,38 +5,24 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
-import Reader, {
+import {
   reducers as reader,
   Connector,
-  selectReaderCurrentContentIndex,
   selectReaderCurrentOffset,
-  selectReaderSetting,
-  ViewType,
   selectReaderCalculationsTotal,
-  load,
-  unload,
-  SelectionHelper,
-  ContentHelper,
-} from '../../lib';
+} from '@ridi/react-viewer';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerFooter from './components/footers/ViewerFooter';
 import { IconsSprite } from './components/icons/IconsSprite';
-import { selectIsFullScreen } from './redux/Viewer.selector';
-import ViewerScreenFooter from './components/footers/ViewerScreenFooter';
 import ContentsData from '../resources/contents/contents.json';
-import { requestLoadContent, onScreenTouched, onScreenScrolled } from './redux/Viewer.action';
-import { screenHeight, screenWidth, scrollTop } from './utils/BrowserWrapper';
+import {
+  onScreenTouched,
+  onScreenScrolled,
+} from './redux/Viewer.action';
 import { BindingType } from '../../src/constants/ContentConstants';
-import Cache from './utils/Cache';
-import Selection, { SelectionMode } from './components/Selection';
-
-const Position = {
-  LEFT: 1,
-  MIDDLE: 2,
-  RIGHT: 3,
-};
-
+import ViewerBody from './components/body/ViewerBody';
+import { Position } from './constants/ViewerConstants';
 
 const rootReducer = combineReducers({
   viewer,
@@ -58,48 +44,18 @@ class DemoViewer extends React.Component {
   constructor(props) {
     super(props);
     this.cache = null;
-    this.onReaderTouched = this.onReaderTouched.bind(this);
-    this.onReaderScrolled = this.onReaderScrolled.bind(this);
-    this.onReaderLoaded = this.onReaderLoaded.bind(this);
-    this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
-    this.footer = <ViewerScreenFooter content={props.content} />;
-
-    this.state = { selections: [], selectionMode: SelectionMode.NONE };
-  }
-
-  onReaderLoaded() {
-    const {
-      content,
-      actionLoad,
-      actionRequestLoadContent,
-    } = this.props;
-    this.cache = new Cache(content.id);
-    const status = this.cache.get();
-    if (status) {
-      actionLoad(status);
-    } else {
-      actionRequestLoadContent(content);
-    }
-  }
-
-  onReaderUnloaded() {
-    const {
-      actionUnload,
-    } = this.props;
-    if (!Connector.core.isReaderLoaded() || !Connector.core.isReaderAllCalculated()) return;
-    const currentState = Connector.core.getReaderState();
-    this.cache.set(currentState);
-    actionUnload();
+    this.onScrolled = this.onScrolled.bind(this);
+    this.onTouched = this.onTouched.bind(this);
   }
 
   onMoveWrongDirection() {
     alert('move to the wrong direction');
   }
 
-  onPositionTouched(position) {
+  onTouched(position) {
     const {
       actionOnScreenTouched,
-      content,
+      contentMeta,
       currentOffset,
       calculationsTotal,
     } = this.props;
@@ -110,7 +66,7 @@ class DemoViewer extends React.Component {
     }
 
     if (position === Position.RIGHT
-      && content.bindingType === BindingType.RIGHT
+      && contentMeta.bindingType === BindingType.RIGHT
       && currentOffset === 0) {
       this.onMoveWrongDirection();
       return;
@@ -118,9 +74,9 @@ class DemoViewer extends React.Component {
 
     let nextOffset = currentOffset;
     if (position === Position.LEFT) {
-      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
+      nextOffset = contentMeta.bindingType === BindingType.LEFT ? currentOffset - 1 : currentOffset + 1;
     } else if (position === Position.RIGHT) {
-      nextOffset = content.bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
+      nextOffset = contentMeta.bindingType === BindingType.LEFT ? currentOffset + 1 : currentOffset - 1;
     }
 
     nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
@@ -129,96 +85,15 @@ class DemoViewer extends React.Component {
     Connector.current.updateCurrentOffset(nextOffset);
   }
 
-  onReaderTouched(event) {
-    console.log(event);
-    if (Connector.current.isOnFooter()) return;
-    if (event.type === 'ReaderTouchStart') {
-      if (SelectionHelper.startSelectionMode(event.detail.clientX, event.detail.clientY)) {
-        const info = SelectionHelper.getSelectionInfo();
-        console.log(info);
-        this.setSelectionRects(info);
-      }
-      return;
-    }
-    if (event.type === 'ReaderTouchMove') {
-      if (SelectionHelper.expandLower(event.detail.clientX, event.detail.clientY)) {
-        const info = SelectionHelper.getSelectionInfo();
-        console.log(info);
-        this.setSelectionRects(info);
-      }
-      return;
-    }
-    if (event.type === 'ReaderTouchEnd') {
-      if (SelectionHelper.endSelectionMode(event.detail.clientX, event.detail.clientY)) {
-        const info = SelectionHelper.getSelectionInfo();
-        console.log(info);
-        this.setSelectionRects(info);
-      }
-      return;
-    }
-
-    const link = ContentHelper.getLinkFromElement(event.detail.target);
-    if (link) {
-      console.log(link);
-      return;
-    }
-    const { setting } = this.props;
-
-    const width = screenWidth();
-    let position = Position.MIDDLE;
-    if (setting.viewType === ViewType.PAGE) {
-      if (event.detail.clientX <= width * 0.2) position = Position.LEFT;
-      if (event.detail.clientX >= width * 0.8) position = Position.RIGHT;
-    }
-
-    this.onPositionTouched(position);
-  }
-
-  onReaderScrolled() {
+  onScrolled() {
     const { actionOnScreenScrolled } = this.props;
     actionOnScreenScrolled();
   }
 
-  setSelectionRects({ rects, text }) {
-    const {
-      currentContentIndex,
-      setting,
-      currentOffset,
-    } = this.props;
-    const calculation = Connector.calculations.getCalculation(currentContentIndex);
-    const selections = rects.map(({
-      top,
-      left,
-      width,
-      height,
-    }) => ({
-      top: setting.viewType === ViewType.SCROLL ? (scrollTop() - calculation.offset) + top : top,
-      left: setting.viewType === ViewType.PAGE ? (currentOffset - calculation.offset) * screenWidth() + left : left,
-      width,
-      height,
-    }));
-    this.setState({
-      selections,
-      selectionMode: text.split(/[^\w/\u3131-\uD79D]/).length > 2 ? SelectionMode.AUTO_HIGHLIGHT : SelectionMode.SELECTION,
-    });
-  }
-
   render() {
     const {
-      isFullScreen,
-      content,
-      currentContentIndex,
-      setting,
-      currentOffset,
+      contentMeta,
     } = this.props;
-    const { selections, selectionMode } = this.state;
-    const calculation = Connector.calculations.getCalculation(currentContentIndex);
-    const selectionPosition = {
-      top: setting.viewType === ViewType.SCROLL ? calculation.offset : 0,
-      left: setting.viewType === ViewType.PAGE ? (calculation.offset - currentOffset) * screenWidth() : 0,
-      width: setting.viewType === ViewType.PAGE ? calculation.offset * screenWidth() : screenWidth(),
-      height: setting.viewType === ViewType.SCROLL ? calculation.total : screenHeight(),
-    };
     return (
       <section
         id="viewer_page"
@@ -226,40 +101,21 @@ class DemoViewer extends React.Component {
         tabIndex="-1"
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
-            this.onPositionTouched(Position.MIDDLE);
+            this.onTouched(Position.MIDDLE);
           } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
-            this.onPositionTouched(Position.LEFT);
+            this.onTouched(Position.LEFT);
           } else if (e.key === 'ArrowRight' || e.key === 'Right') {
-            this.onPositionTouched(Position.RIGHT);
+            this.onTouched(Position.RIGHT);
           }
         }}
       >
-        <ViewerHeader title={content.title} chapter={currentContentIndex} isVisible={!isFullScreen} />
-        <Reader
-          footer={this.footer}
-          contentFooter={<small>content footer area...</small>}
-          onMount={this.onReaderLoaded}
-          onUnmount={this.onReaderUnloaded}
-          onTouched={this.onReaderTouched}
-          onScrolled={this.onReaderScrolled}
-        >
-          <Selection
-            selectionColor="rgb(31, 140, 230)"
-            highlightColor="rgb(231, 216, 124)"
-            rects={selections}
-            position={selectionPosition}
-            selectionMode={selectionMode}
-          />
-          {setting.viewType === ViewType.PAGE
-            && (
-              <>
-                <button type="button" className="left_button" />
-                <button type="button" className="right_button" />
-              </>
-            )
-          }
-        </Reader>
-        <ViewerFooter content={content} />
+        <ViewerHeader contentMeta={contentMeta} />
+        <ViewerBody
+          contentMeta={contentMeta}
+          onTouched={this.onTouched}
+          onScrolled={this.onScrolled}
+        />
+        <ViewerFooter contentMeta={contentMeta} />
         <IconsSprite />
       </section>
     );
@@ -267,34 +123,22 @@ class DemoViewer extends React.Component {
 }
 
 DemoViewer.propTypes = {
-  content: PropTypes.object.isRequired,
-  currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  isFullScreen: PropTypes.bool.isRequired,
-  actionRequestLoadContent: PropTypes.func.isRequired,
+  contentMeta: PropTypes.object.isRequired,
   actionOnScreenTouched: PropTypes.func.isRequired,
   actionOnScreenScrolled: PropTypes.func.isRequired,
   currentOffset: PropTypes.number.isRequired,
-  setting: PropTypes.object.isRequired,
   calculationsTotal: PropTypes.number.isRequired,
-  actionLoad: PropTypes.func.isRequired,
-  actionUnload: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  isFullScreen: selectIsFullScreen(state),
   isVisibleSettingPopup: state.viewer.ui.isVisibleSettingPopup,
-  currentContentIndex: selectReaderCurrentContentIndex(state),
   currentOffset: selectReaderCurrentOffset(state),
-  setting: selectReaderSetting(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionRequestLoadContent: content => dispatch(requestLoadContent(content)),
   actionOnScreenTouched: () => dispatch(onScreenTouched()),
   actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
-  actionLoad: state => dispatch(load(state)),
-  actionUnload: () => dispatch(unload()),
 });
 
 const DemoViewerPage = connect(
@@ -308,11 +152,11 @@ const queryParam = new URLSearchParams(window.location.search);
 
 const contentId = queryParam.get('contentId');
 const selected = contents.filter(content => content.id.toString() === contentId);
-const content = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
+const contentMeta = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
 
 ReactDOM.render(
   <Provider store={store}>
-    <DemoViewerPage content={content} />
+    <DemoViewerPage contentMeta={contentMeta} />
   </Provider>,
   document.getElementById('app'),
 );

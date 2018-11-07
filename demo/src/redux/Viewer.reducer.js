@@ -1,5 +1,5 @@
 import { ViewerUiActions } from './Viewer.action';
-import path, { initialState } from './Viewer.path';
+import path, { initialState, setAnnotation } from './Viewer.path';
 import { ImmutableObjectBuilder } from '../../../src/util/ImmutabilityHelper';
 import { updateObject } from '../../../src/util/Util';
 import createReducer from '../../../src/util/Reducer';
@@ -28,9 +28,29 @@ const onScreenScrolled = state => new ImmutableObjectBuilder(state)
   .set(path.isVisibleSettingPopup(), false)
   .build();
 
+const onAnnotationAdded = (state, { annotation }) => new ImmutableObjectBuilder(state)
+  .set(path.annotations(), setAnnotation(state.annotations, annotation))
+  .build();
+
+const onAnnotationsSet = (state, { annotations }) => new ImmutableObjectBuilder(state)
+  .set(path.annotations(), annotations)
+  .build();
+
+const onAnnotationUpdated = (state, { annotation }) => new ImmutableObjectBuilder(state)
+  .set(path.annotations(), setAnnotation(state.annotations, annotation))
+  .build();
+
+const onAnnotationRemoved = (state, { annotation }) => new ImmutableObjectBuilder(state)
+  .set(path.annotations(), setAnnotation(state.annotations, annotation, true))
+  .build();
+
 export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
   [ViewerUiActions.TOUCHED]: onScreenTouched,
   [ViewerUiActions.SCROLLED]: onScreenScrolled,
+  [ViewerUiActions.ADD_ANNOTATION]: onAnnotationAdded,
+  [ViewerUiActions.UPDATE_ANNOTATION]: onAnnotationUpdated,
+  [ViewerUiActions.SET_ANNOTATIONS]: onAnnotationsSet,
+  [ViewerUiActions.REMOVE_ANNOTATION]: onAnnotationRemoved,
 });
