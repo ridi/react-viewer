@@ -6,7 +6,7 @@ import {
   selectReaderCurrentOffset,
   Connector,
   selectReaderCalculationsTotal,
-} from '../../../../lib';
+} from '@ridi/react-viewer';
 
 
 class ViewerPageFooterToolbar extends Component {

@@ -5,13 +5,13 @@ import ThemeSetting from './ThemeSetting';
 import ViewTypeSetting from './ViewTypeSetting';
 import ComicSpineSetting from './ComicSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewType } from '../../../../lib';
+import { ViewType } from '@ridi/react-viewer';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
 import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerComicSettingPopup extends BaseSettingPopup {
   renderSettings() {
-    const { content, setting } = this.props;
+    const { contentMeta, setting } = this.props;
     return (
       <ul className="setting_group">
         <ThemeSetting
@@ -19,7 +19,7 @@ class ViewerComicSettingPopup extends BaseSettingPopup {
         />
         <ViewTypeSetting
           onChanged={viewType => this.onSettingChanged({ viewType })}
-          contentViewType={content.viewType}
+          contentViewType={contentMeta.viewType}
         />
         { setting.viewType === ViewType.PAGE
           ? <ColumnSetting onChanged={changedSetting => this.onSettingChanged(changedSetting)} /> : null }
@@ -36,7 +36,7 @@ class ViewerComicSettingPopup extends BaseSettingPopup {
 }
 
 ViewerComicSettingPopup.propTypes = {
-  content: PropTypes.object.isRequired,
+  contentMeta: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(ViewerComicSettingPopup);

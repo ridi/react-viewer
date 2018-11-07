@@ -1,3 +1,4 @@
+const path = require('path');
 module.exports = {
   'extends': '@ridi',
   'parser': 'babel-eslint',
@@ -13,6 +14,13 @@ module.exports = {
   'env': {
     'browser': true,
     'node': true,
+  },
+  'settings': {
+    'import/resolver': {
+      webpack: {
+        config: path.join(__dirname, 'webpack.config.js'),
+      }
+    },
   },
   'rules': {
     'import/prefer-default-export': 0,

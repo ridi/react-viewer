@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ReaderThemeType } from '../../../../lib';
+import { ReaderThemeType } from '@ridi/react-viewer';
 import SvgIcons from '../icons/SvgIcons';
 
 

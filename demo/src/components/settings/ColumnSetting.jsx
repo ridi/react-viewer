@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   selectReaderSetting,
   COLUMN_GAP_RANGE,
-} from '../../../../lib';
+} from '@ridi/react-viewer';
 import SvgIcons from '../icons/SvgIcons';
 import Stepper from './Stepper';
 

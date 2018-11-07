@@ -6,7 +6,7 @@ import {
   selectReaderSetting,
   selectReaderCalculationsTotal,
   ViewType,
-} from '../../../../lib';
+} from '@ridi/react-viewer';
 import { AvailableViewType } from '../../constants/ContentConstants';
 import { isExist } from '../../../../src/util/Util';
 import SvgIcons from '../icons/SvgIcons';
@@ -19,10 +19,10 @@ class ViewerScreenFooter extends Component {
   }
 
   checkIsPageView() {
-    const { content, viewerScreenSettings } = this.props;
-    return ((content.viewType === AvailableViewType.BOTH)
+    const { contentMeta, viewerScreenSettings } = this.props;
+    return ((contentMeta.viewType === AvailableViewType.BOTH)
       && (viewerScreenSettings.viewType === ViewType.PAGE))
-      || (content.viewType === AvailableViewType.PAGE);
+      || (contentMeta.viewType === AvailableViewType.PAGE);
   }
 
   renderBestComments() {
@@ -35,18 +35,18 @@ class ViewerScreenFooter extends Component {
 
   render() {
     const {
-      content,
+      contentMeta,
       calculationsTotal,
     } = this.props;
 
-    if (!isExist(content)) {
+    if (!isExist(contentMeta)) {
       return null;
     }
 
     return (
       <div className="viewer_bottom">
         <div className="viewer_bottom_information">
-          <p className="content_title">{content.title}</p>
+          <p className="content_title">{contentMeta.title}</p>
         </div>
         <div
           role="presentation"
@@ -89,7 +89,7 @@ class ViewerScreenFooter extends Component {
 }
 
 ViewerScreenFooter.propTypes = {
-  content: PropTypes.object.isRequired,
+  contentMeta: PropTypes.object.isRequired,
   viewerScreenSettings: PropTypes.object,
   calculationsTotal: PropTypes.number.isRequired,
 };

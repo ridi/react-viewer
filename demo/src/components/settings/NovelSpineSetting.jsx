@@ -6,7 +6,7 @@ import {
   FONT_SIZE_RANGE,
   CONTENT_PADDING_RANGE,
   LINE_HEIGHT_RANGE,
-} from '../../../../lib';
+} from '@ridi/react-viewer';
 import { ViewerSpinType } from '../../constants/SettingConstants';
 import Stepper from './Stepper';
 import SvgIcons from '../icons/SvgIcons';

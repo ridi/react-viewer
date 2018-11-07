@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '../../../../lib';
+import { selectReaderSetting, CONTENT_WIDTH_RANGE } from '@ridi/react-viewer';
 import { ViewerComicSpinType } from '../../constants/SettingConstants';
 import Stepper from './Stepper';
 import SvgIcons from '../icons/SvgIcons';
