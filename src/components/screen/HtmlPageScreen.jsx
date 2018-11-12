@@ -19,13 +19,12 @@ import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
-import withSelection from '../selection/WithSelection';
+import WithSelection from '../selection/WithSelection';
 
 class HtmlPageScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
-    this.Content = props.annotationable ? withSelection(PageHtmlContent) : PageHtmlContent;
   }
 
   calculate(index, contentNode) {
@@ -80,9 +79,9 @@ class HtmlPageScreen extends BaseScreen {
       contentFooter,
       annotationable,
       annotations,
-      onTouched,
       onSelectionChanged,
       onAnnotationTouched,
+      selectable,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
@@ -90,7 +89,7 @@ class HtmlPageScreen extends BaseScreen {
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
-      <this.Content
+      <PageHtmlContent
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
@@ -102,14 +101,20 @@ class HtmlPageScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        annotations={annotations}
         onContentMount={this.onContentMount}
-        viewType={ViewType.PAGE}
-        annotationable={annotationable}
-        onTouched={onTouched}
-        onSelectionChanged={onSelectionChanged}
-        onAnnotationTouched={onAnnotationTouched}
-      />
+      >
+        {(annotationable || selectable) && (
+          <WithSelection
+            annotationable={annotationable}
+            selectable={selectable}
+            viewType={ViewType.PAGE}
+            annotations={annotations}
+            onSelectionChanged={onSelectionChanged}
+            onAnnotationTouched={onAnnotationTouched}
+            contentIndex={content.index}
+          />
+        )}
+      </PageHtmlContent>
     );
   }
 
@@ -139,6 +144,8 @@ HtmlPageScreen.propTypes = {
   bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
   calculationsTotal: PropTypes.number.isRequired,
   onMoveWrongDirection: PropTypes.func,
+  selectable: PropTypes.bool.isRequired,
+  annotationable: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

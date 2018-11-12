@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Reader, {
   Connector,
   selectReaderCurrentContentIndex,
-  selectReaderCurrentOffset,
   selectReaderSetting,
   ViewType,
   load,
@@ -25,6 +24,7 @@ import Cache from '../../utils/Cache';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
 
+// todo redux!
 const initialState = {
   selection: null,
   contextMenuPosition: null,
@@ -93,7 +93,7 @@ class ViewerBody extends React.Component {
 
   onReaderTouched(event) {
     this.setState(initialState);
-    const link = ContentHelper.getLinkFromElement(event.detail.target);
+    const link = ContentHelper.getLinkFromElement(event.target);
     if (link) {
       // TODO go to...
       return;
@@ -103,8 +103,8 @@ class ViewerBody extends React.Component {
     const width = screenWidth();
     let position = Position.MIDDLE;
     if (setting.viewType === ViewType.PAGE) {
-      if (event.detail.clientX <= width * 0.2) position = Position.LEFT;
-      if (event.detail.clientX >= width * 0.8) position = Position.RIGHT;
+      if (event.clientX <= width * 0.2) position = Position.LEFT;
+      if (event.clientX >= width * 0.8) position = Position.RIGHT;
     }
     onTouched(position);
   }
@@ -149,7 +149,7 @@ class ViewerBody extends React.Component {
         style,
       });
     }
-    Connector.selection.clearSelection();
+    Connector.selection.endSelection();
     this.setState(initialState);
   }
 
@@ -163,7 +163,7 @@ class ViewerBody extends React.Component {
         x: lastRect.left + lastRect.width,
         y: lastRect.top + lastRect.height,
       },
-    })
+    });
   }
 
   renderPageButtons() {
@@ -215,7 +215,7 @@ class ViewerBody extends React.Component {
       case SelectionMode.AUTO_HIGHLIGHT:
         const { currentContentIndex, actionAddAnnotation } = this.props;
         actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
-        Connector.selection.clearSelection();
+        Connector.selection.endSelection();
         this.setState(initialState);
         break;
       default: break;
@@ -251,7 +251,6 @@ ViewerBody.propTypes = {
   onScrolled: PropTypes.func.isRequired,
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
-  currentOffset: PropTypes.number.isRequired,
   setting: PropTypes.object.isRequired,
   actionLoad: PropTypes.func.isRequired,
   actionUnload: PropTypes.func.isRequired,
@@ -265,7 +264,6 @@ ViewerBody.propTypes = {
 const mapStateToProps = state => ({
   isVisibleSettingPopup: state.viewer.ui.isVisibleSettingPopup,
   currentContentIndex: selectReaderCurrentContentIndex(state),
-  currentOffset: selectReaderCurrentOffset(state),
   setting: selectReaderSetting(state),
   annotations: selectAnnotations(state),
 });

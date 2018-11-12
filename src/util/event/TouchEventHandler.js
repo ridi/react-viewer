@@ -6,7 +6,7 @@ import {
   CustomEvent,
 } from '../EventHandler';
 
-export default class ReaderGestureEventHandler {
+export default class TouchEventHandler {
   static EVENT_TYPE = {
     Touch: 'ReaderTouch',
     TouchStart: 'ReaderTouchStart',
@@ -44,7 +44,7 @@ export default class ReaderGestureEventHandler {
       pageY,
       type,
       target,
-    } = ReaderGestureEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
+    } = TouchEventHandler.isTouchEvent(event) ? event.changedTouches[0] : event;
     return {
       screenX,
       screenY,
@@ -67,7 +67,7 @@ export default class ReaderGestureEventHandler {
   }
 
   addEvent(type, event) {
-    this.eventQueue.push({ type, detail: ReaderGestureEventHandler.getDetail(event) });
+    this.eventQueue.push({ type, detail: TouchEventHandler.getDetail(event) });
   }
 
   resetEvent() {
@@ -82,21 +82,21 @@ export default class ReaderGestureEventHandler {
   }
 
   ignoreEvent(event) {
-    return (this.isTouchMode ^ ReaderGestureEventHandler.isTouchEvent(event)) === 1;
+    return (this.isTouchMode ^ TouchEventHandler.isTouchEvent(event)) === 1;
   }
 
   start(event) {
     this.isTouchMode = event.type === DOMEventConstants.TOUCH_START;
     this.startTime = Date.now();
     this.isStarted = true;
-    this.addEvent(ReaderGestureEventHandler.EVENT_TYPE.TouchStart, event);
+    this.addEvent(TouchEventHandler.EVENT_TYPE.TouchStart, event);
   }
 
   move(event) {
     if (!this.isStarted || this.ignoreEvent(event)) return;
 
-    this.addEvent(ReaderGestureEventHandler.EVENT_TYPE.TouchMove, event);
-    if (Date.now() - this.startTime >= ReaderGestureEventHandler.DELAY_FOR_TOUCHMOVE) {
+    this.addEvent(TouchEventHandler.EVENT_TYPE.TouchMove, event);
+    if (Date.now() - this.startTime >= TouchEventHandler.DELAY_FOR_TOUCHMOVE) {
       this.emitEvents();
     }
     this.isMoved = true;
@@ -105,11 +105,11 @@ export default class ReaderGestureEventHandler {
   end(event) {
     if (!this.isStarted || this.ignoreEvent(event)) return;
 
-    if (Date.now() - this.startTime >= ReaderGestureEventHandler.DELAY_FOR_TOUCHMOVE) {
-      this.addEvent(ReaderGestureEventHandler.EVENT_TYPE.TouchEnd, event);
+    if (Date.now() - this.startTime >= TouchEventHandler.DELAY_FOR_TOUCHMOVE) {
+      this.addEvent(TouchEventHandler.EVENT_TYPE.TouchEnd, event);
     } else {
       this.resetEvent();
-      this.addEvent(ReaderGestureEventHandler.EVENT_TYPE.Touch, event);
+      this.addEvent(TouchEventHandler.EVENT_TYPE.Touch, event);
     }
     this.emitEvents();
     this.init();

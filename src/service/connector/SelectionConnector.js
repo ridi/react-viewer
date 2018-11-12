@@ -24,13 +24,16 @@ class SelectionConnector extends BaseConnector {
     return this.isSelecting;
   }
 
-  saveSelection() {
+  saveSelection(selectionModeForced = null) {
     const { contentIndex } = Connector.current.getCurrent();
     const text = ReaderJsHelper.sel.getText();
     const rects = ReaderJsHelper.sel.getRects().toAbsolute(ReaderJsHelper.node);
     const serializedRange = ReaderJsHelper.sel.getRange().toSerializedString();
 
-    const selectionMode = (wordCount(text) > 2 ? SelectionMode.AUTO_HIGHLIGHT : SelectionMode.USER_SELECTION);
+    let selectionMode = selectionModeForced;
+    if (!selectionMode) {
+      selectionMode = (wordCount(text) > 2 ? SelectionMode.AUTO_HIGHLIGHT : SelectionMode.USER_SELECTION);
+    }
     this.dispatch(updateSelection(
       {
         serializedRange,
@@ -44,8 +47,10 @@ class SelectionConnector extends BaseConnector {
     ));
   }
 
-  clearSelection() {
+  endSelection() {
     this.dispatch(updateSelection(null, SelectionMode.NORMAL));
+    this.isSelecting = false;
+    return true;
   }
 
   startSelection(x, y) {
@@ -53,32 +58,25 @@ class SelectionConnector extends BaseConnector {
     if (ReaderJsHelper.sel.start(x, y)) {
       this.isSelecting = true;
       this.saveSelection();
-    }
-  }
-
-  endSelection(x, y) {
-    if (this.isSelecting) {
-      this.expandLower(x, y);
-      this.isSelecting = false;
       return true;
     }
     return false;
   }
 
-  expandUpper(x, y) {
+  expandUpper(x, y, selectionModeForced) {
     if (this.isSelecting) {
       if (ReaderJsHelper.sel.expandIntoUpper(x, y)) {
-        this.saveSelection();
+        this.saveSelection(selectionModeForced);
         return true;
       }
     }
     return false;
   }
 
-  expandLower(x, y) {
+  expandLower(x, y, selectionModeForced) {
     if (this.isSelecting) {
       if (ReaderJsHelper.sel.expandIntoLower(x, y)) {
-        this.saveSelection();
+        this.saveSelection(selectionModeForced);
         return true;
       }
     }

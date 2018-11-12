@@ -106,8 +106,6 @@ export default class BaseScreen extends React.Component {
       calculationsTotal,
       contentFormat,
       isReadyToRead,
-      additionalTouchableScreen,
-      selectable,
     } = this.props;
 
     return (
@@ -118,18 +116,15 @@ export default class BaseScreen extends React.Component {
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}
-        selectable={selectable}
       >
         { this.renderContents() }
         { this.renderFooter() }
-        { additionalTouchableScreen }
       </TouchableScreen>
     );
   }
 }
 
 BaseScreen.defaultProps = {
-  additionalTouchableScreen: null,
   onTouched: null,
   onSelectionChanged: null,
   onAnnotationTouched: null,
@@ -145,13 +140,9 @@ BaseScreen.propTypes = {
   calculationsTotal: PropTypes.number.isRequired,
   contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
-  additionalTouchableScreen: PropTypes.node,
-  selectable: PropTypes.bool.isRequired,
   onTouched: PropTypes.func,
   onSelectionChanged: PropTypes.func,
   onAnnotationTouched: PropTypes.func,
-  annotationable: PropTypes.bool.isRequired,
-  annotations: PropTypes.array.isRequired,
 };
 
 export const mapStateToProps = state => ({

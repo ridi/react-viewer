@@ -6,10 +6,12 @@ import {
   allowScrollEvent,
 } from '../../util/EventHandler';
 import { ViewType } from '../../constants/SettingConstants';
+import { isExist } from '../../util/Util';
 
 class TouchableScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.handleTouchEvent = this.handleTouchEvent.bind(this);
   }
 
   componentDidMount() {
@@ -24,32 +26,14 @@ class TouchableScreen extends React.Component {
     this.handleScrollEvent(true);
   }
 
-  // handleTouchEvent(event) {
-  //   const {
-  //     onTouched,
-  //     onTouchStart,
-  //     onTouchMove,
-  //     onTouchEnd,
-  //   } = this.props;
-  //   switch (event.type) {
-  //     case TouchEventHandler.EVENT_TYPE.Touch:
-  //       onTouched(event);
-  //       break;
-  //     case TouchEventHandler.EVENT_TYPE.TouchStart:
-  //       onTouchStart(event);
-  //       this.handleScrollEvent();
-  //       break;
-  //     case TouchEventHandler.EVENT_TYPE.TouchMove:
-  //       onTouchMove(event);
-  //       this.handleTouchMoveInEdge(event);
-  //       break;
-  //     case TouchEventHandler.EVENT_TYPE.TouchEnd:
-  //       onTouchEnd(event);
-  //       this.handleScrollEvent();
-  //       break;
-  //     default: break;
-  //   }
-  // }
+  handleTouchEvent(event) {
+    // todo need to find more clear way to check ignore case
+    if (event.target.getAttribute('data-type')) return;
+    const { onTouched } = this.props;
+    if (isExist(onTouched)) {
+      onTouched(event);
+    }
+  }
 
   handleScrollEvent(forceAllow = false) {
     const { viewType, forwardedRef, isReadyToRead } = this.props;
@@ -83,6 +67,7 @@ class TouchableScreen extends React.Component {
         innerRef={forwardedRef}
         id="reader_contents"
         total={total}
+        onClick={this.handleTouchEvent}
       >
         {children}
       </StyledTouchable>
@@ -92,7 +77,7 @@ class TouchableScreen extends React.Component {
 
 TouchableScreen.defaultProps = {
   forwardedRef: React.createRef(),
-  onTouched: () => {},
+  onTouched: null,
   children: null,
   total: null,
   StyledTouchable: () => {},

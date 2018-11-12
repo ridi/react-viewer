@@ -33,13 +33,12 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import withSelection from '../selection/WithSelection';
+import WithSelection from '../selection/WithSelection';
 
 class HtmlScrollScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
-    this.Content = props.annotationable ? withSelection(ScrollHtmlContent) : ScrollHtmlContent;
   }
 
   componentDidMount() {
@@ -106,8 +105,8 @@ class HtmlScrollScreen extends BaseScreen {
       current,
       contentFooter,
       annotationable,
+      selectable,
       annotations,
-      onTouched,
       onSelectionChanged,
       onAnnotationTouched,
     } = this.props;
@@ -117,7 +116,7 @@ class HtmlScrollScreen extends BaseScreen {
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
-      <this.Content
+      <ScrollHtmlContent
         className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
@@ -129,14 +128,20 @@ class HtmlScrollScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        annotations={annotations}
         onContentMount={this.onContentMount}
-        viewType={ViewType.SCROLL}
-        annotationable={annotationable}
-        onTouched={onTouched}
-        onSelectionChanged={onSelectionChanged}
-        onAnnotationTouched={onAnnotationTouched}
-      />
+      >
+        {(annotationable || selectable) && (
+          <WithSelection
+            annotationable={annotationable}
+            selectable={selectable}
+            viewType={ViewType.SCROLL}
+            annotations={annotations}
+            onSelectionChanged={onSelectionChanged}
+            onAnnotationTouched={onAnnotationTouched}
+            contentIndex={content.index}
+          />
+        )}
+      </ScrollHtmlContent>
     );
   }
 
@@ -165,6 +170,8 @@ HtmlScrollScreen.propTypes = {
   contentFooter: PropTypes.node,
   onScrolled: PropTypes.func.isRequired,
   ignoreScroll: PropTypes.bool.isRequired,
+  selectable: PropTypes.bool.isRequired,
+  annotationable: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

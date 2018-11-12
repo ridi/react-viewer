@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SelectionStyleType } from '../../constants/SelectionConstants';
+import { SelectionStyleType, SelectionParts } from '../../constants/SelectionConstants';
 import SelectionHandle from './SelectionHandle';
-import { isExist } from '../../util/Util';
 
 const getRectProps = (rect, selectionStyle) => {
   const defaultProps = {
@@ -35,7 +34,6 @@ const getRectProps = (rect, selectionStyle) => {
 
 const Selection = ({
   item,
-  onTouched,
 }) => {
   const { rects, withHandle, style } = item;
   if (!rects || rects.length === 0) return null;
@@ -44,14 +42,7 @@ const Selection = ({
   const lastRect = rects.length > 0 ? rects[rects.length - 1] : null;
 
   return (
-    <g
-      onClick={(event) => {
-        event.stopPropagation();
-        if (isExist(onTouched)) {
-          onTouched(item);
-        }
-      }}
-    >
+    <g>
       {withHandle
       && (
         <SelectionHandle
@@ -63,7 +54,14 @@ const Selection = ({
         />
       )
       }
-      {rects.map(rect => (<rect {...getRectProps(rect, style)} style={{ mixBlendMode: 'multiply' }} />))}
+      {rects.map(rect => (
+        <rect
+          data-id={item.id}
+          data-type={SelectionParts.TEXT}
+          style={{ mixBlendMode: 'multiply' }}
+          {...getRectProps(rect, style)}
+        />
+      ))}
       {withHandle
       && (
         <SelectionHandle
@@ -78,10 +76,6 @@ const Selection = ({
   );
 };
 
-Selection.defaultProps = {
-  onTouched: null,
-};
-
 Selection.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.any,
@@ -92,7 +86,6 @@ Selection.propTypes = {
       type: PropTypes.string,
     }).isRequired,
   }),
-  onTouched: PropTypes.func,
 };
 
 export default Selection;
