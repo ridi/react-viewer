@@ -49,7 +49,16 @@ const SelectionContextMenu = ({ position, onClickItem }) => (
     }}
   >
     <section style={{ padding: '10px' }}>
-      <h2 style={{ margin: '0 0 4px 0', fontSize: '10px', fontWeight: '800', color: '#616161' }}>COLORS</h2>
+      <h2
+        style={{
+          margin: '0 0 4px 0',
+          fontSize: '10px',
+          fontWeight: '800',
+          color: '#616161',
+        }}
+      >
+        COLORS
+      </h2>
       { RangedAnnotationStyles.map(style => (
         <button
           type="button"
@@ -73,7 +82,8 @@ const SelectionContextMenu = ({ position, onClickItem }) => (
         }}
         style={getButtonStyles(null)}
       >
-        X<span className="indent_hidden">삭제</span>
+        X
+        <span className="indent_hidden">삭제</span>
       </button>
     </section>
   </div>

@@ -200,7 +200,9 @@ class CalculationsConnector extends BaseConnector {
     if (calculatedAnnotations[annotation.id]) {
       return calculatedAnnotations[annotation.id];
     }
-    this.dispatch(updateAnnotationCalculation(annotation.id, { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) }));
+    const calculation = { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) };
+    this.dispatch(updateAnnotationCalculation(annotation.id, calculation));
+    return calculation;
   }
 }
 

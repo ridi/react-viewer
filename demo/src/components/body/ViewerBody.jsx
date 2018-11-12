@@ -53,6 +53,8 @@ class ViewerBody extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.setting.viewType !== this.props.setting.viewType) {
       // selection 초기화 & annotation rects 계산
+      // todo redux!
+      /* eslint-disable react/no-did-update-set-state */
       this.setState(initialState);
     }
   }
@@ -166,6 +168,37 @@ class ViewerBody extends React.Component {
     });
   }
 
+  onReaderSelectionChanged({ selection, selectionMode }) {
+    const { currentContentIndex, actionAddAnnotation } = this.props;
+    const lastRect = selection.rects.length > 0 ? selection.rects[selection.rects.length - 1] : null;
+    console.log('ViewerBody.onReaderSelectionChanged', selection, selectionMode);
+    switch (selectionMode) {
+      case SelectionMode.NORMAL:
+        this.setState({
+          selection,
+          showContextMenu: false,
+          contextMenuPosition: null,
+        });
+        break;
+      case SelectionMode.USER_SELECTION:
+        this.setState({
+          selection,
+          showContextMenu: true,
+          contextMenuPosition: {
+            x: lastRect.left + lastRect.width + Connector.setting.getContainerHorizontalMargin(),
+            y: lastRect.top + lastRect.height + Connector.setting.getContainerHorizontalMargin(),
+          },
+        });
+        break;
+      case SelectionMode.AUTO_HIGHLIGHT:
+        actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
+        Connector.selection.endSelection();
+        this.setState(initialState);
+        break;
+      default: break;
+    }
+  }
+
   renderPageButtons() {
     const { setting } = this.props;
     if (setting.viewType === ViewType.SCROLL) return null;
@@ -189,37 +222,6 @@ class ViewerBody extends React.Component {
         onClickItem={this.onContentMenuItemClicked}
       />
     );
-  }
-
-  onReaderSelectionChanged({ selection, selectionMode }) {
-    const lastRect = selection.rects.length > 0 ? selection.rects[selection.rects.length - 1] : null;
-    console.log('ViewerBody.onReaderSelectionChanged', selection, selectionMode);
-    switch (selectionMode) {
-      case SelectionMode.NORMAL:
-        this.setState({
-          selection,
-          showContextMenu: false,
-          contextMenuPosition: null,
-        });
-        break;
-      case SelectionMode.USER_SELECTION:
-        this.setState({
-          selection,
-          showContextMenu: true,
-          contextMenuPosition: {
-            x: lastRect.left + lastRect.width + Connector.setting.getContainerHorizontalMargin(),
-            y: lastRect.top + lastRect.height + Connector.setting.getContainerHorizontalMargin(),
-          },
-        });
-        break;
-      case SelectionMode.AUTO_HIGHLIGHT:
-        const { currentContentIndex, actionAddAnnotation } = this.props;
-        actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
-        Connector.selection.endSelection();
-        this.setState(initialState);
-        break;
-      default: break;
-    }
   }
 
   render() {

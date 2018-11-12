@@ -8,7 +8,6 @@ import TouchEventHandler from '../../util/event/TouchEventHandler';
 export default class SelectionLayer extends React.Component {
   static defaultProps = {
     items: [],
-    onItemTouched: null,
   };
 
   static propTypes = {
