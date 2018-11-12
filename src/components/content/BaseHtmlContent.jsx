@@ -10,6 +10,7 @@ export default class BaseHtmlContent extends BaseContent {
     super(props);
 
     this.contentRef = React.createRef();
+    this.contentWrapperRef = React.createRef();
     this.listener = null;
   }
 
@@ -55,10 +56,10 @@ export default class BaseHtmlContent extends BaseContent {
   }
 
   afterContentLoaded() {
-    const { onContentRendered, forwardedRef } = this.props;
+    const { onContentRendered } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
-      const { current } = forwardedRef;
+      const { current } = this.contentWrapperRef;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
@@ -87,7 +88,7 @@ export default class BaseHtmlContent extends BaseContent {
 
   renderContent(contentPrefix = '') {
     const { isContentLoaded, content } = this.props.content;
-    const { contentFooter, className, additionalContent } = this.props;
+    const { contentFooter, className, children } = this.props;
     if (isContentLoaded) {
       return (
         <>
@@ -97,7 +98,7 @@ export default class BaseHtmlContent extends BaseContent {
             dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
           />
           {contentFooter}
-          {additionalContent}
+          {children}
         </>
       );
     }
@@ -106,7 +107,7 @@ export default class BaseHtmlContent extends BaseContent {
 
   render() {
     const { index } = this.props.content;
-    const { startOffset, StyledContent, forwardedRef } = this.props;
+    const { startOffset, StyledContent } = this.props;
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
       <StyledContent
@@ -115,7 +116,7 @@ export default class BaseHtmlContent extends BaseContent {
         className="chapter"
         visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
-        innerRef={forwardedRef}
+        innerRef={this.contentWrapperRef}
       >
         {this.renderContent(prefix)}
       </StyledContent>
@@ -127,8 +128,7 @@ BaseHtmlContent.defaultProps = {
   contentFooter: null,
   className: '',
   StyledContent: () => {},
-  additionalContent: null,
-  forwardedRef: React.createRef(),
+  children: null,
 };
 
 BaseHtmlContent.propTypes = {
@@ -142,6 +142,5 @@ BaseHtmlContent.propTypes = {
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
   StyledContent: PropTypes.func,
-  additionalContent: PropTypes.node,
-  forwardedRef: PropTypes.any,
+  children: PropTypes.node,
 };

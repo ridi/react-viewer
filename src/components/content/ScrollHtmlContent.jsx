@@ -13,4 +13,4 @@ ScrollHtmlContent.propTypes = {
   ...BaseHtmlContent.propTypes,
 };
 
-export default React.forwardRef((props, ref) => <ScrollHtmlContent forwardedRef={ref} {...props} />);
+export default ScrollHtmlContent;
