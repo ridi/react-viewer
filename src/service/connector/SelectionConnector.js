@@ -38,7 +38,6 @@ class SelectionConnector extends BaseConnector {
   _getContentRelativeRects(rects) {
     const { viewType } = Connector.setting.getSetting();
     const isScroll = viewType === ViewType.SCROLL;
-    console.log('_getContentRelativeRects', isScroll);
     return new RectsUtil(rects.toAbsolute(ReaderJsHelper.node))
       .translateX(SELECTION_LAYER_EXPANDED_WIDTH)
       .translateY(SELECTION_LAYER_EXPANDED_WIDTH)
@@ -65,7 +64,6 @@ class SelectionConnector extends BaseConnector {
       style: DefaultSelectionStyle[selectionMode],
       contentIndex,
     };
-    console.log(this._selection);
     this._selectionMode = selectionMode;
     this.dispatch(updateSelection(this._selection));
   }

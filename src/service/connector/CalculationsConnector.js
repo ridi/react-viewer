@@ -41,7 +41,6 @@ class CalculationsConnector extends BaseConnector {
 
   invalidate() {
     this.dispatch(invalidateCalculations());
-    console.log('invalidate');
   }
 
   isCompleted() {

@@ -33,7 +33,6 @@ class WithSelection extends React.Component {
   }
 
   getSelectionItems() {
-    console.log('getSelectionItems')
     const {
       contentIndex,
       annotations,
