@@ -72,7 +72,6 @@ class ImagePageScreen extends BaseScreen {
     const {
       current,
       contentFooter,
-      additionalContent,
     } = this.props;
 
     return (
@@ -84,7 +83,6 @@ class ImagePageScreen extends BaseScreen {
         onContentLoaded={this.onContentLoaded}
         onContentError={this.onContentError}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
-        additionalContent={additionalContent}
       />
     );
   }
@@ -147,7 +145,6 @@ ImagePageScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   footer: null,
   contentFooter: null,
-  additionalContent: null,
 };
 
 ImagePageScreen.propTypes = {
@@ -162,7 +159,6 @@ ImagePageScreen.propTypes = {
   footerCalculations: FooterCalculationsType.isRequired,
   bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
   calculationsTotal: PropTypes.number.isRequired,
-  additionalContent: PropTypes.node,
 };
 
 const mapStateToProps = state => ({

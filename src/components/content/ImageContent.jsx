@@ -40,7 +40,7 @@ class ImageContent extends BaseContent {
   }
 
   render() {
-    const { contentFooter, additionalContent } = this.props;
+    const { contentFooter, children } = this.props;
     const { isContentLoaded } = this.props.content;
     return (
       <section
@@ -49,7 +49,7 @@ class ImageContent extends BaseContent {
       >
         {this.renderImage()}
         {contentFooter}
-        {additionalContent}
+        {children}
       </section>
     );
   }
@@ -58,6 +58,7 @@ class ImageContent extends BaseContent {
 ImageContent.defaultProps = {
   contentFooter: null,
   forwardedRef: React.createRef(),
+  children: null,
 };
 
 ImageContent.propTypes = {
@@ -67,6 +68,7 @@ ImageContent.propTypes = {
   onContentError: PropTypes.func,
   contentFooter: PropTypes.node,
   forwardedRef: PropTypes.any,
+  children: PropTypes.node,
 };
 
 export default React.forwardRef((props, ref) => <ImageContent forwardedRef={ref} {...props} />);

@@ -132,7 +132,6 @@ HtmlPageScreen.defaultProps = {
   ...BaseScreen.defaultProps,
   footer: null,
   contentFooter: null,
-  additionalContent: null,
 };
 
 HtmlPageScreen.propTypes = {
