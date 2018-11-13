@@ -100,9 +100,8 @@ const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(
   .set(path.isReadyToRead(), isReadyToRead)
   .build();
 
-const updateSelection = (state, { selection, selectionMode }) => new ImmutableObjectBuilder(state)
+const updateSelection = (state, { selection }) => new ImmutableObjectBuilder(state)
   .set(path.selection(), selection)
-  .set(path.selectionMode(), selectionMode)
   .build();
 
 const updateAnnotationCalculation = (state, { annotationId, calculation }) => new ImmutableObjectBuilder(state)

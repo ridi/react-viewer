@@ -6,7 +6,7 @@ import SelectionLayer from './SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { isExist } from '../../util/Util';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
-import { selectReaderSelection, selectReaderSelectionMode } from '../../redux/selector';
+import { selectReaderSelection } from '../../redux/selector';
 import { SelectionMode, SelectionParts } from '../../constants/SelectionConstants';
 
 class WithSelection extends React.Component {
@@ -22,7 +22,6 @@ class WithSelection extends React.Component {
     onSelectionChanged: PropTypes.func,
     onAnnotationTouched: PropTypes.func,
     selection: PropTypes.object,
-    selectionMode: PropTypes.string.isRequired,
     selectable: PropTypes.bool.isRequired,
   };
 
@@ -34,6 +33,7 @@ class WithSelection extends React.Component {
   }
 
   getSelectionItems() {
+    console.log('getSelectionItems')
     const {
       contentIndex,
       annotations,
@@ -56,7 +56,6 @@ class WithSelection extends React.Component {
   }
 
   handleTouchMoveInEdge(event) {
-    // todo upper edge
     const halfHeight = screenHeight() / 2;
     const normalizedY = halfHeight - Math.abs(halfHeight - event.detail.clientY);
     if (normalizedY < WithSelection.SCROLLING_EDGE) {
@@ -71,62 +70,58 @@ class WithSelection extends React.Component {
     const {
       selectable,
       onSelectionChanged,
-      selection,
-      selectionMode,
       onAnnotationTouched,
       annotations,
     } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
+
     const selectionPart = target.getAttribute('data-type');
     const selectionId = target.getAttribute('data-id');
-    switch (event.type) {
-      case TouchEventHandler.EVENT_TYPE.Touch:
-        Connector.selection.endSelection();
-        if (isExist(onAnnotationTouched)) {
-          if (selectionPart === SelectionParts.TEXT && selectionId) {
-            const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
-            if (annotation) {
-              event.stopPropagation();
-              onAnnotationTouched({
-                ...annotation,
-                ...Connector.calculations.getAnnotationCalculation(annotation),
-              });
-            }
+    if (event.type === TouchEventHandler.EVENT_TYPE.Touch) {
+      Connector.selection.end();
+
+      if (isExist(onAnnotationTouched)) {
+        if (selectionPart === SelectionParts.TEXT && selectionId) {
+          const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
+          if (annotation) {
+            onAnnotationTouched({
+              ...annotation,
+              ...Connector.calculations.getAnnotationCalculation(annotation),
+            });
           }
         }
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchStart:
-        if (!selectable) break;
+      }
+    } else if (selectable) {
+      if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
         this.currentTouchStartPart = selectionPart;
-        Connector.selection.startSelection(x, y);
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchMove:
-        if (!selectable) break;
+        if (Connector.selection.selectionMode !== SelectionMode.USER_SELECTION) {
+          Connector.selection.start(x, y);
+        }
+      } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchMove) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {
-          Connector.selection.expandUpper(x, y, SelectionMode.USER_SELECTION);
+          Connector.selection.expandIntoUpper(x, y, SelectionMode.USER_SELECTION);
         } else if (this.currentTouchStartPart === SelectionParts.LOWER_HANDLE) {
-          Connector.selection.expandLower(x, y, SelectionMode.USER_SELECTION);
+          Connector.selection.expandIntoLower(x, y, SelectionMode.USER_SELECTION);
         } else {
-          Connector.selection.expandLower(x, y);
+          Connector.selection.expandIntoLower(x, y);
         }
         this.handleTouchMoveInEdge(event);
-        break;
-      case TouchEventHandler.EVENT_TYPE.TouchEnd:
-        if (!selectable) break;
-
+      } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchEnd) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {
-          Connector.selection.expandUpper(x, y, SelectionMode.USER_SELECTION);
+          Connector.selection.expandIntoUpper(x, y, SelectionMode.USER_SELECTION);
         } else if (this.currentTouchStartPart === SelectionParts.LOWER_HANDLE) {
-          Connector.selection.expandLower(x, y, SelectionMode.USER_SELECTION);
+          Connector.selection.expandIntoLower(x, y, SelectionMode.USER_SELECTION);
         } else {
-          Connector.selection.expandLower(x, y);
+          Connector.selection.expandIntoLower(x, y);
         }
         if (isExist(onSelectionChanged)) {
-          onSelectionChanged({ selection, selectionMode });
+          onSelectionChanged({
+            selection: Connector.selection.selection,
+            selectionMode: Connector.selection.selectionMode,
+          });
         }
         this.currentTouchStartPart = null;
-        break;
-      default: break;
+      }
     }
   }
 
@@ -136,7 +131,7 @@ class WithSelection extends React.Component {
       viewType,
     } = this.props;
     const { contentIndex: currentContentIndex } = Connector.current.getCurrent();
-    if (currentContentIndex !== contentIndex || !Connector.selection.isAvailable()) return null;
+    if (currentContentIndex !== contentIndex || !Connector.selection.isAvailable) return null;
 
     return (
       <SelectionLayer
@@ -151,7 +146,6 @@ class WithSelection extends React.Component {
 
 const mapStateToProps = state => ({
   selection: selectReaderSelection(state),
-  selectionMode: selectReaderSelectionMode(state),
 });
 
 export default connect(mapStateToProps)(WithSelection);

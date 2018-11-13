@@ -6,103 +6,114 @@ import BaseConnector from './BaseConnector';
 import { updateSelection } from '../../redux/action';
 import { SELECTION_LAYER_EXPANDED_WIDTH } from '../../constants/StyledConstants';
 import { ViewType } from '../..';
+import { RectsUtil } from '../../util/SelectionUtil';
 
 class SelectionConnector extends BaseConnector {
-  afterConnected() {
-    this.init();
-  }
+  _isSelecting = false;
+  _selection = null;
+  _selectionMode = SelectionMode.NORMAL;
 
-  init() {
-    this.isSelecting = false;
-  }
-
-  isAvailable() {
+  get isAvailable() {
     return ReaderJsHelper.isMounted;
   }
 
-  isSelectMode() {
-    return this.isSelecting;
+  get isSelecting() {
+    return this._isSelecting;
   }
 
-  saveSelection(selectionModeForced = null) {
+  get selection() {
+    return this._selection;
+  }
+
+  get selectionMode() {
+    return this._selectionMode;
+  }
+
+  _init() {
+    this._isSelecting = false;
+    this._selection = null;
+    this._selectionMode = SelectionMode.NORMAL;
+  }
+
+  _getContentRelativeRects(rects) {
+    const { viewType } = Connector.setting.getSetting();
+    const isScroll = viewType === ViewType.SCROLL;
+    console.log('_getContentRelativeRects', isScroll);
+    return new RectsUtil(rects.toAbsolute(ReaderJsHelper.node))
+      .translateX(SELECTION_LAYER_EXPANDED_WIDTH)
+      .translateY(SELECTION_LAYER_EXPANDED_WIDTH)
+      .translateX(isScroll ? -Connector.setting.getContainerHorizontalMargin() : 0)
+      .translateY(isScroll ? 0 : -Connector.setting.getContainerVerticalMargin())
+      .getRects();
+  }
+
+  _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
     const { contentIndex } = Connector.current.getCurrent();
     const text = ReaderJsHelper.sel.getText();
-    const rects = ReaderJsHelper.sel.getRects().toAbsolute(ReaderJsHelper.node);
+    const rects = ReaderJsHelper.sel.getRects();
     const serializedRange = ReaderJsHelper.sel.getRange().toSerializedString();
 
     let selectionMode = selectionModeForced;
-    if (!selectionMode) {
+    if (selectionMode === SelectionMode.NORMAL) {
       selectionMode = (wordCount(text) > 2 ? SelectionMode.AUTO_HIGHLIGHT : SelectionMode.USER_SELECTION);
     }
-    this.dispatch(updateSelection(
-      {
-        serializedRange,
-        rects: this.getContentRelativeRects(rects),
-        text,
-        withHandle: selectionMode === SelectionMode.USER_SELECTION,
-        style: DefaultSelectionStyle[selectionMode],
-        contentIndex,
-      },
-      selectionMode,
-    ));
+    this._selection = {
+      serializedRange,
+      rects: this._getContentRelativeRects(rects),
+      text,
+      withHandle: selectionMode === SelectionMode.USER_SELECTION,
+      style: DefaultSelectionStyle[selectionMode],
+      contentIndex,
+    };
+    console.log(this._selection);
+    this._selectionMode = selectionMode;
+    this.dispatch(updateSelection(this._selection));
   }
 
-  endSelection() {
-    this.dispatch(updateSelection(null, SelectionMode.NORMAL));
-    this.isSelecting = false;
-    return true;
+  afterConnected() {
+    this._init();
   }
 
-  startSelection(x, y) {
-    this.endSelection();
+  start(x, y) {
+    this.end();
     if (ReaderJsHelper.sel.start(x, y)) {
-      this.isSelecting = true;
-      this.saveSelection();
+      this._isSelecting = true;
+      this._cacheSelection();
       return true;
     }
     return false;
   }
 
-  expandUpper(x, y, selectionModeForced) {
-    if (this.isSelecting) {
+  end() {
+    this._init();
+    this.dispatch(updateSelection(this._selection));
+    return true;
+  }
+
+  expandIntoUpper(x, y, selectionModeForced) {
+    if (this._isSelecting) {
       if (ReaderJsHelper.sel.expandIntoUpper(x, y)) {
-        this.saveSelection(selectionModeForced);
+        this._cacheSelection(selectionModeForced);
         return true;
       }
     }
     return false;
   }
 
-  expandLower(x, y, selectionModeForced) {
-    if (this.isSelecting) {
+  expandIntoLower(x, y, selectionModeForced) {
+    if (this._isSelecting) {
       if (ReaderJsHelper.sel.expandIntoLower(x, y)) {
-        this.saveSelection(selectionModeForced);
+        this._cacheSelection(selectionModeForced);
         return true;
       }
     }
     return false;
-  }
-
-  getContentRelativeRects(rects) {
-    const { viewType } = Connector.setting.getSetting();
-    return rects.map(({
-      top,
-      left,
-      width,
-      height,
-    }) => ({
-      top: (viewType === ViewType.SCROLL ? top : top - Connector.setting.getContainerVerticalMargin()) + SELECTION_LAYER_EXPANDED_WIDTH,
-      left: (viewType === ViewType.SCROLL ? left - Connector.setting.getContainerHorizontalMargin() : left) + SELECTION_LAYER_EXPANDED_WIDTH,
-      width,
-      height,
-    }));
   }
 
   getRectsFromSerializedRange(serializedRange) {
     try {
-      const absoluteRects = ReaderJsHelper.readerJs.getRectsFromSerializedRange(serializedRange).toAbsolute(ReaderJsHelper.node);
-      console.log(serializedRange, '=>', absoluteRects, ReaderJsHelper.readerJs.context, ReaderJsHelper.node);
-      return this.getContentRelativeRects(absoluteRects);
+      const rects = ReaderJsHelper.readerJs.getRectsFromSerializedRange(serializedRange);
+      return this._getContentRelativeRects(rects);
     } catch (e) {
       console.warn(e);
       return [];

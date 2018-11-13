@@ -36,12 +36,17 @@ const getButtonStyles = (style) => {
   return defaultProps;
 };
 
-const SelectionContextMenu = ({ position, onClickItem }) => (
+const SelectionContextMenu = ({
+  top,
+  left,
+  targetItem,
+  onClickItem,
+}) => (
   <div
     style={{
       position: 'absolute',
-      top: `${position.y}px`,
-      left: `${position.x}px`,
+      top: `${top}px`,
+      left: `${left}px`,
       zIndex: '100',
       padding: '6px',
       backgroundColor: '#222',
@@ -67,7 +72,7 @@ const SelectionContextMenu = ({ position, onClickItem }) => (
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            onClickItem({ style });
+            onClickItem({ ...targetItem, style });
           }}
         >
           <span className="indent_hidden">{style.color}</span>
@@ -78,7 +83,7 @@ const SelectionContextMenu = ({ position, onClickItem }) => (
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          onClickItem({ style: null });
+          onClickItem({ ...targetItem, style: null });
         }}
         style={getButtonStyles(null)}
       >
@@ -90,11 +95,10 @@ const SelectionContextMenu = ({ position, onClickItem }) => (
 );
 
 SelectionContextMenu.propTypes = {
-  position: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-  }).isRequired,
+  top: PropTypes.number.isRequired,
+  left: PropTypes.number.isRequired,
   onClickItem: PropTypes.func.isRequired,
+  targetItem: PropTypes.object.isRequired,
 };
 
 export default SelectionContextMenu;

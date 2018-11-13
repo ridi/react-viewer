@@ -43,11 +43,11 @@ class TouchableScreen extends React.Component {
     }
 
     if (viewType === ViewType.PAGE) {
-      if (Connector.current.isOnFooter() || !Connector.selection.isSelectMode()) allowScrollEvent(forwardedRef.current);
+      if (Connector.current.isOnFooter() || !Connector.selection.isSelecting) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
     if (viewType === ViewType.SCROLL) {
-      if (isReadyToRead && !Connector.selection.isSelectMode()) allowScrollEvent(forwardedRef.current);
+      if (isReadyToRead && !Connector.selection.isSelecting) allowScrollEvent(forwardedRef.current);
       else preventScrollEvent(forwardedRef.current);
     }
   }

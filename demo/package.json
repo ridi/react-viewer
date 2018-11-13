@@ -22,14 +22,14 @@
     "store": "^2.0.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.5",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/plugin-transform-classes": "^7.1.0",
     "@babel/plugin-transform-proto-to-assign": "^7.0.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
     "@babel/preset-react": "^7.0.0",
     "@ridi/eslint-config": "^4.1.1",
     "babel-eslint": "^10.0.1",
@@ -49,8 +49,8 @@
     "redux-devtools-multiple-monitors": "^1.0.1",
     "styled-components": "^3.4.10",
     "url-search-params-polyfill": "^2.0.3",
-    "webpack": "^4.21.0",
-    "webpack-dev-server": "^3.1.9",
+    "webpack": "^4.25.1",
+    "webpack-dev-server": "^3.1.10",
     "webpack-manifest-plugin": "^2.0.4",
     "webpack-stream": "^5.1.1",
     "whatwg-fetch": "^2.0.4"

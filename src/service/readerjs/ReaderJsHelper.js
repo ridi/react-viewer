@@ -8,12 +8,16 @@ const DETECTION_TYPE = 'top'; // bottom or top
 class ReaderJsHelper {
   constructor() {
     this._readerJs = null;
-    this.isMounted = false;
-    this.node = null;
+    this._isMounted = false;
+    this._node = null;
+  }
+
+  get isMounted() {
+    return this._isMounted;
   }
 
   get readerJs() {
-    if (this._readerJs === null) {
+    if (!this._isMounted) {
       throw new Error('Readerjs is not initialized. Use `ReaderJsHelper.mount()`.');
     }
     return this._readerJs;
@@ -31,11 +35,18 @@ class ReaderJsHelper {
     return this.readerJs.content;
   }
 
+  get node() {
+    if (!this._isMounted) {
+      throw new Error('Readerjs is not initialized. Use `ReaderJsHelper.mount()`.');
+    }
+    return this._node;
+  }
+
   mount(node, isScrollMode) {
-    this.node = node;
-    this.readerJs = new Reader(this.node, this._createContext(isScrollMode));
+    this.readerJs = new Reader(node, this._createContext(node, isScrollMode));
+    this._node = node;
+    this._isMounted = true;
     this.setDebugMode(process.env.NODE_ENV === 'development');
-    this.isMounted = true;
   }
 
   unmount() {
@@ -45,13 +56,13 @@ class ReaderJsHelper {
       /* ignore */
     }
     this.readerJs = null;
-    this.node = null;
-    this.isMounted = false;
+    this._node = null;
+    this._isMounted = false;
   }
 
   // TODO maxSelectionLength as configuration
-  _createContext(isScrollMode, maxSelectionLength = 1000) {
-    const columnGap = Util.getStylePropertyIntValue(this.node, 'column-gap');
+  _createContext(node, isScrollMode, maxSelectionLength = 1000) {
+    const columnGap = Util.getStylePropertyIntValue(node, 'column-gap');
     const width = screenWidth() - columnGap;
     const height = screenHeight();
     return new Context(width, height, columnGap, false, isScrollMode, maxSelectionLength);

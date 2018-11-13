@@ -20,5 +20,6 @@ module.exports = {
     'react/forbid-prop-types': 0,
     'no-underscore-dangle': 0,
     'react/destructuring-assignment': 0,
+    'lines-between-class-members': 0,
   },
 };

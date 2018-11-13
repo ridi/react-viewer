@@ -7,7 +7,6 @@ import {
   DEFAULT_HORIZONTAL_MARGIN,
 } from '../constants/StyledConstants';
 import { PRE_CALCULATION } from '../constants/CalculationsConstants';
-import { SelectionMode } from '../constants/SelectionConstants';
 
 export const initialContentState = index => ({
   index,
@@ -71,7 +70,6 @@ export const initialState = {
   },
   setting: initialSettingState(),
   selection: null,
-  selectionMode: SelectionMode.NORMAL,
 };
 
 export default {
@@ -113,5 +111,4 @@ export default {
   annotationCalculation: id => ['calculations', 'annotations', id],
 
   selection: () => ['selection'],
-  selectionMode: () => ['selectionMode'],
 };

@@ -20,6 +20,10 @@ export const initialState = {
     viewerSettings: {},
     isFullScreen: false,
     availableViewType: AvailableViewType.BOTH,
+    contextMenu: {
+      isVisible: false,
+      target: null,
+    },
   },
   annotations: [],
 };
@@ -29,5 +33,6 @@ export default {
   viewerSettings: () => ['ui', 'viewerSettings'],
   isFullScreen: () => ['ui', 'isFullScreen'],
   availableViewType: () => ['ui', 'availableViewType'],
+  contextMenu: () => ['ui', 'contextMenu'],
   annotations: () => ['annotations'],
 };

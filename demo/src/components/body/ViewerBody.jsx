@@ -10,26 +10,21 @@ import Reader, {
   unload,
   SelectionMode,
   ContentHelper,
+  selectReaderIsReadyToRead,
 } from '@ridi/react-viewer';
-import { selectAnnotations } from '../../redux/Viewer.selector';
+import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
 import {
   requestLoadContent,
   addAnnotation,
   setAnnotations,
-  updateAnnotation, removeAnnotation,
+  updateAnnotation, removeAnnotation, setContextMenu,
 } from '../../redux/Viewer.action';
 import { screenWidth } from '../../utils/BrowserWrapper';
 import Cache from '../../utils/Cache';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
-
-// todo redux!
-const initialState = {
-  selection: null,
-  contextMenuPosition: null,
-  showContextMenu: false,
-};
+import { RectsUtil } from '../../../../src/util/SelectionUtil';
 
 class ViewerBody extends React.Component {
   constructor(props) {
@@ -46,16 +41,12 @@ class ViewerBody extends React.Component {
 
     this.footer = <ViewerScreenFooter contentMeta={props.contentMeta} />;
     this.contentFooter = <small>content footer area...</small>;
-
-    this.state = initialState;
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.setting.viewType !== this.props.setting.viewType) {
-      // selection 초기화 & annotation rects 계산
-      // todo redux!
-      /* eslint-disable react/no-did-update-set-state */
-      this.setState(initialState);
+    const { isReadyToRead, actionSetContextMenu } = this.props;
+    if (prevProps.isReadyToRead && !isReadyToRead) {
+      actionSetContextMenu(false);
     }
   }
 
@@ -94,7 +85,7 @@ class ViewerBody extends React.Component {
   }
 
   onReaderTouched(event) {
-    this.setState(initialState);
+    // TODO onReaderTouched event should be occurred as exclusive with onReaderSelectionChanged event ;o;
     const link = ContentHelper.getLinkFromElement(event.target);
     if (link) {
       // TODO go to...
@@ -111,92 +102,58 @@ class ViewerBody extends React.Component {
     onTouched(position);
   }
 
-  onContentMenuItemClicked({ style }) {
+  onContentMenuItemClicked(targetSelection) {
     const {
       currentContentIndex,
       actionAddAnnotation,
       actionSetAnnotation,
       actionRemoveAnnotation,
+      actionSetContextMenu,
     } = this.props;
     const {
       id,
-      serializedRange,
-      text,
-      rects,
-    } = this.state.selection;
-    if (style === null) {
-      actionRemoveAnnotation({
-        id,
-        serializedRange,
-        text,
-        rects,
-        contentIndex: currentContentIndex,
-        style,
-      });
-    } else if (id) {
-      actionSetAnnotation({
-        id,
-        serializedRange,
-        text,
-        rects,
-        contentIndex: currentContentIndex,
-        style,
-      });
-    } else {
-      actionAddAnnotation({
-        serializedRange,
-        text,
-        rects,
-        contentIndex: currentContentIndex,
-        style,
-      });
+      style,
+      withHandle,
+      ...others
+    } = targetSelection;
+    const updateSelection = {
+      id,
+      ...others,
+      contentIndex: currentContentIndex,
+      style,
+    };
+    if (!id) {
+      actionAddAnnotation(updateSelection);
+    } else if (!style) {
+      actionRemoveAnnotation(updateSelection);
+    } else if (style) {
+      actionSetAnnotation(updateSelection);
     }
-    Connector.selection.endSelection();
-    this.setState(initialState);
+    Connector.selection.end();
+    actionSetContextMenu(false);
   }
 
   onReaderAnnotationTouched(annotation) {
-    const lastRect = annotation.rects.length > 0 ? annotation.rects[annotation.rects.length - 1] : null;
-    console.log('onReaderAnnotationTouched', annotation);
-    this.setState({
-      selection: annotation,
-      showContextMenu: true,
-      contextMenuPosition: {
-        x: lastRect.left + lastRect.width,
-        y: lastRect.top + lastRect.height,
-      },
-    });
+    const { actionSetContextMenu } = this.props;
+    actionSetContextMenu(true, annotation);
   }
 
   onReaderSelectionChanged({ selection, selectionMode }) {
-    const { currentContentIndex, actionAddAnnotation } = this.props;
-    const lastRect = selection.rects.length > 0 ? selection.rects[selection.rects.length - 1] : null;
-    console.log('ViewerBody.onReaderSelectionChanged', selection, selectionMode);
-    switch (selectionMode) {
-      case SelectionMode.NORMAL:
-        this.setState({
-          selection,
-          showContextMenu: false,
-          contextMenuPosition: null,
-        });
-        break;
-      case SelectionMode.USER_SELECTION:
-        this.setState({
-          selection,
-          showContextMenu: true,
-          contextMenuPosition: {
-            x: lastRect.left + lastRect.width + Connector.setting.getContainerHorizontalMargin(),
-            y: lastRect.top + lastRect.height + Connector.setting.getContainerHorizontalMargin(),
-          },
-        });
-        break;
-      case SelectionMode.AUTO_HIGHLIGHT:
-        actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
-        Connector.selection.endSelection();
-        this.setState(initialState);
-        break;
-      default: break;
+    const {
+      currentContentIndex,
+      actionAddAnnotation,
+      actionSetContextMenu,
+    } = this.props;
+
+    if (selectionMode === SelectionMode.USER_SELECTION) {
+      return actionSetContextMenu(true, selection);
     }
+    if (selectionMode === SelectionMode.AUTO_HIGHLIGHT) {
+      actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
+      Connector.selection.end();
+      return actionSetContextMenu(false);
+    }
+    return actionSetContextMenu(false);
   }
 
   renderPageButtons() {
@@ -211,14 +168,24 @@ class ViewerBody extends React.Component {
   }
 
   renderContextMenu() {
-    const {
-      contextMenuPosition,
-      showContextMenu,
-    } = this.state;
-    if (!showContextMenu) return null;
+    const { currentContentIndex } = this.props;
+    const { viewType } = this.props.setting;
+    const { isVisible, target } = this.props.contextMenu;
+    if (!isVisible) return null;
+
+    const lastRect = target.rects.length > 0 ? target.rects[target.rects.length - 1] : null;
+    const position = new RectsUtil([lastRect])
+      .translateX(lastRect.width)
+      .translateX(Connector.setting.getContainerHorizontalMargin())
+      .translateY(lastRect.height)
+      .translateY(Connector.setting.getContainerVerticalMargin())
+      .translateY(viewType === ViewType.SCROLL ? Connector.calculations.getStartOffset(currentContentIndex) : 0)
+      .getRects()[0];
     return (
       <SelectionContextMenu
-        position={contextMenuPosition}
+        top={position.top}
+        left={position.left}
+        targetItem={target}
         onClickItem={this.onContentMenuItemClicked}
       />
     );
@@ -261,6 +228,9 @@ ViewerBody.propTypes = {
   actionSetAnnotations: PropTypes.func.isRequired,
   actionSetAnnotation: PropTypes.func.isRequired,
   actionRemoveAnnotation: PropTypes.func.isRequired,
+  contextMenu: PropTypes.object.isRequired,
+  actionSetContextMenu: PropTypes.func.isRequired,
+  isReadyToRead: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -268,6 +238,8 @@ const mapStateToProps = state => ({
   currentContentIndex: selectReaderCurrentContentIndex(state),
   setting: selectReaderSetting(state),
   annotations: selectAnnotations(state),
+  contextMenu: selectContextMenu(state),
+  isReadyToRead: selectReaderIsReadyToRead(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -278,6 +250,7 @@ const mapDispatchToProps = dispatch => ({
   actionSetAnnotations: annotations => dispatch(setAnnotations(annotations)),
   actionSetAnnotation: annotation => dispatch(updateAnnotation(annotation)),
   actionRemoveAnnotation: annotation => dispatch(removeAnnotation(annotation)),
+  actionSetContextMenu: (isVisible, target) => dispatch(setContextMenu(isVisible, target)),
 });
 
 export default connect(

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import path from './Viewer.path';
+import path, { initialState } from './Viewer.path';
 import { nullSafeGet } from '../../../src/util/Util';
 
 
@@ -17,5 +17,10 @@ export const selectIsFullScreen = createSelector(
 
 export const selectAnnotations = createSelector(
   [getViewer],
-  viewer => nullSafeGet(viewer, path.annotations(), {}),
+  viewer => nullSafeGet(viewer, path.annotations(), []),
+);
+
+export const selectContextMenu = createSelector(
+  [getViewer],
+  viewer => nullSafeGet(viewer, path.contextMenu(), initialState.ui.contextMenu),
 );

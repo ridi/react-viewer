@@ -44,6 +44,10 @@ const onAnnotationRemoved = (state, { annotation }) => new ImmutableObjectBuilde
   .set(path.annotations(), setAnnotation(state.annotations, annotation, true))
   .build();
 
+const onContextMenuSet = (state, { isVisible, target }) => new ImmutableObjectBuilder(state)
+  .set(path.contextMenu(), { isVisible, target })
+  .build();
+
 export default createReducer(initialState, {
   [ViewerUiActions.TOGGLE_VIEWER_SETTING]: onToggleViewerSetting,
   [ViewerUiActions.VIEWER_SETTING_CHANGED]: viewerSettingChanged,
@@ -53,4 +57,5 @@ export default createReducer(initialState, {
   [ViewerUiActions.UPDATE_ANNOTATION]: onAnnotationUpdated,
   [ViewerUiActions.SET_ANNOTATIONS]: onAnnotationsSet,
   [ViewerUiActions.REMOVE_ANNOTATION]: onAnnotationRemoved,
+  [ViewerUiActions.SET_CONTEXT_MENU]: onContextMenuSet,
 });

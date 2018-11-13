@@ -138,10 +138,9 @@ export const setReadyToRead = isReadyToRead => ({
   isReadyToRead,
 });
 
-export const updateSelection = (selection, selectionMode) => ({
+export const updateSelection = selection => ({
   type: actions.UPDATE_SELECTION,
   selection,
-  selectionMode,
 });
 
 export const updateAnnotationCalculation = (annotationId, calculation) => ({
