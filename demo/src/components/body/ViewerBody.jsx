@@ -207,7 +207,9 @@ class ViewerBody extends React.Component {
           annotations={annotations}
           onSelectionChanged={this.onReaderSelectionChanged}
           onAnnotationTouched={this.onReaderAnnotationTouched}
-        />
+        >
+          {this.renderPageButtons()}
+        </Reader>
         { this.renderContextMenu() }
       </>
     );

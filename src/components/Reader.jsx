@@ -84,6 +84,7 @@ class Reader extends React.Component {
       annotations,
       onSelectionChanged,
       onAnnotationTouched,
+      children,
     } = this.props;
 
     const props = {
@@ -104,7 +105,7 @@ class Reader extends React.Component {
       props.contentFooter = <ContentFooter content={contentFooter} />;
     }
     const Screen = this.getScreen();
-    return <Screen {...props} />;
+    return <Screen {...props}>{children}</Screen>;
   }
 }
 
@@ -122,6 +123,7 @@ Reader.defaultProps = {
   annotations: [],
   onSelectionChanged: null,
   onAnnotationTouched: null,
+  children: null,
 };
 
 Reader.propTypes = {
@@ -140,6 +142,7 @@ Reader.propTypes = {
   annotations: PropTypes.array,
   onSelectionChanged: PropTypes.func,
   onAnnotationTouched: PropTypes.func,
+  children: PropTypes.node,
 };
 
 const mapStateToProps = state => ({
