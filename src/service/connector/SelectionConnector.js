@@ -4,9 +4,6 @@ import { DefaultSelectionStyle, SelectionMode } from '../../constants/SelectionC
 import { wordCount } from '../../util/Util';
 import BaseConnector from './BaseConnector';
 import { updateSelection } from '../../redux/action';
-import { SELECTION_LAYER_EXPANDED_WIDTH } from '../../constants/StyledConstants';
-import { ViewType } from '../..';
-import { RectsUtil } from '../../util/SelectionUtil';
 
 class SelectionConnector extends BaseConnector {
   _isSelecting = false;
@@ -31,21 +28,6 @@ class SelectionConnector extends BaseConnector {
     this._selectionMode = SelectionMode.NORMAL;
   }
 
-  _getContentRelativeRects(rects) {
-    const { viewType } = Connector.setting.getSetting();
-    const isScroll = viewType === ViewType.SCROLL;
-
-    const result = new RectsUtil(rects.toAbsolute(ReaderJsHelper.node))
-      .translateX(SELECTION_LAYER_EXPANDED_WIDTH)
-      .translateY(SELECTION_LAYER_EXPANDED_WIDTH)
-      .translateX(isScroll ? 0 : ReaderJsHelper.node.parentNode.scrollLeft)
-      .translateX(isScroll ? -Connector.setting.getContainerHorizontalMargin() : 0)
-      .translateY(isScroll ? 0 : -Connector.setting.getContainerVerticalMargin())
-      .getRects();
-    console.log(ReaderJsHelper.node, ReaderJsHelper.node.isConnected, isScroll, rects, result);
-    return result;
-  }
-
   _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
     const { contentIndex } = Connector.current.getCurrent();
     const text = ReaderJsHelper.sel.getText();
@@ -58,7 +40,7 @@ class SelectionConnector extends BaseConnector {
     }
     this._selection = {
       serializedRange,
-      rects: this._getContentRelativeRects(rects),
+      rects: ReaderJsHelper.getContentRelativeRects(rects),
       text,
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
       style: DefaultSelectionStyle[selectionMode],
@@ -112,7 +94,7 @@ class SelectionConnector extends BaseConnector {
   getRectsFromSerializedRange(serializedRange) {
     try {
       const rects = ReaderJsHelper.readerJs.getRectsFromSerializedRange(serializedRange);
-      return this._getContentRelativeRects(rects);
+      return ReaderJsHelper.getContentRelativeRects(rects);
     } catch (e) {
       console.warn(e);
       return [];

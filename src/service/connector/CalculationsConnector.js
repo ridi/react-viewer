@@ -16,7 +16,6 @@ import {
   selectReaderContents,
   selectReaderCurrentContentIndex,
   selectReaderIsReadyToRead,
-  selectReaderAnnotationCalculations,
 } from '../../redux/selector';
 import { hasIntersect } from '../../util/Util';
 import { ContentFormat } from '../../constants/ContentConstants';
@@ -25,17 +24,16 @@ import SelectionConnector from './SelectionConnector';
 
 // TODO 테스트 작성
 class CalculationsConnector extends BaseConnector {
-  constructor() {
-    super();
-    this.hasFooter = false;
+  // todo move to config
+  _hasFooter = false;
+  _annotations = {};
+
+  set hasFooter(hasFooter) {
+    this._hasFooter = hasFooter;
   }
 
-  setHasFooter(hasFooter) {
-    this.hasFooter = hasFooter;
-  }
-
-  getHasFooter() {
-    return this.hasFooter;
+  get hasFooter() {
+    return this._hasFooter;
   }
 
   invalidate() {
@@ -195,14 +193,7 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getAnnotationCalculation(annotation) {
-    // FIXME 이 부분이 readerJS가 아직 update 되기 전에 불려서 문제가 되기 떄문에, 임시로 매번 새로 계산하도록 해 놓았음.
-    const calculatedAnnotations = selectReaderAnnotationCalculations(this.getState());
-    if (calculatedAnnotations[annotation.id]) {
-      return calculatedAnnotations[annotation.id];
-    }
-    const calculation = { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) };
-    // this.dispatch(updateAnnotationCalculation(annotation.id, calculation));
-    return calculation;
+    return { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) };
   }
 }
 

@@ -17,7 +17,7 @@ import ContentFooter from './footer/ContentFooter';
 class Reader extends React.Component {
   constructor(props) {
     super(props);
-    Connector.calculations.setHasFooter(!!props.footer);
+    Connector.calculations.hasFooter = !!props.footer;
     this.onTouched = this.onTouched.bind(this);
     this.onScrolled = this.onScrolled.bind(this);
   }

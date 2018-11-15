@@ -19,9 +19,25 @@ import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
-import WithSelection from '../selection/WithSelection';
 
 class HtmlPageScreen extends BaseScreen {
+  static defaultProps = {
+    ...BaseScreen.defaultProps,
+    footer: null,
+    contentFooter: null,
+  };
+
+  static propTypes = {
+    ...BaseScreen.propTypes,
+    contentsCalculations: PropTypes.arrayOf(ContentCalculationsType).isRequired,
+    footer: PropTypes.node,
+    contentFooter: PropTypes.node,
+    footerCalculations: FooterCalculationsType.isRequired,
+    bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
+    calculationsTotal: PropTypes.number.isRequired,
+    onMoveWrongDirection: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
@@ -29,7 +45,7 @@ class HtmlPageScreen extends BaseScreen {
 
   calculate(index, contentNode) {
     if (index === FOOTER_INDEX) {
-      const hasFooter = Connector.calculations.getHasFooter();
+      const { hasFooter } = Connector.calculations;
       Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
     }
     waitThenRun(() => {
@@ -40,6 +56,7 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   moveToOffset() {
+    super.moveToOffset();
     const { contentIndex } = this.props.current;
     setScrollTop(0);
     if (contentIndex === FOOTER_INDEX) {
@@ -77,11 +94,6 @@ class HtmlPageScreen extends BaseScreen {
     const {
       current,
       contentFooter,
-      annotationable,
-      annotations,
-      onSelectionChanged,
-      onAnnotationTouched,
-      selectable,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
@@ -102,19 +114,7 @@ class HtmlPageScreen extends BaseScreen {
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
         onContentMount={this.onContentMount}
-      >
-        {(annotationable || selectable) && (
-          <WithSelection
-            annotationable={annotationable}
-            selectable={selectable}
-            viewType={ViewType.PAGE}
-            annotations={annotations}
-            onSelectionChanged={onSelectionChanged}
-            onAnnotationTouched={onAnnotationTouched}
-            contentIndex={content.index}
-          />
-        )}
-      </PageHtmlContent>
+      />
     );
   }
 
@@ -127,25 +127,6 @@ class HtmlPageScreen extends BaseScreen {
       .map(content => this.renderContent(content, StyledContent));
   }
 }
-
-HtmlPageScreen.defaultProps = {
-  ...BaseScreen.defaultProps,
-  footer: null,
-  contentFooter: null,
-};
-
-HtmlPageScreen.propTypes = {
-  ...BaseScreen.propTypes,
-  contentsCalculations: PropTypes.arrayOf(ContentCalculationsType).isRequired,
-  footer: PropTypes.node,
-  contentFooter: PropTypes.node,
-  footerCalculations: FooterCalculationsType.isRequired,
-  bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
-  calculationsTotal: PropTypes.number.isRequired,
-  onMoveWrongDirection: PropTypes.func,
-  selectable: PropTypes.bool.isRequired,
-  annotationable: PropTypes.bool.isRequired,
-};
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),

@@ -87,8 +87,7 @@ class ViewerBody extends React.Component {
   }
 
   onReaderTouched(event) {
-    // TODO onReaderTouched event should be occurred as exclusive with onReaderSelectionChanged event ;o;
-    const link = ContentHelper.getLinkFromElement(event.target);
+    const link = ContentHelper.getLinkFromElement(event.detail.target);
     if (link) {
       // TODO go to...
       return;
@@ -98,8 +97,8 @@ class ViewerBody extends React.Component {
     const width = screenWidth();
     let position = Position.MIDDLE;
     if (setting.viewType === ViewType.PAGE) {
-      if (event.clientX <= width * 0.2) position = Position.LEFT;
-      if (event.clientX >= width * 0.8) position = Position.RIGHT;
+      if (event.detail.clientX <= width * 0.2) position = Position.LEFT;
+      if (event.detail.clientX >= width * 0.8) position = Position.RIGHT;
     }
     onTouched(position);
   }

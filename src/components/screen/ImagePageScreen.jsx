@@ -39,7 +39,7 @@ class ImagePageScreen extends BaseScreen {
     const { contents } = this.props;
     const { columnsInPage, startWithBlankPage } = this.props.setting;
     Connector.calculations.setContentTotal(1, Math.ceil((contents.length + startWithBlankPage) / columnsInPage));
-    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.getHasFooter() ? 1 : 0);
+    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.hasFooter ? 1 : 0);
   }
 
   moveToOffset() {

@@ -23,7 +23,6 @@ export const actions = {
   UPDATE_FOOTER_CALCULATIONS: 'READER:UPDATE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
   UPDATE_SELECTION: 'READER:UPDATE_SELECTION',
-  UPDATE_ANNOTATION_CALCULATIONS: 'READER:UPDATE_ANNOTATION_CALCULATIONS',
 };
 
 export const load = fullState => ({
@@ -141,10 +140,4 @@ export const setReadyToRead = isReadyToRead => ({
 export const updateSelection = selection => ({
   type: actions.UPDATE_SELECTION,
   selection,
-});
-
-export const updateAnnotationCalculation = (annotationId, calculation) => ({
-  type: actions.UPDATE_ANNOTATION_CALCULATIONS,
-  annotationId,
-  calculation,
 });

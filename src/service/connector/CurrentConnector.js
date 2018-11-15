@@ -53,7 +53,7 @@ class CurrentConnector extends BaseConnector {
   }
 
   isOnFooter() {
-    if (!CalculationsConnector.getHasFooter()) return false;
+    if (!CalculationsConnector.hasFooter) return false;
     if (!CalculationsConnector.isCompleted()) return false;
 
     const currentContentIndex = selectReaderCurrentContentIndex(this.getState());

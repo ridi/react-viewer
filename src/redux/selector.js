@@ -80,9 +80,4 @@ export const selectReaderSelection = createSelector(
   reader => nullSafeGet(reader, path.selection(), null),
 );
 
-export const selectReaderAnnotationCalculations = createSelector(
-  [getReader],
-  reader => nullSafeGet(reader, path.annotationCalculations(), null),
-);
-
 export const selectReader = getReader;

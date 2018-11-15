@@ -33,9 +33,25 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import WithSelection from '../selection/WithSelection';
 
 class HtmlScrollScreen extends BaseScreen {
+  static defaultProps = {
+    ...BaseScreen.defaultProps,
+    contentFooter: null,
+  };
+
+  static propTypes = {
+    ...BaseScreen.propTypes,
+    contentsCalculations: PropTypes.arrayOf(ContentCalculationsType),
+    calculationsTotal: PropTypes.number.isRequired,
+    actionUpdateContent: PropTypes.func.isRequired,
+    actionUpdateContentError: PropTypes.func.isRequired,
+    footerCalculations: FooterCalculationsType.isRequired,
+    contentFooter: PropTypes.node,
+    onScrolled: PropTypes.func.isRequired,
+    ignoreScroll: PropTypes.bool.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
@@ -73,6 +89,7 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   moveToOffset() {
+    super.moveToOffset();
     const { offset } = this.props.current;
     setScrollTop(offset);
   }
@@ -104,11 +121,6 @@ class HtmlScrollScreen extends BaseScreen {
     const {
       current,
       contentFooter,
-      annotationable,
-      selectable,
-      annotations,
-      onSelectionChanged,
-      onAnnotationTouched,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
     const isCurrentContent = current.contentIndex === content.index;
@@ -129,19 +141,7 @@ class HtmlScrollScreen extends BaseScreen {
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
         onContentMount={this.onContentMount}
-      >
-        {(annotationable || selectable) && isCurrentContent && (
-          <WithSelection
-            annotationable={annotationable}
-            selectable={selectable}
-            viewType={ViewType.SCROLL}
-            annotations={annotations}
-            onSelectionChanged={onSelectionChanged}
-            onAnnotationTouched={onAnnotationTouched}
-            contentIndex={content.index}
-          />
-        )}
-      </ScrollHtmlContent>
+      />
     );
   }
 
@@ -154,25 +154,6 @@ class HtmlScrollScreen extends BaseScreen {
       .map(content => this.renderContent(content, StyledContent));
   }
 }
-
-HtmlScrollScreen.defaultProps = {
-  ...BaseScreen.defaultProps,
-  contentFooter: null,
-};
-
-HtmlScrollScreen.propTypes = {
-  ...BaseScreen.propTypes,
-  contentsCalculations: PropTypes.arrayOf(ContentCalculationsType),
-  calculationsTotal: PropTypes.number.isRequired,
-  actionUpdateContent: PropTypes.func.isRequired,
-  actionUpdateContentError: PropTypes.func.isRequired,
-  footerCalculations: FooterCalculationsType.isRequired,
-  contentFooter: PropTypes.node,
-  onScrolled: PropTypes.func.isRequired,
-  ignoreScroll: PropTypes.bool.isRequired,
-  selectable: PropTypes.bool.isRequired,
-  annotationable: PropTypes.bool.isRequired,
-};
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),

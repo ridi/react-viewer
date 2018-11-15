@@ -66,7 +66,6 @@ const StyledScrollContent = () => `
 `;
 
 const StyledPageContent = () => `
-  position: relative;
   vertical-align: top;
   white-space: initial;
   display: inline-block;

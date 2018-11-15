@@ -2,6 +2,7 @@ import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
 export const READERJS_CONTENT_WRAPPER = 'current_content';
+export const SELECTION_BASE_CONTENT = 'reader_contents';
 export const EMPTY_READ_LOCATION = '-1#-1';
 export const INVALID_PAGE = -1;
 export const INVALID_OFFSET = -1;
