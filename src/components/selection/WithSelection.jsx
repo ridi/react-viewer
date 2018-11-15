@@ -129,8 +129,6 @@ class WithSelection extends React.Component {
       contentIndex,
       viewType,
     } = this.props;
-    const { contentIndex: currentContentIndex } = Connector.current.getCurrent();
-    if (currentContentIndex !== contentIndex || !Connector.selection.isAvailable) return null;
 
     return (
       <SelectionLayer

@@ -8,28 +8,11 @@ import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import ReaderJsHelper from '../readerjs/ReaderJsHelper';
-import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
+import { EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends BaseConnector {
   getCurrent() {
     return selectReaderCurrent(this.getState());
-  }
-
-  setReaderJs() {
-    const { viewType } = selectReaderSetting(this.getState());
-    try {
-      ReaderJsHelper.unmount();
-
-      const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
-      if (node) {
-        ReaderJsHelper.mount(node, viewType === ViewType.SCROLL);
-        const location = ReaderJsHelper.getNodeLocationOfCurrentPage();
-        this.dispatch(updateCurrent({ location }));
-      }
-    } catch (e) {
-      // ignore error
-      console.warn(e);
-    }
   }
 
   updateCurrentOffset(offset) {

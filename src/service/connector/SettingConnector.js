@@ -94,7 +94,7 @@ class SettingConnector extends BaseConnector {
           const fullWidth = (this.getContainerWidthInternal() * total) + (this.getColumnGap() * (total - 1));
           return withUnit ? `${fullWidth}px` : fullWidth;
         }
-        return 'auto';
+        return withUnit ? '100%' : 100;
       }
     }
     return withUnit ? `${contentWidthInPercent}%` : contentWidthInPercent;

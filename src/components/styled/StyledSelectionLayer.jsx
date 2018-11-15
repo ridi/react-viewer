@@ -13,7 +13,7 @@ const getLeft = () => `-${SELECTION_LAYER_EXPANDED_WIDTH}px`;
 const getWidth = (viewType, contentIndex) => (
   viewType === ViewType.SCROLL
     ? `calc(100% + ${SELECTION_LAYER_EXPANDED_WIDTH * 2}px)`
-    : `${Connector.setting.getContentWidth(contentIndex) + (SELECTION_LAYER_EXPANDED_WIDTH * 2)}px`
+    : `calc(${Connector.setting.getContentWidth(contentIndex, true)} + ${(SELECTION_LAYER_EXPANDED_WIDTH * 2)}px)`
 );
 const getHeight = () => `calc(100% + ${SELECTION_LAYER_EXPANDED_WIDTH * 2}px)`;
 

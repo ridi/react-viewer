@@ -1,30 +1,32 @@
 import { Context, Reader, Util } from '@ridi/reader.js/web';
 import { isExist } from '../../util/Util';
 import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
-import { EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
+import { EMPTY_READ_LOCATION, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import Connector from '../connector';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
-class ReaderJsHelper {
-  constructor() {
-    this._readerJs = null;
-    this._isMounted = false;
-    this._node = null;
-  }
+const getCurrentContentNode = () => document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
 
-  get isMounted() {
-    return this._isMounted;
-  }
+class ReaderJsHelper {
+  _readerJs = null;
+  _node = null;
 
   get readerJs() {
-    if (!this._isMounted) {
-      throw new Error('Readerjs is not initialized. Use `ReaderJsHelper.mount()`.');
+    if (this._isValid()) {
+      return this._readerJs;
     }
-    return this._readerJs;
-  }
 
-  set readerJs(readerJs) {
-    this._readerJs = readerJs;
+    const { viewType } = Connector.setting.getSetting();
+    const node = getCurrentContentNode();
+    if (node) {
+      this._mount(node, viewType === ViewType.SCROLL);
+    }
+    if (!this._readerJs) {
+      throw new Error('Readerjs was not able to initialized.');
+    }
+    console.log(this._node, this._readerJs.context.isScrollMode);
+    return this._readerJs;
   }
 
   get sel() {
@@ -36,28 +38,37 @@ class ReaderJsHelper {
   }
 
   get node() {
-    if (!this._isMounted) {
-      throw new Error('Readerjs is not initialized. Use `ReaderJsHelper.mount()`.');
+    return this.content.wrapper;
+  }
+
+  _isValid() {
+    const { viewType } = Connector.setting.getSetting();
+    if (this._readerJs) {
+      return ((viewType === ViewType.SCROLL) === this._readerJs.context.isScrollMode)
+        && this._node
+        && this._node.isConnected
+        && this._node === getCurrentContentNode();
     }
-    return this._node;
+    return false;
   }
 
-  mount(node, isScrollMode) {
-    this.readerJs = new Reader(node, this._createContext(node, isScrollMode));
+  _mount(node, isScrollMode) {
+    if (this._readerJs) {
+      this._unmount();
+    }
+    this._readerJs = new Reader(node, this._createContext(node, isScrollMode));
     this._node = node;
-    this._isMounted = true;
-    this.setDebugMode(process.env.NODE_ENV === 'development');
+    this._setDebugMode(process.env.NODE_ENV === 'development');
   }
 
-  unmount() {
+  _unmount() {
     try {
-      this.readerJs.unmount();
+      this._readerJs.unmount();
     } catch (e) {
       /* ignore */
     }
-    this.readerJs = null;
+    this._readerJs = null;
     this._node = null;
-    this._isMounted = false;
   }
 
   // TODO maxSelectionLength as configuration
@@ -68,12 +79,8 @@ class ReaderJsHelper {
     return new Context(width, height, columnGap, false, isScrollMode, maxSelectionLength);
   }
 
-  invalidateContext(isScrollMode) {
-    this.readerJs.changeContext(this._createContext(isScrollMode));
-  }
-
-  setDebugMode(debugMode = false) {
-    this.readerJs.debugNodeLocation = debugMode;
+  _setDebugMode(debugMode = false) {
+    this._readerJs.debugNodeLocation = debugMode;
   }
 
   getOffsetFromNodeLocation(location) {

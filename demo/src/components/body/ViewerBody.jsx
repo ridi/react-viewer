@@ -20,7 +20,7 @@ import {
   setAnnotations,
   updateAnnotation, removeAnnotation, setContextMenu,
 } from '../../redux/Viewer.action';
-import { screenWidth } from '../../utils/BrowserWrapper';
+import { screenHeight, screenWidth } from '../../utils/BrowserWrapper';
 import Cache from '../../utils/Cache';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
@@ -29,8 +29,11 @@ import { RectsUtil } from '../../../../src/util/SelectionUtil';
 class ViewerBody extends React.Component {
   constructor(props) {
     super(props);
-    this.readerCache = new Cache(props.contentMeta.id);
-    this.annotationCache = new Cache(props.contentMeta.id, id => `${id}`);
+    this.readerCache = new Cache(
+      props.contentMeta.id,
+      key => `${key}_${screenWidth()}x${screenHeight()}_${Connector.setting.getSetting().viewType}`,
+    );
+    this.annotationCache = new Cache(props.contentMeta.id);
 
     this.onReaderTouched = this.onReaderTouched.bind(this);
     this.onReaderLoaded = this.onReaderLoaded.bind(this);
@@ -57,7 +60,6 @@ class ViewerBody extends React.Component {
       actionRequestLoadContent,
       actionSetAnnotations,
     } = this.props;
-    this.readerCache = new Cache(contentMeta.id);
     const readerState = this.readerCache.get();
     if (readerState) {
       actionLoad(readerState);
@@ -79,7 +81,7 @@ class ViewerBody extends React.Component {
     const currentState = Connector.core.getReaderState();
     this.readerCache.set(currentState);
 
-    this.annotationCache.set(annotations.map(({ rects, ...others }) => others));
+    this.annotationCache.set(annotations);
 
     actionUnload();
   }
@@ -207,9 +209,7 @@ class ViewerBody extends React.Component {
           annotations={annotations}
           onSelectionChanged={this.onReaderSelectionChanged}
           onAnnotationTouched={this.onReaderAnnotationTouched}
-        >
-          {this.renderPageButtons()}
-        </Reader>
+        />
         { this.renderContextMenu() }
       </>
     );

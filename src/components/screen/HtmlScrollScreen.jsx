@@ -130,7 +130,7 @@ class HtmlScrollScreen extends BaseScreen {
         StyledContent={StyledContent}
         onContentMount={this.onContentMount}
       >
-        {(annotationable || selectable) && (
+        {(annotationable || selectable) && isCurrentContent && (
           <WithSelection
             annotationable={annotationable}
             selectable={selectable}

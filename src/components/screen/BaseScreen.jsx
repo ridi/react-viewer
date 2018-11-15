@@ -33,9 +33,6 @@ export default class BaseScreen extends React.Component {
     if (isReadyToRead && !disableCalculation) {
       Connector.current.restoreCurrentOffset();
     }
-    // this.moveToOffset();
-    Connector.current.setReaderJs();
-
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {
         Connector.calculations.invalidate();
@@ -54,13 +51,9 @@ export default class BaseScreen extends React.Component {
       || prevCurrent.viewType !== current.viewType);
     const isNeededRestore = hasJustCalculatedCurrent;
     const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
-    const isNeededUpdateReaderJs = (!prevIsReadyToRead && isReadyToRead)
-      || prevCurrent.contentIndex !== current.contentIndex
-      || prevCurrent.viewType !== current.viewType;
 
     if (isNeededRestore) Connector.current.restoreCurrentOffset();
     if (isNeededMoveToOffset) this.moveToOffset();
-    if (isNeededUpdateReaderJs) Connector.current.setReaderJs();
   }
 
   componentWillUnmount() {
@@ -90,7 +83,7 @@ export default class BaseScreen extends React.Component {
   onContentMount(index) {
     const { current } = this.props;
     if (index === current.contentIndex) {
-      Connector.current.setReaderJs();
+      // Connector.current.setReaderJs();
     }
   }
 

@@ -5,7 +5,6 @@ import {
   updateFooterCalculation,
   updateContentCalculation,
   setReadyToRead,
-  updateAnnotationCalculation,
 } from '../../redux/action';
 import {
   selectReaderFooterCalculations,
@@ -196,12 +195,13 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getAnnotationCalculation(annotation) {
+    // FIXME 이 부분이 readerJS가 아직 update 되기 전에 불려서 문제가 되기 떄문에, 임시로 매번 새로 계산하도록 해 놓았음.
     const calculatedAnnotations = selectReaderAnnotationCalculations(this.getState());
     if (calculatedAnnotations[annotation.id]) {
       return calculatedAnnotations[annotation.id];
     }
     const calculation = { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) };
-    this.dispatch(updateAnnotationCalculation(annotation.id, calculation));
+    // this.dispatch(updateAnnotationCalculation(annotation.id, calculation));
     return calculation;
   }
 }

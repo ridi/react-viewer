@@ -13,10 +13,6 @@ class SelectionConnector extends BaseConnector {
   _selection = null;
   _selectionMode = SelectionMode.NORMAL;
 
-  get isAvailable() {
-    return ReaderJsHelper.isMounted;
-  }
-
   get isSelecting() {
     return this._isSelecting;
   }
@@ -38,12 +34,16 @@ class SelectionConnector extends BaseConnector {
   _getContentRelativeRects(rects) {
     const { viewType } = Connector.setting.getSetting();
     const isScroll = viewType === ViewType.SCROLL;
-    return new RectsUtil(rects.toAbsolute(ReaderJsHelper.node))
+
+    const result = new RectsUtil(rects.toAbsolute(ReaderJsHelper.node))
       .translateX(SELECTION_LAYER_EXPANDED_WIDTH)
       .translateY(SELECTION_LAYER_EXPANDED_WIDTH)
+      .translateX(isScroll ? 0 : ReaderJsHelper.node.parentNode.scrollLeft)
       .translateX(isScroll ? -Connector.setting.getContainerHorizontalMargin() : 0)
       .translateY(isScroll ? 0 : -Connector.setting.getContainerVerticalMargin())
       .getRects();
+    console.log(ReaderJsHelper.node, ReaderJsHelper.node.isConnected, isScroll, rects, result);
+    return result;
   }
 
   _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
@@ -65,6 +65,7 @@ class SelectionConnector extends BaseConnector {
       contentIndex,
     };
     this._selectionMode = selectionMode;
+    console.log(this._selection, this._selectionMode);
     this.dispatch(updateSelection(this._selection));
   }
 
