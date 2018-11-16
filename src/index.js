@@ -1,7 +1,7 @@
 import Reader from './components/Reader';
 import reducers from './redux/reducer';
 import Connector from './service/connector';
-import ContentHelper from './service/readerjs/ContentHelper';
+import ReaderJsHelper from './service/readerjs/ReaderJsHelper';
 
 export * from './redux/action';
 export * from './redux/selector';
@@ -11,7 +11,7 @@ export * from './constants/SelectionConstants';
 export {
   reducers,
   Connector,
-  ContentHelper,
+  ReaderJsHelper,
 };
 
 export default Reader;

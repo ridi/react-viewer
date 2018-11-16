@@ -193,7 +193,10 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getAnnotationCalculation(annotation) {
-    return { rects: SelectionConnector.getRectsFromSerializedRange(annotation.serializedRange) };
+    console.log('getAnnotationCalculation', annotation);
+    return {
+      rects: SelectionConnector.getRectsFromSerializedRange(annotation.contentIndex, annotation.serializedRange),
+    };
   }
 }
 

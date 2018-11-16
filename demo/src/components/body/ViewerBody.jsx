@@ -9,8 +9,8 @@ import Reader, {
   load,
   unload,
   SelectionMode,
-  ContentHelper,
   selectReaderIsReadyToRead,
+  ReaderJsHelper,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
@@ -24,7 +24,6 @@ import { screenHeight, screenWidth } from '../../utils/BrowserWrapper';
 import Cache from '../../utils/Cache';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
-import { RectsUtil } from '../../../../src/util/SelectionUtil';
 
 class ViewerBody extends React.Component {
   constructor(props) {
@@ -87,7 +86,7 @@ class ViewerBody extends React.Component {
   }
 
   onReaderTouched(event) {
-    const link = ContentHelper.getLinkFromElement(event.detail.target);
+    const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
     if (link) {
       // TODO go to...
       return;
@@ -169,23 +168,14 @@ class ViewerBody extends React.Component {
   }
 
   renderContextMenu() {
-    const { currentContentIndex } = this.props;
-    const { viewType } = this.props.setting;
     const { isVisible, target } = this.props.contextMenu;
     if (!isVisible) return null;
 
     const lastRect = target.rects.length > 0 ? target.rects[target.rects.length - 1] : null;
-    const position = new RectsUtil([lastRect])
-      .translateX(lastRect.width)
-      .translateX(Connector.setting.getContainerHorizontalMargin())
-      .translateY(lastRect.height)
-      .translateY(Connector.setting.getContainerVerticalMargin())
-      .translateY(viewType === ViewType.SCROLL ? Connector.calculations.getStartOffset(currentContentIndex) : 0)
-      .getRects()[0];
     return (
       <SelectionContextMenu
-        top={position.top}
-        left={position.left}
+        top={lastRect.top + lastRect.height}
+        left={lastRect.left + lastRect.width}
         targetItem={target}
         onClickItem={this.onContentMenuItemClicked}
       />

@@ -52,16 +52,17 @@ export default class BaseScreen extends React.Component {
     return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType);
   }
 
-  static needAnnotationRender(viewType, selection) {
+  static needAnnotationRender(viewType, annotation) {
+    if (!Connector.calculations.isContentCalculated(annotation.contentIndex)) return false;
     // todo temporary code: Force to set annotation recalculation time
     if (viewType === ViewType.SCROLL) {
       const { offset } = Connector.current.getCurrent();
       const [top, height] = [offset, screenHeight()];
       const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
-      return contentIndexesInScreen.includes(selection.contentIndex);
+      return contentIndexesInScreen.includes(annotation.contentIndex);
     }
     const { contentIndex } = Connector.current.getCurrent();
-    return contentIndex === selection.contentIndex;
+    return contentIndex === annotation.contentIndex;
   }
 
   static recalculateAnnotations(annotations, viewType) {

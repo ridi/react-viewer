@@ -2,19 +2,26 @@ import { Context, Reader, Util } from '@ridi/reader.js/web';
 import { isExist } from '../../util/Util';
 import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
 import {
+  CONTENT_WRAPPER,
   EMPTY_READ_LOCATION,
-  READERJS_CONTENT_WRAPPER,
   ViewType,
 } from '../../constants/SettingConstants';
 import Connector from '../connector';
+import SettingConnector from '../connector/SettingConnector';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
-const getCurrentContentNode = () => document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
-
-class ReaderJsHelper {
+class ReaderJsWrapper {
   _readerJs = null;
   _node = null;
+  _contentIndex = null;
+
+  constructor(contentIndex) {
+    if (!isExist(contentIndex)) {
+      throw new Error('ReaderJs initialization needs `contentIndex`.');
+    }
+    this._contentIndex = contentIndex;
+  }
 
   get readerJs() {
     if (this._isValid()) {
@@ -22,12 +29,13 @@ class ReaderJsHelper {
     }
 
     const { viewType } = Connector.setting.getSetting();
-    const node = getCurrentContentNode();
+    const node = this._getContentNode();
+    console.log(this._contentIndex, node);
     if (node) {
       this._mount(node, viewType === ViewType.SCROLL);
     }
     if (!this._readerJs) {
-      throw new Error('Readerjs was not able to initialized.');
+      throw new Error('ReaderJs was not able to initialized.');
     }
     return this._readerJs;
   }
@@ -44,13 +52,17 @@ class ReaderJsHelper {
     return this.readerJs.context;
   }
 
+  _getContentNode() {
+    return document.querySelector(`#${SettingConnector.getChapterId(this._contentIndex)} ${CONTENT_WRAPPER}`);
+  }
+
   _isValid() {
     const { viewType } = Connector.setting.getSetting();
     if (this._readerJs) {
       return ((viewType === ViewType.SCROLL) === this._readerJs.context.isScrollMode)
         && this._node
         && this._node.isConnected
-        && this._node === getCurrentContentNode();
+        && this._node === this._getContentNode();
     }
     return false;
   }
@@ -96,6 +108,24 @@ class ReaderJsHelper {
   getNodeLocationOfCurrentPage() {
     return this.readerJs.getNodeLocationOfCurrentPage(DETECTION_TYPE);
   }
+
+  getRectsFromSerializedRange(serializedRange) {
+    return this.readerJs.getRectsFromSerializedRange(serializedRange);
+  }
 }
 
-export default new ReaderJsHelper();
+export default class ReaderJsHelper {
+  static _readerJs = {}; // [content_index] : [ReaderJsWrapper instance]
+
+  static get(contentIndex) {
+    if (!this._readerJs[contentIndex]) {
+      this._readerJs[contentIndex] = new ReaderJsWrapper(contentIndex);
+    }
+    return this._readerJs[contentIndex];
+  }
+
+  static getCurrent() {
+    const { contentIndex } = Connector.current.getCurrent();
+    return ReaderJsHelper.get(contentIndex);
+  }
+}

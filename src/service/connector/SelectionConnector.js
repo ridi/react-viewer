@@ -31,9 +31,9 @@ class SelectionConnector extends BaseConnector {
 
   _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
     const { contentIndex } = Connector.current.getCurrent();
-    const text = ReaderJsHelper.sel.getText();
-    const rects = ReaderJsHelper.sel.getRects();
-    const serializedRange = ReaderJsHelper.sel.getRange().toSerializedString();
+    const text = ReaderJsHelper.getCurrent().sel.getText();
+    const rects = ReaderJsHelper.getCurrent().sel.getRects();
+    const serializedRange = ReaderJsHelper.getCurrent().sel.getRange().toSerializedString();
 
     let selectionMode = selectionModeForced;
     if (selectionMode === SelectionMode.NORMAL) {
@@ -57,7 +57,7 @@ class SelectionConnector extends BaseConnector {
 
   start(x, y) {
     this.end();
-    if (ReaderJsHelper.sel.start(x, y)) {
+    if (ReaderJsHelper.getCurrent().sel.start(x, y)) {
       this._isSelecting = true;
       this._cacheSelection();
       return true;
@@ -73,7 +73,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoUpper(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (ReaderJsHelper.sel.expandIntoUpper(x, y)) {
+      if (ReaderJsHelper.getCurrent().sel.expandIntoUpper(x, y)) {
         this._cacheSelection(selectionModeForced);
         return true;
       }
@@ -83,7 +83,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoLower(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (ReaderJsHelper.sel.expandIntoLower(x, y)) {
+      if (ReaderJsHelper.getCurrent().sel.expandIntoLower(x, y)) {
         this._cacheSelection(selectionModeForced);
         return true;
       }
@@ -91,12 +91,14 @@ class SelectionConnector extends BaseConnector {
     return false;
   }
 
-  getRectsFromSerializedRange(serializedRange) {
+  getRectsFromSerializedRange(contentIndex, serializedRange) {
+    let readerJs;
     try {
-      const rects = ReaderJsHelper.readerJs.getRectsFromSerializedRange(serializedRange);
+      readerJs = ReaderJsHelper.get(contentIndex);
+      const rects = readerJs.getRectsFromSerializedRange(serializedRange);
       return new RectsUtil(rects).toAbsolute().getObject();
     } catch (e) {
-      console.warn(e);
+      console.warn(readerJs, contentIndex, serializedRange, e);
       return [];
     }
   }

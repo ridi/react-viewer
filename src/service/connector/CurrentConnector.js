@@ -23,7 +23,7 @@ class CurrentConnector extends BaseConnector {
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     let location = EMPTY_READ_LOCATION;
     try {
-      location = ReaderJsHelper.getNodeLocationOfCurrentPage();
+      location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
     } catch (e) {
       // ignore error
       console.warn(e);
