@@ -30,7 +30,7 @@ import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 
@@ -129,7 +129,6 @@ class HtmlScrollScreen extends BaseScreen {
 
     return (
       <ScrollHtmlContent
-        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
         isCalculated={isCalculated}

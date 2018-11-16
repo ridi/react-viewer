@@ -27,7 +27,7 @@ import ImageContent from '../content/ImageContent';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -134,7 +134,6 @@ class ImageScrollScreen extends BaseScreen {
 
     return (
       <StyledImageScrollContent
-        className={READERJS_CONTENT_WRAPPER}
         setting={setting}
         innerRef={this.wrapper}
         height="auto"

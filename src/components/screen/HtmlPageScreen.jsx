@@ -17,7 +17,7 @@ import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 
 class HtmlPageScreen extends BaseScreen {
@@ -102,7 +102,6 @@ class HtmlPageScreen extends BaseScreen {
 
     return (
       <PageHtmlContent
-        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
         isCalculated={isCalculated}

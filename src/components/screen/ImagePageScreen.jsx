@@ -26,7 +26,7 @@ import { makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 
 class ImagePageScreen extends BaseScreen {
@@ -126,7 +126,6 @@ class ImagePageScreen extends BaseScreen {
     const { columnsInPage } = this.props.setting;
     return (
       <StyledImagePageContent
-        className={READERJS_CONTENT_WRAPPER}
         setting={this.props.setting}
         innerRef={this.container}
         width={`${screenWidth()}px`}
