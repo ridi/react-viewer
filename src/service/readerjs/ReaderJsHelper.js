@@ -1,9 +1,12 @@
 import { Context, Reader, Util } from '@ridi/reader.js/web';
 import { isExist } from '../../util/Util';
 import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
-import { EMPTY_READ_LOCATION, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import {
+  EMPTY_READ_LOCATION,
+  READERJS_CONTENT_WRAPPER,
+  ViewType,
+} from '../../constants/SettingConstants';
 import Connector from '../connector';
-import { RectsUtil } from '../../util/SelectionUtil';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
@@ -26,7 +29,6 @@ class ReaderJsHelper {
     if (!this._readerJs) {
       throw new Error('Readerjs was not able to initialized.');
     }
-    console.log(this._node, this._readerJs.context.isScrollMode);
     return this._readerJs;
   }
 
@@ -36,6 +38,10 @@ class ReaderJsHelper {
 
   get content() {
     return this.readerJs.content;
+  }
+
+  get context() {
+    return this.readerJs.context;
   }
 
   _isValid() {
@@ -89,20 +95,6 @@ class ReaderJsHelper {
 
   getNodeLocationOfCurrentPage() {
     return this.readerJs.getNodeLocationOfCurrentPage(DETECTION_TYPE);
-  }
-
-  getContentRelativeRects(rects) {
-    const { viewType } = Connector.setting.getSetting();
-    const isScroll = viewType === ViewType.SCROLL;
-
-    // todo check result value
-    const result = new RectsUtil(rects.toAbsolute(this.content.wrapper))
-      .translateX(isScroll ? 0 : Connector.setting.getContainerHorizontalMargin() * 2)
-      // .translateY(isScroll ? Connector.setting.getContainerVerticalMargin() + (Connector.setting.getScrollingContentGap() / 2) : 0)
-      .translateY(isScroll ? this.content.wrapper.parentNode.offsetTop + (Connector.setting.getScrollingContentGap() / 2) : 0)
-      .getRects();
-    // console.log(this.content.wrapper, this.content.wrapper.isConnected, isScroll, rects, result);
-    return result;
   }
 }
 

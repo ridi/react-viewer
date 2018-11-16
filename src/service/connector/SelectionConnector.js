@@ -4,6 +4,7 @@ import { DefaultSelectionStyle, SelectionMode } from '../../constants/SelectionC
 import { wordCount } from '../../util/Util';
 import BaseConnector from './BaseConnector';
 import { updateSelection } from '../../redux/action';
+import { RectsUtil } from '../../util/SelectionUtil';
 
 class SelectionConnector extends BaseConnector {
   _isSelecting = false;
@@ -40,14 +41,13 @@ class SelectionConnector extends BaseConnector {
     }
     this._selection = {
       serializedRange,
-      rects: ReaderJsHelper.getContentRelativeRects(rects),
+      rects: new RectsUtil(rects).toAbsolute().getObject(),
       text,
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
       style: DefaultSelectionStyle[selectionMode],
       contentIndex,
     };
     this._selectionMode = selectionMode;
-    console.log(this._selection, this._selectionMode);
     this.dispatch(updateSelection(this._selection));
   }
 
@@ -94,7 +94,7 @@ class SelectionConnector extends BaseConnector {
   getRectsFromSerializedRange(serializedRange) {
     try {
       const rects = ReaderJsHelper.readerJs.getRectsFromSerializedRange(serializedRange);
-      return ReaderJsHelper.getContentRelativeRects(rects);
+      return new RectsUtil(rects).toAbsolute().getObject();
     } catch (e) {
       console.warn(e);
       return [];
