@@ -30,7 +30,6 @@ class ReaderJsWrapper {
 
     const { viewType } = Connector.setting.getSetting();
     const node = this._getContentNode();
-    console.log(this._contentIndex, node);
     if (node) {
       this._mount(node, viewType === ViewType.SCROLL);
     }

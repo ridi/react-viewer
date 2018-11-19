@@ -98,7 +98,7 @@ class SelectionConnector extends BaseConnector {
       const rects = readerJs.getRectsFromSerializedRange(serializedRange);
       return new RectsUtil(rects).toAbsolute().getObject();
     } catch (e) {
-      console.warn(readerJs, contentIndex, serializedRange, e);
+      console.warn(e);
       return [];
     }
   }
