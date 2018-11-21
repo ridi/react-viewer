@@ -7,28 +7,19 @@ import {
 import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import ReaderJsHelper from '../readerjs/ReaderJsHelper';
-import { EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends BaseConnector {
   getCurrent() {
     return selectReaderCurrent(this.getState());
   }
 
-  updateCurrentOffset(offset) {
-    const { viewType } = selectReaderSetting(this.getState());
-    const contentIndex = CalculationsConnector.getIndexAtOffset(offset);
-
-    const total = CalculationsConnector.getContentTotal(contentIndex);
-    const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
-    let location = EMPTY_READ_LOCATION;
-    try {
-      location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
-    } catch (e) {
-      // ignore error
-      console.warn(e);
-    }
-
+  updateCurrentOffset({
+    contentIndex,
+    offset,
+    position,
+    viewType,
+    location,
+  }) {
     this.dispatch(updateCurrent({
       contentIndex,
       offset,

@@ -13,6 +13,11 @@ export const screenHeight = cached('screenHeight', () => Window.innerHeight);
 
 addEventListener(Window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
 
+export const scrollLeft = () => {
+  if (Document.scrollingElement) return Document.scrollingElement.scrollLeft;
+  return Document.documentElement.scrollLeft || Document.body.scrollLeft;
+};
+
 export const scrollTop = () => {
   if (Document.scrollingElement) return Document.scrollingElement.scrollTop;
   return Document.documentElement.scrollTop || Document.body.scrollTop;

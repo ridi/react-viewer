@@ -1,6 +1,4 @@
-import EventBus from '../event/EventBus';
-import { LOADED, UNLOADED } from '../event/CoreEvents';
-import { META_SET, WITH_CONTENT, CONTENT_LOADED } from '../event/ContentEvents';
+import EventBus, { Events } from '../event';
 import BaseService from './BaseService';
 
 const contentMeta = [
@@ -14,8 +12,8 @@ const contentMeta = [
 
 class ContentService extends BaseService {
   listeningEvents = {
-    [LOADED]: this.appLoaded.bind(this),
-    [UNLOADED]: this.appUnloaded.bind(this),
+    [Events.core.LOADED]: this.appLoaded.bind(this),
+    [Events.core.UNLOADED]: this.appUnloaded.bind(this),
   };
 
   _loadAllContents(contentMeta) {
@@ -29,10 +27,10 @@ class ContentService extends BaseService {
   }
 
   async appLoaded() {
-    EventBus.emit(META_SET, contentMeta);
+    EventBus.emit(Events.content.META_SET, contentMeta);
     const contents = await this._loadAllContents(contentMeta);
-    EventBus.emit(WITH_CONTENT, contents);
-    EventBus.emit(CONTENT_LOADED, { contentNumber: contents.length });
+    EventBus.emit(Events.content.WITH_CONTENT, contents);
+    EventBus.emit(Events.content.CONTENT_LOADED, { contentNumber: contents.length });
   }
 
   appUnloaded(appUnloaded) {

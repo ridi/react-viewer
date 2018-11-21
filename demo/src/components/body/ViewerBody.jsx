@@ -183,7 +183,7 @@ class ViewerBody extends React.Component {
   }
 
   render() {
-    const { onScrolled, annotations } = this.props;
+    const { annotations } = this.props;
     return (
       <>
         <Reader
@@ -192,7 +192,6 @@ class ViewerBody extends React.Component {
           onMount={this.onReaderLoaded}
           onUnmount={this.onReaderUnloaded}
           onTouched={this.onReaderTouched}
-          onScrolled={onScrolled}
           selectable
           annotationable
           annotations={annotations}
@@ -208,7 +207,6 @@ class ViewerBody extends React.Component {
 ViewerBody.propTypes = {
   contentMeta: PropTypes.object.isRequired,
   onTouched: PropTypes.func.isRequired,
-  onScrolled: PropTypes.func.isRequired,
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   actionRequestLoadContent: PropTypes.func.isRequired,
   setting: PropTypes.object.isRequired,

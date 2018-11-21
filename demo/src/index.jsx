@@ -11,6 +11,8 @@ import {
   Service,
   selectReaderCurrentOffset,
   selectReaderCalculationsTotal,
+  EventBus,
+  Events,
 } from '@ridi/react-viewer';
 import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
@@ -46,7 +48,7 @@ class DemoViewer extends React.Component {
   constructor(props) {
     super(props);
     this.cache = null;
-    this.onScrolled = this.onScrolled.bind(this);
+    EventBus.on(Events.core.SCROLL, this.onScrolled.bind(this));
     this.onTouched = this.onTouched.bind(this);
   }
 
@@ -115,7 +117,6 @@ class DemoViewer extends React.Component {
         <ViewerBody
           contentMeta={contentMeta}
           onTouched={this.onTouched}
-          onScrolled={this.onScrolled}
         />
         <ViewerFooter contentMeta={contentMeta} />
         <IconsSprite />

@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fromEvent, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, map } from 'rxjs/operators';
 import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
@@ -9,13 +11,10 @@ import Footer from '../footer/Footer';
 import {
   screenHeight,
   scrollTop,
+  scrollLeft,
   setScrollTop,
   waitThenRun,
 } from '../../util/BrowserWrapper';
-import {
-  addEventListener,
-  removeEventListener,
-} from '../../util/EventHandler';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
@@ -24,7 +23,6 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
-import { debounce } from '../../util/Util';
 import Connector from '../../service/connector';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -33,6 +31,7 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
+import EventBus, { Events } from '../../event';
 
 class HtmlScrollScreen extends BaseScreen {
   static defaultProps = {
@@ -48,7 +47,6 @@ class HtmlScrollScreen extends BaseScreen {
     actionUpdateContentError: PropTypes.func.isRequired,
     footerCalculations: FooterCalculationsType.isRequired,
     contentFooter: PropTypes.node,
-    onScrolled: PropTypes.func.isRequired,
     ignoreScroll: PropTypes.bool.isRequired,
   };
 
@@ -60,20 +58,19 @@ class HtmlScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
-    this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL).pipe(
+      debounce(() => timer(DOMEventDelayConstants.SCROLL)),
+      map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
+      distinctUntilChanged(),
+    ).subscribe(data => EventBus.emit(Events.core.SCROLL, data));
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
-  }
-
-  onScrollHandle(e) {
-    const { ignoreScroll, onScrolled, isReadyToRead } = this.props;
-    if (ignoreScroll || !isReadyToRead) return;
-    onScrolled(e);
-    Connector.current.updateCurrentOffset(scrollTop());
+    if (this.scrollEventSubscription) {
+      this.scrollEventSubscription.unsubscribe();
+      this.scrollEventSubscription = null;
+    }
   }
 
   calculate(index, node) {

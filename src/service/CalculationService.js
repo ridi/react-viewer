@@ -1,7 +1,5 @@
-import EventBus from '../event/EventBus';
 import BaseService from './BaseService';
-import { RESIZE, SCROLL } from '../event/CoreEvents';
-import { CALCULATION_INVALIDATE } from '../event/CalculationEvents';
+import EventBus, { Events } from '../event';
 import Connector from './connector';
 import { EMPTY_READ_LOCATION } from '../constants/SettingConstants';
 import CalculationsConnector from './connector/CalculationsConnector';
@@ -14,11 +12,11 @@ class CalculationService extends BaseService {
     // [RESIZE]: this.calculationNeeded.bind(this),
     // [CONTENT_LOADED]: this.calculationNeeded.bind(this),
     // [CALCULATION_INVALIDATE]: this.calculationStart.bind(this),
-    [SCROLL]: this.onScrolled.bind(this),
+    [Events.core.SCROLL]: this.onScrolled.bind(this),
   };
 
   calculationNeeded({ contentNumber }) {
-    EventBus.emit(CALCULATION_INVALIDATE, contentNumber);
+    EventBus.emit(Events.calculation.CALCULATION_INVALIDATE, contentNumber);
   }
 
   async calculationStart() {

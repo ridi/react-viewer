@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fromEvent, timer } from 'rxjs';
+import { debounce, distinctUntilChanged, map } from 'rxjs/operators';
 import {
   selectReaderContents,
   selectReaderContentsCalculations,
@@ -7,20 +9,19 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import {
+  scrollLeft,
   scrollTop,
   setScrollTop,
   waitThenRun,
 } from '../../util/BrowserWrapper';
 import {
   addEventListener,
-  removeEventListener,
 } from '../../util/EventHandler';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
-import { debounce } from '../../util/Util';
 import Footer from '../footer/Footer';
 import Connector from '../../service/connector';
 import ImageContent from '../content/ImageContent';
@@ -31,6 +32,7 @@ import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import EventBus, { Events } from '../../event';
 
 class ImageScrollScreen extends BaseScreen {
   constructor(props) {
@@ -41,8 +43,11 @@ class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
-    this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL).pipe(
+      debounce(() => timer(DOMEventDelayConstants.SCROLL)),
+      map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
+      distinctUntilChanged(),
+    ).subscribe(data => EventBus.emit(Events.core.SCROLL, data));
 
     if (!this.listener) {
       const { current } = this.wrapper;
@@ -56,17 +61,10 @@ class ImageScrollScreen extends BaseScreen {
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
-  }
-
-  onScrollHandle(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const { ignoreScroll, onScrolled, isReadyToRead } = this.props;
-    if (ignoreScroll || !isReadyToRead) return;
-    onScrolled(e);
-    Connector.current.updateCurrentOffset(scrollTop());
+    if (this.scrollEventSubscription) {
+      this.scrollEventSubscription.unsubscribe();
+      this.scrollEventSubscription = null;
+    }
   }
 
   calculate(index, node) {
@@ -161,7 +159,6 @@ ImageScrollScreen.propTypes = {
   actionUpdateContentError: PropTypes.func.isRequired,
   footerCalculations: FooterCalculationsType.isRequired,
   contentFooter: PropTypes.node,
-  onScrolled: PropTypes.func.isRequired,
   ignoreScroll: PropTypes.bool.isRequired,
 };
 

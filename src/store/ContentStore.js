@@ -1,6 +1,6 @@
 import { merge } from 'rxjs';
 import { scan, map } from 'rxjs/operators';
-import { WITH_CONTENT, META_SET, WITH_CONTENTS } from '../event/ContentEvents';
+import { Events } from '../event';
 import StoreBuilder from '../util/StoreBuilder';
 
 /**
@@ -57,12 +57,12 @@ class CollectionStore {
 }
 
 export const contentMeta$ = new StoreBuilder([])
-  .fromEvent(META_SET)
+  .fromEvent(Events.content.META_SET)
   .build();
 
 export const contents$ = new StoreBuilder([])
-  .fromEvent(WITH_CONTENT)
-  .fromEvent(WITH_CONTENTS)
+  .fromEvent(Events.content.WITH_CONTENT)
+  .fromEvent(Events.content.WITH_CONTENTS)
   .build();
 
 export const content$ = (index) => contents$.pipe(

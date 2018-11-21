@@ -1,6 +1,5 @@
 import ContentService from './ContentService';
-import EventBus from '../event/EventBus';
-import { LOADED, UNLOADED } from '../event/CoreEvents';
+import EventBus, { Events } from '../event';
 import CalculationService from './CalculationService';
 
 const services = [
@@ -12,7 +11,7 @@ export const unloadAll = () => {
   services.forEach(service => service.beforeUnloaded());
   services.forEach(service => service.unload());
 
-  EventBus.emit(UNLOADED);
+  EventBus.emit(Events.core.UNLOADED);
 };
 
 export const loadAll = () => {
@@ -20,7 +19,7 @@ export const loadAll = () => {
   services.forEach(service => service.afterLoaded());
   window.addEventListener('beforeunload', unloadAll);
 
-  EventBus.emit(LOADED);
+  EventBus.emit(Events.core.LOADED);
 };
 
 export default {
