@@ -31,9 +31,10 @@ class SelectionConnector extends BaseConnector {
 
   _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
     const { contentIndex } = Connector.current.getCurrent();
-    const text = ReaderJsHelper.getCurrent().sel.getText();
-    const rects = ReaderJsHelper.getCurrent().sel.getRects();
-    const serializedRange = ReaderJsHelper.getCurrent().sel.getRange().toSerializedString();
+    const readerJs = ReaderJsHelper.getCurrent();
+    const text = readerJs.sel.getText();
+    const rects = readerJs.sel.getRects();
+    const serializedRange = readerJs.sel.getRange().bind(readerJs).toSerializedString();
 
     let selectionMode = selectionModeForced;
     if (selectionMode === SelectionMode.NORMAL) {
