@@ -8,6 +8,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import {
   reducers as reader,
   Connector,
+  Service,
   selectReaderCurrentOffset,
   selectReaderCalculationsTotal,
 } from '@ridi/react-viewer';
@@ -39,6 +40,7 @@ const enhancer = composeWithDevTools(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, {}, enhancer);
 Connector.connect(store);
+Service.loadAll();
 
 class DemoViewer extends React.Component {
   constructor(props) {

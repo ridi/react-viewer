@@ -1,6 +1,7 @@
 import Reader from './components/Reader';
 import reducers from './redux/reducer';
 import Connector from './service/connector';
+import Service from './service';
 import ReaderJsHelper from './service/readerjs/ReaderJsHelper';
 
 export * from './redux/action';
@@ -12,6 +13,7 @@ export {
   reducers,
   Connector,
   ReaderJsHelper,
+  Service,
 };
 
 export default Reader;
