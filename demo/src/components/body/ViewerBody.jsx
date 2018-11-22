@@ -11,6 +11,8 @@ import Reader, {
   SelectionMode,
   selectReaderIsReadyToRead,
   ReaderJsHelper,
+  EventBus,
+  Events,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
@@ -18,7 +20,7 @@ import {
   requestLoadContent,
   addAnnotation,
   setAnnotations,
-  updateAnnotation, removeAnnotation, setContextMenu,
+  updateAnnotation, removeAnnotation, setContextMenu, onScreenScrolled,
 } from '../../redux/Viewer.action';
 import { screenHeight, screenWidth } from '../../utils/BrowserWrapper';
 import Cache from '../../utils/Cache';
@@ -34,12 +36,14 @@ class ViewerBody extends React.Component {
     );
     this.annotationCache = new Cache(props.contentMeta.id);
 
-    this.onReaderTouched = this.onReaderTouched.bind(this);
     this.onReaderLoaded = this.onReaderLoaded.bind(this);
     this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.onContentMenuItemClicked = this.onContentMenuItemClicked.bind(this);
     this.onReaderSelectionChanged = this.onReaderSelectionChanged.bind(this);
     this.onReaderAnnotationTouched = this.onReaderAnnotationTouched.bind(this);
+
+    EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this));
+    EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this));
 
     this.footer = <ViewerScreenFooter contentMeta={props.contentMeta} />;
     this.contentFooter = <small>content footer area...</small>;
@@ -83,6 +87,11 @@ class ViewerBody extends React.Component {
     this.annotationCache.set(annotations);
 
     actionUnload();
+  }
+
+  onReaderScrolled() {
+    const { actionOnScreenScrolled } = this.props;
+    actionOnScreenScrolled();
   }
 
   onReaderTouched(event) {
@@ -191,7 +200,6 @@ class ViewerBody extends React.Component {
           contentFooter={this.contentFooter}
           onMount={this.onReaderLoaded}
           onUnmount={this.onReaderUnloaded}
-          onTouched={this.onReaderTouched}
           selectable
           annotationable
           annotations={annotations}
@@ -220,6 +228,7 @@ ViewerBody.propTypes = {
   contextMenu: PropTypes.object.isRequired,
   actionSetContextMenu: PropTypes.func.isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
+  actionOnScreenScrolled: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -240,6 +249,7 @@ const mapDispatchToProps = dispatch => ({
   actionSetAnnotation: annotation => dispatch(updateAnnotation(annotation)),
   actionRemoveAnnotation: annotation => dispatch(removeAnnotation(annotation)),
   actionSetContextMenu: (isVisible, target) => dispatch(setContextMenu(isVisible, target)),
+  actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 
 export default connect(

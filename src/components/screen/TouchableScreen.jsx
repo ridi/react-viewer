@@ -11,18 +11,17 @@ import SelectionLayer from '../selection/SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { SelectionMode, SelectionParts } from '../..';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
+import EventBus, { Events } from '../../event';
 
 class TouchableScreen extends React.Component {
   static defaultProps = {
     forwardedRef: React.createRef(),
-    onTouched: null,
     children: null,
     total: null,
     StyledTouchable: () => {},
   };
 
   static propTypes = {
-    onTouched: PropTypes.func,
     children: PropTypes.node,
     forwardedRef: PropTypes.object,
     total: PropTypes.number,
@@ -94,7 +93,6 @@ class TouchableScreen extends React.Component {
       onSelectionChanged,
       onAnnotationTouched,
       annotations,
-      onTouched,
     } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
 
@@ -113,8 +111,8 @@ class TouchableScreen extends React.Component {
             });
           }
         }
-      } else if (isExist(onTouched)) {
-        onTouched(event);
+      } else {
+        EventBus.emit(Events.core.TOUCH, event);
       }
     } else if (selectable) {
       if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {

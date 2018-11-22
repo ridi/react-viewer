@@ -5,4 +5,5 @@ export const UNLOADED = Symbol('UNLOADED');
 
 
 export const RESIZE = Symbol('RESIZE');
-export const SCROLL = Symbol('SCROLL');
+export const SCROLL = Symbol('SCROLL'); // {scrollX, scrollY}
+export const TOUCH = Symbol('TOUCH'); // {position}

@@ -21,7 +21,6 @@ import { ViewType } from '../..';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
-    onTouched: null,
     onSelectionChanged: null,
     onAnnotationTouched: null,
     children: null,
@@ -37,7 +36,6 @@ export default class BaseScreen extends React.Component {
     calculationsTotal: PropTypes.number.isRequired,
     contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
     isReadyToRead: PropTypes.bool.isRequired,
-    onTouched: PropTypes.func,
     onSelectionChanged: PropTypes.func,
     onAnnotationTouched: PropTypes.func,
     children: PropTypes.node,
@@ -84,7 +82,6 @@ export default class BaseScreen extends React.Component {
     };
     this.onContentLoaded = this.onContentLoaded.bind(this);
     this.onContentError = this.onContentError.bind(this);
-    this.onTouchableScreenTouched = this.onTouchableScreenTouched.bind(this);
     this.onContentMount = this.onContentMount.bind(this);
   }
 
@@ -118,14 +115,6 @@ export default class BaseScreen extends React.Component {
 
   componentWillUnmount() {
     removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-  }
-
-  onTouchableScreenTouched(event) {
-    const { onTouched, isReadyToRead } = this.props;
-    if (!isReadyToRead) return;
-    if (isExist(onTouched)) {
-      onTouched(event);
-    }
   }
 
   onContentLoaded(index, content) {
@@ -177,7 +166,6 @@ export default class BaseScreen extends React.Component {
       <TouchableScreen
         ref={this.wrapper}
         total={calculationsTotal}
-        onTouched={this.onTouchableScreenTouched}
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}

@@ -48,7 +48,6 @@ class DemoViewer extends React.Component {
   constructor(props) {
     super(props);
     this.cache = null;
-    EventBus.on(Events.core.SCROLL, this.onScrolled.bind(this));
     this.onTouched = this.onTouched.bind(this);
   }
 
@@ -89,11 +88,6 @@ class DemoViewer extends React.Component {
     Connector.current.updateCurrentOffset(nextOffset);
   }
 
-  onScrolled() {
-    const { actionOnScreenScrolled } = this.props;
-    actionOnScreenScrolled();
-  }
-
   render() {
     const {
       contentMeta,
@@ -114,10 +108,7 @@ class DemoViewer extends React.Component {
         }}
       >
         <ViewerHeader contentMeta={contentMeta} />
-        <ViewerBody
-          contentMeta={contentMeta}
-          onTouched={this.onTouched}
-        />
+        <ViewerBody contentMeta={contentMeta} onTouched={this.onTouched} />
         <ViewerFooter contentMeta={contentMeta} />
         <IconsSprite />
       </section>
@@ -127,10 +118,9 @@ class DemoViewer extends React.Component {
 
 DemoViewer.propTypes = {
   contentMeta: PropTypes.object.isRequired,
-  actionOnScreenTouched: PropTypes.func.isRequired,
-  actionOnScreenScrolled: PropTypes.func.isRequired,
   currentOffset: PropTypes.number.isRequired,
   calculationsTotal: PropTypes.number.isRequired,
+  actionOnScreenTouched: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -141,13 +131,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   actionOnScreenTouched: () => dispatch(onScreenTouched()),
-  actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 
-const DemoViewerPage = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DemoViewer);
+const DemoViewerPage = connect(mapStateToProps, mapDispatchToProps)(DemoViewer);
 
 
 const { contents } = ContentsData;
