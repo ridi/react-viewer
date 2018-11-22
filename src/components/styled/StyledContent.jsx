@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import PropTypes from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 
@@ -85,7 +85,8 @@ export const StyledHtmlScrollContent = StyledBaseContent.extend`
 
   position: absolute;
   top: ${({ startOffset }) => `${startOffset !== PRE_CALCULATION ? startOffset : -999}px`};
-  padding-top: 25px; padding-bottom: 25px;
+  padding-top: ${() => Connector.setting.getScrollingContentGap() / 2}px;
+  padding-bottom: ${() => Connector.setting.getScrollingContentGap() / 2}px;
 `;
 
 export const StyledHtmlPageContent = StyledBaseContent.extend`

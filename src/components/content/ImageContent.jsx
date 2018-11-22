@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
+import BaseContent from './BaseContent';
 
-export default class ImageContent extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.wrapper = React.createRef();
-  }
-
+class ImageContent extends BaseContent {
   imageOnErrorHandler() {
     const { onContentError } = this.props;
     const { index, isContentOnError } = this.props.content;
@@ -44,15 +40,16 @@ export default class ImageContent extends React.PureComponent {
   }
 
   render() {
-    const { contentFooter } = this.props;
+    const { contentFooter, children } = this.props;
     const { isContentLoaded } = this.props.content;
     return (
       <section
-        ref={this.wrapper}
+        ref={this.props.forwardedRef}
         className={`comic_page ${isContentLoaded ? 'loaded' : ''} ${contentFooter ? 'has_content_footer' : ''}`}
       >
         {this.renderImage()}
         {contentFooter}
+        {children}
       </section>
     );
   }
@@ -60,6 +57,8 @@ export default class ImageContent extends React.PureComponent {
 
 ImageContent.defaultProps = {
   contentFooter: null,
+  forwardedRef: React.createRef(),
+  children: null,
 };
 
 ImageContent.propTypes = {
@@ -68,4 +67,8 @@ ImageContent.propTypes = {
   onContentLoaded: PropTypes.func,
   onContentError: PropTypes.func,
   contentFooter: PropTypes.node,
+  forwardedRef: PropTypes.any,
+  children: PropTypes.node,
 };
+
+export default React.forwardRef((props, ref) => <ImageContent forwardedRef={ref} {...props} />);

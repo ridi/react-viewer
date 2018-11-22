@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ViewType } from '@ridi/react-viewer';
 import ThemeSetting from './ThemeSetting';
 import ViewTypeSetting from './ViewTypeSetting';
 import FontSetting from './FontSetting';
 import NovelSpineSetting from './NovelSpineSetting';
 import ColumnSetting from './ColumnSetting';
-import { ViewType } from '../../../../lib';
 import { ViewerSpinType } from '../../constants/SettingConstants';
 import BaseSettingPopup, { mapStateToProps } from './BaseSettingPopup';
 
 class ViewerNovelSettingPopup extends BaseSettingPopup {
   renderSettings() {
-    const { content, setting } = this.props;
+    const { contentMeta, setting } = this.props;
     return (
       <ul className="setting_group">
         <ThemeSetting
@@ -20,7 +20,7 @@ class ViewerNovelSettingPopup extends BaseSettingPopup {
         />
         <ViewTypeSetting
           onChanged={viewType => this.onSettingChanged({ viewType })}
-          contentViewType={content.viewType}
+          contentViewType={contentMeta.viewType}
         />
         { setting.viewType === ViewType.PAGE
           ? <ColumnSetting onChanged={changedSetting => this.onSettingChanged(changedSetting)} /> : null }
@@ -39,7 +39,7 @@ class ViewerNovelSettingPopup extends BaseSettingPopup {
 }
 
 ViewerNovelSettingPopup.propTypes = {
-  content: PropTypes.object.isRequired,
+  contentMeta: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps)(ViewerNovelSettingPopup);

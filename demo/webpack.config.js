@@ -1,13 +1,14 @@
+const path = require('path');
 
 module.exports = {
   context: __dirname,
   entry: {
-    index: `${__dirname}/src/index.jsx`,
+    index: path.join(__dirname, 'src/index.jsx'),
     bundleLoader: [
       '@babel/polyfill',
       'url-search-params-polyfill',
       'whatwg-fetch',
-      `${__dirname}/src/bundleLoader.js`,
+      path.join(__dirname, 'src/bundleLoader.js'),
     ],
   },
   output: {
@@ -26,8 +27,8 @@ module.exports = {
             '@babel/preset-react',
           ],
           plugins: [
+            ['@babel/plugin-proposal-class-properties', { loose: false }],
             ['@babel/plugin-transform-classes', { loose: true }],
-            ['@babel/plugin-proposal-class-properties'],
             ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
             ['@babel/plugin-transform-react-jsx'],
             ['@babel/plugin-transform-proto-to-assign'],
@@ -38,6 +39,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      '@ridi/react-viewer': path.join(__dirname, '../lib'),
+    },
   },
   mode: 'production',
 };

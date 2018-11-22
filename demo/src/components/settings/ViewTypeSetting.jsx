@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting, ViewType } from '../../../../lib';
+import { selectReaderSetting, ViewType } from '@ridi/react-viewer';
 import SvgIcons from '../icons/SvgIcons';
 import { AvailableViewType } from '../../constants/ContentConstants';
 

@@ -1,4 +1,4 @@
-import { isExist } from '../Util';
+import { isExist } from '../../util/Util';
 
 class BaseConnector {
   constructor() {

@@ -2,6 +2,7 @@ import calculations from './CalculationsConnector';
 import setting from './SettingConnector';
 import current from './CurrentConnector';
 import BaseConnector from './BaseConnector';
+import selection from './SelectionConnector';
 import { selectReader, selectReaderIsAllCalculated, selectReaderIsLoaded } from '../../redux/selector';
 
 const core = new (class CoreConnector extends BaseConnector {
@@ -23,6 +24,7 @@ export const connect = (store) => {
   calculations.connect(store);
   setting.connect(store);
   current.connect(store);
+  selection.connect(store);
 };
 
 export default {
@@ -31,4 +33,5 @@ export default {
   calculations,
   setting,
   current,
+  selection,
 };

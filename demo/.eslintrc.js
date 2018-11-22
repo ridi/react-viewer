@@ -1,8 +1,26 @@
+const path = require('path');
 module.exports = {
   'extends': '@ridi',
+  'parser': 'babel-eslint',
+  'parserOptions': {
+    'ecmaVersion': 6,
+    'sourceType': 'module',
+    'ecmaFeatures': {
+      'jsx': true,
+      'modules': true,
+      'experimentalObjectRestSpread': true
+    }
+  },
   'env': {
     'browser': true,
     'node': true,
+  },
+  'settings': {
+    'import/resolver': {
+      webpack: {
+        config: path.join(__dirname, 'webpack.config.js'),
+      }
+    },
   },
   'rules': {
     'import/prefer-default-export': 0,

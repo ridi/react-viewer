@@ -9,10 +9,12 @@ import {
 import {
   scrollTop,
   setScrollTop,
-  addEventListener,
-  removeEventListener,
   waitThenRun,
 } from '../../util/BrowserWrapper';
+import {
+  addEventListener,
+  removeEventListener,
+} from '../../util/EventHandler';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -20,12 +22,12 @@ import BaseScreen, {
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
 import Footer from '../footer/Footer';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import ImageContent from '../content/ImageContent';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
@@ -132,7 +134,6 @@ class ImageScrollScreen extends BaseScreen {
 
     return (
       <StyledImageScrollContent
-        className={READERJS_CONTENT_WRAPPER}
         setting={setting}
         innerRef={this.wrapper}
         height="auto"

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import { screenHeight } from '../../util/BrowserWrapper';
 
 const StyledBaseTouchable = styled.div`
@@ -17,6 +17,8 @@ const StyledPageTouchable = StyledBaseTouchable.extend`
 `;
 
 export const StyledHtmlScrollTouchable = StyledScrollTouchable.extend`
+   position: relative;
+   overflow: hidden;
    min-height: calc(100vh + 100px);
    height: ${({ total }) => `${total + (Connector.setting.getContainerVerticalMargin() * 2)}px`};
 `;

@@ -19,14 +19,14 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 
 class ImagePageScreen extends BaseScreen {
@@ -39,7 +39,7 @@ class ImagePageScreen extends BaseScreen {
     const { contents } = this.props;
     const { columnsInPage, startWithBlankPage } = this.props.setting;
     Connector.calculations.setContentTotal(1, Math.ceil((contents.length + startWithBlankPage) / columnsInPage));
-    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.getHasFooter() ? 1 : 0);
+    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.hasFooter ? 1 : 0);
   }
 
   moveToOffset() {
@@ -126,7 +126,6 @@ class ImagePageScreen extends BaseScreen {
     const { columnsInPage } = this.props.setting;
     return (
       <StyledImagePageContent
-        className={READERJS_CONTENT_WRAPPER}
         setting={this.props.setting}
         innerRef={this.container}
         width={`${screenWidth()}px`}

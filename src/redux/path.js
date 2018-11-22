@@ -58,7 +58,7 @@ export const initialState = {
   calculations: {
     contents: [],
     footer: initialFooterCalculationsState(),
-    total: 0,
+    contentTotal: 0,
   },
   current: {
     contentIndex: 1,
@@ -68,6 +68,7 @@ export const initialState = {
     viewType: ViewType.SCROLL,
   },
   setting: initialSettingState(),
+  selection: null,
 };
 
 export default {
@@ -97,7 +98,7 @@ export default {
   columnsInPage: () => ['setting', 'columnsInPage'],
   columnGap: () => ['setting', 'columnGap'],
 
-  calculationsTotal: () => ['calculations', 'total'],
+  calculationsTotal: () => ['calculations', 'contentTotal'],
   contentsCalculations: () => ['calculations', 'contents'],
   contentsCalculation: index => ['calculations', 'contents', index - 1],
   isContentsCalculated: index => ['calculations', 'contents', index - 1, 'isCalculated'],
@@ -105,4 +106,6 @@ export default {
   footerCalculations: () => ['calculations', 'footer'],
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
+
+  selection: () => ['selection'],
 };

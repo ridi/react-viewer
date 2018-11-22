@@ -10,10 +10,12 @@ import {
   screenHeight,
   scrollTop,
   setScrollTop,
-  addEventListener,
-  removeEventListener,
   waitThenRun,
 } from '../../util/BrowserWrapper';
+import {
+  addEventListener,
+  removeEventListener,
+} from '../../util/EventHandler';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
@@ -23,16 +25,33 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
 import { debounce } from '../../util/Util';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 
 class HtmlScrollScreen extends BaseScreen {
+  static defaultProps = {
+    ...BaseScreen.defaultProps,
+    contentFooter: null,
+  };
+
+  static propTypes = {
+    ...BaseScreen.propTypes,
+    contentsCalculations: PropTypes.arrayOf(ContentCalculationsType),
+    calculationsTotal: PropTypes.number.isRequired,
+    actionUpdateContent: PropTypes.func.isRequired,
+    actionUpdateContentError: PropTypes.func.isRequired,
+    footerCalculations: FooterCalculationsType.isRequired,
+    contentFooter: PropTypes.node,
+    onScrolled: PropTypes.func.isRequired,
+    ignoreScroll: PropTypes.bool.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
@@ -70,6 +89,7 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   moveToOffset() {
+    super.moveToOffset();
     const { offset } = this.props.current;
     setScrollTop(offset);
   }
@@ -106,9 +126,9 @@ class HtmlScrollScreen extends BaseScreen {
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
+
     return (
       <ScrollHtmlContent
-        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
         isCalculated={isCalculated}
@@ -119,6 +139,7 @@ class HtmlScrollScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
+        onContentMount={this.onContentMount}
       />
     );
   }
@@ -132,23 +153,6 @@ class HtmlScrollScreen extends BaseScreen {
       .map(content => this.renderContent(content, StyledContent));
   }
 }
-
-HtmlScrollScreen.defaultProps = {
-  ...BaseScreen.defaultProps,
-  contentFooter: null,
-};
-
-HtmlScrollScreen.propTypes = {
-  ...BaseScreen.propTypes,
-  contentsCalculations: PropTypes.arrayOf(ContentCalculationsType),
-  calculationsTotal: PropTypes.number.isRequired,
-  actionUpdateContent: PropTypes.func.isRequired,
-  actionUpdateContentError: PropTypes.func.isRequired,
-  footerCalculations: FooterCalculationsType.isRequired,
-  contentFooter: PropTypes.node,
-  onScrolled: PropTypes.func.isRequired,
-  ignoreScroll: PropTypes.bool.isRequired,
-};
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),

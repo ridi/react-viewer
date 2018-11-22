@@ -75,4 +75,9 @@ export const selectReaderIsLoaded = createSelector(
   reader => nullSafeGet(reader, path.isLoaded(), true),
 );
 
+export const selectReaderSelection = createSelector(
+  [getReader],
+  reader => nullSafeGet(reader, path.selection(), null),
+);
+
 export const selectReader = getReader;

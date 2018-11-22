@@ -1,5 +1,15 @@
 module.exports = {
   'extends': '@ridi',
+  'parser': 'babel-eslint',
+  'parserOptions': {
+    'ecmaVersion': 6,
+    'sourceType': 'module',
+    'ecmaFeatures': {
+      'jsx': true,
+      'modules': true,
+      'experimentalObjectRestSpread': true
+    }
+  },
   'env': {
     'browser': true,
     'node': true,
@@ -10,5 +20,6 @@ module.exports = {
     'react/forbid-prop-types': 0,
     'no-underscore-dangle': 0,
     'react/destructuring-assignment': 0,
+    'lines-between-class-members': 0,
   },
 };

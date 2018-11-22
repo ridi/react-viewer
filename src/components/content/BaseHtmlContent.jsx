@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
-import Connector from '../../util/connector';
-import { addEventListener } from '../../util/BrowserWrapper';
+import Connector from '../../service/connector';
+import { addEventListener } from '../../util/EventHandler';
+import BaseContent from './BaseContent';
 
-export default class BaseHtmlContent extends React.PureComponent {
+export default class BaseHtmlContent extends BaseContent {
   constructor(props) {
     super(props);
 
-    this.wrapper = React.createRef();
-    this.content = React.createRef();
+    this.contentRef = React.createRef();
+    this.contentWrapperRef = React.createRef();
     this.listener = null;
   }
 
   componentDidMount() {
+    super.componentDidMount();
     const { isContentLoaded } = this.props.content;
     if (!isContentLoaded) {
       this.loadContent();
@@ -57,7 +59,7 @@ export default class BaseHtmlContent extends React.PureComponent {
     const { onContentRendered } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
-      const { current } = this.wrapper;
+      const { current } = this.contentWrapperRef;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
@@ -68,7 +70,7 @@ export default class BaseHtmlContent extends React.PureComponent {
 
   waitForResources() {
     // images
-    const images = [...this.content.current.querySelectorAll('img')]
+    const images = [...this.contentRef.current.querySelectorAll('img')]
       .filter(img => !img.complete)
       .map(img => new Promise((resolve) => {
         addEventListener(img, 'load', () => resolve());
@@ -86,16 +88,17 @@ export default class BaseHtmlContent extends React.PureComponent {
 
   renderContent(contentPrefix = '') {
     const { isContentLoaded, content } = this.props.content;
-    const { contentFooter, className } = this.props;
+    const { contentFooter, className, children } = this.props;
     if (isContentLoaded) {
       return (
         <>
           <section
-            ref={this.content}
+            ref={this.contentRef}
             className={`content_container ${className}`}
             dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
           />
           {contentFooter}
+          {children}
         </>
       );
     }
@@ -113,7 +116,7 @@ export default class BaseHtmlContent extends React.PureComponent {
         className="chapter"
         visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
-        innerRef={this.wrapper}
+        innerRef={this.contentWrapperRef}
       >
         {this.renderContent(prefix)}
       </StyledContent>
@@ -125,6 +128,7 @@ BaseHtmlContent.defaultProps = {
   contentFooter: null,
   className: '',
   StyledContent: () => {},
+  children: null,
 };
 
 BaseHtmlContent.propTypes = {
@@ -138,4 +142,5 @@ BaseHtmlContent.propTypes = {
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
   StyledContent: PropTypes.func,
+  children: PropTypes.node,
 };

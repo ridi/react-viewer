@@ -12,15 +12,32 @@ import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { INVALID_OFFSET, READERJS_CONTENT_WRAPPER, ViewType } from '../../constants/SettingConstants';
+import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 
 class HtmlPageScreen extends BaseScreen {
+  static defaultProps = {
+    ...BaseScreen.defaultProps,
+    footer: null,
+    contentFooter: null,
+  };
+
+  static propTypes = {
+    ...BaseScreen.propTypes,
+    contentsCalculations: PropTypes.arrayOf(ContentCalculationsType).isRequired,
+    footer: PropTypes.node,
+    contentFooter: PropTypes.node,
+    footerCalculations: FooterCalculationsType.isRequired,
+    bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
+    calculationsTotal: PropTypes.number.isRequired,
+    onMoveWrongDirection: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
@@ -28,7 +45,7 @@ class HtmlPageScreen extends BaseScreen {
 
   calculate(index, contentNode) {
     if (index === FOOTER_INDEX) {
-      const hasFooter = Connector.calculations.getHasFooter();
+      const { hasFooter } = Connector.calculations;
       Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
     }
     waitThenRun(() => {
@@ -39,6 +56,7 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   moveToOffset() {
+    super.moveToOffset();
     const { contentIndex } = this.props.current;
     setScrollTop(0);
     if (contentIndex === FOOTER_INDEX) {
@@ -81,9 +99,9 @@ class HtmlPageScreen extends BaseScreen {
     const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
+
     return (
       <PageHtmlContent
-        className={isCurrentContent ? READERJS_CONTENT_WRAPPER : null}
         key={`${content.uri}:${content.index}`}
         content={content}
         isCalculated={isCalculated}
@@ -94,6 +112,7 @@ class HtmlPageScreen extends BaseScreen {
         onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
+        onContentMount={this.onContentMount}
       />
     );
   }
@@ -107,23 +126,6 @@ class HtmlPageScreen extends BaseScreen {
       .map(content => this.renderContent(content, StyledContent));
   }
 }
-
-HtmlPageScreen.defaultProps = {
-  ...BaseScreen.defaultProps,
-  footer: null,
-  contentFooter: null,
-};
-
-HtmlPageScreen.propTypes = {
-  ...BaseScreen.propTypes,
-  contentsCalculations: PropTypes.arrayOf(ContentCalculationsType).isRequired,
-  footer: PropTypes.node,
-  contentFooter: PropTypes.node,
-  footerCalculations: FooterCalculationsType.isRequired,
-  bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
-  calculationsTotal: PropTypes.number.isRequired,
-  onMoveWrongDirection: PropTypes.func,
-};
 
 const mapStateToProps = state => ({
   ...readerBaseScreenMapStateToProps(state),

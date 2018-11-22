@@ -17,23 +17,23 @@ import {
   selectReaderCurrentContentIndex,
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
-import { hasIntersect } from '../Util';
+import { hasIntersect } from '../../util/Util';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
+import SelectionConnector from './SelectionConnector';
 
 // TODO 테스트 작성
 class CalculationsConnector extends BaseConnector {
-  constructor() {
-    super();
-    this.hasFooter = false;
+  // todo move to config
+  _hasFooter = false;
+  _annotations = {};
+
+  set hasFooter(hasFooter) {
+    this._hasFooter = hasFooter;
   }
 
-  setHasFooter(hasFooter) {
-    this.hasFooter = hasFooter;
-  }
-
-  getHasFooter() {
-    return this.hasFooter;
+  get hasFooter() {
+    return this._hasFooter;
   }
 
   invalidate() {
@@ -54,14 +54,17 @@ class CalculationsConnector extends BaseConnector {
     return calculatedContents[index - 1].isCalculated;
   }
 
-  getStartOffset(index) {
+  getCalculation(index) {
     if (index === FOOTER_INDEX) {
-      const { offset } = selectReaderFooterCalculations(this.getState());
-      return offset;
+      return selectReaderFooterCalculations(this.getState());
     }
     if (!selectReaderIsInitContents(this.getState())) return false;
     const calculatedContents = selectReaderContentsCalculations(this.getState());
-    return calculatedContents[index - 1].offset;
+    return calculatedContents[index - 1];
+  }
+
+  getStartOffset(index) {
+    return this.getCalculation(index).offset;
   }
 
   setStartOffset(index, offset) {
@@ -161,9 +164,8 @@ class CalculationsConnector extends BaseConnector {
   getIndexAtOffset(offset) {
     const calculations = selectReaderContentsCalculations(this.getState());
     const lastIndex = calculations.length;
-    for (let i = 1; i <= lastIndex; i += 1) {
-      const index = i === lastIndex ? FOOTER_INDEX : i;
-      const nextIndex = i >= lastIndex - 1 ? FOOTER_INDEX : i + 1;
+    for (let index = 1; index <= lastIndex; index += 1) {
+      const nextIndex = index === lastIndex ? FOOTER_INDEX : index + 1;
       // index === lastIndex ==> isFooter
       if (offset >= this.getStartOffset(index) && (index === FOOTER_INDEX || offset < this.getStartOffset(nextIndex))) {
         return index;
@@ -188,6 +190,12 @@ class CalculationsConnector extends BaseConnector {
       .map(({ index }) => index)
       .slice(0, contentCountAtATime);
     return result;
+  }
+
+  getAnnotationCalculation(annotation) {
+    return {
+      rects: SelectionConnector.getRectsFromSerializedRange(annotation.contentIndex, annotation.serializedRange),
+    };
   }
 }
 

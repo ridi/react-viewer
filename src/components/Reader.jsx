@@ -7,9 +7,9 @@ import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
 import Events from '../constants/DOMEventConstants';
-import Connector from '../util/connector';
+import Connector from '../service/connector';
 import { isExist } from '../util/Util';
-import { addEventListener, removeEventListener } from '../util/BrowserWrapper';
+import { addEventListener, removeEventListener } from '../util/EventHandler';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
@@ -17,7 +17,7 @@ import ContentFooter from './footer/ContentFooter';
 class Reader extends React.Component {
   constructor(props) {
     super(props);
-    Connector.calculations.setHasFooter(!!props.footer);
+    Connector.calculations.hasFooter = !!props.footer;
     this.onTouched = this.onTouched.bind(this);
     this.onScrolled = this.onScrolled.bind(this);
   }
@@ -41,7 +41,9 @@ class Reader extends React.Component {
   }
 
   onTouched(e) {
-    const { onTouched } = this.props;
+    const {
+      onTouched,
+    } = this.props;
     if (isExist(onTouched)) {
       onTouched(e);
     }
@@ -77,6 +79,11 @@ class Reader extends React.Component {
       contentFooter,
       ignoreScroll,
       disableCalculation,
+      selectable,
+      annotationable,
+      annotations,
+      onSelectionChanged,
+      onAnnotationTouched,
       children,
     } = this.props;
 
@@ -87,6 +94,11 @@ class Reader extends React.Component {
       disableCalculation,
       onTouched: this.onTouched,
       onScrolled: this.onScrolled,
+      selectable,
+      annotationable,
+      annotations,
+      onSelectionChanged,
+      onAnnotationTouched,
     };
 
     if (contentFooter) {
@@ -100,25 +112,37 @@ class Reader extends React.Component {
 Reader.defaultProps = {
   footer: null,
   contentFooter: null,
-  onTouched: null,
-  onMount: null,
-  onUnmount: null,
   ignoreScroll: false,
   disableCalculation: false,
   onScrolled: null,
+  onMount: null,
+  onUnmount: null,
+  onTouched: null,
+  selectable: false,
+  annotationable: false,
+  annotations: [],
+  onSelectionChanged: null,
+  onAnnotationTouched: null,
+  children: null,
 };
 
 Reader.propTypes = {
   setting: SettingType,
   footer: PropTypes.node,
   contentFooter: PropTypes.node,
+  ignoreScroll: PropTypes.bool,
+  disableCalculation: PropTypes.bool,
+  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
   onTouched: PropTypes.func,
   onMount: PropTypes.func,
   onUnmount: PropTypes.func,
   onScrolled: PropTypes.func,
-  ignoreScroll: PropTypes.bool,
-  disableCalculation: PropTypes.bool,
-  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
+  selectable: PropTypes.bool,
+  annotationable: PropTypes.bool,
+  annotations: PropTypes.array,
+  onSelectionChanged: PropTypes.func,
+  onAnnotationTouched: PropTypes.func,
+  children: PropTypes.node,
 };
 
 const mapStateToProps = state => ({

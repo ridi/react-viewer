@@ -2,13 +2,13 @@
 import React from 'react';
 /* eslint-enable no-unused-vars */
 import BaseHtmlContent from './BaseHtmlContent';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 
-export default class PageHtmlContent extends BaseHtmlContent {
+class PageHtmlContent extends BaseHtmlContent {
   moveToOffset() {
     const { localOffset } = this.props;
-    if (this.wrapper.current && localOffset >= 0) {
-      this.wrapper.current.scrollLeft = localOffset
+    if (this.contentWrapperRef.current && localOffset >= 0) {
+      this.contentWrapperRef.current.scrollLeft = localOffset
         * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
     }
   }
@@ -21,3 +21,5 @@ PageHtmlContent.defaultProps = {
 PageHtmlContent.propTypes = {
   ...BaseHtmlContent.propTypes,
 };
+
+export default PageHtmlContent;

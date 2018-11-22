@@ -1,30 +1,91 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { debounce } from '../../util/Util';
+import { debounce, isExist } from '../../util/Util';
 import {
   selectReaderContents,
   selectReaderCurrent,
   selectReaderSetting,
-  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead,
+  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead, selectReaderSelection,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
-import Connector from '../../util/connector';
+import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
-import { addEventListener, removeEventListener } from '../../util/BrowserWrapper';
+import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
+import { screenHeight, waitThenRun } from '../../util/BrowserWrapper';
+import { ViewType } from '../..';
 
 export default class BaseScreen extends React.Component {
+  static defaultProps = {
+    onTouched: null,
+    onSelectionChanged: null,
+    onAnnotationTouched: null,
+    children: null,
+  };
+
+  static propTypes = {
+    disableCalculation: PropTypes.bool.isRequired,
+    setting: SettingType.isRequired,
+    current: CurrentType.isRequired,
+    contents: PropTypes.arrayOf(ContentType).isRequired,
+    actionUpdateContent: PropTypes.func.isRequired,
+    actionUpdateContentError: PropTypes.func.isRequired,
+    calculationsTotal: PropTypes.number.isRequired,
+    contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
+    isReadyToRead: PropTypes.bool.isRequired,
+    onTouched: PropTypes.func,
+    onSelectionChanged: PropTypes.func,
+    onAnnotationTouched: PropTypes.func,
+    children: PropTypes.node,
+    selectable: PropTypes.bool.isRequired,
+    annotationable: PropTypes.bool.isRequired,
+    annotations: PropTypes.array,
+    selection: PropTypes.object,
+  };
+
+  static getDerivedStateFromProps(props) {
+    // todo temporary code: Force to set annotation recalculation time
+    return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType);
+  }
+
+  static needAnnotationRender(viewType, annotation) {
+    if (!Connector.calculations.isContentCalculated(annotation.contentIndex)) return false;
+    // todo temporary code: Force to set annotation recalculation time
+    if (viewType === ViewType.SCROLL) {
+      const { offset } = Connector.current.getCurrent();
+      const [top, height] = [offset, screenHeight()];
+      const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
+      return contentIndexesInScreen.includes(annotation.contentIndex);
+    }
+    const { contentIndex } = Connector.current.getCurrent();
+    return contentIndex === annotation.contentIndex;
+  }
+
+  static recalculateAnnotations(annotations, viewType) {
+    // todo temporary code: Force to set annotation recalculation time
+    return {
+      annotations: annotations.filter(BaseScreen.needAnnotationRender.bind(this, viewType))
+        .map(item => ({
+          ...item,
+          ...Connector.calculations.getAnnotationCalculation(item),
+        })),
+    };
+  }
+
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
-
+    this.state = {
+      annotations: [],
+    };
     this.onContentLoaded = this.onContentLoaded.bind(this);
     this.onContentError = this.onContentError.bind(this);
     this.onTouchableScreenTouched = this.onTouchableScreenTouched.bind(this);
+    this.onContentMount = this.onContentMount.bind(this);
   }
 
   componentDidMount() {
@@ -32,8 +93,6 @@ export default class BaseScreen extends React.Component {
     if (isReadyToRead && !disableCalculation) {
       Connector.current.restoreCurrentOffset();
     }
-    this.moveToOffset();
-
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {
         Connector.calculations.invalidate();
@@ -52,12 +111,9 @@ export default class BaseScreen extends React.Component {
       || prevCurrent.viewType !== current.viewType);
     const isNeededRestore = hasJustCalculatedCurrent;
     const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
-    const isNeededUpdateReaderJs = prevCurrent.contentIndex !== current.contentIndex
-      || prevCurrent.viewType !== current.viewType;
 
     if (isNeededRestore) Connector.current.restoreCurrentOffset();
     if (isNeededMoveToOffset) this.moveToOffset();
-    if (isNeededUpdateReaderJs) Connector.current.setReaderJs();
   }
 
   componentWillUnmount() {
@@ -67,7 +123,9 @@ export default class BaseScreen extends React.Component {
   onTouchableScreenTouched(event) {
     const { onTouched, isReadyToRead } = this.props;
     if (!isReadyToRead) return;
-    onTouched(event);
+    if (isExist(onTouched)) {
+      onTouched(event);
+    }
   }
 
   onContentLoaded(index, content) {
@@ -82,7 +140,20 @@ export default class BaseScreen extends React.Component {
     actionUpdateContentError(index, error, isAllLoaded);
   }
 
-  moveToOffset() {}
+  onContentMount(index) {
+    const { current } = this.props;
+    if (index === current.contentIndex) {
+      // Connector.current.setReaderJs();
+    }
+  }
+
+  moveToOffset() {
+    const { annotations } = this.props;
+    // todo temporary code: Force to set annotation recalculation time
+    waitThenRun(() => {
+      this.setState(BaseScreen.recalculateAnnotations(annotations));
+    }, 0);
+  }
 
   renderContents() { return null; }
 
@@ -95,7 +166,13 @@ export default class BaseScreen extends React.Component {
       contentFormat,
       isReadyToRead,
       children,
+      annotationable,
+      selectable,
+      selection,
+      onSelectionChanged,
+      onAnnotationTouched,
     } = this.props;
+
     return (
       <TouchableScreen
         ref={this.wrapper}
@@ -104,6 +181,12 @@ export default class BaseScreen extends React.Component {
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}
+        annotationable={annotationable}
+        selectable={selectable}
+        annotations={this.state.annotations}
+        selection={selection}
+        onSelectionChanged={onSelectionChanged}
+        onAnnotationTouched={onAnnotationTouched}
       >
         { this.renderContents() }
         { this.renderFooter() }
@@ -113,25 +196,6 @@ export default class BaseScreen extends React.Component {
   }
 }
 
-BaseScreen.defaultProps = {
-  onTouched: () => {},
-  children: null,
-};
-
-BaseScreen.propTypes = {
-  onTouched: PropTypes.func,
-  disableCalculation: PropTypes.bool.isRequired,
-  setting: SettingType.isRequired,
-  current: CurrentType.isRequired,
-  contents: PropTypes.arrayOf(ContentType).isRequired,
-  actionUpdateContent: PropTypes.func.isRequired,
-  actionUpdateContentError: PropTypes.func.isRequired,
-  calculationsTotal: PropTypes.number.isRequired,
-  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
-  isReadyToRead: PropTypes.bool.isRequired,
-  children: PropTypes.node,
-};
-
 export const mapStateToProps = state => ({
   setting: selectReaderSetting(state),
   current: selectReaderCurrent(state),
@@ -139,6 +203,7 @@ export const mapStateToProps = state => ({
   calculationsTotal: selectReaderCalculationsTotal(state),
   contentFormat: selectReaderContentFormat(state),
   isReadyToRead: selectReaderIsReadyToRead(state),
+  selection: selectReaderSelection(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

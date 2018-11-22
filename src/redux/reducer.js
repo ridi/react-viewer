@@ -99,6 +99,10 @@ const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(
   .set(path.isReadyToRead(), isReadyToRead)
   .build();
 
+const updateSelection = (state, { selection }) => new ImmutableObjectBuilder(state)
+  .set(path.selection(), selection)
+  .build();
+
 export default ({
   setting: customSetting = {},
 } = {}) => {
@@ -118,5 +122,6 @@ export default ({
     [actions.UPDATE_CONTENT_CALCULATIONS]: updateContentCalculation,
     [actions.UPDATE_FOOTER_CALCULATIONS]: updateFooterCalculation,
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
+    [actions.UPDATE_SELECTION]: updateSelection,
   });
 };

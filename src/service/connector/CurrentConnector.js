@@ -7,27 +7,12 @@ import {
 import { updateCurrent } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import ReaderJsHelper from '../ReaderJsHelper';
-import { READERJS_CONTENT_WRAPPER, ViewType, EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
+import ReaderJsHelper from '../readerjs/ReaderJsHelper';
+import { EMPTY_READ_LOCATION } from '../../constants/SettingConstants';
 
 class CurrentConnector extends BaseConnector {
-  constructor() {
-    super();
-    this.readerJsHelper = null;
-  }
-
-  setReaderJs() {
-    const { viewType } = selectReaderSetting(this.getState());
-    if (this.readerJsHelper) {
-      this.readerJsHelper.unmount();
-      this.readerJsHelper = null;
-    }
-    const node = document.querySelector(`.${READERJS_CONTENT_WRAPPER}`);
-    if (node) {
-      this.readerJsHelper = new ReaderJsHelper(node, viewType === ViewType.SCROLL);
-      const location = this.readerJsHelper.getNodeLocationOfCurrentPage();
-      this.dispatch(updateCurrent({ location }));
-    }
+  getCurrent() {
+    return selectReaderCurrent(this.getState());
   }
 
   updateCurrentOffset(offset) {
@@ -37,8 +22,11 @@ class CurrentConnector extends BaseConnector {
     const total = CalculationsConnector.getContentTotal(contentIndex);
     const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
     let location = EMPTY_READ_LOCATION;
-    if (this.readerJsHelper) {
-      location = this.readerJsHelper.getNodeLocationOfCurrentPage();
+    try {
+      location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
+    } catch (e) {
+      // ignore error
+      console.warn(e);
     }
 
     this.dispatch(updateCurrent({
@@ -65,7 +53,7 @@ class CurrentConnector extends BaseConnector {
   }
 
   isOnFooter() {
-    if (!CalculationsConnector.getHasFooter()) return false;
+    if (!CalculationsConnector.hasFooter) return false;
     if (!CalculationsConnector.isCompleted()) return false;
 
     const currentContentIndex = selectReaderCurrentContentIndex(this.getState());

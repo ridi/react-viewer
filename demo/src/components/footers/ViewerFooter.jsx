@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { selectReaderSetting, ViewType } from '../../../../lib';
+import { selectReaderSetting, ViewType } from '@ridi/react-viewer';
 import { ContentType } from '../../constants/ContentConstants';
 import { onToggleViewerSetting } from '../../redux/Viewer.action';
 import { selectIsFullScreen } from '../../redux/Viewer.selector';
@@ -15,7 +15,7 @@ class ViewerFooter extends Component {
   render() {
     const {
       isFullScreen,
-      content,
+      contentMeta,
       isVisibleSettingPopup,
       toggleViewerSetting,
     } = this.props;
@@ -23,9 +23,9 @@ class ViewerFooter extends Component {
 
     return (
       <section>
-        {content.contentType === ContentType.WEB_NOVEL
-          ? <ViewerNovelSettingPopup content={content} />
-          : <ViewerComicSettingPopup content={content} />
+        {contentMeta.contentType === ContentType.WEB_NOVEL
+          ? <ViewerNovelSettingPopup contentMeta={contentMeta} />
+          : <ViewerComicSettingPopup contentMeta={contentMeta} />
         }
         <footer
           className={`viewer_footer ${isFullScreen ? '' : 'active'}`}
@@ -47,7 +47,7 @@ class ViewerFooter extends Component {
 }
 
 ViewerFooter.propTypes = {
-  content: PropTypes.object.isRequired,
+  contentMeta: PropTypes.object.isRequired,
   isFullScreen: PropTypes.bool.isRequired,
   setting: PropTypes.object.isRequired,
   isVisibleSettingPopup: PropTypes.bool.isRequired,

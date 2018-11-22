@@ -1,13 +1,8 @@
 import store from 'store';
-import { screenHeight, screenWidth } from './BrowserWrapper';
 
 export default class Cache {
-  constructor(bookId) {
-    this.bookId = bookId;
-  }
-
-  getKey() {
-    return `${this.bookId}_${screenWidth()}x${screenHeight()}`;
+  constructor(key, keyGenerator = k => `${k}`) {
+    this.getKey = keyGenerator.bind(this, key);
   }
 
   set(value) {
