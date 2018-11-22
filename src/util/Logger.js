@@ -1,5 +1,3 @@
-import { tap } from 'rxjs/operators';
-
 const _isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
 export default class Logger {
@@ -13,9 +11,21 @@ export default class Logger {
     }
   }
 
+  static table(...data) {
+    if (_isDev) {
+      console.table(...data);
+    }
+  }
+
   static error(...data) {
     console.error(...data);
   }
-}
 
-export const rxDebug = obs$ => obs$.pipe(tap((...data) => Logger.debug(...data)));
+  static debugGroup(groupName, ...data) {
+    if (_isDev) {
+      console.group(groupName);
+      console.log(...data);
+      console.groupEnd();
+    }
+  }
+}

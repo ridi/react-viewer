@@ -1,47 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import { connect, Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
 import {
-  reducers as reader,
   Connector,
-  Service,
   selectReaderCurrentOffset,
   selectReaderCalculationsTotal,
-  EventBus,
-  Events,
 } from '@ridi/react-viewer';
-import viewer from './redux/Viewer.reducer';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerFooter from './components/footers/ViewerFooter';
 import { IconsSprite } from './components/icons/IconsSprite';
-import ContentsData from '../resources/contents/contents.json';
-import {
-  onScreenTouched,
-} from './redux/Viewer.action';
+import { onScreenTouched } from './redux/Viewer.action';
 import { BindingType } from '../../src/constants/ContentConstants';
 import ViewerBody from './components/body/ViewerBody';
 import { Position } from './constants/ViewerConstants';
-
-const rootReducer = combineReducers({
-  viewer,
-  reader: reader({
-    setting: {
-      font: 'kopup_dotum',
-      containerHorizontalMargin: 30,
-      containerVerticalMargin: 50,
-    },
-  }),
-});
-
-const enhancer = composeWithDevTools(applyMiddleware(thunk));
-
-const store = createStore(rootReducer, {}, enhancer);
-Connector.connect(store);
-Service.loadAll();
+import AppService from './service/AppService';
 
 class DemoViewer extends React.Component {
   constructor(props) {
@@ -134,17 +107,9 @@ const mapDispatchToProps = dispatch => ({
 
 const DemoViewerPage = connect(mapStateToProps, mapDispatchToProps)(DemoViewer);
 
-
-const { contents } = ContentsData;
-const queryParam = new URLSearchParams(window.location.search);
-
-const contentId = queryParam.get('contentId');
-const selected = contents.filter(content => content.id.toString() === contentId);
-const contentMeta = selected.length === 1 ? selected[0] : contents[Math.floor(Math.random() * contents.length)];
-
 ReactDOM.render(
-  <Provider store={store}>
-    <DemoViewerPage contentMeta={contentMeta} />
+  <Provider store={AppService.store}>
+    <DemoViewerPage contentMeta={AppService.contentMeta} />
   </Provider>,
   document.getElementById('app'),
 );

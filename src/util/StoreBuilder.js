@@ -25,7 +25,7 @@ export default class StoreBuilder {
     const obs$ = new BehaviorSubject(this._initialValue);
 
     Object.getOwnPropertySymbols(this._reducers)
-      .forEach(type => EventBus.from(type).on(obs$));
+      .forEach(type => EventBus.asObservable(type).subscribe(obs$));
 
     return obs$.pipe(
       scan((store, { type, data }) => {
@@ -34,7 +34,7 @@ export default class StoreBuilder {
         }
         return store;
       }, this._initialValue),
-      tap(data => {
+      tap((data) => {
         if (this._notifyEvent) {
           EventBus.emit(this._notifyEvent, data);
         }

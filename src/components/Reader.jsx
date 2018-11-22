@@ -6,13 +6,13 @@ import { selectReaderContentFormat, selectReaderSetting } from '../redux/selecto
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
-import Events from '../constants/DOMEventConstants';
+import DOMEvents from '../constants/DOMEventConstants';
 import Connector from '../service/connector';
-import { isExist } from '../util/Util';
 import { addEventListener, removeEventListener } from '../util/EventHandler';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
+import EventBus, { Events } from '../event';
 
 class Reader extends React.Component {
   static defaultProps = {
@@ -20,8 +20,6 @@ class Reader extends React.Component {
     contentFooter: null,
     ignoreScroll: false,
     disableCalculation: false,
-    onMount: null,
-    onUnmount: null,
     selectable: false,
     annotationable: false,
     annotations: [],
@@ -35,8 +33,6 @@ class Reader extends React.Component {
     ignoreScroll: PropTypes.bool,
     disableCalculation: PropTypes.bool,
     contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
-    onMount: PropTypes.func,
-    onUnmount: PropTypes.func,
     selectable: PropTypes.bool,
     annotationable: PropTypes.bool,
     annotations: PropTypes.array,
@@ -46,24 +42,23 @@ class Reader extends React.Component {
   constructor(props) {
     super(props);
     Connector.calculations.hasFooter = !!props.footer;
+
+    this.onUnmount = this.onUnmount.bind(this);
   }
 
   componentDidMount() {
-    const { onMount, onUnmount } = this.props;
-    if (isExist(onMount)) {
-      onMount();
-    }
-    if (isExist(onUnmount)) {
-      addEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
-    }
+    EventBus.emit(Events.core.LOADED);
+    addEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
   }
 
   componentWillUnmount() {
-    const { onUnmount } = this.props;
-    if (isExist(onUnmount)) {
-      onUnmount();
-      removeEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
-    }
+    removeEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
+    this.onUnmount();
+  }
+
+  onUnmount() {
+    EventBus.emit(Events.core.UNLOADED);
+    EventBus.completeAll();
   }
 
   getScreen() {

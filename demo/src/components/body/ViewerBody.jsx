@@ -17,36 +17,25 @@ import Reader, {
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
 import {
-  requestLoadContent,
-  addAnnotation,
-  setAnnotations,
-  updateAnnotation, removeAnnotation, setContextMenu, onScreenScrolled,
+  addAnnotation, updateAnnotation, removeAnnotation, setContextMenu, onScreenScrolled,
 } from '../../redux/Viewer.action';
-import { screenHeight, screenWidth } from '../../utils/BrowserWrapper';
-import Cache from '../../utils/Cache';
+import { screenWidth } from '../../utils/BrowserWrapper';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
 
 class ViewerBody extends React.Component {
   constructor(props) {
     super(props);
-    this.readerCache = new Cache(
-      props.contentMeta.id,
-      key => `${key}_${screenWidth()}x${screenHeight()}_${Connector.setting.getSetting().viewType}`,
-    );
-    this.annotationCache = new Cache(props.contentMeta.id);
-
-    this.onReaderLoaded = this.onReaderLoaded.bind(this);
-    this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.onContentMenuItemClicked = this.onContentMenuItemClicked.bind(this);
-
-    EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this));
-    EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this));
-    EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this));
-    EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this));
-
     this.footer = <ViewerScreenFooter contentMeta={props.contentMeta} />;
     this.contentFooter = <small>content footer area...</small>;
+  }
+
+  componentDidMount() {
+    EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this), this);
+    EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
+    EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
+    EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
   }
 
   componentDidUpdate(prevProps) {
@@ -56,37 +45,8 @@ class ViewerBody extends React.Component {
     }
   }
 
-  onReaderLoaded() {
-    const {
-      contentMeta,
-      actionLoad,
-      actionRequestLoadContent,
-      actionSetAnnotations,
-    } = this.props;
-    const readerState = this.readerCache.get();
-    if (readerState) {
-      actionLoad(readerState);
-    } else {
-      actionRequestLoadContent(contentMeta);
-    }
-    const annotationsState = this.annotationCache.get();
-    if (annotationsState) {
-      actionSetAnnotations(annotationsState);
-    }
-  }
-
-  onReaderUnloaded() {
-    const {
-      actionUnload,
-      annotations,
-    } = this.props;
-    if (!Connector.core.isReaderLoaded() || !Connector.core.isReaderAllCalculated()) return;
-    const currentState = Connector.core.getReaderState();
-    this.readerCache.set(currentState);
-
-    this.annotationCache.set(annotations);
-
-    actionUnload();
+  componentWillUnmount() {
+    EventBus.offByTarget(this);
   }
 
   onReaderScrolled() {
@@ -214,13 +174,9 @@ ViewerBody.propTypes = {
   contentMeta: PropTypes.object.isRequired,
   onTouched: PropTypes.func.isRequired,
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  actionRequestLoadContent: PropTypes.func.isRequired,
   setting: PropTypes.object.isRequired,
-  actionLoad: PropTypes.func.isRequired,
-  actionUnload: PropTypes.func.isRequired,
   annotations: PropTypes.array.isRequired,
   actionAddAnnotation: PropTypes.func.isRequired,
-  actionSetAnnotations: PropTypes.func.isRequired,
   actionSetAnnotation: PropTypes.func.isRequired,
   actionRemoveAnnotation: PropTypes.func.isRequired,
   contextMenu: PropTypes.object.isRequired,
@@ -239,11 +195,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionRequestLoadContent: contentMeta => dispatch(requestLoadContent(contentMeta)),
   actionLoad: state => dispatch(load(state)),
   actionUnload: () => dispatch(unload()),
   actionAddAnnotation: annotation => dispatch(addAnnotation(annotation)),
-  actionSetAnnotations: annotations => dispatch(setAnnotations(annotations)),
   actionSetAnnotation: annotation => dispatch(updateAnnotation(annotation)),
   actionRemoveAnnotation: annotation => dispatch(removeAnnotation(annotation)),
   actionSetContextMenu: (isVisible, target) => dispatch(setContextMenu(isVisible, target)),
