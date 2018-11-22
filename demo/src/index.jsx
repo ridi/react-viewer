@@ -21,7 +21,6 @@ import { IconsSprite } from './components/icons/IconsSprite';
 import ContentsData from '../resources/contents/contents.json';
 import {
   onScreenTouched,
-  onScreenScrolled,
 } from './redux/Viewer.action';
 import { BindingType } from '../../src/constants/ContentConstants';
 import ViewerBody from './components/body/ViewerBody';

@@ -32,7 +32,6 @@ class TouchableScreen extends React.Component {
     selection: PropTypes.object,
     annotationable: PropTypes.bool.isRequired,
     selectable: PropTypes.bool.isRequired,
-    onSelectionChanged: PropTypes.func,
   };
 
   selectionRef = React.createRef();
@@ -89,7 +88,6 @@ class TouchableScreen extends React.Component {
   handleTouchEvent(event) {
     const {
       selectable,
-      onSelectionChanged,
       annotations,
     } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
@@ -131,8 +129,8 @@ class TouchableScreen extends React.Component {
         } else {
           Connector.selection.expandIntoLower(x, y);
         }
-        if (isExist(onSelectionChanged)) {
-          onSelectionChanged({
+        if (Connector.selection.isSelecting) {
+          EventBus.emit(Events.core.CHANGE_SELECTION, {
             selection: Connector.selection.selection,
             selectionMode: Connector.selection.selectionMode,
           });

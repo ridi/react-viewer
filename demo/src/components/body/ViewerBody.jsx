@@ -39,11 +39,11 @@ class ViewerBody extends React.Component {
     this.onReaderLoaded = this.onReaderLoaded.bind(this);
     this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.onContentMenuItemClicked = this.onContentMenuItemClicked.bind(this);
-    this.onReaderSelectionChanged = this.onReaderSelectionChanged.bind(this);
 
     EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this));
     EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this));
     EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this));
+    EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this));
 
     this.footer = <ViewerScreenFooter contentMeta={props.contentMeta} />;
     this.contentFooter = <small>content footer area...</small>;
@@ -203,7 +203,6 @@ class ViewerBody extends React.Component {
           selectable
           annotationable
           annotations={annotations}
-          onSelectionChanged={this.onReaderSelectionChanged}
         />
         { this.renderContextMenu() }
       </>

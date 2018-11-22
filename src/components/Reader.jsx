@@ -15,6 +15,34 @@ import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
 
 class Reader extends React.Component {
+  static defaultProps = {
+    footer: null,
+    contentFooter: null,
+    ignoreScroll: false,
+    disableCalculation: false,
+    onMount: null,
+    onUnmount: null,
+    selectable: false,
+    annotationable: false,
+    annotations: [],
+    children: null,
+  };
+
+  static propTypes = {
+    setting: SettingType,
+    footer: PropTypes.node,
+    contentFooter: PropTypes.node,
+    ignoreScroll: PropTypes.bool,
+    disableCalculation: PropTypes.bool,
+    contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
+    onMount: PropTypes.func,
+    onUnmount: PropTypes.func,
+    selectable: PropTypes.bool,
+    annotationable: PropTypes.bool,
+    annotations: PropTypes.array,
+    children: PropTypes.node,
+  };
+
   constructor(props) {
     super(props);
     Connector.calculations.hasFooter = !!props.footer;
@@ -64,7 +92,6 @@ class Reader extends React.Component {
       selectable,
       annotationable,
       annotations,
-      onSelectionChanged,
       children,
     } = this.props;
 
@@ -76,7 +103,6 @@ class Reader extends React.Component {
       selectable,
       annotationable,
       annotations,
-      onSelectionChanged,
     };
 
     if (contentFooter) {
@@ -86,36 +112,6 @@ class Reader extends React.Component {
     return <Screen {...props}>{children}</Screen>;
   }
 }
-
-Reader.defaultProps = {
-  footer: null,
-  contentFooter: null,
-  ignoreScroll: false,
-  disableCalculation: false,
-  onMount: null,
-  onUnmount: null,
-  selectable: false,
-  annotationable: false,
-  annotations: [],
-  onSelectionChanged: null,
-  children: null,
-};
-
-Reader.propTypes = {
-  setting: SettingType,
-  footer: PropTypes.node,
-  contentFooter: PropTypes.node,
-  ignoreScroll: PropTypes.bool,
-  disableCalculation: PropTypes.bool,
-  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
-  onMount: PropTypes.func,
-  onUnmount: PropTypes.func,
-  selectable: PropTypes.bool,
-  annotationable: PropTypes.bool,
-  annotations: PropTypes.array,
-  onSelectionChanged: PropTypes.func,
-  children: PropTypes.node,
-};
 
 const mapStateToProps = state => ({
   setting: selectReaderSetting(state),
