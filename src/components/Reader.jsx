@@ -65,7 +65,6 @@ class Reader extends React.Component {
       annotationable,
       annotations,
       onSelectionChanged,
-      onAnnotationTouched,
       children,
     } = this.props;
 
@@ -78,7 +77,6 @@ class Reader extends React.Component {
       annotationable,
       annotations,
       onSelectionChanged,
-      onAnnotationTouched,
     };
 
     if (contentFooter) {
@@ -100,7 +98,6 @@ Reader.defaultProps = {
   annotationable: false,
   annotations: [],
   onSelectionChanged: null,
-  onAnnotationTouched: null,
   children: null,
 };
 
@@ -117,7 +114,6 @@ Reader.propTypes = {
   annotationable: PropTypes.bool,
   annotations: PropTypes.array,
   onSelectionChanged: PropTypes.func,
-  onAnnotationTouched: PropTypes.func,
   children: PropTypes.node,
 };
 

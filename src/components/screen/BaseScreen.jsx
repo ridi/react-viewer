@@ -22,7 +22,6 @@ import { ViewType } from '../..';
 export default class BaseScreen extends React.Component {
   static defaultProps = {
     onSelectionChanged: null,
-    onAnnotationTouched: null,
     children: null,
   };
 
@@ -37,7 +36,6 @@ export default class BaseScreen extends React.Component {
     contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
     isReadyToRead: PropTypes.bool.isRequired,
     onSelectionChanged: PropTypes.func,
-    onAnnotationTouched: PropTypes.func,
     children: PropTypes.node,
     selectable: PropTypes.bool.isRequired,
     annotationable: PropTypes.bool.isRequired,
@@ -159,7 +157,6 @@ export default class BaseScreen extends React.Component {
       selectable,
       selection,
       onSelectionChanged,
-      onAnnotationTouched,
     } = this.props;
 
     return (
@@ -174,7 +171,6 @@ export default class BaseScreen extends React.Component {
         annotations={this.state.annotations}
         selection={selection}
         onSelectionChanged={onSelectionChanged}
-        onAnnotationTouched={onAnnotationTouched}
       >
         { this.renderContents() }
         { this.renderFooter() }

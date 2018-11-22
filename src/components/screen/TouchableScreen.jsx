@@ -33,7 +33,6 @@ class TouchableScreen extends React.Component {
     annotationable: PropTypes.bool.isRequired,
     selectable: PropTypes.bool.isRequired,
     onSelectionChanged: PropTypes.func,
-    onAnnotationTouched: PropTypes.func,
   };
 
   selectionRef = React.createRef();
@@ -91,7 +90,6 @@ class TouchableScreen extends React.Component {
     const {
       selectable,
       onSelectionChanged,
-      onAnnotationTouched,
       annotations,
     } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
@@ -100,16 +98,12 @@ class TouchableScreen extends React.Component {
     const selectionId = target.getAttribute('data-id');
     if (event.type === TouchEventHandler.EVENT_TYPE.Touch) {
       Connector.selection.end();
-
       if (selectionPart === SelectionParts.TEXT && selectionId) {
-        if (isExist(onAnnotationTouched)) {
-          const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
-          if (annotation) {
-            onAnnotationTouched({
-              ...annotation,
-              ...Connector.calculations.getAnnotationCalculation(annotation),
-            });
-          }
+        const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
+        if (annotation) {
+          EventBus.emit(Events.core.TOUCH_ANNOTATION, annotation);
+        } else {
+          EventBus.emit(Events.core.TOUCH, event);
         }
       } else {
         EventBus.emit(Events.core.TOUCH, event);
