@@ -3,6 +3,8 @@ import setting from './SettingConnector';
 import current from './CurrentConnector';
 import BaseConnector from './BaseConnector';
 import selection from './SelectionConnector';
+import content from './ContentConnector';
+
 import { selectReader, selectReaderIsAllCalculated, selectReaderIsLoaded } from '../../redux/selector';
 
 const core = new (class CoreConnector extends BaseConnector {
@@ -25,6 +27,7 @@ export const connect = (store) => {
   setting.connect(store);
   current.connect(store);
   selection.connect(store);
+  content.connect(store);
 };
 
 export default {
@@ -34,4 +37,5 @@ export default {
   setting,
   current,
   selection,
+  content,
 };

@@ -1,6 +1,3 @@
-import { setContentsByUri, setContentsByValue } from '@ridi/react-viewer';
-import { getJson } from '../utils/Api';
-
 export const ViewerUiActions = {
   TOGGLE_VIEWER_SETTING: 'VIEWER_FOOTER:TOGGLE_SETTING',
   VIEWER_SETTING_CHANGED: 'VIEWER:SETTING_CHANGED',
@@ -24,25 +21,6 @@ export const viewerSettingChanged = changedSetting => ({
 
 export const updateViewerSettings = changedSetting => (dispatch) => {
   dispatch(viewerSettingChanged(changedSetting));
-};
-
-export const requestLoadContent = ({
-  id,
-  contentFormat,
-  bindingType,
-  hasLoadedContent,
-}) => (dispatch) => {
-  if (hasLoadedContent) {
-    getJson(`./resources/contents/${id}/spine.json`)
-      .then((contents) => {
-        dispatch(setContentsByValue(contentFormat, bindingType, contents.map(content => content.content)));
-      });
-  } else {
-    getJson(`./resources/contents/${id}/spine.json`)
-      .then(({ contents: uris }) => {
-        dispatch(setContentsByUri(contentFormat, bindingType, uris));
-      });
-  }
 };
 
 export const onScreenTouched = () => ({

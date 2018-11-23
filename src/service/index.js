@@ -1,9 +1,9 @@
-import ContentService from './ContentService';
-import CalculationService from './CalculationService';
+import content from './ContentService';
+import calculation from './CalculationService';
 
 const services = [
-  ContentService,
-  CalculationService,
+  content,
+  calculation,
 ];
 
 export const unloadAll = () => {
@@ -20,4 +20,6 @@ export const loadAll = () => {
 export default {
   loadAll,
   unloadAll,
+  content,
+  calculation,
 };

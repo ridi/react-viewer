@@ -19,6 +19,7 @@ import {
 import Cache from '../utils/Cache';
 import { screenHeight, screenWidth } from '../utils/BrowserWrapper';
 import { selectAnnotations } from '../redux/Viewer.selector';
+import { getJson } from '../utils/Api';
 
 class AppService {
   _store = null;
@@ -85,12 +86,30 @@ class AppService {
     EventBus.on(Events.core.UNLOADED, this.onUnloaded);
   }
 
+  _loadContent() {
+    const {
+      id,
+      contentFormat,
+      bindingType,
+      hasLoadedContent,
+    } = this._contentMeta;
+
+    getJson(`./resources/contents/${id}/spine.json`)
+      .then((spines) => {
+        if (hasLoadedContent) {
+          Service.content.setContentsByValue(contentFormat, bindingType, spines.map(spine => spine.content));
+        } else {
+          Service.content.setContentsByUri(contentFormat, bindingType, spines.contents);
+        }
+      });
+  }
+
   onLoaded() {
     const readerState = this._readerCache.get();
     if (readerState) {
       this._store.dispatch(load(readerState));
     } else {
-      this._store.dispatch(requestLoadContent(this._contentMeta));
+      this._loadContent();
     }
     const annotationsState = this._annotationCache.get();
     if (annotationsState) {
