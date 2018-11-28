@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
+import Service from '../../service';
+import EventBus, { Events } from '../../event';
 
 export default class Footer extends React.PureComponent {
   constructor(props) {
@@ -10,16 +12,17 @@ export default class Footer extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.onContentRendered();
+    const { isCalculated } = this.props;
+    if (!isCalculated) {
+      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
+    }
   }
 
   componentDidUpdate() {
-    this.onContentRendered();
-  }
-
-  onContentRendered() {
-    const { onContentRendered } = this.props;
-    onContentRendered(FOOTER_INDEX, this.wrapper.current);
+    const { isCalculated } = this.props;
+    if (!isCalculated) {
+      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
+    }
   }
 
   render() {
@@ -45,15 +48,14 @@ export default class Footer extends React.PureComponent {
 
 Footer.defaultProps = {
   content: null,
-  onContentRendered: () => {},
   StyledFooter: () => {},
   startOffset: 0,
 };
 
 Footer.propTypes = {
   content: PropTypes.node,
-  onContentRendered: PropTypes.func,
   startOffset: PropTypes.number,
   containerVerticalMargin: PropTypes.number.isRequired,
   StyledFooter: PropTypes.func,
+  isCalculated: PropTypes.bool.isRequired,
 };

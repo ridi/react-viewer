@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fromEvent, timer } from 'rxjs';
-import { debounce, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounce, distinctUntilChanged, map, tap } from 'rxjs/operators';
 import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
-  selectReaderFooterCalculations,
+  selectReaderFooterCalculations, selectReaderCalculationsTargets,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import {
@@ -13,7 +13,7 @@ import {
   scrollTop,
   scrollLeft,
   setScrollTop,
-  waitThenRun,
+  waitThenRun, scrollTo,
 } from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
@@ -48,25 +48,29 @@ class HtmlScrollScreen extends BaseScreen {
     footerCalculations: FooterCalculationsType.isRequired,
     contentFooter: PropTypes.node,
     ignoreScroll: PropTypes.bool.isRequired,
+    calculationsTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
+    this.moveToOffset = this.moveToOffset.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
 
-    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL).pipe(
-      debounce(() => timer(DOMEventDelayConstants.SCROLL)),
-      map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
-      distinctUntilChanged(),
-    ).subscribe(data => EventBus.emit(Events.core.SCROLL, data));
+    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset, this);
+    EventBus.on(Events.calculation.READY_TO_READ, () => {
+      this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+        .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
+    }, this);
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
+
+    EventBus.offByTarget(this);
     if (this.scrollEventSubscription) {
       this.scrollEventSubscription.unsubscribe();
       this.scrollEventSubscription = null;
@@ -85,9 +89,8 @@ class HtmlScrollScreen extends BaseScreen {
     ));
   }
 
-  moveToOffset() {
+  moveToOffset(offset) {
     super.moveToOffset();
-    const { offset } = this.props.current;
     setScrollTop(offset);
   }
 
@@ -100,13 +103,13 @@ class HtmlScrollScreen extends BaseScreen {
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
         key="footer"
+        isCalculated={footerCalculations.isCalculated}
         content={footer}
-        onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}
         startOffset={Connector.calculations.getStartOffset(FOOTER_INDEX)}
         StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.SCROLL)}
@@ -131,22 +134,17 @@ class HtmlScrollScreen extends BaseScreen {
         isCalculated={isCalculated}
         startOffset={startOffset}
         localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
-        onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        onContentMount={this.onContentMount}
       />
     );
   }
 
   renderContents() {
-    const { contents } = this.props;
+    const { contents, calculationsTargets } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.SCROLL);
-    const calculatedTarget = Connector.calculations.getCalculationTargetContents();
     return contents
-      .filter(({ index }) => this.needRender(index) || calculatedTarget.includes(index))
+      .filter(({ index }) => this.needRender(index) || calculationsTargets.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }
@@ -156,6 +154,7 @@ const mapStateToProps = state => ({
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
+  calculationsTargets: selectReaderCalculationsTargets(state),
 });
 
 const mapDispatchToProps = dispatch => ({

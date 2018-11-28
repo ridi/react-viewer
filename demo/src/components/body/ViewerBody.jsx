@@ -32,6 +32,7 @@ class ViewerBody extends React.Component {
   }
 
   componentDidMount() {
+    console.log('dm');
     EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this), this);
     EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
     EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
@@ -46,6 +47,7 @@ class ViewerBody extends React.Component {
   }
 
   componentWillUnmount() {
+    console.log('wum');
     EventBus.offByTarget(this);
   }
 
@@ -151,19 +153,25 @@ class ViewerBody extends React.Component {
     );
   }
 
-  render() {
+  renderReader() {
     const { annotations } = this.props;
     return (
+      <Reader
+        footer={this.footer}
+        contentFooter={this.contentFooter}
+        onMount={this.onReaderLoaded}
+        onUnmount={this.onReaderUnloaded}
+        selectable
+        annotationable
+        annotations={annotations}
+      />
+    );
+  }
+
+  render() {
+    return (
       <>
-        <Reader
-          footer={this.footer}
-          contentFooter={this.contentFooter}
-          onMount={this.onReaderLoaded}
-          onUnmount={this.onReaderUnloaded}
-          selectable
-          annotationable
-          annotations={annotations}
-        />
+        { this.renderReader() }
         { this.renderContextMenu() }
       </>
     );

@@ -37,6 +37,10 @@ export const setScrollTop = (top) => {
   }
 };
 
+export const scrollTo = (top, left) => {
+  Window.scrollTo(left, top);
+};
+
 export const { scrollBy } = Window;
 
 export const offsetWidth = () => Document.body.offsetWidth;
@@ -55,4 +59,5 @@ export default {
   offsetWidth,
   offsetHeight,
   waitThenRun,
+  scrollTo,
 };

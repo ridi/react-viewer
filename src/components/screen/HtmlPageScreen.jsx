@@ -4,7 +4,7 @@ import {
   selectReaderContentsCalculations,
   selectReaderFooterCalculations,
   selectReaderBindingType,
-  selectReaderCalculationsTotal,
+  selectReaderCalculationsTotal, selectReaderCalculationsTargets,
 } from '../../redux/selector';
 import { setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
@@ -36,24 +36,8 @@ class HtmlPageScreen extends BaseScreen {
     bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
     calculationsTotal: PropTypes.number.isRequired,
     onMoveWrongDirection: PropTypes.func,
+    calculationsTarget: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    this.calculate = this.calculate.bind(this);
-  }
-
-  calculate(index, contentNode) {
-    if (index === FOOTER_INDEX) {
-      const { hasFooter } = Connector.calculations;
-      Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
-    }
-    waitThenRun(() => {
-      const pagesTotal = Math.ceil(contentNode.scrollWidth
-        / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
-      Connector.calculations.setContentTotal(index, pagesTotal);
-    });
-  }
 
   moveToOffset() {
     super.moveToOffset();
@@ -74,16 +58,16 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
 
     return (
       <Footer
         key="footer"
+        isCalculated={footerCalculations.isCalculated}
         content={footer}
         startOffset={startOffset}
-        onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.PAGE)}
       />
@@ -107,22 +91,17 @@ class HtmlPageScreen extends BaseScreen {
         isCalculated={isCalculated}
         startOffset={startOffset}
         localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
-        onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        onContentMount={this.onContentMount}
       />
     );
   }
 
   renderContents() {
-    const { contents } = this.props;
+    const { contents, calculationsTarget } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.PAGE);
-    const calculatedTarget = Connector.calculations.getCalculationTargetContents();
     return contents
-      .filter(({ index }) => this.needRender(index) || calculatedTarget.includes(index))
+      .filter(({ index }) => this.needRender(index) || calculationsTarget.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }
@@ -133,6 +112,7 @@ const mapStateToProps = state => ({
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
   bindingType: selectReaderBindingType(state),
+  calculationsTargets: selectReaderCalculationsTargets(state),
 });
 
 const mapDispatchToProps = dispatch => ({

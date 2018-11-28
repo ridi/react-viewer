@@ -79,11 +79,10 @@ class AppService {
   }
 
   _connectWithReactViewer() {
-    Connector.connect(this._store);
-    Service.loadAll();
-
     EventBus.on(Events.core.LOADED, this.onLoaded);
     EventBus.on(Events.core.UNLOADED, this.onUnloaded);
+    Connector.connect(this._store);
+    Service.loadAll();
   }
 
   _loadContent() {

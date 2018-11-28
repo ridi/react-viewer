@@ -88,6 +88,7 @@ const invalidateCalculations = state => new ImmutableObjectBuilder(state)
   .set(path.isReadyToRead(), false)
   .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
+  .set(path.calculationsTargets(), [])
   .build();
 
 const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(state)
@@ -101,6 +102,10 @@ const setReadyToRead = (state, { isReadyToRead }) => new ImmutableObjectBuilder(
 
 const updateSelection = (state, { selection }) => new ImmutableObjectBuilder(state)
   .set(path.selection(), selection)
+  .build();
+
+const setCalculationsTargets = (state, { targets }) => new ImmutableObjectBuilder(state)
+  .set(path.calculationsTargets(), targets)
   .build();
 
 export default ({
@@ -123,5 +128,6 @@ export default ({
     [actions.UPDATE_FOOTER_CALCULATIONS]: updateFooterCalculation,
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
     [actions.UPDATE_SELECTION]: updateSelection,
+    [actions.SET_CALCULATIONS_TARGETS]: setCalculationsTargets,
   });
 };

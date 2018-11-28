@@ -5,6 +5,7 @@ import {
   updateFooterCalculation,
   updateContentCalculation,
   setReadyToRead,
+  setCalculationsTargets,
 } from '../../redux/action';
 import {
   selectReaderFooterCalculations,
@@ -26,7 +27,6 @@ import SelectionConnector from './SelectionConnector';
 class CalculationsConnector extends BaseConnector {
   // todo move to config
   _hasFooter = false;
-  _annotations = {};
 
   set hasFooter(hasFooter) {
     this._hasFooter = hasFooter;
@@ -50,7 +50,7 @@ class CalculationsConnector extends BaseConnector {
       return calculatedFooter.isCalculated;
     }
     if (!selectReaderIsInitContents(this.getState())) return false;
-    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    const calculatedContents = this.getContentCalculations();
     return calculatedContents[index - 1].isCalculated;
   }
 
@@ -59,8 +59,16 @@ class CalculationsConnector extends BaseConnector {
       return selectReaderFooterCalculations(this.getState());
     }
     if (!selectReaderIsInitContents(this.getState())) return false;
-    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    const calculatedContents = this.getContentCalculations();
     return calculatedContents[index - 1];
+  }
+
+  getContentCalculations() {
+    return selectReaderContentsCalculations(this.getState());
+  }
+
+  getFooterCalculations() {
+    return selectReaderFooterCalculations(this.getState());
   }
 
   getStartOffset(index) {
@@ -78,39 +86,12 @@ class CalculationsConnector extends BaseConnector {
     }
   }
 
-  checkAllCompleted() {
-    const state = this.getState();
-    const isInitContents = selectReaderIsInitContents(state);
-    if (!isInitContents) return;
-    const calculatedContents = selectReaderContentsCalculations(state);
-    const calculatedFooter = selectReaderFooterCalculations(state);
-    const contentFormat = selectReaderContentFormat(state);
-    const isAllCalculated = contentFormat === ContentFormat.HTML
-      ? calculatedContents.every(content => content.isCalculated)
-      : calculatedContents[0].isCalculated;
-    const isFooterCalculated = !this.hasFooter || calculatedFooter.isCalculated;
+  setReadyToRead(readyToRead = true) {
+    this.dispatch(setReadyToRead(readyToRead));
+  }
 
-    for (let i = 0; i < calculatedContents.length; i += 1) {
-      const { index, isCalculated, total } = calculatedContents[i];
-      if (isCalculated && typeof this.getStartOffset(index) === 'number') {
-        const nextIndex = (index === calculatedContents.length) ? FOOTER_INDEX : index + 1;
-        this.setStartOffset(nextIndex, this.getStartOffset(index) + total);
-      } else {
-        break;
-      }
-    }
-
-    const calculatedTotal = calculatedContents.reduce((sum, content) => sum + content.total, calculatedFooter.total);
-    this.dispatch(updateCalculationsTotal(calculatedTotal, isAllCalculated && isFooterCalculated));
-
-    const isReadyToRead = selectReaderIsReadyToRead(state);
-    if (!isReadyToRead) {
-      const currentContentIndex = selectReaderCurrentContentIndex(state);
-      if (this.getStartOffset(currentContentIndex) !== PRE_CALCULATION
-        && this.isContentCalculated(currentContentIndex)) {
-        this.dispatch(setReadyToRead(true));
-      }
-    }
+  isReadyToRead() {
+    return selectReaderIsReadyToRead(this.getState());
   }
 
   setContentTotal(index, total) {
@@ -118,22 +99,30 @@ class CalculationsConnector extends BaseConnector {
       this.dispatch(index === FOOTER_INDEX
         ? updateFooterCalculation({ total, isCalculated: true })
         : updateContentCalculation({ index, total, isCalculated: true }));
-      this.checkAllCompleted();
     }
+  }
+
+  setCalculationsTotal(calculatedTotal, completed) {
+    this.dispatch(updateCalculationsTotal(calculatedTotal, completed));
   }
 
   getContentTotal(index) {
     if (index === FOOTER_INDEX) {
-      const { total } = selectReaderFooterCalculations(this.getState());
+      const { total } = this.getFooterCalculations();
       return total;
     }
-    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    const calculatedContents = this.getContentCalculations();
     return calculatedContents[index - 1].total;
+  }
+
+  getCalculationsTotal() {
+    const { total: footerTotal } = this.getFooterCalculations();
+    return selectReaderCalculationsTotal(this.getState()) + footerTotal;
   }
 
   getContentIndexesInOffsetRange(startOffset, endOffset) {
     const total = selectReaderCalculationsTotal(this.getState());
-    const calculations = selectReaderContentsCalculations(this.getState());
+    const calculations = this.getContentCalculations();
     const result = [];
     const range = [startOffset, endOffset];
 
@@ -162,7 +151,7 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getIndexAtOffset(offset) {
-    const calculations = selectReaderContentsCalculations(this.getState());
+    const calculations = this.getContentCalculations();
     const lastIndex = calculations.length;
     for (let index = 1; index <= lastIndex; index += 1) {
       const nextIndex = index === lastIndex ? FOOTER_INDEX : index + 1;
@@ -182,7 +171,7 @@ class CalculationsConnector extends BaseConnector {
   getCalculationTargetContents() {
     // TODO 값 관리
     const contentCountAtATime = 4;
-    const calculatedContents = selectReaderContentsCalculations(this.getState());
+    const calculatedContents = this.getContentCalculations();
     if (this.isCompleted()) return [];
 
     const result = calculatedContents
@@ -196,6 +185,10 @@ class CalculationsConnector extends BaseConnector {
     return {
       rects: SelectionConnector.getRectsFromSerializedRange(annotation.contentIndex, annotation.serializedRange),
     };
+  }
+
+  setTargets(targets) {
+    this.dispatch(setCalculationsTargets(targets));
   }
 }
 

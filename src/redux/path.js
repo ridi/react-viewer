@@ -59,6 +59,7 @@ export const initialState = {
     contents: [],
     footer: initialFooterCalculationsState(),
     contentTotal: 0,
+    targets: [],
   },
   current: {
     contentIndex: 1,
@@ -106,6 +107,7 @@ export default {
   footerCalculations: () => ['calculations', 'footer'],
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
+  calculationsTargets: () => ['calculations', 'targets'],
 
   selection: () => ['selection'],
 };

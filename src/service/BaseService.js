@@ -1,8 +1,10 @@
+import { merge } from 'rxjs';
 import EventBus from '../event/EventBus';
 import Logger from '../util/Logger';
 
 export default class BaseService {
   listeningEvents = {}; // event: observer
+  _subscriptions = [];
 
   load() {
     Object.getOwnPropertySymbols(this.listeningEvents)
@@ -12,8 +14,17 @@ export default class BaseService {
 
   unload() {
     EventBus.offByTarget(this);
+    this._subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   afterLoaded() {}
   beforeUnloaded() {}
+
+  connectEvents(connectedTo, ...events) {
+    const obs$ = merge(...events.map(eventType => EventBus.asObservable(eventType)));
+    const subscription = connectedTo(obs$);
+    if (subscription) {
+      this._subscriptions.push(subscription);
+    }
+  }
 }

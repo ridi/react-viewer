@@ -20,6 +20,7 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
 import Connector from '../../service/connector';
+import Service from '../../service';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { makeSequence } from '../../util/Util';
@@ -28,6 +29,7 @@ import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
+import EventBus, { Events } from '../../event';
 
 class ImagePageScreen extends BaseScreen {
   constructor(props) {
@@ -36,10 +38,10 @@ class ImagePageScreen extends BaseScreen {
   }
 
   componentDidMount() {
-    const { contents } = this.props;
-    const { columnsInPage, startWithBlankPage } = this.props.setting;
-    Connector.calculations.setContentTotal(1, Math.ceil((contents.length + startWithBlankPage) / columnsInPage));
-    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.hasFooter ? 1 : 0);
+    const isCalculated = Connector.calculations.isContentCalculated(1);
+    if (!isCalculated) {
+      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: 1 });
+    }
   }
 
   moveToOffset() {
@@ -54,13 +56,14 @@ class ImagePageScreen extends BaseScreen {
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
 
     return (
       <Footer
         content={footer}
+        isCalculated={footerCalculations.isCalculated}
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.PAGE)}

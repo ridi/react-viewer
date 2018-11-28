@@ -1,9 +1,11 @@
 import React from 'react';
+import Service from '../../service';
 import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../service/connector';
 import { addEventListener } from '../../util/EventHandler';
 import BaseContent from './BaseContent';
+import EventBus, { Events } from '../../event';
 
 export default class BaseHtmlContent extends BaseContent {
   constructor(props) {
@@ -16,13 +18,11 @@ export default class BaseHtmlContent extends BaseContent {
 
   componentDidMount() {
     super.componentDidMount();
-    const { isContentLoaded } = this.props.content;
-    if (!isContentLoaded) {
-      this.loadContent();
-      return;
+    const { isCalculated } = this.props;
+    if (!isCalculated) {
+      this.afterContentLoaded();
     }
 
-    this.afterContentLoaded();
     this.moveToOffset();
   }
 
@@ -31,10 +31,9 @@ export default class BaseHtmlContent extends BaseContent {
       localOffset,
       isCalculated,
     } = this.props;
-    const { isContentLoaded } = this.props.content;
-    if (!isContentLoaded) return;
-
-    this.afterContentLoaded();
+    if (!isCalculated) {
+      this.afterContentLoaded();
+    }
 
     if (prevProps.isCalculated && !isCalculated) {
       this.listener = null;
@@ -45,25 +44,15 @@ export default class BaseHtmlContent extends BaseContent {
     }
   }
 
-  loadContent() {
-    const { uri, index } = this.props.content;
-    const { onContentLoaded, onContentError } = this.props;
-
-    if (!uri) onContentError(index, 'no uri');
-    fetch(uri).then(response => response.json())
-      .then(data => onContentLoaded(index, data.value))
-      .catch(error => onContentError(index, error));
-  }
-
   afterContentLoaded() {
-    const { onContentRendered } = this.props;
+    const { contentFooter } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
       const { current } = this.contentWrapperRef;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
-          onContentRendered(index, current);
+          EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index, contentNode: current, contentFooterNode: contentFooter });
         });
     }
   }
@@ -136,9 +125,6 @@ BaseHtmlContent.propTypes = {
   className: PropTypes.string,
   startOffset: PropTypes.number.isRequired,
   localOffset: PropTypes.number.isRequired,
-  onContentLoaded: PropTypes.func,
-  onContentError: PropTypes.func,
-  onContentRendered: PropTypes.func,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
   StyledContent: PropTypes.func,

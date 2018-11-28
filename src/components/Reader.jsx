@@ -52,13 +52,14 @@ class Reader extends React.Component {
   }
 
   componentWillUnmount() {
+    console.log('!!!! unmount');
     removeEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
     this.onUnmount();
   }
 
   onUnmount() {
     EventBus.emit(Events.core.UNLOADED);
-    EventBus.completeAll();
+    // EventBus.completeAll();
   }
 
   getScreen() {

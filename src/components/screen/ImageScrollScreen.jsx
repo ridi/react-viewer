@@ -31,8 +31,9 @@ import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import EventBus, { Events } from '../../event';
+import Service from '../../service';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class ImageScrollScreen extends BaseScreen {
   constructor(props) {
@@ -43,18 +44,16 @@ class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
 
-    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL).pipe(
-      debounce(() => timer(DOMEventDelayConstants.SCROLL)),
-      map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
-      distinctUntilChanged(),
-    ).subscribe(data => EventBus.emit(Events.core.SCROLL, data));
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+      .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
 
     if (!this.listener) {
+      const { contentFooter } = this.props;
       const { current } = this.wrapper;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
-          this.calculate(1, current);
+          EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
         });
     }
   }
@@ -65,18 +64,6 @@ class ImageScrollScreen extends BaseScreen {
       this.scrollEventSubscription.unsubscribe();
       this.scrollEventSubscription = null;
     }
-  }
-
-  calculate(index, node) {
-    if (index === FOOTER_INDEX) {
-      Connector.calculations.setContentTotal(FOOTER_INDEX, node.scrollHeight);
-    }
-    const isLastContent = Connector.calculations.isLastContent(index);
-    const { contentFooter } = this.props;
-    waitThenRun(() => Connector.calculations.setContentTotal(
-      index,
-      node.scrollHeight + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),
-    ));
   }
 
   waitForResources() {
@@ -96,13 +83,13 @@ class ImageScrollScreen extends BaseScreen {
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
+        isCalculated={footerCalculations.isCalculated}
         content={footer}
         containerVerticalMargin={containerVerticalMargin}
-        onContentRendered={this.calculate}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.SCROLL)}
       />
     );

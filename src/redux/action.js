@@ -23,6 +23,7 @@ export const actions = {
   UPDATE_FOOTER_CALCULATIONS: 'READER:UPDATE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
   UPDATE_SELECTION: 'READER:UPDATE_SELECTION',
+  SET_CALCULATIONS_TARGETS: 'READER:SET_CALCULATIONS_TARGETS',
 };
 
 export const load = fullState => ({
@@ -140,4 +141,9 @@ export const setReadyToRead = isReadyToRead => ({
 export const updateSelection = selection => ({
   type: actions.UPDATE_SELECTION,
   selection,
+});
+
+export const setCalculationsTargets = (targets) => ({
+  type: actions.SET_CALCULATIONS_TARGETS,
+  targets,
 });

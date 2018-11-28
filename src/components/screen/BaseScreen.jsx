@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
 import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { debounce, isExist } from '../../util/Util';
+import { debounce } from '../../util/Util';
 import {
   selectReaderContents,
   selectReaderCurrent,
   selectReaderSetting,
-  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead, selectReaderSelection,
+  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead, selectReaderSelection, selectReaderIsContentsLoaded,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
@@ -17,7 +17,7 @@ import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { screenHeight, waitThenRun } from '../../util/BrowserWrapper';
-import { ViewType } from '../..';
+import { ViewType } from '../../constants/SettingConstants';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
@@ -39,6 +39,7 @@ export default class BaseScreen extends React.Component {
     annotationable: PropTypes.bool.isRequired,
     annotations: PropTypes.array,
     selection: PropTypes.object,
+    isContentsLoaded: PropTypes.bool.isRequired,
   };
 
   static getDerivedStateFromProps(props) {
@@ -76,16 +77,13 @@ export default class BaseScreen extends React.Component {
     this.state = {
       annotations: [],
     };
-    this.onContentLoaded = this.onContentLoaded.bind(this);
-    this.onContentError = this.onContentError.bind(this);
-    this.onContentMount = this.onContentMount.bind(this);
   }
 
   componentDidMount() {
     const { isReadyToRead, disableCalculation } = this.props;
-    if (isReadyToRead && !disableCalculation) {
-      Connector.current.restoreCurrentOffset();
-    }
+    // if (isReadyToRead && !disableCalculation) {
+    //   Connector.current.restoreCurrentOffset();
+    // }
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {
         Connector.calculations.invalidate();
@@ -105,31 +103,12 @@ export default class BaseScreen extends React.Component {
     const isNeededRestore = hasJustCalculatedCurrent;
     const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
 
-    if (isNeededRestore) Connector.current.restoreCurrentOffset();
-    if (isNeededMoveToOffset) this.moveToOffset();
+    // if (isNeededRestore) Connector.current.restoreCurrentOffset();
+    // if (isNeededMoveToOffset) this.moveToOffset();
   }
 
   componentWillUnmount() {
     removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-  }
-
-  onContentLoaded(index, content) {
-    const { contents, actionUpdateContent } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContent(index, content, isAllLoaded);
-  }
-
-  onContentError(index, error) {
-    const { contents, actionUpdateContentError } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContentError(index, error, isAllLoaded);
-  }
-
-  onContentMount(index) {
-    const { current } = this.props;
-    if (index === current.contentIndex) {
-      // Connector.current.setReaderJs();
-    }
   }
 
   moveToOffset() {
@@ -150,6 +129,7 @@ export default class BaseScreen extends React.Component {
       calculationsTotal,
       contentFormat,
       isReadyToRead,
+      isContentsLoaded,
       children,
       annotationable,
       selectable,
@@ -168,9 +148,9 @@ export default class BaseScreen extends React.Component {
         annotations={this.state.annotations}
         selection={selection}
       >
-        { this.renderContents() }
-        { this.renderFooter() }
-        { children }
+        { isContentsLoaded && this.renderContents() }
+        { isContentsLoaded && this.renderFooter() }
+        { isContentsLoaded && children }
       </TouchableScreen>
     );
   }
@@ -184,6 +164,7 @@ export const mapStateToProps = state => ({
   contentFormat: selectReaderContentFormat(state),
   isReadyToRead: selectReaderIsReadyToRead(state),
   selection: selectReaderSelection(state),
+  isContentsLoaded: selectReaderIsContentsLoaded(state),
 });
 
 export const mapDispatchToProps = dispatch => ({
