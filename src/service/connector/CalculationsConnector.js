@@ -19,7 +19,6 @@ import {
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import SelectionConnector from './SelectionConnector';
 
-// TODO 테스트 작성
 class CalculationsConnector extends BaseConnector {
   // todo move to config
   _hasFooter = false;
@@ -132,19 +131,6 @@ class CalculationsConnector extends BaseConnector {
   isLastContent(index) {
     const calculatedContents = selectReaderContents(this.getState());
     return index === calculatedContents.length;
-  }
-
-  getCalculationTargetContents() {
-    // TODO 값 관리
-    const contentCountAtATime = 4;
-    const calculatedContents = this.getContentCalculations();
-    if (this.isCompleted()) return [];
-
-    const result = calculatedContents
-      .filter(({ isCalculated }) => !isCalculated)
-      .map(({ index }) => index)
-      .slice(0, contentCountAtATime);
-    return result;
   }
 
   getAnnotationCalculation(annotation) {

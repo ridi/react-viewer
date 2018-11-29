@@ -17,6 +17,8 @@ import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { waitThenRun } from '../../util/BrowserWrapper';
+import { fromEvent } from 'rxjs';
+import EventBus, { Events } from '../../event';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
@@ -24,7 +26,6 @@ export default class BaseScreen extends React.Component {
   };
 
   static propTypes = {
-    disableCalculation: PropTypes.bool.isRequired,
     setting: SettingType.isRequired,
     current: CurrentType.isRequired,
     contents: PropTypes.arrayOf(ContentType).isRequired,
@@ -70,17 +71,14 @@ export default class BaseScreen extends React.Component {
   }
 
   componentDidMount() {
-    const { disableCalculation } = this.props;
-    this.resizeReader = debounce(() => {
-      if (!disableCalculation) {
-        Connector.calculations.invalidate();
-      }
-    }, DOMEventDelayConstants.RESIZE);
-    addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
+    this.resizeEventSubscription = fromEvent(window, DOMEventConstants.RESIZE)
+      .subscribe(event => EventBus.emit(Events.core.RESIZE, event));
   }
 
   componentWillUnmount() {
-    removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
+    if (this.resizeEventSubscription) {
+      this.resizeEventSubscription.unsubscribe();
+    }
   }
 
   moveToOffset() {

@@ -18,8 +18,6 @@ class Reader extends React.Component {
   static defaultProps = {
     footer: null,
     contentFooter: null,
-    ignoreScroll: false,
-    disableCalculation: false,
     selectable: false,
     annotationable: false,
     annotations: [],
@@ -30,8 +28,6 @@ class Reader extends React.Component {
     setting: SettingType,
     footer: PropTypes.node,
     contentFooter: PropTypes.node,
-    ignoreScroll: PropTypes.bool,
-    disableCalculation: PropTypes.bool,
     contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
     selectable: PropTypes.bool,
     annotationable: PropTypes.bool,
@@ -83,8 +79,6 @@ class Reader extends React.Component {
     const {
       footer,
       contentFooter,
-      ignoreScroll,
-      disableCalculation,
       selectable,
       annotationable,
       annotations,
@@ -94,8 +88,6 @@ class Reader extends React.Component {
     const props = {
       footer,
       contentFooter,
-      ignoreScroll,
-      disableCalculation,
       selectable,
       annotationable,
       annotations,

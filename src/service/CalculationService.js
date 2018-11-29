@@ -4,7 +4,7 @@ import {
   tap,
   map,
   mergeMap,
-  switchMap,
+  switchMap, debounce, distinctUntilChanged,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
@@ -13,6 +13,8 @@ import { ViewType } from '../constants/SettingConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
 import { ContentFormat } from '../constants/ContentConstants';
 import Logger from '../util/Logger';
+import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
+import { screenHeight, screenWidth } from '../util/BrowserWrapper';
 
 class CalculationService extends BaseService {
   settingsAffectingCalculation = [
@@ -72,23 +74,6 @@ class CalculationService extends BaseService {
     if (completed) EventBus.emit(Events.calculation.CALCULATION_COMPLETED);
   }
 
-  _calculationTargets$() {
-    return merge(
-      EventBus.asObservable(Events.content.ALL_CONTENT_LOADED),
-      EventBus.asObservable(Events.core.RESIZE),
-      EventBus.asObservable(Events.core.SETTING_UPDATED).pipe(
-        filter(settingName => this.settingsAffectingCalculation.includes(settingName)),
-      ),
-    ).pipe(
-      tap(() => Connector.calculations.invalidate()),
-      tap(() => EventBus.emit(Events.calculation.CALCULATION_INVALIDATED)),
-      tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
-      switchMap(() => EventBus.asObservable(Events.calculation.CALCULATION_UPDATED)),
-      tap(() => this._checkAllCompleted()),
-      map(() => this._getCalculationTargetContents()),
-    );
-  }
-
   _calculateContent({ index, contentNode, contentFooter }) {
     const { viewType, startWithBlankPage, columnsInPage } = Connector.setting.getSetting();
     const contentFormat = Connector.content.getContentFormat();
@@ -128,16 +113,32 @@ class CalculationService extends BaseService {
   load() {
     super.load();
     this.connectEvents(this.onCalculateContent.bind(this), Events.calculation.CALCULATE_CONTENT);
-    this.calculationTargetsSubscription = this._calculationTargets$().subscribe({
+    this.connectEvents(this.onCalculated.bind(this), Events.content.ALL_CONTENT_LOADED, Events.core.RESIZE, Events.core.SETTING_UPDATED);
+  }
+
+  onCalculated(loadAllContent$, resize$, updateSetting$) {
+    return merge(
+      loadAllContent$,
+      resize$.pipe(
+        debounce(() => timer(DOMEventDelayConstants.RESIZE)),
+        map(() => ({ w: screenWidth(), h: screenHeight() })),
+        distinctUntilChanged(({ w: bw, h: bh }, { w: aw, h: ah }) => bw === aw && bh === ah),
+      ),
+      updateSetting$.pipe(
+        filter(settingName => this.settingsAffectingCalculation.includes(settingName)),
+      ),
+    ).pipe(
+      tap(() => Connector.calculations.invalidate()),
+      tap(() => EventBus.emit(Events.calculation.CALCULATION_INVALIDATED)),
+      tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
+      switchMap(() => EventBus.asObservable(Events.calculation.CALCULATION_UPDATED)),
+      tap(() => this._checkAllCompleted()),
+      map(() => this._getCalculationTargetContents()),
+    ).subscribe({
       next: nextTargets => Connector.calculations.setTargets(nextTargets),
       error: error => Logger.error(error),
       complete: () => Logger.debug('calculationTargetsSubscription complete'),
     });
-  }
-
-  unload() {
-    super.unload();
-    this.calculationTargetsSubscription.unsubscribe();
   }
 
   onCalculateContent(calculateContent$) {

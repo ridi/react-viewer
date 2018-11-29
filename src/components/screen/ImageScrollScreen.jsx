@@ -140,7 +140,6 @@ ImageScrollScreen.propTypes = {
   actionUpdateContentError: PropTypes.func.isRequired,
   footerCalculations: FooterCalculationsType.isRequired,
   contentFooter: PropTypes.node,
-  ignoreScroll: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

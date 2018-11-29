@@ -42,7 +42,6 @@ class HtmlScrollScreen extends BaseScreen {
     actionUpdateContentError: PropTypes.func.isRequired,
     footerCalculations: FooterCalculationsType.isRequired,
     contentFooter: PropTypes.node,
-    ignoreScroll: PropTypes.bool.isRequired,
     calculationsTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
