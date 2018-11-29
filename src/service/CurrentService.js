@@ -32,13 +32,16 @@ class CurrentService extends BaseService {
   _restoreCurrentOffset() {
     const { viewType } = Connector.setting.getSetting();
     const { position, contentIndex } = Connector.current.getCurrent();
+    const startOffset = Connector.calculations.getStartOffset(contentIndex);
+    const isCalculated = Connector.calculations.isContentCalculated(contentIndex)
+      && startOffset !== PRE_CALCULATION;
+    if (!isCalculated) return null;
     const calculationTotal = Connector.calculations.getCalculationsTotal();
 
     const total = Connector.calculations.getContentTotal(contentIndex);
-    const maxOffset = Connector.calculations.getStartOffset(contentIndex) + (total - 1);
-    const newOffset = Math.min(Math.round(position * total) + Connector.calculations.getStartOffset(contentIndex), maxOffset);
-    // TODO 깔끔하게 만들기
-    console.log(`restore: ${calculationTotal}, ${screenHeight()}, ${newOffset}`);
+    const newOffset = Math.round(position * total) + startOffset;
+
+    console.log(`restore: ${contentIndex} index, ${calculationTotal}, ${screenHeight()}, ${position}, ${total}, ${startOffset}, ${newOffset}`);
     if (calculationTotal >= screenHeight() + newOffset) {
       this.isRestored = true;
       Connector.current.updateCurrent({ offset: newOffset, viewType });
@@ -117,6 +120,7 @@ class CurrentService extends BaseService {
   onCurrentUpdated(scroll$, readyToRead$) {
     const currentUpdated$ = merge(
       scroll$.pipe(
+        filter(() => this.isRestored),
         debounce(() => timer(DOMEventDelayConstants.SCROLL)),
         map(() => scrollTop()),
         distinctUntilChanged(),
