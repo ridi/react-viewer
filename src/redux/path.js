@@ -43,7 +43,7 @@ export const initialSettingState = () => ({
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
 });
 
-export const initialState = {
+export const initialState = () => ({
   status: {
     isLoaded: true,
     isInitContents: false,
@@ -71,7 +71,7 @@ export const initialState = {
   },
   setting: initialSettingState(),
   selection: null,
-};
+});
 
 export default {
   contents: () => ['contents'],

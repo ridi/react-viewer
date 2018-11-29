@@ -15,7 +15,7 @@ const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState
   .set(path.isLoaded(), true)
   .build();
 
-const unload = () => new ImmutableObjectBuilder(initialState)
+const unload = () => new ImmutableObjectBuilder(initialState())
   .set(path.isLoaded(), false)
   .build();
 
@@ -117,7 +117,7 @@ export default ({
   setting: customSetting = {},
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
-  return createReducer({ ...initialState, setting }, {
+  return createReducer({ ...initialState(), setting }, {
     [actions.LOAD]: load,
     [actions.UNLOAD]: unload,
     [actions.SET_CONTENT_METADATA]: setContentMetadata,
