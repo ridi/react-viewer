@@ -1,5 +1,4 @@
 import React from 'react';
-import Service from '../../service';
 import PropTypes, { ContentType } from '../prop-types';
 import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import Connector from '../../service/connector';

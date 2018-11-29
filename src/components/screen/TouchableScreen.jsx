@@ -6,7 +6,6 @@ import {
   allowScrollEvent, addEventListener, removeEventListener,
 } from '../../util/EventHandler';
 import { ViewType, SELECTION_BASE_CONTENT } from '../../constants/SettingConstants';
-import { isExist } from '../../util/Util';
 import SelectionLayer from '../selection/SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { SelectionMode, SelectionParts } from '../..';

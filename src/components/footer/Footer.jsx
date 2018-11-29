@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { screenWidth } from '../../util/BrowserWrapper';
-import Service from '../../service';
 import EventBus, { Events } from '../../event';
 
 export default class Footer extends React.PureComponent {

@@ -15,6 +15,7 @@ export const initialContentState = index => ({
   error: null,
   isContentLoaded: false,
   isContentOnError: false,
+  isInScreen: false,
 });
 
 export const initialContentCalculationsState = index => ({

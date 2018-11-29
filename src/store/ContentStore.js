@@ -65,8 +65,6 @@ export const contents$ = new StoreBuilder([])
   .fromEvent(Events.content.WITH_CONTENTS)
   .build();
 
-export const content$ = (index) => contents$.pipe(
-  map((contents) => contents.filter(content => index === content.index)),
+export const content$ = index => contents$.pipe(
+  map(contents => contents.filter(content => index === content.index)),
 );
-
-content$(index).subscribe()

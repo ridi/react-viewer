@@ -16,8 +16,7 @@ import TouchableScreen from './TouchableScreen';
 import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import { screenHeight, waitThenRun } from '../../util/BrowserWrapper';
-import { ViewType } from '../../constants/SettingConstants';
+import { waitThenRun } from '../../util/BrowserWrapper';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
@@ -44,26 +43,17 @@ export default class BaseScreen extends React.Component {
 
   static getDerivedStateFromProps(props) {
     // todo temporary code: Force to set annotation recalculation time
-    return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType);
+    return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType, props.contents);
   }
 
-  static needAnnotationRender(viewType, annotation) {
-    if (!Connector.calculations.isContentCalculated(annotation.contentIndex)) return false;
-    // todo temporary code: Force to set annotation recalculation time
-    if (viewType === ViewType.SCROLL) {
-      const { offset } = Connector.current.getCurrent();
-      const [top, height] = [offset, screenHeight()];
-      const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
-      return contentIndexesInScreen.includes(annotation.contentIndex);
-    }
-    const { contentIndex } = Connector.current.getCurrent();
-    return contentIndex === annotation.contentIndex;
+  static needAnnotationRender(viewType, contents, annotation) {
+    return !!contents.find(({ index, isInScreen }) => annotation.contentIndex === index && isInScreen);
   }
 
-  static recalculateAnnotations(annotations, viewType) {
+  static recalculateAnnotations(annotations, viewType, contents) {
     // todo temporary code: Force to set annotation recalculation time
     return {
-      annotations: annotations.filter(BaseScreen.needAnnotationRender.bind(this, viewType))
+      annotations: annotations.filter(BaseScreen.needAnnotationRender.bind(BaseScreen, viewType, contents))
         .map(item => ({
           ...item,
           ...Connector.calculations.getAnnotationCalculation(item),
@@ -80,31 +70,13 @@ export default class BaseScreen extends React.Component {
   }
 
   componentDidMount() {
-    const { isReadyToRead, disableCalculation } = this.props;
-    // if (isReadyToRead && !disableCalculation) {
-    //   Connector.current.restoreCurrentOffset();
-    // }
+    const { disableCalculation } = this.props;
     this.resizeReader = debounce(() => {
       if (!disableCalculation) {
         Connector.calculations.invalidate();
       }
     }, DOMEventDelayConstants.RESIZE);
     addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { current: prevCurrent, isReadyToRead: prevIsReadyToRead } = prevProps;
-    const { current, isReadyToRead } = this.props;
-
-    const hasJustCalculatedCurrent = !prevIsReadyToRead && isReadyToRead;
-    const isCurrentMoved = (prevCurrent.offset !== current.offset
-      || prevCurrent.contentIndex !== current.contentIndex
-      || prevCurrent.viewType !== current.viewType);
-    const isNeededRestore = hasJustCalculatedCurrent;
-    const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
-
-    // if (isNeededRestore) Connector.current.restoreCurrentOffset();
-    // if (isNeededMoveToOffset) this.moveToOffset();
   }
 
   componentWillUnmount() {

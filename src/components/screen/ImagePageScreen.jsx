@@ -20,7 +20,6 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
 } from './BaseScreen';
 import Connector from '../../service/connector';
-import Service from '../../service';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { makeSequence } from '../../util/Util';

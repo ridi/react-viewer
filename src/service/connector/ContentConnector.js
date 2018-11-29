@@ -2,7 +2,7 @@ import BaseConnector from './BaseConnector';
 import {
   setContentsByValue,
   setContentsByUri,
-  updateContent, updateContentError,
+  updateContent, updateContentError, setContentsInScreen,
 } from '../../redux/action';
 import { selectReaderContentFormat, selectReaderContents } from '../../redux/selector';
 
@@ -37,6 +37,10 @@ class ContentConnector extends BaseConnector {
 
   getContentFormat() {
     return selectReaderContentFormat(this.getState());
+  }
+
+  setContentsInScreen(contentIndexes) {
+    this.dispatch(setContentsInScreen(contentIndexes));
   }
 }
 

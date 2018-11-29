@@ -6,7 +6,7 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal, selectReaderCalculationsTargets,
 } from '../../redux/selector';
-import { setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
+import { setScrollTop } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fromEvent, timer } from 'rxjs';
-import { debounce, distinctUntilChanged, map, tap } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
@@ -9,11 +8,8 @@ import {
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import {
-  screenHeight,
-  scrollTop,
-  scrollLeft,
   setScrollTop,
-  waitThenRun, scrollTo,
+  waitThenRun,
 } from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
@@ -27,7 +23,6 @@ import Connector from '../../service/connector';
 import ScrollHtmlContent from '../content/ScrollHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
@@ -94,14 +89,6 @@ class HtmlScrollScreen extends BaseScreen {
     setScrollTop(offset);
   }
 
-  needRender(contentIndex) {
-    const { current } = this.props;
-    const calculated = Connector.calculations.isContentCalculated(contentIndex);
-    const [top, height] = [current.offset, screenHeight()];
-    const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
-    return calculated && contentIndexesInScreen.includes(contentIndex);
-  }
-
   renderFooter() {
     const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
@@ -144,7 +131,7 @@ class HtmlScrollScreen extends BaseScreen {
     const { contents, calculationsTargets } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.SCROLL);
     return contents
-      .filter(({ index }) => this.needRender(index) || calculationsTargets.includes(index))
+      .filter(({ isInScreen, index }) => isInScreen || calculationsTargets.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }

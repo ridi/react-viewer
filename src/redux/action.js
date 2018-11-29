@@ -24,6 +24,7 @@ export const actions = {
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
   UPDATE_SELECTION: 'READER:UPDATE_SELECTION',
   SET_CALCULATIONS_TARGETS: 'READER:SET_CALCULATIONS_TARGETS',
+  SET_CONTENTS_IN_SCREEN: 'READER:SET_CONTENTS_IN_SCREEN',
 };
 
 export const load = fullState => ({
@@ -143,7 +144,12 @@ export const updateSelection = selection => ({
   selection,
 });
 
-export const setCalculationsTargets = (targets) => ({
+export const setCalculationsTargets = targets => ({
   type: actions.SET_CALCULATIONS_TARGETS,
   targets,
+});
+
+export const setContentsInScreen = contentIndexes => ({
+  type: actions.SET_CONTENTS_IN_SCREEN,
+  contentIndexes,
 });

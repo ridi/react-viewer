@@ -36,7 +36,7 @@ export default class EventBus {
   }
 
   static offByTarget(target = UNKNOWN_TARGET) {
-    Object.getOwnPropertySymbols(EventBus._events).forEach((eventType) => EventBus.off(eventType, target));
+    Object.getOwnPropertySymbols(EventBus._events).forEach(eventType => EventBus.off(eventType, target));
   }
 
   static completeAll() {

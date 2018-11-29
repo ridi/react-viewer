@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fromEvent, timer } from 'rxjs';
-import { debounce, distinctUntilChanged, map } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 import {
   selectReaderContents,
   selectReaderContentsCalculations,
@@ -9,10 +8,7 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import {
-  scrollLeft,
-  scrollTop,
   setScrollTop,
-  waitThenRun,
 } from '../../util/BrowserWrapper';
 import {
   addEventListener,
@@ -27,13 +23,10 @@ import Connector from '../../service/connector';
 import ImageContent from '../content/ImageContent';
 import { StyledImageScrollContent } from '../styled/StyledContent';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import EventBus, { Events } from '../../event';
-import Service from '../../service';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 
 class ImageScrollScreen extends BaseScreen {
   constructor(props) {
@@ -43,9 +36,10 @@ class ImageScrollScreen extends BaseScreen {
 
   componentDidMount() {
     super.componentDidMount();
-
-    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
-      .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
+    EventBus.on(Events.calculation.READY_TO_READ, () => {
+      this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+        .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
+    });
 
     if (!this.listener) {
       const { contentFooter } = this.props;

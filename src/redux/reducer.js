@@ -108,6 +108,11 @@ const setCalculationsTargets = (state, { targets }) => new ImmutableObjectBuilde
   .set(path.calculationsTargets(), targets)
   .build();
 
+const setContentsInScreen = (state, { contentIndexes }) => new ImmutableObjectBuilder(state)
+  .set(path.contents(), state.contents.map(({ index, ...others }) => (
+    { index, ...others, isInScreen: contentIndexes.includes(index) }
+  ))).build();
+
 export default ({
   setting: customSetting = {},
 } = {}) => {
@@ -129,5 +134,6 @@ export default ({
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
     [actions.UPDATE_SELECTION]: updateSelection,
     [actions.SET_CALCULATIONS_TARGETS]: setCalculationsTargets,
+    [actions.SET_CONTENTS_IN_SCREEN]: setContentsInScreen,
   });
 };

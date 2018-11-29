@@ -1,5 +1,5 @@
 import { from } from 'rxjs';
-import { mergeMap, map, catchError, tap, of } from 'rxjs/operators';
+import { mergeMap, map, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 import EventBus, { Events } from '../event';
 import BaseService from './BaseService';

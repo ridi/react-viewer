@@ -12,15 +12,11 @@ import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
   selectReaderIsAllCalculated,
-  selectReaderContentFormat,
   selectReaderIsInitContents,
   selectReaderContents,
-  selectReaderCurrentContentIndex,
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
-import { hasIntersect } from '../../util/Util';
-import { ContentFormat } from '../../constants/ContentConstants';
-import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import SelectionConnector from './SelectionConnector';
 
 // TODO 테스트 작성
@@ -118,36 +114,6 @@ class CalculationsConnector extends BaseConnector {
   getCalculationsTotal() {
     const { total: footerTotal } = this.getFooterCalculations();
     return selectReaderCalculationsTotal(this.getState()) + footerTotal;
-  }
-
-  getContentIndexesInOffsetRange(startOffset, endOffset) {
-    const total = selectReaderCalculationsTotal(this.getState());
-    const calculations = this.getContentCalculations();
-    const result = [];
-    const range = [startOffset, endOffset];
-
-    const lastIndex = calculations.length;
-    if (this.isCompleted() && startOffset > total) {
-      // 가끔 리사이즈로 창 사이즈를 늘렸을 때 scrollTop(offset) 값이
-      // 화면에 존재하지 않는 큰 값이 되는 경우가 있다.
-      return [lastIndex];
-    }
-
-    for (let i = 1; i <= lastIndex; i += 1) {
-      const index = i === lastIndex + 1 ? FOOTER_INDEX : i;
-      const nextIndex = i === lastIndex ? FOOTER_INDEX : i + 1;
-      if (typeof this.getStartOffset(nextIndex) === 'undefined') {
-        break;
-      }
-      const contentRange = [this.getStartOffset(index), index === FOOTER_INDEX ? total : this.getStartOffset(nextIndex)];
-      if (hasIntersect(range, contentRange)) {
-        result.push(index);
-      } else if (this.getStartOffset(index) > endOffset) {
-        break;
-      }
-    }
-
-    return result;
   }
 
   getIndexAtOffset(offset) {

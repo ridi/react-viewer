@@ -1,4 +1,3 @@
-import { merge } from 'rxjs';
 import EventBus from '../event/EventBus';
 import Logger from '../util/Logger';
 
@@ -21,8 +20,8 @@ export default class BaseService {
   beforeUnloaded() {}
 
   connectEvents(connectedTo, ...events) {
-    const obs$ = merge(...events.map(eventType => EventBus.asObservable(eventType)));
-    const subscription = connectedTo(obs$);
+    const obs$ = [...events.map(eventType => EventBus.asObservable(eventType))];
+    const subscription = connectedTo(...obs$);
     if (subscription) {
       this._subscriptions.push(subscription);
     }
