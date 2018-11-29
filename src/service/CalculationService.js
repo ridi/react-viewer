@@ -113,7 +113,7 @@ class CalculationService extends BaseService {
   load() {
     super.load();
     this.connectEvents(this.onCalculateContent.bind(this), Events.calculation.CALCULATE_CONTENT);
-    this.connectEvents(this.onCalculated.bind(this), Events.content.ALL_CONTENT_LOADED, Events.core.RESIZE, Events.core.SETTING_UPDATED);
+    this.connectEvents(this.onCalculated.bind(this), Events.content.ALL_CONTENT_LOADED, Events.core.RESIZE, Events.setting.SETTING_UPDATED);
   }
 
   onCalculated(loadAllContent$, resize$, updateSetting$) {
@@ -125,7 +125,7 @@ class CalculationService extends BaseService {
         distinctUntilChanged(({ w: bw, h: bh }, { w: aw, h: ah }) => bw === aw && bh === ah),
       ),
       updateSetting$.pipe(
-        filter(settingName => this.settingsAffectingCalculation.includes(settingName)),
+        filter(settingName => !this.settingsAffectingCalculation.includes(settingName)),
       ),
     ).pipe(
       tap(() => Connector.calculations.invalidate()),

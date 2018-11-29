@@ -14,4 +14,3 @@ export const CHANGE_SELECTION = Symbol('CHANGE_SELECTION'); // { selection, sele
 
 export const MOVE_TO_OFFSET = Symbol('MOVE_TO_OFFSET');
 
-export const SETTING_UPDATED = Symbol('SETTING_UPDATED'); // updatedSetting

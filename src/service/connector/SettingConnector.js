@@ -11,21 +11,6 @@ import { selectReaderContentFormat, selectReaderSetting } from '../../redux/sele
 import { updateSetting } from '../../redux/action';
 import CalculationsConnector from './CalculationsConnector';
 
-const settingsAffectingCalculation = [
-  'viewType',
-  'font',
-  'fontSizeInPx',
-  'contentPaddingInPercent',
-  'contentWidthInPercent',
-  'lineHeightInEm',
-  'columnsInPage',
-  'columnGapInPercent',
-  'startWithBlankPage',
-  'containerHorizontalMargin',
-  'containerVerticalMargin',
-  'maxWidth',
-];
-
 class SettingConnector extends BaseConnector {
   getMaxWidth(withUnit = false) {
     const { maxWidth } = this.getSetting();
@@ -175,9 +160,6 @@ class SettingConnector extends BaseConnector {
 
   updateSetting(setting) {
     this.dispatch(updateSetting(setting));
-    if (Object.keys(setting).some(s => settingsAffectingCalculation.includes(s))) {
-      CalculationsConnector.invalidate();
-    }
   }
 }
 

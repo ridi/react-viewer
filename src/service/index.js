@@ -1,11 +1,13 @@
 import content from './ContentService';
 import calculation from './CalculationService';
 import current from './CurrentService';
+import setting from './SettingService';
 
 const services = [
   content,
   calculation,
   current,
+  setting,
 ];
 
 export const unloadAll = () => {
@@ -25,4 +27,5 @@ export default {
   content,
   calculation,
   current,
+  setting,
 };
