@@ -50,13 +50,6 @@ class HtmlPageScreen extends BaseScreen {
     }
   }
 
-  needRender(index) {
-    const { current } = this.props;
-    const calculated = Connector.calculations.isContentCalculated(index);
-    const visible = current.contentIndex === index;
-    return calculated && visible;
-  }
-
   renderFooter() {
     const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
@@ -98,10 +91,10 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   renderContents() {
-    const { contents, calculationsTarget } = this.props;
+    const { contents, calculationsTargets } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.PAGE);
     return contents
-      .filter(({ index }) => this.needRender(index) || calculationsTarget.includes(index))
+      .filter(({ isInScreen, index }) => isInScreen || calculationsTargets.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }
