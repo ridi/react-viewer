@@ -32,7 +32,6 @@ class ViewerBody extends React.Component {
   }
 
   componentDidMount() {
-    console.log('dm');
     EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this), this);
     EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
     EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
@@ -47,7 +46,6 @@ class ViewerBody extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('wum');
     EventBus.offByTarget(this);
   }
 

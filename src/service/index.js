@@ -1,13 +1,11 @@
-import content from './ContentService';
+import load from './LoadService';
 import calculation from './CalculationService';
 import current from './CurrentService';
-import setting from './SettingService';
 
 const services = [
-  content,
+  load,
   calculation,
   current,
-  setting,
 ];
 
 export const unloadAll = () => {
@@ -15,17 +13,16 @@ export const unloadAll = () => {
   services.forEach(service => service.unload());
 };
 
-export const loadAll = () => {
-  services.forEach(service => service.load());
-  services.forEach(service => service.afterLoaded());
+export const loadAll = (restoreState) => {
+  services.forEach(service => service.load(restoreState));
+  services.forEach(service => service.afterLoaded(restoreState));
   window.addEventListener('beforeunload', unloadAll);
 };
 
 export default {
   loadAll,
   unloadAll,
-  content,
+  load,
   calculation,
   current,
-  setting,
 };

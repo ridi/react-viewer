@@ -1,17 +1,20 @@
 /* eslint no-restricted-globals: 0 */
-import { debounce, isExist } from './Util';
+import { fromEvent, timer } from 'rxjs';
+import { debounce } from 'rxjs/operators';
+import { isExist } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
 import { cached, clearCache } from './CacheStore';
-import { addEventListener } from './EventHandler';
 
 const Window = isExist(window) ? window : { addEventListener: () => {}, scrollBy: () => {} };
 const Document = isExist(document) ? document : { body: {}, scrollingElement: {}, documentElement: {} };
 
+fromEvent(Window, DOMEventConstants.RESIZE).pipe(
+  debounce(() => timer(0)),
+).subscribe(() => clearCache('screenWidth', 'screenHeight'));
+
 export const screenWidth = cached('screenWidth', () => Window.innerWidth);
 
 export const screenHeight = cached('screenHeight', () => Window.innerHeight);
-
-addEventListener(Window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
 
 export const scrollLeft = () => {
   if (Document.scrollingElement) return Document.scrollingElement.scrollLeft;

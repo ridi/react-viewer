@@ -43,18 +43,17 @@ class Reader extends React.Component {
   }
 
   componentDidMount() {
-    EventBus.emit(Events.core.LOADED);
+    EventBus.emit(Events.core.MOUNTED);
     addEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
   }
 
   componentWillUnmount() {
-    console.log('!!!! unmount');
     removeEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
     this.onUnmount();
   }
 
   onUnmount() {
-    EventBus.emit(Events.core.UNLOADED);
+    EventBus.emit(Events.core.UNMOUNTED);
     // EventBus.completeAll();
   }
 

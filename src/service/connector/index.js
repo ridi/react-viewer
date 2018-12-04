@@ -6,6 +6,7 @@ import selection from './SelectionConnector';
 import content from './ContentConnector';
 
 import { selectReader, selectReaderIsAllCalculated, selectReaderIsLoaded } from '../../redux/selector';
+import { load } from '../../redux/action';
 
 const core = new (class CoreConnector extends BaseConnector {
   isReaderLoaded() {
@@ -18,6 +19,10 @@ const core = new (class CoreConnector extends BaseConnector {
 
   getReaderState() {
     return selectReader(this.getState());
+  }
+
+  restoreReaderState(state) {
+    this.store.dispatch(load(state));
   }
 })();
 

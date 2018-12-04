@@ -118,7 +118,15 @@ class CalculationService extends BaseService {
 
   onCalculated(loadAllContent$, resize$, updateSetting$) {
     return merge(
-      loadAllContent$,
+      loadAllContent$.pipe(
+        filter(() => {
+          if (Connector.calculations.isCompleted()) {
+            EventBus.emit(Events.calculation.CALCULATION_COMPLETED);
+            return false;
+          }
+          return true;
+        }),
+      ),
       resize$.pipe(
         debounce(() => timer(DOMEventDelayConstants.RESIZE)),
         map(() => ({ w: screenWidth(), h: screenHeight() })),
@@ -129,6 +137,7 @@ class CalculationService extends BaseService {
       ),
     ).pipe(
       tap(() => Connector.calculations.invalidate()),
+      tap(() => Connector.calculations.setReadyToRead(false)),
       tap(() => EventBus.emit(Events.calculation.CALCULATION_INVALIDATED)),
       tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
       switchMap(() => EventBus.asObservable(Events.calculation.CALCULATION_UPDATED)),

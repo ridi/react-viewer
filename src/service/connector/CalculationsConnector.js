@@ -6,6 +6,7 @@ import {
   updateContentCalculation,
   setReadyToRead,
   setCalculationsTargets,
+  setCalculations,
 } from '../../redux/action';
 import {
   selectReaderFooterCalculations,
@@ -141,6 +142,10 @@ class CalculationsConnector extends BaseConnector {
 
   setTargets(targets) {
     this.dispatch(setCalculationsTargets(targets));
+  }
+
+  setCalculations(calculations) {
+    this.dispatch(setCalculations(calculations));
   }
 }
 

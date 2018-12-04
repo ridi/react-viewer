@@ -10,23 +10,24 @@ import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
 import Connector from './connector';
 import CalculationsConnector from './connector/CalculationsConnector';
-import { EMPTY_READ_LOCATION } from '..';
+import { EMPTY_READ_LOCATION, ViewType } from '../constants/SettingConstants';
 import ReaderJsHelper from './readerjs/ReaderJsHelper';
-import { screenHeight, scrollTop } from '../util/BrowserWrapper';
+import { screenHeight, scrollTop, waitThenRun } from '../util/BrowserWrapper';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
 import { hasIntersect } from '../util/Util';
 
 class CurrentService extends BaseService {
-  isRestored = false;
+  _isOffsetRestored = false;
 
   load() {
     super.load();
+
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.calculation.CALCULATION_INVALIDATED);
-    this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED);
-    this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.SCROLL, Events.calculation.READY_TO_READ);
-    this.connectEvents(this.onCalculationCompleted.bind(this), Events.calculation.CALCULATION_COMPLETED);
+    this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED, Events.calculation.CALCULATION_COMPLETED);
+    this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT, Events.core.SCROLL);
+    this.connectEvents(this.onMoved.bind(this), Events.core.MOVED);
   }
 
   _restoreCurrentOffset() {
@@ -41,10 +42,10 @@ class CurrentService extends BaseService {
     const total = Connector.calculations.getContentTotal(contentIndex);
     const newOffset = Math.round(position * total) + startOffset;
 
-    console.log(`restore: ${contentIndex} index, ${calculationTotal}, ${screenHeight()}, ${position}, ${total}, ${startOffset}, ${newOffset}`);
-    if (calculationTotal >= screenHeight() + newOffset) {
-      this.isRestored = true;
+    if (viewType === ViewType.PAGE || calculationTotal >= screenHeight() + newOffset) {
+      this._isOffsetRestored = true;
       Connector.current.updateCurrent({ offset: newOffset, viewType });
+      EventBus.emit(Events.core.UPDATE_CURRENT, { offset: newOffset, viewType });
       return newOffset;
     }
     return null;
@@ -93,52 +94,61 @@ class CurrentService extends BaseService {
   }
 
   onCalculationInvalidated(invalidate$) {
-    return invalidate$.subscribe(() => { this.isRestored = false; });
+    return invalidate$.subscribe(() => { this._isOffsetRestored = false; });
   }
 
-  onCalculated(calculateUpdate$) {
-    return calculateUpdate$.pipe(
-      filter(() => !this.isRestored),
-      map(() => this._restoreCurrentOffset()),
-      tap(offset => Logger.debug('restored: ', offset)),
-      filter(offset => offset !== null),
-      tap(offset => EventBus.emit(Events.core.MOVE_TO_OFFSET, offset)),
-      tap(() => { this.isRestored = true; }),
-      tap(() => Connector.calculations.setReadyToRead()),
-      tap(() => EventBus.emit(Events.calculation.READY_TO_READ)),
-    ).subscribe();
+  onCalculated(calculateUpdate$, calculationComplete$) {
+    return merge(calculateUpdate$, calculationComplete$).pipe(
+      filter(() => !this._isOffsetRestored),
+    ).subscribe(() => {
+      if (this._restoreCurrentOffset() !== null) {
+        this._isOffsetRestored = true;
+      }
+    });
   }
 
-  onCalculationCompleted(calculationComplete$) {
-    return calculationComplete$.pipe(
-      filter(() => Connector.calculations.isReadyToRead()),
-      tap(() => Connector.calculations.setReadyToRead()),
-      tap(() => EventBus.emit(Events.calculation.READY_TO_READ)),
-    ).subscribe();
-  }
-
-  onCurrentUpdated(scroll$, readyToRead$) {
-    const currentUpdated$ = merge(
+  onCurrentUpdated(updateCurrent$, scroll$) {
+    return merge(
+      updateCurrent$.pipe(
+        map(({ data: current }) => current),
+        filter(({ offset }) => offset !== null),
+        tap(({ offset }) => {
+          Connector.calculations.setReadyToRead(false);
+          waitThenRun(() => {
+            EventBus.emit(Events.core.MOVE_TO_OFFSET, offset);
+          }, 0);
+        }),
+      ),
       scroll$.pipe(
-        filter(() => this.isRestored),
+        filter(() => Connector.calculations.isReadyToRead()),
         debounce(() => timer(DOMEventDelayConstants.SCROLL)),
         map(() => scrollTop()),
+        tap(top => Logger.debug('scrollTop', top)),
         distinctUntilChanged(),
         map(scrollY => this._getCurrentOffset(scrollY)),
         tap(current => Connector.current.updateCurrent(current)),
       ),
-      readyToRead$.pipe(
-        map(() => Connector.current.getCurrent()),
-      ),
-    );
-    return currentUpdated$.pipe(
-      tap(current => Logger.debug('currentUpdated$', current)),
-      map(({ offset }) => ({ viewPortRange: [offset, offset + screenHeight()], margin: screenHeight() * 2 })),
-      map(({ viewPortRange, margin }) => this._getContentIndexesInOffsetRange(
-        viewPortRange[0] - margin, viewPortRange[1] + margin,
-      )),
-      tap(contentIndexes => Connector.content.setContentsInScreen(contentIndexes)),
-    ).subscribe();
+    ).subscribe(({ offset, contentIndex }) => {
+      const { viewType } = Connector.setting.getSetting();
+      if (viewType === ViewType.SCROLL) {
+        const viewPortRange = [offset, offset + screenHeight()];
+        const margin = screenHeight() * 2;
+        const contentIndexes = this._getContentIndexesInOffsetRange(
+          viewPortRange[0] - margin, viewPortRange[1] + margin,
+        );
+        Logger.debug('setContentsInScreen', contentIndexes);
+        Connector.content.setContentsInScreen(contentIndexes);
+      } else {
+        Connector.content.setContentsInScreen([contentIndex]);
+      }
+    });
+  }
+
+  onMoved(moved$) {
+    return moved$.subscribe(() => {
+      Connector.calculations.setReadyToRead(true);
+      waitThenRun(() => EventBus.emit(Events.calculation.READY_TO_READ), 0);
+    });
   }
 }
 

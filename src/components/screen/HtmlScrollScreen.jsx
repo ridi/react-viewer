@@ -8,6 +8,7 @@ import {
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import {
+  scrollTop,
   setScrollTop,
   waitThenRun,
 } from '../../util/BrowserWrapper';
@@ -85,7 +86,10 @@ class HtmlScrollScreen extends BaseScreen {
 
   moveToOffset(offset) {
     super.moveToOffset();
-    setScrollTop(offset);
+    waitThenRun(() => {
+      setScrollTop(offset);
+      waitThenRun(() => EventBus.emit(Events.core.MOVED), 0);
+    }, 0);
   }
 
   renderFooter() {

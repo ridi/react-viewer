@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import Slider from 'rc-slider';
 import {
   selectReaderCurrentOffset,
-  Connector,
   selectReaderCalculationsTotal,
+  EventBus,
+  Events,
 } from '@ridi/react-viewer';
 
 
@@ -28,7 +29,7 @@ class ViewerPageFooterToolbar extends Component {
   }
 
   onSlideAfterChanged(offset) {
-    Connector.current.updateCurrentOffset(offset);
+    EventBus.emit(Events.core.UPDATE_CURRENT, { offset });
   }
 
   render() {

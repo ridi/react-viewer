@@ -21,13 +21,10 @@ export default class BaseHtmlContent extends BaseContent {
     if (!isCalculated) {
       this.afterContentLoaded();
     }
-
-    this.moveToOffset();
   }
 
   componentDidUpdate(prevProps) {
     const {
-      localOffset,
       isCalculated,
     } = this.props;
     if (!isCalculated) {
@@ -36,10 +33,6 @@ export default class BaseHtmlContent extends BaseContent {
 
     if (prevProps.isCalculated && !isCalculated) {
       this.listener = null;
-    }
-    if ((!prevProps.isCalculated && isCalculated)
-      || (localOffset !== prevProps.localOffset)) {
-      this.moveToOffset();
     }
   }
 
@@ -71,8 +64,6 @@ export default class BaseHtmlContent extends BaseContent {
     }
     return Promise.all([...images, ...fonts]);
   }
-
-  moveToOffset() {}
 
   renderContent(contentPrefix = '') {
     const { isContentLoaded, content } = this.props.content;

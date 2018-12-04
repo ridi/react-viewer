@@ -36,8 +36,8 @@ class AppService {
   }
 
   constructor() {
-    this.onLoaded = this.onLoaded.bind(this);
-    this.onUnloaded = this.onUnloaded.bind(this);
+    this.onMounted = this.onMounted.bind(this);
+    this.onUnmounted = this.onUnmounted.bind(this);
 
     this._setContentMeta();
     this._setRedux();
@@ -79,10 +79,9 @@ class AppService {
   }
 
   _connectWithReactViewer() {
-    EventBus.on(Events.core.LOADED, this.onLoaded);
-    EventBus.on(Events.core.UNLOADED, this.onUnloaded);
+    EventBus.on(Events.core.MOUNTED, this.onMounted);
+    EventBus.on(Events.core.UNMOUNTED, this.onUnmounted);
     Connector.connect(this._store);
-    Service.loadAll();
   }
 
   _loadContent() {
@@ -96,18 +95,19 @@ class AppService {
     getJson(`./resources/contents/${id}/spine.json`)
       .then((spines) => {
         if (hasLoadedContent) {
-          Service.content.setContentsByValue(contentFormat, bindingType, spines.map(spine => spine.content));
+          Service.load.setContentsByValue(contentFormat, bindingType, spines.map(spine => spine.content));
         } else {
-          Service.content.setContentsByUri(contentFormat, bindingType, spines.contents);
+          Service.load.setContentsByUri(contentFormat, bindingType, spines.contents);
         }
       });
   }
 
-  onLoaded() {
+  onMounted() {
     const readerState = this._readerCache.get();
     if (readerState) {
-      this._store.dispatch(load(readerState));
+      Service.loadAll(readerState);
     } else {
+      Service.loadAll();
       this._loadContent();
     }
     const annotationsState = this._annotationCache.get();
@@ -116,7 +116,7 @@ class AppService {
     }
   }
 
-  onUnloaded() {
+  onUnmounted() {
     if (!Connector.core.isReaderLoaded() || !Connector.core.isReaderAllCalculated()) return;
     const currentState = Connector.core.getReaderState();
     this._readerCache.set(currentState);

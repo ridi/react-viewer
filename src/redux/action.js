@@ -22,6 +22,7 @@ export const actions = {
   UPDATE_CONTENT_CALCULATIONS: 'READER:UPDATE_CONTENT_CALCULATIONS',
   UPDATE_FOOTER_CALCULATIONS: 'READER:UPDATE_FOOTER_CALCULATIONS',
   UPDATE_CALCULATIONS_TOTAL: 'READER:UPDATE_CALCULATIONS_TOTAL',
+  SET_CALCULATIONS: 'READER:SET_CALCULATIONS',
   UPDATE_SELECTION: 'READER:UPDATE_SELECTION',
   SET_CALCULATIONS_TARGETS: 'READER:SET_CALCULATIONS_TARGETS',
   SET_CONTENTS_IN_SCREEN: 'READER:SET_CONTENTS_IN_SCREEN',
@@ -152,4 +153,9 @@ export const setCalculationsTargets = targets => ({
 export const setContentsInScreen = contentIndexes => ({
   type: actions.SET_CONTENTS_IN_SCREEN,
   contentIndexes,
+});
+
+export const setCalculations = calculations => ({
+  type: actions.SET_CALCULATIONS,
+  calculations,
 });

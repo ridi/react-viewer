@@ -6,7 +6,7 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal, selectReaderCalculationsTargets,
 } from '../../redux/selector';
-import { setScrollTop } from '../../util/BrowserWrapper';
+import { setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -19,6 +19,7 @@ import PageHtmlContent from '../content/PageHtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
+import EventBus, { Events } from '../../event';
 
 class HtmlPageScreen extends BaseScreen {
   static defaultProps = {
@@ -39,15 +40,33 @@ class HtmlPageScreen extends BaseScreen {
     calculationsTarget: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.moveToOffset = this.moveToOffset.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset, this);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    EventBus.offByTarget(this);
+  }
+
   moveToOffset() {
     super.moveToOffset();
-    const { contentIndex } = this.props.current;
-    setScrollTop(0);
-    if (contentIndex === FOOTER_INDEX) {
-      this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
-    } else {
-      this.wrapper.current.scrollLeft = 0;
-    }
+
+    waitThenRun(() => {
+      const { contentIndex } = this.props.current;
+      setScrollTop(0);
+      if (contentIndex === FOOTER_INDEX) {
+        this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
+      } else {
+        this.wrapper.current.scrollLeft = 0;
+      }
+    }, 0);
   }
 
   renderFooter() {

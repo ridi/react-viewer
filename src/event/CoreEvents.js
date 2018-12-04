@@ -1,9 +1,9 @@
 export const LOG = Symbol('LOG');
 
 // Lifecycle
-export const LOADED = Symbol('LOADED');
-export const UNLOADED = Symbol('UNLOADED');
-
+export const RESTORE_STATE = Symbol('RESTORE_STATE'); // { metadata: { contentFormat, bindingType }, setting, contents, calculations }
+export const MOUNTED = Symbol('MOUNTED');
+export const UNMOUNTED = Symbol('UNMOUNTED');
 
 // User Actions
 export const RESIZE = Symbol('RESIZE');
@@ -14,3 +14,6 @@ export const CHANGE_SELECTION = Symbol('CHANGE_SELECTION'); // { selection, sele
 
 export const MOVE_TO_OFFSET = Symbol('MOVE_TO_OFFSET');
 
+export const UPDATE_CURRENT = Symbol('UPDATE_CURRENT');
+
+export const MOVED = Symbol('MOVED');

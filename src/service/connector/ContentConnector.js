@@ -4,7 +4,7 @@ import {
   setContentsByUri,
   updateContent, updateContentError, setContentsInScreen,
 } from '../../redux/action';
-import { selectReaderContentFormat, selectReaderContents } from '../../redux/selector';
+import { selectReaderContentFormat, selectReaderContents, selectReaderIsContentsLoaded } from '../../redux/selector';
 
 class ContentConnector extends BaseConnector {
   setContentsByUri(contentFormat, bindingType, uris) {
@@ -41,6 +41,10 @@ class ContentConnector extends BaseConnector {
 
   setContentsInScreen(contentIndexes) {
     this.dispatch(setContentsInScreen(contentIndexes));
+  }
+
+  isContentsLoaded() {
+    return selectReaderIsContentsLoaded(this.getState());
   }
 }
 

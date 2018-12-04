@@ -100,6 +100,7 @@ export default {
   columnsInPage: () => ['setting', 'columnsInPage'],
   columnGap: () => ['setting', 'columnGap'],
 
+  calculations: () => ['calculations'],
   calculationsTotal: () => ['calculations', 'contentTotal'],
   contentsCalculations: () => ['calculations', 'contents'],
   contentsCalculation: index => ['calculations', 'contents', index - 1],
