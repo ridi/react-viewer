@@ -15,11 +15,12 @@ import BaseScreen, {
 import Connector from '../../service/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
-import PageHtmlContent from '../content/PageHtmlContent';
+import HtmlContent from '../content/HtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import EventBus, { Events } from '../../event';
+import Logger from '../../util/Logger';
 
 class HtmlPageScreen extends BaseScreen {
   static defaultProps = {
@@ -55,16 +56,26 @@ class HtmlPageScreen extends BaseScreen {
     EventBus.offByTarget(this);
   }
 
-  moveToOffset() {
+  moveToOffset(offset) {
     super.moveToOffset();
 
     waitThenRun(() => {
       const { contentIndex } = this.props.current;
+      const w = this.wrapper;
+      const cw = this.getContentRef(contentIndex);
       setScrollTop(0);
       if (contentIndex === FOOTER_INDEX) {
-        this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
+        w.current.scrollLeft = w.current.scrollWidth;
       } else {
-        this.wrapper.current.scrollLeft = 0;
+        w.current.scrollLeft = 0;
+      }
+      const startOffset = Connector.calculations.getStartOffset(contentIndex);
+      const localOffset = offset - startOffset;
+      console.log('moveToOffset', offset, contentIndex, w.current, cw.current, startOffset, localOffset);
+      if (cw.current && localOffset >= 0) {
+        cw.current.scrollLeft = localOffset
+          * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
+        EventBus.emit(Events.core.MOVED);
       }
     }, 0);
   }
@@ -88,21 +99,19 @@ class HtmlPageScreen extends BaseScreen {
 
   renderContent(content, StyledContent) {
     const {
-      current,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
-    const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
-      <PageHtmlContent
+      <HtmlContent
         key={`${content.uri}:${content.index}`}
+        ref={this.getContentRef(content.index)}
         content={content}
         isCalculated={isCalculated}
         startOffset={startOffset}
-        localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
       />

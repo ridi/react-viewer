@@ -6,6 +6,8 @@ import {
   Connector,
   selectReaderCurrentOffset,
   selectReaderCalculationsTotal,
+  EventBus,
+  Events,
 } from '@ridi/react-viewer';
 import ViewerHeader from './components/headers/ViewerHeader';
 import ViewerFooter from './components/footers/ViewerFooter';
@@ -34,7 +36,6 @@ class DemoViewer extends React.Component {
       currentOffset,
       calculationsTotal,
     } = this.props;
-
     if (position === Position.MIDDLE) {
       actionOnScreenTouched();
       return;
@@ -56,8 +57,7 @@ class DemoViewer extends React.Component {
 
     nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
     if (currentOffset === nextOffset) return;
-
-    Connector.current.updateCurrentOffset(nextOffset);
+    EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, nextOffset);
   }
 
   render() {

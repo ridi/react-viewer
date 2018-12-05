@@ -19,6 +19,8 @@ import { ContentFormat } from '../../constants/ContentConstants';
 import { waitThenRun } from '../../util/BrowserWrapper';
 import { fromEvent } from 'rxjs';
 import EventBus, { Events } from '../../event';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { ViewType } from '../../constants/SettingConstants';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
@@ -41,6 +43,8 @@ export default class BaseScreen extends React.Component {
     selection: PropTypes.object,
     isContentsLoaded: PropTypes.bool.isRequired,
   };
+
+  _contentRefs = new Map();
 
   static getDerivedStateFromProps(props) {
     // todo temporary code: Force to set annotation recalculation time
@@ -81,6 +85,13 @@ export default class BaseScreen extends React.Component {
     }
   }
 
+  getContentRef(index) {
+    if (!this._contentRefs.has(index)) {
+      this._contentRefs.set(index, React.createRef());
+    }
+    return this._contentRefs.get(index);
+  }
+
   moveToOffset() {
     const { annotations } = this.props;
     // todo temporary code: Force to set annotation recalculation time
@@ -104,6 +115,7 @@ export default class BaseScreen extends React.Component {
       annotationable,
       selectable,
       selection,
+      current,
     } = this.props;
 
     return (
@@ -117,6 +129,7 @@ export default class BaseScreen extends React.Component {
         selectable={selectable}
         annotations={this.state.annotations}
         selection={selection}
+        isLastPage={setting.viewType === ViewType.PAGE && current.contentIndex === FOOTER_INDEX}
       >
         { isContentsLoaded && this.renderContents() }
         { isContentsLoaded && this.renderFooter() }

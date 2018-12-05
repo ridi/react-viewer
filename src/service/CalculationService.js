@@ -57,9 +57,6 @@ class CalculationService extends BaseService {
       const offset = Connector.calculations.getStartOffset(index);
       if (!isCalculated || offset === PRE_CALCULATION) return;
       const nextIndex = (index === calculatedContents.length) ? FOOTER_INDEX : index + 1;
-      if (nextIndex === FOOTER_INDEX) {
-        Logger.debug('footer calculation', index, isCalculated, total, offset);
-      }
       Connector.calculations.setStartOffset(nextIndex, offset + total);
     });
 
@@ -98,7 +95,9 @@ class CalculationService extends BaseService {
     }
     // SCROLL
     if (index === FOOTER_INDEX) {
-      return of({ index, total: contentNode.offsetHeight });
+      const total = contentNode.scrollHeight;
+      console.log('total', total, contentNode.isConnected);
+      return of({ index, total });
     }
     const isLastContent = Connector.calculations.isLastContent(index);
     return timer().pipe(

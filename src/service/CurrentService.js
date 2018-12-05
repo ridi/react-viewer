@@ -1,15 +1,15 @@
-import { merge, timer } from 'rxjs';
+import { merge, timer, NEVER } from 'rxjs';
 import {
   map,
   filter,
   tap,
   debounce,
   distinctUntilChanged,
+  catchError,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
 import Connector from './connector';
-import CalculationsConnector from './connector/CalculationsConnector';
 import { EMPTY_READ_LOCATION, ViewType } from '../constants/SettingConstants';
 import ReaderJsHelper from './readerjs/ReaderJsHelper';
 import { screenHeight, scrollTop } from '../util/BrowserWrapper';
@@ -26,49 +26,74 @@ class CurrentService extends BaseService {
 
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.calculation.CALCULATION_INVALIDATED);
     this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED, Events.calculation.CALCULATION_COMPLETED);
-    this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT, Events.core.SCROLL);
+    this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT_OFFSET);
+    this.connectEvents(this.onScrolled.bind(this), Events.core.SCROLL);
     this.connectEvents(this.onMoved.bind(this), Events.core.MOVED);
   }
 
   _restoreCurrentOffset() {
-    const { viewType } = Connector.setting.getSetting();
     const { position, contentIndex } = Connector.current.getCurrent();
-    const startOffset = Connector.calculations.getStartOffset(contentIndex);
-    const isCalculated = Connector.calculations.isContentCalculated(contentIndex)
-      && startOffset !== PRE_CALCULATION;
-    if (!isCalculated) return null;
+    const { offset, total, isCalculated } = Connector.calculations.getCalculation(contentIndex);
+
+    if (!isCalculated || offset === PRE_CALCULATION) return null;
+
+    const { viewType } = Connector.setting.getSetting();
     const calculationTotal = Connector.calculations.getCalculationsTotal();
+    const newOffset = Math.min(total - 1, Math.round(position * total)) + offset;
 
-    const total = Connector.calculations.getContentTotal(contentIndex);
-    const newOffset = Math.round(position * total) + startOffset;
-
-    if (viewType === ViewType.PAGE || calculationTotal >= screenHeight() + newOffset) {
+    if ((viewType === ViewType.PAGE)
+      || (viewType === ViewType.SCROLL && calculationTotal >= screenHeight() + newOffset)) {
       this._isOffsetRestored = true;
-      Connector.current.updateCurrent({ offset: newOffset, viewType });
-      EventBus.emit(Events.core.UPDATE_CURRENT, { offset: newOffset, viewType });
+      console.log('_restoreCurrentOffset', contentIndex, newOffset);
+      EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, newOffset);
       return newOffset;
     }
     return null;
   }
 
-  _getCurrentOffset(offset) {
+  _getContentIndexAtOffset(offset) {
+    const calculations = Connector.calculations.getContentCalculations();
+    const lastIndex = calculations.length;
+
+    let result = null;
+    console.log('_getCurrent1', calculations);
+    calculations.forEach(({ offset: startOffset, total, isCalculated, index }) => {
+      if (!isCalculated || startOffset === PRE_CALCULATION) {
+        return;
+      }
+      if (offset >= startOffset && offset < startOffset + total) {
+        result = index;
+        return;
+      }
+      if (index === lastIndex && offset >= startOffset + total) {
+        result = FOOTER_INDEX;
+      }
+    });
+    return result;
+  }
+
+  _getCurrent(offset) {
     const { viewType } = Connector.setting.getSetting();
-    const contentIndex = CalculationsConnector.getIndexAtOffset(offset);
-    const total = CalculationsConnector.getContentTotal(contentIndex);
-    const position = (offset - CalculationsConnector.getStartOffset(contentIndex)) / total;
-    let location = EMPTY_READ_LOCATION;
-    try {
-      location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
-    } catch (e) {
-      // ignore error
-      console.warn(e);
-    }
+    const contentIndex = this._getContentIndexAtOffset(offset);
+    if (contentIndex === null) return null;
+
+    const { total, isCalculated, offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
+    if (!isCalculated) return null;
+
+    const position = (offset - startOffset) / total;
+    // let location = EMPTY_READ_LOCATION;
+    // try {
+    //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
+    // } catch (e) {
+    //   // ignore error
+    //   console.warn(e);
+    // }
 
     return {
       contentIndex,
       offset,
       position,
-      location,
+      // location,
       viewType,
     };
   }
@@ -93,6 +118,20 @@ class CurrentService extends BaseService {
     }).map(({ index }) => index);
   }
 
+  _setContentsInScreen({ offset, contentIndex }) {
+    const { viewType } = Connector.setting.getSetting();
+    if (viewType === ViewType.SCROLL) {
+      const viewPortRange = [offset, offset + screenHeight()];
+      const margin = screenHeight() * 2;
+      const contentIndexes = this._getContentIndexesInOffsetRange(
+        viewPortRange[0] - margin, viewPortRange[1] + margin,
+      );
+      Connector.content.setContentsInScreen(contentIndexes);
+    } else {
+      Connector.content.setContentsInScreen([contentIndex]);
+    }
+  }
+
   onCalculationInvalidated(invalidate$) {
     return invalidate$.subscribe(() => { this._isOffsetRestored = false; });
   }
@@ -107,43 +146,41 @@ class CurrentService extends BaseService {
     });
   }
 
-  onCurrentUpdated(updateCurrent$, scroll$) {
-    return merge(
-      updateCurrent$.pipe(
-        map(({ data: current }) => current),
-        filter(({ offset }) => offset !== null),
-        tap(({ offset }) => {
-          Connector.calculations.setReadyToRead(false);
-          EventBus.emit(Events.core.MOVE_TO_OFFSET, offset);
-        }),
-      ),
-      scroll$.pipe(
-        filter(() => Connector.calculations.isReadyToRead()),
-        debounce(() => timer(DOMEventDelayConstants.SCROLL)),
-        map(() => scrollTop()),
-        tap(top => Logger.debug('scrollTop', top)),
-        distinctUntilChanged(),
-        map(scrollY => this._getCurrentOffset(scrollY)),
-        tap(current => Connector.current.updateCurrent(current)),
-      ),
-    ).subscribe(({ offset, contentIndex }) => {
-      const { viewType } = Connector.setting.getSetting();
-      if (viewType === ViewType.SCROLL) {
-        const viewPortRange = [offset, offset + screenHeight()];
-        const margin = screenHeight() * 2;
-        const contentIndexes = this._getContentIndexesInOffsetRange(
-          viewPortRange[0] - margin, viewPortRange[1] + margin,
-        );
-        Logger.debug('setContentsInScreen', contentIndexes);
-        Connector.content.setContentsInScreen(contentIndexes);
-      } else {
-        Connector.content.setContentsInScreen([contentIndex]);
-      }
+  onCurrentUpdated(updateCurrentOffset$) {
+    return updateCurrentOffset$.pipe(
+      tap(({ data }) => console.log('onCurrentUpdated', data)),
+      filter(({ data: offset }) => offset !== null),
+      map(({ data: offset }) => this._getCurrent(offset)),
+      tap(current => console.log('_getCurrent', current)),
+      filter(current => current),
+      distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
+      catchError((err, caught) => {
+        Logger.error(err, caught);
+        return NEVER;
+      }),
+    ).subscribe((current) => {
+      Connector.current.updateCurrent(current);
+      Connector.calculations.setReadyToRead(false);
+      this._setContentsInScreen(current);
+      EventBus.emit(Events.core.MOVE_TO_OFFSET, current.offset);
     });
   }
 
-  onMoved(moved$) {
-    return moved$.subscribe(() => {
+  onScrolled(scroll$) {
+    return scroll$.pipe(
+      filter(() => Connector.calculations.isReadyToRead()),
+      debounce(() => timer(DOMEventDelayConstants.SCROLL)),
+      map(() => scrollTop()),
+      map(scrollY => this._getCurrent(scrollY)),
+      distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
+    ).subscribe((current) => {
+      Connector.current.updateCurrent(current);
+      this._setContentsInScreen(current);
+    });
+  }
+
+  onMoved(move$) {
+    return move$.subscribe(() => {
       Connector.calculations.setReadyToRead(true);
       EventBus.emit(Events.calculation.READY_TO_READ);
     });

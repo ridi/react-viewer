@@ -41,13 +41,7 @@ class CalculationsConnector extends BaseConnector {
   }
 
   isContentCalculated(index) {
-    if (index === FOOTER_INDEX) {
-      const calculatedFooter = selectReaderFooterCalculations(this.getState());
-      return calculatedFooter.isCalculated;
-    }
-    if (!selectReaderIsInitContents(this.getState())) return false;
-    const calculatedContents = this.getContentCalculations();
-    return calculatedContents[index - 1].isCalculated;
+    return this.getCalculation(index).isCalculated;
   }
 
   getCalculation(index) {
@@ -103,30 +97,12 @@ class CalculationsConnector extends BaseConnector {
   }
 
   getContentTotal(index) {
-    if (index === FOOTER_INDEX) {
-      const { total } = this.getFooterCalculations();
-      return total;
-    }
-    const calculatedContents = this.getContentCalculations();
-    return calculatedContents[index - 1].total;
+    return this.getCalculation(index).total;
   }
 
   getCalculationsTotal() {
     const { total: footerTotal } = this.getFooterCalculations();
     return selectReaderCalculationsTotal(this.getState()) + footerTotal;
-  }
-
-  getIndexAtOffset(offset) {
-    const calculations = this.getContentCalculations();
-    const lastIndex = calculations.length;
-    for (let index = 1; index <= lastIndex; index += 1) {
-      const nextIndex = index === lastIndex ? FOOTER_INDEX : index + 1;
-      // index === lastIndex ==> isFooter
-      if (offset >= this.getStartOffset(index) && (index === FOOTER_INDEX || offset < this.getStartOffset(nextIndex))) {
-        return index;
-      }
-    }
-    return null;
   }
 
   isLastContent(index) {

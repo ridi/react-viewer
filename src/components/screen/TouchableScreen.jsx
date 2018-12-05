@@ -31,6 +31,7 @@ class TouchableScreen extends React.Component {
     selection: PropTypes.object,
     annotationable: PropTypes.bool.isRequired,
     selectable: PropTypes.bool.isRequired,
+    isLastPage: PropTypes.bool.isRequired,
   };
 
   selectionRef = React.createRef();
@@ -49,13 +50,18 @@ class TouchableScreen extends React.Component {
     }
     addEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
     this.touchHandler = new TouchEventHandler(node);
-    this.touchHandler.attach();
+
     this.handleScrollEvent();
+    EventBus.on(Events.calculation.READY_TO_READ, () => {
+      this.touchHandler.attach();
+      this.handleScrollEvent();
+    }, this);
   }
 
   componentDidUpdate() {
     this.handleScrollEvent();
   }
+
   componentWillUnmount() {
     const { current: node } = this.isSelectable() ? this.selectionRef : this.props.forwardedRef;
     this.touchHandler.detach();
@@ -140,6 +146,7 @@ class TouchableScreen extends React.Component {
   }
 
   handleScrollEvent(forceAllow = false) {
+    // TODO isReadyToRead 체크를 제거할 수 있을까?
     const { viewType, forwardedRef, isReadyToRead } = this.props;
     if (forceAllow) {
       allowScrollEvent(forwardedRef.current);
@@ -163,8 +170,9 @@ class TouchableScreen extends React.Component {
       annotations,
       selection,
       viewType,
+      isLastPage,
     } = this.props;
-    if (!annotationable && !selectable) return null;
+    if ((!annotationable && !selectable) || isLastPage) return null;
     return (
       <SelectionLayer
         ref={this.selectionRef}

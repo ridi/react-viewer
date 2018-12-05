@@ -6,12 +6,11 @@ import { addEventListener } from '../../util/EventHandler';
 import BaseContent from './BaseContent';
 import EventBus, { Events } from '../../event';
 
-export default class BaseHtmlContent extends BaseContent {
+class HtmlContent extends BaseContent {
   constructor(props) {
     super(props);
 
     this.contentRef = React.createRef();
-    this.contentWrapperRef = React.createRef();
     this.listener = null;
   }
 
@@ -37,10 +36,10 @@ export default class BaseHtmlContent extends BaseContent {
   }
 
   afterContentLoaded() {
-    const { contentFooter } = this.props;
+    const { contentFooter, forwardedRef } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
-      const { current } = this.contentWrapperRef;
+      const { current } = forwardedRef;
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
@@ -66,27 +65,24 @@ export default class BaseHtmlContent extends BaseContent {
   }
 
   renderContent(contentPrefix = '') {
-    const { isContentLoaded, content } = this.props.content;
+    const { content } = this.props.content;
     const { contentFooter, className, children } = this.props;
-    if (isContentLoaded) {
-      return (
-        <>
-          <section
-            ref={this.contentRef}
-            className={`content_container ${className}`}
-            dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
-          />
-          {contentFooter}
-          {children}
-        </>
-      );
-    }
-    return null;
+    return (
+      <>
+        <section
+          ref={this.contentRef}
+          className={`content_container ${className}`}
+          dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
+        />
+        {contentFooter}
+        {children}
+      </>
+    );
   }
 
   render() {
     const { index } = this.props.content;
-    const { startOffset, StyledContent } = this.props;
+    const { startOffset, StyledContent, forwardedRef } = this.props;
     const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
       <StyledContent
@@ -95,7 +91,7 @@ export default class BaseHtmlContent extends BaseContent {
         className="chapter"
         visible={startOffset !== PRE_CALCULATION}
         startOffset={startOffset}
-        innerRef={this.contentWrapperRef}
+        innerRef={forwardedRef}
       >
         {this.renderContent(prefix)}
       </StyledContent>
@@ -103,20 +99,23 @@ export default class BaseHtmlContent extends BaseContent {
   }
 }
 
-BaseHtmlContent.defaultProps = {
+HtmlContent.defaultProps = {
   contentFooter: null,
   className: '',
   StyledContent: () => {},
   children: null,
+  forwardedRef: React.createRef(),
 };
 
-BaseHtmlContent.propTypes = {
+HtmlContent.propTypes = {
   content: ContentType,
   className: PropTypes.string,
   startOffset: PropTypes.number.isRequired,
-  localOffset: PropTypes.number.isRequired,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,
   StyledContent: PropTypes.func,
   children: PropTypes.node,
+  forwardedRef: PropTypes.object,
 };
+
+export default React.forwardRef((props, ref) => <HtmlContent forwardedRef={ref} {...props} />);
