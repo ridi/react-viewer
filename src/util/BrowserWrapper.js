@@ -8,10 +8,6 @@ import { cached, clearCache } from './CacheStore';
 const Window = isExist(window) ? window : { addEventListener: () => {}, scrollBy: () => {} };
 const Document = isExist(document) ? document : { body: {}, scrollingElement: {}, documentElement: {} };
 
-fromEvent(Window, DOMEventConstants.RESIZE).pipe(
-  debounce(() => timer(0)),
-).subscribe(() => clearCache('screenWidth', 'screenHeight'));
-
 export const screenWidth = cached('screenWidth', () => Window.innerWidth);
 
 export const screenHeight = cached('screenHeight', () => Window.innerHeight);
@@ -51,6 +47,14 @@ export const offsetWidth = () => Document.body.offsetWidth;
 export const offsetHeight = () => Document.body.offsetHeight;
 
 export const waitThenRun = requestAnimationFrame || setTimeout || (func => func());
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+fromEvent(Window, DOMEventConstants.RESIZE).pipe(
+  debounce(() => timer(0)),
+).subscribe(() => clearCache('screenWidth', 'screenHeight'));
 
 export default {
   screenWidth,

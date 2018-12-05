@@ -88,7 +88,7 @@ class HtmlScrollScreen extends BaseScreen {
     super.moveToOffset();
     waitThenRun(() => {
       setScrollTop(offset);
-      waitThenRun(() => EventBus.emit(Events.core.MOVED), 0);
+      EventBus.emit(Events.core.MOVED);
     }, 0);
   }
 

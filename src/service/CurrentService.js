@@ -12,7 +12,7 @@ import Connector from './connector';
 import CalculationsConnector from './connector/CalculationsConnector';
 import { EMPTY_READ_LOCATION, ViewType } from '../constants/SettingConstants';
 import ReaderJsHelper from './readerjs/ReaderJsHelper';
-import { screenHeight, scrollTop, waitThenRun } from '../util/BrowserWrapper';
+import { screenHeight, scrollTop } from '../util/BrowserWrapper';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
@@ -114,9 +114,7 @@ class CurrentService extends BaseService {
         filter(({ offset }) => offset !== null),
         tap(({ offset }) => {
           Connector.calculations.setReadyToRead(false);
-          waitThenRun(() => {
-            EventBus.emit(Events.core.MOVE_TO_OFFSET, offset);
-          }, 0);
+          EventBus.emit(Events.core.MOVE_TO_OFFSET, offset);
         }),
       ),
       scroll$.pipe(
@@ -147,7 +145,7 @@ class CurrentService extends BaseService {
   onMoved(moved$) {
     return moved$.subscribe(() => {
       Connector.calculations.setReadyToRead(true);
-      waitThenRun(() => EventBus.emit(Events.calculation.READY_TO_READ), 0);
+      EventBus.emit(Events.calculation.READY_TO_READ);
     });
   }
 }
