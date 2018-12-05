@@ -1,5 +1,10 @@
 import { from } from 'rxjs';
-import { mergeMap, map, catchError, filter, tap } from 'rxjs/operators';
+import {
+  mergeMap,
+  map,
+  catchError,
+  tap,
+} from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 import EventBus, { Events } from '../event';
 import BaseService from './BaseService';
@@ -8,7 +13,13 @@ import Logger from '../util/Logger';
 import { isExist } from '../util/Util';
 
 class LoadService extends BaseService {
-  load({ contents, metadata, setting, current, calculations } = {}) {
+  load({
+    contents,
+    metadata,
+    setting,
+    current,
+    calculations,
+  } = {}) {
     super.load();
     this.connectEvents(this.onSettingUpdated.bind(this), Events.setting.UPDATE_SETTING);
 

@@ -2,7 +2,6 @@ import { merge, timer, NEVER } from 'rxjs';
 import {
   map,
   filter,
-  tap,
   debounce,
   distinctUntilChanged,
   catchError,
@@ -10,8 +9,7 @@ import {
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
 import Connector from './connector';
-import { EMPTY_READ_LOCATION, ViewType } from '../constants/SettingConstants';
-import ReaderJsHelper from './readerjs/ReaderJsHelper';
+import { ViewType } from '../constants/SettingConstants';
 import { screenHeight, scrollTop } from '../util/BrowserWrapper';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
@@ -44,7 +42,6 @@ class CurrentService extends BaseService {
     if ((viewType === ViewType.PAGE)
       || (viewType === ViewType.SCROLL && calculationTotal >= screenHeight() + newOffset)) {
       this._isOffsetRestored = true;
-      console.log('_restoreCurrentOffset', contentIndex, newOffset);
       EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, newOffset);
       return newOffset;
     }
@@ -56,8 +53,12 @@ class CurrentService extends BaseService {
     const lastIndex = calculations.length;
 
     let result = null;
-    console.log('_getCurrent1', calculations);
-    calculations.forEach(({ offset: startOffset, total, isCalculated, index }) => {
+    calculations.forEach(({
+      offset: startOffset,
+      total,
+      isCalculated,
+      index,
+    }) => {
       if (!isCalculated || startOffset === PRE_CALCULATION) {
         return;
       }
@@ -148,10 +149,8 @@ class CurrentService extends BaseService {
 
   onCurrentUpdated(updateCurrentOffset$) {
     return updateCurrentOffset$.pipe(
-      tap(({ data }) => console.log('onCurrentUpdated', data)),
       filter(({ data: offset }) => offset !== null),
       map(({ data: offset }) => this._getCurrent(offset)),
-      tap(current => console.log('_getCurrent', current)),
       filter(current => current),
       distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
       catchError((err, caught) => {

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { connect, Provider } from 'react-redux';
 import {
-  Connector,
   selectReaderCurrentOffset,
   selectReaderCalculationsTotal,
   EventBus,

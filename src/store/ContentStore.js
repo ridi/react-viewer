@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: 0 */
 import { merge } from 'rxjs';
 import { scan, map } from 'rxjs/operators';
 import { Events } from '../event';

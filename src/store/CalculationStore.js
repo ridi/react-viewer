@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: 0 */
 import StoreBuilder from '../util/StoreBuilder';
 import { Events } from '../event';
 

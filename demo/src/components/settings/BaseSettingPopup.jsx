@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { selectReaderSetting, ViewType, EventBus, Events } from '@ridi/react-viewer';
+import {
+  selectReaderSetting,
+  ViewType,
+  EventBus,
+  Events,
+} from '@ridi/react-viewer';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
 export default class BaseSettingPopup extends React.Component {

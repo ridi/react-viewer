@@ -1,23 +1,24 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
-import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { debounce } from '../../util/Util';
+import { fromEvent } from 'rxjs';
 import {
   selectReaderContents,
   selectReaderCurrent,
   selectReaderSetting,
-  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead, selectReaderSelection, selectReaderIsContentsLoaded,
+  selectReaderCalculationsTotal,
+  selectReaderContentFormat,
+  selectReaderIsReadyToRead,
+  selectReaderSelection,
+  selectReaderIsContentsLoaded,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
 import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
-import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import { waitThenRun } from '../../util/BrowserWrapper';
-import { fromEvent } from 'rxjs';
 import EventBus, { Events } from '../../event';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
@@ -44,8 +45,6 @@ export default class BaseScreen extends React.Component {
     isContentsLoaded: PropTypes.bool.isRequired,
   };
 
-  _contentRefs = new Map();
-
   static getDerivedStateFromProps(props) {
     // todo temporary code: Force to set annotation recalculation time
     return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType, props.contents);
@@ -65,6 +64,8 @@ export default class BaseScreen extends React.Component {
         })),
     };
   }
+
+  _contentRefs = new Map();
 
   constructor(props) {
     super(props);

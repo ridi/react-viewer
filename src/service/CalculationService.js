@@ -96,7 +96,6 @@ class CalculationService extends BaseService {
     // SCROLL
     if (index === FOOTER_INDEX) {
       const total = contentNode.scrollHeight;
-      console.log('total', total, contentNode.isConnected);
       return of({ index, total });
     }
     const isLastContent = Connector.calculations.isLastContent(index);

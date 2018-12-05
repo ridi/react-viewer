@@ -25,12 +25,10 @@ class ViewerPageFooterToolbar extends Component {
   }
 
   onSlideChanged(value) {
-    console.log('onSlideChanged', value);
     this.setState({ value });
   }
 
   onSlideAfterChanged(offset) {
-    console.log('onSlideAfterChanged', offset);
     EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, offset);
   }
 
@@ -51,7 +49,6 @@ class ViewerPageFooterToolbar extends Component {
         <div className="page_slider_wrapper">
           <Slider
             {...sliderProps}
-            onKeyboard={value => console.log('onKeyboard', value)}
             onChange={value => this.onSlideChanged(value)}
             onAfterChange={value => this.onSlideAfterChanged(value - 1)}
           />

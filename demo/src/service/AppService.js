@@ -4,7 +4,6 @@ import {
   Connector,
   Service,
   reducers as reader,
-  load,
   unload,
 } from '@ridi/react-viewer';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
@@ -13,7 +12,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import ContentsData from '../../resources/contents/contents.json';
 import viewer from '../redux/Viewer.reducer';
 import {
-  requestLoadContent,
   setAnnotations,
 } from '../redux/Viewer.action';
 import Cache from '../utils/Cache';
@@ -23,8 +21,11 @@ import { getJson } from '../utils/Api';
 
 class AppService {
   _store = null;
+
   _contentMeta = null;
+
   _readerCache = null;
+
   _annotationCache = null;
 
   get contentMeta() {

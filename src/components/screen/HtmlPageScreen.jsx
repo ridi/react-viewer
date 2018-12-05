@@ -20,7 +20,6 @@ import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import EventBus, { Events } from '../../event';
-import Logger from '../../util/Logger';
 
 class HtmlPageScreen extends BaseScreen {
   static defaultProps = {
@@ -71,7 +70,6 @@ class HtmlPageScreen extends BaseScreen {
       }
       const startOffset = Connector.calculations.getStartOffset(contentIndex);
       const localOffset = offset - startOffset;
-      console.log('moveToOffset', offset, contentIndex, w.current, cw.current, startOffset, localOffset);
       if (cw.current && localOffset >= 0) {
         cw.current.scrollLeft = localOffset
           * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
