@@ -50,12 +50,8 @@ class TouchableScreen extends React.Component {
     }
     addEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
     this.touchHandler = new TouchEventHandler(node);
-
+    this.touchHandler.attach();
     this.handleScrollEvent();
-    EventBus.on(Events.calculation.READY_TO_READ, () => {
-      this.touchHandler.attach();
-      this.handleScrollEvent();
-    }, this);
   }
 
   componentDidUpdate() {
@@ -91,10 +87,9 @@ class TouchableScreen extends React.Component {
   }
 
   handleTouchEvent(event) {
-    const {
-      selectable,
-      annotations,
-    } = this.props;
+    if (!Connector.calculations.isReadyToRead()) return;
+
+    const { selectable, annotations } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
 
     const selectionPart = target.getAttribute('data-type');

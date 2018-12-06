@@ -36,10 +36,8 @@ class ImageScrollScreen extends BaseScreen {
 
   componentDidMount() {
     super.componentDidMount();
-    EventBus.on(Events.calculation.READY_TO_READ, () => {
-      this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
-        .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
-    });
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+      .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
 
     if (!this.listener) {
       const { contentFooter } = this.props;

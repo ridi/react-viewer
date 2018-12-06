@@ -55,10 +55,8 @@ class HtmlScrollScreen extends BaseScreen {
     super.componentDidMount();
 
     EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset, this);
-    EventBus.on(Events.calculation.READY_TO_READ, () => {
-      this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
-        .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
-    }, this);
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+      .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
   }
 
   componentWillUnmount() {
