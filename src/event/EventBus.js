@@ -49,7 +49,7 @@ export default class EventBus {
   constructor(eventType) {
     this._eventType = eventType;
     this._subject = (new Subject()).pipe(
-      tap(({ type, data }) => Logger.debugGroup(type.description, data)),
+      tap(({ type, data }) => Logger.debugGroup(`✉️ ${type.description}`, data)),
       share(),
     );
   }

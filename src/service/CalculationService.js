@@ -4,7 +4,9 @@ import {
   tap,
   map,
   mergeMap,
-  switchMap, debounce, distinctUntilChanged,
+  switchMap,
+  debounce,
+  distinctUntilChanged,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';

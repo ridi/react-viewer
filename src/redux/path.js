@@ -24,6 +24,7 @@ export const initialContentCalculationsState = index => ({
   offset: index === 1 ? 0 : PRE_CALCULATION,
   total: 0,
 });
+
 export const initialFooterCalculationsState = () => ({ isCalculated: false, offset: PRE_CALCULATION, total: 0 });
 
 export const initialSettingState = () => ({
@@ -41,6 +42,13 @@ export const initialSettingState = () => ({
   contentFooterHeight: DEFAULT_CONTENT_FOOTER_HEIGHT,
   containerHorizontalMargin: DEFAULT_HORIZONTAL_MARGIN,
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
+});
+
+export const initialAnnotationCalculationState = (id, contentIndex) => ({
+  id,
+  contentIndex,
+  rects: null,
+  isVisible: false,
 });
 
 export const initialState = () => ({
@@ -61,6 +69,7 @@ export const initialState = () => ({
     footer: initialFooterCalculationsState(),
     contentTotal: 0,
     targets: [],
+    annotations: {},
   },
   current: {
     contentIndex: 1,
@@ -110,6 +119,8 @@ export default {
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
   calculationsTargets: () => ['calculations', 'targets'],
+  annotationCalculations: () => ['calculations', 'annotations'],
+  annotationCalculation: id => ['calculations', 'annotations', id],
 
   selection: () => ['selection'],
 };

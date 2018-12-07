@@ -15,6 +15,9 @@ import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
 import { hasIntersect } from '../util/Util';
+import AnnotationStore from '../store/AnnotationStore';
+import ReaderJsHelper from './readerjs/ReaderJsHelper';
+import { RectsUtil } from '../util/SelectionUtil';
 
 class CurrentService extends BaseService {
   _isOffsetRestored = false;
@@ -27,6 +30,8 @@ class CurrentService extends BaseService {
     this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT_OFFSET);
     this.connectEvents(this.onScrolled.bind(this), Events.core.SCROLL);
     this.connectEvents(this.onMoved.bind(this), Events.core.MOVED);
+    this.connectEvents(this.onAnnotationCalculationNeeded.bind(this), Events.core.SCROLL, Events.core.MOVED, Events.core.ANNOTATION_ADDED);
+    this.connectEvents(this.onAnnotationsSet.bind(this), Events.core.SET_ANNOTATIONS);
   }
 
   _restoreCurrentOffset() {
@@ -134,7 +139,10 @@ class CurrentService extends BaseService {
   }
 
   onCalculationInvalidated(invalidate$) {
-    return invalidate$.subscribe(() => { this._isOffsetRestored = false; });
+    return invalidate$.subscribe(() => {
+      this._isOffsetRestored = false;
+      AnnotationStore.invalidateCalculations();
+    });
   }
 
   onCalculated(calculateUpdate$, calculationComplete$) {
@@ -183,6 +191,90 @@ class CurrentService extends BaseService {
       Connector.calculations.setReadyToRead(true);
       EventBus.emit(Events.calculation.READY_TO_READ);
     });
+  }
+
+  _getRectsFromSerializedRange(contentIndex, serializedRange) {
+    const { viewType } = Connector.setting.getSetting();
+
+    let xAdded = 0;
+    if (viewType === ViewType.PAGE) {
+      const { offset, viewType: currentViewType } = Connector.current.getCurrent();
+      if (currentViewType === ViewType.PAGE) {
+        const containerWidth = Connector.setting.getContainerWidth();
+        const columnGap = Connector.setting.getColumnGap();
+        const { offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
+        const localOffset = offset - startOffset;
+        xAdded = localOffset * (containerWidth + columnGap);
+      }
+    }
+
+    let readerJs;
+    try {
+      readerJs = ReaderJsHelper.get(contentIndex);
+      const rects = readerJs.getRectsFromSerializedRange(serializedRange);
+      return new RectsUtil(rects)
+        .toAbsolute()
+        .translateX(viewType === ViewType.PAGE ? xAdded : 0)
+        .getObject();
+    } catch (e) {
+      Logger.warn(e);
+      return [];
+    }
+  }
+
+  onAnnotationCalculationNeeded(scroll$, moved$, annotationChanged$) {
+    return merge(
+      scroll$,
+      moved$,
+      annotationChanged$,
+    ).subscribe(() => {
+      const contentIndexes = Connector.content.getContentsInScreen();
+
+      const annotationsInScreen = AnnotationStore.annotations
+        .filter(({ contentIndex: aci }) => contentIndexes.includes(aci));
+      const calculationTargets = annotationsInScreen
+        .filter(({ id }) => !AnnotationStore.calculations.has(id) || AnnotationStore.calculations.get(id).rects === null);
+
+      AnnotationStore.setCalculations(
+        calculationTargets.map(({ id, contentIndex, serializedRange }) => ({
+          id,
+          contentIndex,
+          rects: this._getRectsFromSerializedRange(contentIndex, serializedRange),
+        })),
+        annotationsInScreen.map(({ id }) => id),
+      );
+    });
+  }
+
+  onAnnotationsSet(setAnnotation$) {
+    return setAnnotation$.subscribe(({ data: annotations }) => {
+      let added = false;
+      if (AnnotationStore.annotations.length < annotations.length) {
+        // annotation added
+        added = true;
+      }
+      AnnotationStore.annotations = annotations;
+      EventBus.emit(Events.core.ANNOTATION_CHANGED, annotations);
+      if (added) {
+        EventBus.emit(Events.core.ANNOTATION_ADDED);
+      }
+    });
+  }
+
+  toPageRelativeRects(rects) {
+    const { viewType } = Connector.setting.getSetting();
+    if (viewType !== ViewType.PAGE) return rects;
+
+    const containerWidth = Connector.setting.getContainerWidth();
+    const columnGap = Connector.setting.getColumnGap();
+    const { offset, contentIndex } = Connector.current.getCurrent();
+    const { offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
+    const localOffset = offset - startOffset;
+
+    return rects.map(({ left, ...others }) => ({
+      left: left - (localOffset * (containerWidth + columnGap)),
+      ...others,
+    }));
   }
 }
 

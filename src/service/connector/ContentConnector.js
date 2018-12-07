@@ -46,6 +46,10 @@ class ContentConnector extends BaseConnector {
   isContentsLoaded() {
     return selectReaderIsContentsLoaded(this.getState());
   }
+
+  getContentsInScreen() {
+    return this.getContents().filter(({ isInScreen }) => isInScreen).map(({ index }) => index);
+  }
 }
 
 export default new ContentConnector();

@@ -36,12 +36,16 @@ class ViewerBody extends React.Component {
     EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
     EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
     EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
+    EventBus.emit(Events.core.SET_ANNOTATIONS, this.props.annotations);
   }
 
   componentDidUpdate(prevProps) {
-    const { isReadyToRead, actionSetContextMenu } = this.props;
+    const { isReadyToRead, actionSetContextMenu, annotations } = this.props;
     if (prevProps.isReadyToRead && !isReadyToRead) {
       actionSetContextMenu(false);
+    }
+    if (annotations !== prevProps.annotations) {
+      EventBus.emit(Events.core.SET_ANNOTATIONS, annotations);
     }
   }
 
@@ -83,6 +87,7 @@ class ViewerBody extends React.Component {
       id,
       style,
       withHandle,
+      rects,
       ...others
     } = targetSelection;
     const updateSelection = {
@@ -118,7 +123,12 @@ class ViewerBody extends React.Component {
       return actionSetContextMenu(true, selection);
     }
     if (selectionMode === SelectionMode.AUTO_HIGHLIGHT) {
-      actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
+      const {
+        withHandle,
+        rects,
+        ...others
+      } = selection;
+      actionAddAnnotation({ ...others, contentIndex: currentContentIndex });
       Connector.selection.end();
       return actionSetContextMenu(false);
     }

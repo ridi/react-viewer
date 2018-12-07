@@ -14,11 +14,9 @@ import {
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
-import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import { waitThenRun } from '../../util/BrowserWrapper';
 import EventBus, { Events } from '../../event';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
@@ -45,26 +43,6 @@ export default class BaseScreen extends React.Component {
     isContentsLoaded: PropTypes.bool.isRequired,
   };
 
-  static getDerivedStateFromProps(props) {
-    // todo temporary code: Force to set annotation recalculation time
-    return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType, props.contents);
-  }
-
-  static needAnnotationRender(viewType, contents, annotation) {
-    return !!contents.find(({ index, isInScreen }) => annotation.contentIndex === index && isInScreen);
-  }
-
-  static recalculateAnnotations(annotations, viewType, contents) {
-    // todo temporary code: Force to set annotation recalculation time
-    return {
-      annotations: annotations.filter(BaseScreen.needAnnotationRender.bind(BaseScreen, viewType, contents))
-        .map(item => ({
-          ...item,
-          ...Connector.calculations.getAnnotationCalculation(item),
-        })),
-    };
-  }
-
   _contentRefs = new Map();
 
   constructor(props) {
@@ -78,12 +56,17 @@ export default class BaseScreen extends React.Component {
   componentDidMount() {
     this.resizeEventSubscription = fromEvent(window, DOMEventConstants.RESIZE)
       .subscribe(event => EventBus.emit(Events.core.RESIZE, event));
+
+    EventBus.on(Events.calculation.READY_TO_READ, () => {
+
+    }, this);
   }
 
   componentWillUnmount() {
     if (this.resizeEventSubscription) {
       this.resizeEventSubscription.unsubscribe();
     }
+    EventBus.offByTarget(this);
   }
 
   getContentRef(index) {
@@ -91,14 +74,6 @@ export default class BaseScreen extends React.Component {
       this._contentRefs.set(index, React.createRef());
     }
     return this._contentRefs.get(index);
-  }
-
-  moveToOffset() {
-    const { annotations } = this.props;
-    // todo temporary code: Force to set annotation recalculation time
-    waitThenRun(() => {
-      this.setState(BaseScreen.recalculateAnnotations(annotations));
-    }, 0);
   }
 
   renderContents() { return null; }

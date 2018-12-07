@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SelectionStyleType, SelectionParts } from '../../constants/SelectionConstants';
 import SelectionHandle from './SelectionHandle';
+import Service from '../../service';
 
 const getRectProps = (rect, selectionStyle) => {
   const defaultProps = {
@@ -35,9 +36,17 @@ const getRectProps = (rect, selectionStyle) => {
 const Selection = ({
   item,
 }) => {
-  const { rects, withHandle, style } = item;
-  if (!rects || rects.length === 0) return null;
-
+  const {
+    rects: originalRects,
+    withHandle,
+    style,
+    type,
+  } = item;
+  if (!originalRects || originalRects.length === 0) return null;
+  let rects = originalRects;
+  if (type !== 'selection') {
+    rects = Service.current.toPageRelativeRects(originalRects);
+  }
   const firstRect = rects.length > 0 ? rects[0] : null;
   const lastRect = rects.length > 0 ? rects[rects.length - 1] : null;
 

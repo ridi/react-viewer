@@ -56,8 +56,6 @@ class HtmlPageScreen extends BaseScreen {
   }
 
   moveToOffset(offset) {
-    super.moveToOffset();
-
     waitThenRun(() => {
       const { contentIndex } = this.props.current;
       const w = this.wrapper;

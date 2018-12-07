@@ -89,6 +89,7 @@ const invalidateCalculations = state => new ImmutableObjectBuilder(state)
   .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
   .set(path.calculationsTargets(), [])
+  .set(path.annotationCalculations(), {})
   .build();
 
 const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(state)
