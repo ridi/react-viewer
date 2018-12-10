@@ -57,40 +57,26 @@ export default ViewerPage extends React.Component {
 
 * `onMount`(func): called after reader is mounted
 * `onUnmount`(func): called after reader is unmounted
-* `onTouched`(func): called when user touches the reader screen
 * `footer`(node): markup for the footer area
 * `contentFooter`(node): markup for the content footer area
-* `ignoreScroll`(bool): temporarily disable scrolling (on `scroll` viewType)
-* `disablePageCalculation`(bool): temporarily disable page calculation (on `page` viewType)
-* `onScrolled`(func): called when scrolling event is triggered on screen (on `scroll` viewType)
+* `selectable`(boolean): set reader to be selectable
+* `annotationable`(boolean): set reader to be annotationable
+* `annotations`(array): annotation list is composed of items that has distinct `id` property. 
+
+### Events
+
+* `Events.SCROLL`: Screen is scrolled
+* `Events.TOUCH`: Screen is touched
+* `Events.TOUCH_ANNOTATION`: An annotation item is touched
+* `Events.CHANGE_SELECTION`: Current selection is changed
+* `Events.MOUNTED`: `<Reader>` has been mounted
+* `Events.UNMOUNTED`: `<Reader>` has been unmounted
 
 ### Render Contents
 
-There are 2 ways to set contents in this reader.
-
-#### Use `setContentMetadata` and `updateContent`
- 
-First of all, dispatch `setContentMetadata` for setting content metadata.
-Then each content updated by one at a time.
-
-```js
-import {
-  updateContent, 
-  setContentMetadata,
-  ContentFormat,
-  BindingType,
-} from '@ridi/react-viewer';
-
-dispatch(setContentMetadata(ContentFormat.HTML, BindingType.LEFT, 50));
-
-dispatch(updateContent(1, '<p>...</p>', false));
-//... 1 ~ 50
-dispatch(updateContent(50, '<p>...</p>', true));
-```
-
 #### `setContentsByValue` or `setContentsByUri`
 
-Using this way, whole contents including metadata are set in a time.
+Whole contents including metadata are set in a time.
 Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs.
 
 ```js
@@ -99,19 +85,29 @@ import {
   setContentsByUri,
   ContentFormat,
   BindingType,
+  EventBus,
+  Events,
 } from '@ridi/react-viewer';
 
-dispatch(setContentsByUri(ContentFormat.HTML, BindingType.LEFT,[
-  './uri1.json',
-  './uri2.json',
-  ...
-]));
+EventBus.emit(Events.SET_CONTENTS_BY_URI, {
+  contentFormat: ContentFormat.HTML,
+  bindingType: BindingType.LEFT,
+  uris: [
+    './uri1.json',
+    './uri2.json',
+    ...,
+  ],
+});
 
-dispatch(setContentsByValue(ContentFormat.HTML, BindingType.LEFT,[
-  '<p>...</p>',
-  '<p>...</p>',
-  ...
-]));
+EventBus.emit(Events.SET_CONTENTS_BY_VALUE, {
+  contentFormat: ContentFormat.HTML,
+  bindingType: BindingType.LEFT,
+  contents: [
+    '<p>...</p>',
+    '<p>...</p>',
+    ...,
+  ],
+});
 ```
 
 * `contentFormat`: content format (HTML: 0, IMAGE: 1)
