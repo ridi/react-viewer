@@ -4,6 +4,8 @@ import {
   map,
   catchError,
   tap,
+  filter,
+  switchMap,
 } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 import EventBus, { Events } from '../event';
@@ -47,41 +49,31 @@ class LoadService extends BaseService {
     }
   }
 
-  setContentsByUri(contentFormat, bindingType, uris) {
-    Connector.content.setContentsByUri(contentFormat, bindingType, uris);
-
-    if (contentFormat === ContentFormat.HTML) {
-      from(uris).pipe(
+  onContentSetByUri(contentSetByUri$) {
+    return contentSetByUri$.pipe(
+      map(({ data }) => ({ contentFormat: data.contentFormat, bindingType: data.bindingType, uris: data.uris })),
+      tap(({ contentFormat, bindingType, uris }) => Connector.content.setContentsByUri(contentFormat, bindingType, uris)),
+      filter(({ contentFormat }) => contentFormat === ContentFormat.HTML),
+      switchMap(({ uris }) => from(uris).pipe(
         mergeMap((uri, index) => ajax.getJSON(uri).pipe(
           map(data => ({ index: index + 1, content: data.value })),
           catchError(error => Connector.content.setContentError(index, error)),
         )),
-      ).subscribe({
-        next: ({ index, content }) => Connector.content.setContentLoaded(index, content),
-        error: error => Logger.error(error),
-        complete: (result) => {
-          EventBus.emit(Events.ALL_CONTENT_LOADED, result);
-        },
-      });
-    }
-  }
-
-  setContentsByValue(contentFormat, bindingType, contents) {
-    Connector.content.setContentsByValue(contentFormat, bindingType, contents);
-    EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
-  }
-
-  onContentSetByUri(contentSetByUri$) {
-    return contentSetByUri$.subscribe(({ data }) => {
-      const { contentFormat, bindingType, uris } = data;
-      this.setContentsByUri(contentFormat, bindingType, uris);
+      )),
+    ).subscribe({
+      next: ({ index, content }) => Connector.content.setContentLoaded(index, content),
+      error: error => Logger.error(error),
+      complete: (result) => {
+        EventBus.emit(Events.ALL_CONTENT_LOADED, result);
+      },
     });
   }
 
   onContentSetByValue(contentSetByValue$) {
     return contentSetByValue$.subscribe(({ data }) => {
       const { contentFormat, bindingType, contents } = data;
-      this.setContentsByValue(contentFormat, bindingType, contents);
+      Connector.content.setContentsByValue(contentFormat, bindingType, contents);
+      EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
     });
   }
 

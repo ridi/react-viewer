@@ -5,7 +5,6 @@ import {
   debounce,
   distinctUntilChanged,
   catchError,
-  tap,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';

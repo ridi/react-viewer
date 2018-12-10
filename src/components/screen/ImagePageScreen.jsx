@@ -8,7 +8,12 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { screenHeight, screenWidth, setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
+import {
+  screenHeight,
+  screenWidth,
+  setScrollTop,
+  waitThenRun,
+} from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
