@@ -8,7 +8,7 @@ import {
   selectReaderFooterCalculations,
 } from '../../redux/selector';
 import {
-  setScrollTop,
+  setScrollTop, waitThenRun,
 } from '../../util/BrowserWrapper';
 import {
   addEventListener,
@@ -29,15 +29,11 @@ import { ContentFormat } from '../../constants/ContentConstants';
 import EventBus, { Events } from '../../event';
 
 class ImageScrollScreen extends BaseScreen {
-  constructor(props) {
-    super(props);
-    this.calculate = this.calculate.bind(this);
-  }
-
   componentDidMount() {
     super.componentDidMount();
     this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
       .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
+    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
 
     if (!this.listener) {
       const { contentFooter } = this.props;
@@ -52,6 +48,7 @@ class ImageScrollScreen extends BaseScreen {
 
   componentWillUnmount() {
     super.componentWillUnmount();
+    EventBus.offByTarget(this);
     if (this.scrollEventSubscription) {
       this.scrollEventSubscription.unsubscribe();
       this.scrollEventSubscription = null;
@@ -69,9 +66,11 @@ class ImageScrollScreen extends BaseScreen {
     return Promise.all([...images]);
   }
 
-  moveToOffset() {
-    const { offset } = this.props.current;
-    setScrollTop(offset);
+  moveToOffset(offset) {
+    waitThenRun(() => {
+      setScrollTop(offset);
+      EventBus.emit(Events.core.MOVED);
+    }, 0);
   }
 
   renderFooter() {
@@ -99,8 +98,6 @@ class ImageScrollScreen extends BaseScreen {
         content={content}
         currentOffset={current.offset}
         src={content.uri || content.content}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
       />
     );

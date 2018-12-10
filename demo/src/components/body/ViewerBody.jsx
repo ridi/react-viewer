@@ -13,6 +13,7 @@ import Reader, {
   ReaderJsHelper,
   EventBus,
   Events,
+  ContentFormat,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
@@ -36,7 +37,9 @@ class ViewerBody extends React.Component {
     EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
     EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
     EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
-    EventBus.emit(Events.core.SET_ANNOTATIONS, this.props.annotations);
+    if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
+      EventBus.emit(Events.core.SET_ANNOTATIONS, this.props.annotations);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -44,8 +47,10 @@ class ViewerBody extends React.Component {
     if (prevProps.isReadyToRead && !isReadyToRead) {
       actionSetContextMenu(false);
     }
-    if (annotations !== prevProps.annotations) {
-      EventBus.emit(Events.core.SET_ANNOTATIONS, annotations);
+    if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
+      if (annotations !== prevProps.annotations) {
+        EventBus.emit(Events.core.SET_ANNOTATIONS, annotations);
+      }
     }
   }
 
@@ -59,10 +64,14 @@ class ViewerBody extends React.Component {
   }
 
   onReaderTouched(event) {
-    const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
-    if (link) {
-      // TODO go to...
-      return;
+    try {
+      const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
+      if (link) {
+        // TODO go to...
+        return;
+      }
+    } catch (e) {
+      // ignore...
     }
     const { setting, onTouched } = this.props;
 
@@ -162,15 +171,15 @@ class ViewerBody extends React.Component {
   }
 
   renderReader() {
-    const { annotations } = this.props;
+    const { annotations, contentMeta } = this.props;
     return (
       <Reader
         footer={this.footer}
         contentFooter={this.contentFooter}
         onMount={this.onReaderLoaded}
         onUnmount={this.onReaderUnloaded}
-        selectable
-        annotationable
+        selectable={contentMeta.contentFormat === ContentFormat.HTML}
+        annotationable={contentMeta.contentFormat === ContentFormat.HTML}
         annotations={annotations}
       />
     );

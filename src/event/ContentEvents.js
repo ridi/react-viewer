@@ -1,6 +1,8 @@
 
 export const META_SET = Symbol('META_SET');
 export const CONTENT_SET = Symbol('CONTENT_SET');
+export const CONTENT_LOADED = Symbol('CONTENT_LOADED');
+export const CONTENT_ERROR = Symbol('CONTENT_ERROR');
 export const ALL_CONTENT_LOADED = Symbol('ALL_CONTENT_LOADED');
 // Data
 

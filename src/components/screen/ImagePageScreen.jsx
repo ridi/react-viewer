@@ -8,7 +8,7 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { screenHeight, screenWidth, setScrollTop } from '../../util/BrowserWrapper';
+import { screenHeight, screenWidth, setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
@@ -37,21 +37,29 @@ class ImagePageScreen extends BaseScreen {
   }
 
   componentDidMount() {
+    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
     const isCalculated = Connector.calculations.isContentCalculated(1);
     if (!isCalculated) {
       EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: 1 });
     }
   }
 
-  moveToOffset() {
-    const { contentIndex, offset } = this.props.current;
-    setScrollTop(0);
-    if (contentIndex === FOOTER_INDEX) {
-      this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
-    } else {
-      this.wrapper.current.scrollLeft = 0;
-      this.container.current.scrollLeft = offset * screenWidth();
-    }
+  componentWillUnmount() {
+    EventBus.offByTarget(this);
+  }
+
+  moveToOffset(offset) {
+    waitThenRun(() => {
+      const { contentIndex } = this.props.current;
+      setScrollTop(0);
+      if (contentIndex === FOOTER_INDEX) {
+        this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
+      } else {
+        this.wrapper.current.scrollLeft = 0;
+        this.container.current.scrollLeft = offset * screenWidth();
+      }
+      EventBus.emit(Events.core.MOVED);
+    }, 0);
   }
 
   renderFooter() {

@@ -107,7 +107,7 @@ export default class BaseScreen extends React.Component {
         selection={selection}
         isLastPage={setting.viewType === ViewType.PAGE && current.contentIndex === FOOTER_INDEX}
       >
-        { isContentsLoaded && this.renderContents() }
+        { (isContentsLoaded || contentFormat === ContentFormat.IMAGE) && this.renderContents() }
         { isContentsLoaded && this.renderFooter() }
         { isContentsLoaded && children }
       </TouchableScreen>
