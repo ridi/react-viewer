@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Connector,
   selectReaderSetting,
   selectReaderCalculationsTotal,
   ViewType,
+  Events,
+  EventBus,
 } from '@ridi/react-viewer';
 import { AvailableViewType } from '../../constants/ContentConstants';
 import { isExist } from '../../../../src/util/Util';
@@ -72,7 +73,7 @@ class ViewerScreenFooter extends Component {
             <button
               type="button"
               className="move_prev_page_button"
-              onClick={() => Connector.current.updateCurrentOffset(calculationsTotal - 2)}
+              onClick={() => EventBus.emit(Events.UPDATE_CURRENT_OFFSET, calculationsTotal - 2)}
             >
               <SvgIcons
                 svgName="svg_arrow_6_left"

@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import StyledSelectionLayer from '../styled/StyledSelectionLayer';
 import Selection from './Selection';
+import withStore from '../WithStore';
+import AnnotationStore from '../../store/AnnotationStore';
 
 class SelectionLayer extends React.Component {
   static SCROLLING_EDGE = 60;
@@ -28,7 +30,8 @@ class SelectionLayer extends React.Component {
       items = [...annotations];
     }
     if (selectable && selection) {
-      items.push(selection);
+      // TODO 다듬기
+      items.push({ type: 'selection', ...selection });
     }
     return items;
   }
@@ -46,4 +49,8 @@ class SelectionLayer extends React.Component {
   }
 }
 
-export default React.forwardRef((props, ref) => <SelectionLayer forwardedRef={ref} {...props} />);
+const SelectionLayerWithStore = withStore({
+  annotations: AnnotationStore,
+})(SelectionLayer);
+
+export default React.forwardRef((props, ref) => <SelectionLayerWithStore forwardedRef={ref} {...props} />);

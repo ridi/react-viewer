@@ -4,7 +4,7 @@ import {
   selectReaderContentsCalculations,
   selectReaderFooterCalculations,
   selectReaderBindingType,
-  selectReaderCalculationsTotal,
+  selectReaderCalculationsTotal, selectReaderCalculationsTargets,
 } from '../../redux/selector';
 import { setScrollTop, waitThenRun } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType } from '../prop-types';
@@ -15,10 +15,11 @@ import BaseScreen, {
 import Connector from '../../service/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
-import PageHtmlContent from '../content/PageHtmlContent';
+import HtmlContent from '../content/HtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
-import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
+import EventBus, { Events } from '../../event';
 
 class HtmlPageScreen extends BaseScreen {
   static defaultProps = {
@@ -36,54 +37,56 @@ class HtmlPageScreen extends BaseScreen {
     bindingType: PropTypes.oneOf(BindingType.toList()).isRequired,
     calculationsTotal: PropTypes.number.isRequired,
     onMoveWrongDirection: PropTypes.func,
+    calculationsTarget: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
   constructor(props) {
     super(props);
-    this.calculate = this.calculate.bind(this);
+    this.moveToOffset = this.moveToOffset.bind(this);
   }
 
-  calculate(index, contentNode) {
-    if (index === FOOTER_INDEX) {
-      const { hasFooter } = Connector.calculations;
-      Connector.calculations.setContentTotal(FOOTER_INDEX, hasFooter ? 1 : 0);
-    }
+  componentDidMount() {
+    super.componentDidMount();
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset, this);
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount();
+    EventBus.offByTarget(this);
+  }
+
+  moveToOffset(offset) {
     waitThenRun(() => {
-      const pagesTotal = Math.ceil(contentNode.scrollWidth
-        / (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap()));
-      Connector.calculations.setContentTotal(index, pagesTotal);
-    });
-  }
-
-  moveToOffset() {
-    super.moveToOffset();
-    const { contentIndex } = this.props.current;
-    setScrollTop(0);
-    if (contentIndex === FOOTER_INDEX) {
-      this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
-    } else {
-      this.wrapper.current.scrollLeft = 0;
-    }
-  }
-
-  needRender(index) {
-    const { current } = this.props;
-    const calculated = Connector.calculations.isContentCalculated(index);
-    const visible = current.contentIndex === index;
-    return calculated && visible;
+      const { contentIndex } = this.props.current;
+      const w = this.wrapper;
+      const cw = this.getContentRef(contentIndex);
+      setScrollTop(0);
+      if (contentIndex === FOOTER_INDEX) {
+        w.current.scrollLeft = w.current.scrollWidth;
+      } else {
+        w.current.scrollLeft = 0;
+      }
+      const startOffset = Connector.calculations.getStartOffset(contentIndex);
+      const localOffset = offset - startOffset;
+      if (cw.current && localOffset >= 0) {
+        cw.current.scrollLeft = localOffset
+          * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
+        EventBus.emit(Events.MOVED);
+      }
+    }, 0);
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
 
     return (
       <Footer
         key="footer"
+        isCalculated={footerCalculations.isCalculated}
         content={footer}
         startOffset={startOffset}
-        onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.PAGE)}
       />
@@ -92,37 +95,30 @@ class HtmlPageScreen extends BaseScreen {
 
   renderContent(content, StyledContent) {
     const {
-      current,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
-    const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
-      <PageHtmlContent
+      <HtmlContent
         key={`${content.uri}:${content.index}`}
+        ref={this.getContentRef(content.index)}
         content={content}
         isCalculated={isCalculated}
         startOffset={startOffset}
-        localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
-        onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        onContentMount={this.onContentMount}
       />
     );
   }
 
   renderContents() {
-    const { contents } = this.props;
+    const { contents, calculationsTargets } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.PAGE);
-    const calculatedTarget = Connector.calculations.getCalculationTargetContents();
     return contents
-      .filter(({ index }) => this.needRender(index) || calculatedTarget.includes(index))
+      .filter(({ isInScreen, index }) => isInScreen || calculationsTargets.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }
@@ -133,6 +129,7 @@ const mapStateToProps = state => ({
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
   bindingType: selectReaderBindingType(state),
+  calculationsTargets: selectReaderCalculationsTargets(state),
 });
 
 const mapDispatchToProps = dispatch => ({

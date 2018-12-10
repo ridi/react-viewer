@@ -6,23 +6,22 @@ import {
   allowScrollEvent, addEventListener, removeEventListener,
 } from '../../util/EventHandler';
 import { ViewType, SELECTION_BASE_CONTENT } from '../../constants/SettingConstants';
-import { isExist } from '../../util/Util';
 import SelectionLayer from '../selection/SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { SelectionMode, SelectionParts } from '../..';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
+import EventBus, { Events } from '../../event';
+import AnnotationStore from '../../store/AnnotationStore';
 
 class TouchableScreen extends React.Component {
   static defaultProps = {
     forwardedRef: React.createRef(),
-    onTouched: null,
     children: null,
     total: null,
     StyledTouchable: () => {},
   };
 
   static propTypes = {
-    onTouched: PropTypes.func,
     children: PropTypes.node,
     forwardedRef: PropTypes.object,
     total: PropTypes.number,
@@ -33,8 +32,7 @@ class TouchableScreen extends React.Component {
     selection: PropTypes.object,
     annotationable: PropTypes.bool.isRequired,
     selectable: PropTypes.bool.isRequired,
-    onSelectionChanged: PropTypes.func,
-    onAnnotationTouched: PropTypes.func,
+    isLastPage: PropTypes.bool.isRequired,
   };
 
   selectionRef = React.createRef();
@@ -60,6 +58,7 @@ class TouchableScreen extends React.Component {
   componentDidUpdate() {
     this.handleScrollEvent();
   }
+
   componentWillUnmount() {
     const { current: node } = this.isSelectable() ? this.selectionRef : this.props.forwardedRef;
     this.touchHandler.detach();
@@ -89,32 +88,25 @@ class TouchableScreen extends React.Component {
   }
 
   handleTouchEvent(event) {
-    const {
-      selectable,
-      onSelectionChanged,
-      onAnnotationTouched,
-      annotations,
-      onTouched,
-    } = this.props;
+    if (!Connector.calculations.isReadyToRead()) return;
+
+    const { selectable, annotations } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
 
-    const selectionPart = target.getAttribute('data-type');
-    const selectionId = target.getAttribute('data-id');
+    const selectionPart = target.dataset.type;
+    const selectionId = target.dataset.id;
     if (event.type === TouchEventHandler.EVENT_TYPE.Touch) {
       Connector.selection.end();
-
       if (selectionPart === SelectionParts.TEXT && selectionId) {
-        if (isExist(onAnnotationTouched)) {
-          const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
-          if (annotation) {
-            onAnnotationTouched({
-              ...annotation,
-              ...Connector.calculations.getAnnotationCalculation(annotation),
-            });
-          }
+        const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
+        if (annotation) {
+          const calculationInfo = AnnotationStore.getCalculation(selectionId);
+          EventBus.emit(Events.TOUCH_ANNOTATION, { ...annotation, ...calculationInfo });
+        } else {
+          EventBus.emit(Events.TOUCH, event);
         }
-      } else if (isExist(onTouched)) {
-        onTouched(event);
+      } else {
+        EventBus.emit(Events.TOUCH, event);
       }
     } else if (selectable) {
       if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
@@ -139,8 +131,8 @@ class TouchableScreen extends React.Component {
         } else {
           Connector.selection.expandIntoLower(x, y);
         }
-        if (isExist(onSelectionChanged)) {
-          onSelectionChanged({
+        if (Connector.selection.isSelecting) {
+          EventBus.emit(Events.CHANGE_SELECTION, {
             selection: Connector.selection.selection,
             selectionMode: Connector.selection.selectionMode,
           });
@@ -151,6 +143,7 @@ class TouchableScreen extends React.Component {
   }
 
   handleScrollEvent(forceAllow = false) {
+    // TODO isReadyToRead 체크를 제거할 수 있을까?
     const { viewType, forwardedRef, isReadyToRead } = this.props;
     if (forceAllow) {
       allowScrollEvent(forwardedRef.current);
@@ -174,8 +167,9 @@ class TouchableScreen extends React.Component {
       annotations,
       selection,
       viewType,
+      isLastPage,
     } = this.props;
-    if (!annotationable && !selectable) return null;
+    if ((!annotationable && !selectable) || isLastPage) return null;
     return (
       <SelectionLayer
         ref={this.selectionRef}

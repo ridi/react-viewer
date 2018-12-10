@@ -1,21 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { fromEvent } from 'rxjs';
 import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
-  selectReaderFooterCalculations,
+  selectReaderFooterCalculations, selectReaderCalculationsTargets,
 } from '../../redux/selector';
 import Footer from '../footer/Footer';
 import {
-  screenHeight,
-  scrollTop,
   setScrollTop,
   waitThenRun,
 } from '../../util/BrowserWrapper';
-import {
-  addEventListener,
-  removeEventListener,
-} from '../../util/EventHandler';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
@@ -24,15 +19,14 @@ import BaseScreen, {
   mapDispatchToProps as readerBaseScreenMapDispatchToProps,
   mapStateToProps as readerBaseScreenMapStateToProps,
 } from './BaseScreen';
-import { debounce } from '../../util/Util';
 import Connector from '../../service/connector';
-import ScrollHtmlContent from '../content/ScrollHtmlContent';
+import HtmlContent from '../content/HtmlContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { INVALID_OFFSET, ViewType } from '../../constants/SettingConstants';
+import { ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
+import EventBus, { Events } from '../../event';
 
 class HtmlScrollScreen extends BaseScreen {
   static defaultProps = {
@@ -48,32 +42,31 @@ class HtmlScrollScreen extends BaseScreen {
     actionUpdateContentError: PropTypes.func.isRequired,
     footerCalculations: FooterCalculationsType.isRequired,
     contentFooter: PropTypes.node,
-    onScrolled: PropTypes.func.isRequired,
-    ignoreScroll: PropTypes.bool.isRequired,
+    calculationsTargets: PropTypes.arrayOf(PropTypes.number).isRequired,
   };
 
   constructor(props) {
     super(props);
     this.calculate = this.calculate.bind(this);
+    this.moveToOffset = this.moveToOffset.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
 
-    this.onScroll = debounce(e => this.onScrollHandle(e), DOMEventDelayConstants.SCROLL);
-    addEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset, this);
+    this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
+      .subscribe(event => EventBus.emit(Events.SCROLL, event));
   }
 
   componentWillUnmount() {
     super.componentWillUnmount();
-    removeEventListener(window, DOMEventConstants.SCROLL, this.onScroll, { passive: true });
-  }
 
-  onScrollHandle(e) {
-    const { ignoreScroll, onScrolled, isReadyToRead } = this.props;
-    if (ignoreScroll || !isReadyToRead) return;
-    onScrolled(e);
-    Connector.current.updateCurrentOffset(scrollTop());
+    EventBus.offByTarget(this);
+    if (this.scrollEventSubscription) {
+      this.scrollEventSubscription.unsubscribe();
+      this.scrollEventSubscription = null;
+    }
   }
 
   calculate(index, node) {
@@ -88,28 +81,21 @@ class HtmlScrollScreen extends BaseScreen {
     ));
   }
 
-  moveToOffset() {
-    super.moveToOffset();
-    const { offset } = this.props.current;
-    setScrollTop(offset);
-  }
-
-  needRender(contentIndex) {
-    const { current } = this.props;
-    const calculated = Connector.calculations.isContentCalculated(contentIndex);
-    const [top, height] = [current.offset, screenHeight()];
-    const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
-    return calculated && contentIndexesInScreen.includes(contentIndex);
+  moveToOffset(offset) {
+    waitThenRun(() => {
+      setScrollTop(offset);
+      EventBus.emit(Events.MOVED);
+    }, 0);
   }
 
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
         key="footer"
+        isCalculated={footerCalculations.isCalculated}
         content={footer}
-        onContentRendered={this.calculate}
         containerVerticalMargin={containerVerticalMargin}
         startOffset={Connector.calculations.getStartOffset(FOOTER_INDEX)}
         StyledFooter={getStyledFooter(ContentFormat.HTML, ViewType.SCROLL)}
@@ -119,37 +105,30 @@ class HtmlScrollScreen extends BaseScreen {
 
   renderContent(content, StyledContent) {
     const {
-      current,
       contentFooter,
     } = this.props;
     const startOffset = Connector.calculations.getStartOffset(content.index);
-    const isCurrentContent = current.contentIndex === content.index;
     const isLastContent = Connector.calculations.isLastContent(content.index);
     const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
-      <ScrollHtmlContent
+      <HtmlContent
         key={`${content.uri}:${content.index}`}
+        ref={this.getContentRef(content.index)}
         content={content}
         isCalculated={isCalculated}
         startOffset={startOffset}
-        localOffset={isCurrentContent ? current.offset - startOffset : INVALID_OFFSET}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
-        onContentRendered={this.calculate}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
-        onContentMount={this.onContentMount}
       />
     );
   }
 
   renderContents() {
-    const { contents } = this.props;
+    const { contents, calculationsTargets } = this.props;
     const StyledContent = getStyledContent(ContentFormat.HTML, ViewType.SCROLL);
-    const calculatedTarget = Connector.calculations.getCalculationTargetContents();
     return contents
-      .filter(({ index }) => this.needRender(index) || calculatedTarget.includes(index))
+      .filter(({ isInScreen, index }) => isInScreen || calculationsTargets.includes(index))
       .map(content => this.renderContent(content, StyledContent));
   }
 }
@@ -159,6 +138,7 @@ const mapStateToProps = state => ({
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
+  calculationsTargets: selectReaderCalculationsTargets(state),
 });
 
 const mapDispatchToProps = dispatch => ({

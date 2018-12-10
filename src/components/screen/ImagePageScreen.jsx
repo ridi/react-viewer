@@ -8,7 +8,12 @@ import {
   selectReaderBindingType,
   selectReaderCalculationsTotal,
 } from '../../redux/selector';
-import { screenHeight, screenWidth, setScrollTop } from '../../util/BrowserWrapper';
+import {
+  screenHeight,
+  screenWidth,
+  setScrollTop,
+  waitThenRun,
+} from '../../util/BrowserWrapper';
 import PropTypes, {
   FooterCalculationsType,
   ContentCalculationsType,
@@ -28,6 +33,7 @@ import { StyledImagePageContent } from '../styled/StyledContent';
 import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
+import EventBus, { Events } from '../../event';
 
 class ImagePageScreen extends BaseScreen {
   constructor(props) {
@@ -36,31 +42,40 @@ class ImagePageScreen extends BaseScreen {
   }
 
   componentDidMount() {
-    const { contents } = this.props;
-    const { columnsInPage, startWithBlankPage } = this.props.setting;
-    Connector.calculations.setContentTotal(1, Math.ceil((contents.length + startWithBlankPage) / columnsInPage));
-    Connector.calculations.setContentTotal(FOOTER_INDEX, Connector.calculations.hasFooter ? 1 : 0);
-  }
-
-  moveToOffset() {
-    const { contentIndex, offset } = this.props.current;
-    setScrollTop(0);
-    if (contentIndex === FOOTER_INDEX) {
-      this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
-    } else {
-      this.wrapper.current.scrollLeft = 0;
-      this.container.current.scrollLeft = offset * screenWidth();
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
+    const isCalculated = Connector.calculations.isContentCalculated(1);
+    if (!isCalculated) {
+      EventBus.emit(Events.CALCULATE_CONTENT, { index: 1 });
     }
   }
 
+  componentWillUnmount() {
+    EventBus.offByTarget(this);
+  }
+
+  moveToOffset(offset) {
+    waitThenRun(() => {
+      const { contentIndex } = this.props.current;
+      setScrollTop(0);
+      if (contentIndex === FOOTER_INDEX) {
+        this.wrapper.current.scrollLeft = this.wrapper.current.scrollWidth;
+      } else {
+        this.wrapper.current.scrollLeft = 0;
+        this.container.current.scrollLeft = offset * screenWidth();
+      }
+      EventBus.emit(Events.MOVED);
+    }, 0);
+  }
+
   renderFooter() {
-    const { footer } = this.props;
+    const { footer, footerCalculations } = this.props;
     const { containerVerticalMargin } = this.props.setting;
     const startOffset = Connector.calculations.getStartOffset(FOOTER_INDEX);
 
     return (
       <Footer
         content={footer}
+        isCalculated={footerCalculations.isCalculated}
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.PAGE)}

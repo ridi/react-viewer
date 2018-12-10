@@ -1,34 +1,33 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from 'react';
-import DOMEventDelayConstants from '../../constants/DOMEventDelayConstants';
-import { debounce, isExist } from '../../util/Util';
+import { fromEvent } from 'rxjs';
 import {
   selectReaderContents,
   selectReaderCurrent,
   selectReaderSetting,
-  selectReaderCalculationsTotal, selectReaderContentFormat, selectReaderIsReadyToRead, selectReaderSelection,
+  selectReaderCalculationsTotal,
+  selectReaderContentFormat,
+  selectReaderIsReadyToRead,
+  selectReaderSelection,
+  selectReaderIsContentsLoaded,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
 import DOMEventConstants from '../../constants/DOMEventConstants';
 import { updateContent, updateContentError } from '../../redux/action';
-import Connector from '../../service/connector';
 import TouchableScreen from './TouchableScreen';
-import { addEventListener, removeEventListener } from '../../util/EventHandler';
 import { getStyledTouchable } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
-import { screenHeight, waitThenRun } from '../../util/BrowserWrapper';
-import { ViewType } from '../..';
+import EventBus, { Events } from '../../event';
+import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { ViewType } from '../../constants/SettingConstants';
 
 export default class BaseScreen extends React.Component {
   static defaultProps = {
-    onTouched: null,
-    onSelectionChanged: null,
-    onAnnotationTouched: null,
     children: null,
+    annotations: [],
   };
 
   static propTypes = {
-    disableCalculation: PropTypes.bool.isRequired,
     setting: SettingType.isRequired,
     current: CurrentType.isRequired,
     contents: PropTypes.arrayOf(ContentType).isRequired,
@@ -37,122 +36,42 @@ export default class BaseScreen extends React.Component {
     calculationsTotal: PropTypes.number.isRequired,
     contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
     isReadyToRead: PropTypes.bool.isRequired,
-    onTouched: PropTypes.func,
-    onSelectionChanged: PropTypes.func,
-    onAnnotationTouched: PropTypes.func,
     children: PropTypes.node,
     selectable: PropTypes.bool.isRequired,
     annotationable: PropTypes.bool.isRequired,
     annotations: PropTypes.array,
     selection: PropTypes.object,
+    isContentsLoaded: PropTypes.bool.isRequired,
   };
 
-  static getDerivedStateFromProps(props) {
-    // todo temporary code: Force to set annotation recalculation time
-    return BaseScreen.recalculateAnnotations(props.annotations, props.setting.viewType);
-  }
-
-  static needAnnotationRender(viewType, annotation) {
-    if (!Connector.calculations.isContentCalculated(annotation.contentIndex)) return false;
-    // todo temporary code: Force to set annotation recalculation time
-    if (viewType === ViewType.SCROLL) {
-      const { offset } = Connector.current.getCurrent();
-      const [top, height] = [offset, screenHeight()];
-      const contentIndexesInScreen = Connector.calculations.getContentIndexesInOffsetRange(top - (height * 2), top + height + (height * 2));
-      return contentIndexesInScreen.includes(annotation.contentIndex);
-    }
-    const { contentIndex } = Connector.current.getCurrent();
-    return contentIndex === annotation.contentIndex;
-  }
-
-  static recalculateAnnotations(annotations, viewType) {
-    // todo temporary code: Force to set annotation recalculation time
-    return {
-      annotations: annotations.filter(BaseScreen.needAnnotationRender.bind(this, viewType))
-        .map(item => ({
-          ...item,
-          ...Connector.calculations.getAnnotationCalculation(item),
-        })),
-    };
-  }
+  _contentRefs = new Map();
 
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
-    this.state = {
-      annotations: [],
-    };
-    this.onContentLoaded = this.onContentLoaded.bind(this);
-    this.onContentError = this.onContentError.bind(this);
-    this.onTouchableScreenTouched = this.onTouchableScreenTouched.bind(this);
-    this.onContentMount = this.onContentMount.bind(this);
   }
 
   componentDidMount() {
-    const { isReadyToRead, disableCalculation } = this.props;
-    if (isReadyToRead && !disableCalculation) {
-      Connector.current.restoreCurrentOffset();
-    }
-    this.resizeReader = debounce(() => {
-      if (!disableCalculation) {
-        Connector.calculations.invalidate();
-      }
-    }, DOMEventDelayConstants.RESIZE);
-    addEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-  }
+    this.resizeEventSubscription = fromEvent(window, DOMEventConstants.RESIZE)
+      .subscribe(event => EventBus.emit(Events.RESIZE, event));
 
-  componentDidUpdate(prevProps) {
-    const { current: prevCurrent, isReadyToRead: prevIsReadyToRead } = prevProps;
-    const { current, isReadyToRead } = this.props;
+    EventBus.on(Events.READY_TO_READ, () => {
 
-    const hasJustCalculatedCurrent = !prevIsReadyToRead && isReadyToRead;
-    const isCurrentMoved = (prevCurrent.offset !== current.offset
-      || prevCurrent.contentIndex !== current.contentIndex
-      || prevCurrent.viewType !== current.viewType);
-    const isNeededRestore = hasJustCalculatedCurrent;
-    const isNeededMoveToOffset = hasJustCalculatedCurrent || isCurrentMoved;
-
-    if (isNeededRestore) Connector.current.restoreCurrentOffset();
-    if (isNeededMoveToOffset) this.moveToOffset();
+    }, this);
   }
 
   componentWillUnmount() {
-    removeEventListener(window, DOMEventConstants.RESIZE, this.resizeReader);
-  }
-
-  onTouchableScreenTouched(event) {
-    const { onTouched, isReadyToRead } = this.props;
-    if (!isReadyToRead) return;
-    if (isExist(onTouched)) {
-      onTouched(event);
+    if (this.resizeEventSubscription) {
+      this.resizeEventSubscription.unsubscribe();
     }
+    EventBus.offByTarget(this);
   }
 
-  onContentLoaded(index, content) {
-    const { contents, actionUpdateContent } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContent(index, content, isAllLoaded);
-  }
-
-  onContentError(index, error) {
-    const { contents, actionUpdateContentError } = this.props;
-    const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    actionUpdateContentError(index, error, isAllLoaded);
-  }
-
-  onContentMount(index) {
-    const { current } = this.props;
-    if (index === current.contentIndex) {
-      // Connector.current.setReaderJs();
+  getContentRef(index) {
+    if (!this._contentRefs.has(index)) {
+      this._contentRefs.set(index, React.createRef());
     }
-  }
-
-  moveToOffset() {
-    const { annotations } = this.props;
-    // todo temporary code: Force to set annotation recalculation time
-    waitThenRun(() => {
-      this.setState(BaseScreen.recalculateAnnotations(annotations));
-    }, 0);
+    return this._contentRefs.get(index);
   }
 
   renderContents() { return null; }
@@ -165,32 +84,31 @@ export default class BaseScreen extends React.Component {
       calculationsTotal,
       contentFormat,
       isReadyToRead,
+      isContentsLoaded,
       children,
       annotationable,
       selectable,
       selection,
-      onSelectionChanged,
-      onAnnotationTouched,
+      current,
+      annotations,
     } = this.props;
 
     return (
       <TouchableScreen
         ref={this.wrapper}
         total={calculationsTotal}
-        onTouched={this.onTouchableScreenTouched}
         viewType={setting.viewType}
         StyledTouchable={getStyledTouchable(contentFormat, setting.viewType)}
         isReadyToRead={isReadyToRead}
         annotationable={annotationable}
         selectable={selectable}
-        annotations={this.state.annotations}
+        annotations={annotations}
         selection={selection}
-        onSelectionChanged={onSelectionChanged}
-        onAnnotationTouched={onAnnotationTouched}
+        isLastPage={setting.viewType === ViewType.PAGE && current.contentIndex === FOOTER_INDEX}
       >
-        { this.renderContents() }
-        { this.renderFooter() }
-        { children }
+        { (isContentsLoaded || contentFormat === ContentFormat.IMAGE) && this.renderContents() }
+        { isContentsLoaded && this.renderFooter() }
+        { isContentsLoaded && children }
       </TouchableScreen>
     );
   }
@@ -204,6 +122,7 @@ export const mapStateToProps = state => ({
   contentFormat: selectReaderContentFormat(state),
   isReadyToRead: selectReaderIsReadyToRead(state),
   selection: selectReaderSelection(state),
+  isContentsLoaded: selectReaderIsContentsLoaded(state),
 });
 
 export const mapDispatchToProps = dispatch => ({

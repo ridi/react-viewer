@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 import BaseContent from './BaseContent';
+import EventBus, { Events } from '../../event';
 
 class ImageContent extends BaseContent {
   imageOnErrorHandler() {
-    const { onContentError } = this.props;
     const { index, isContentOnError } = this.props.content;
     if (!isContentOnError) {
-      onContentError(index, '');
+      EventBus.emit(Events.CONTENT_ERROR, { index, error: '' });
     }
   }
 
   imageOnLoadHandler() {
-    const { onContentLoaded } = this.props;
     const { index, isContentLoaded } = this.props.content;
     if (!isContentLoaded) {
-      onContentLoaded(index, '');
+      EventBus.emit(Events.CONTENT_LOADED, { index, content: '' });
     }
   }
 
@@ -64,8 +63,6 @@ ImageContent.defaultProps = {
 ImageContent.propTypes = {
   src: PropTypes.string,
   content: ContentType.isRequired,
-  onContentLoaded: PropTypes.func,
-  onContentError: PropTypes.func,
   contentFooter: PropTypes.node,
   forwardedRef: PropTypes.any,
   children: PropTypes.node,

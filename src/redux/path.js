@@ -15,6 +15,7 @@ export const initialContentState = index => ({
   error: null,
   isContentLoaded: false,
   isContentOnError: false,
+  isInScreen: false,
 });
 
 export const initialContentCalculationsState = index => ({
@@ -23,6 +24,7 @@ export const initialContentCalculationsState = index => ({
   offset: index === 1 ? 0 : PRE_CALCULATION,
   total: 0,
 });
+
 export const initialFooterCalculationsState = () => ({ isCalculated: false, offset: PRE_CALCULATION, total: 0 });
 
 export const initialSettingState = () => ({
@@ -42,7 +44,14 @@ export const initialSettingState = () => ({
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
 });
 
-export const initialState = {
+export const initialAnnotationCalculationState = (id, contentIndex) => ({
+  id,
+  contentIndex,
+  rects: null,
+  isVisible: false,
+});
+
+export const initialState = () => ({
   status: {
     isLoaded: true,
     isInitContents: false,
@@ -59,6 +68,8 @@ export const initialState = {
     contents: [],
     footer: initialFooterCalculationsState(),
     contentTotal: 0,
+    targets: [],
+    annotations: {},
   },
   current: {
     contentIndex: 1,
@@ -69,7 +80,7 @@ export const initialState = {
   },
   setting: initialSettingState(),
   selection: null,
-};
+});
 
 export default {
   contents: () => ['contents'],
@@ -98,6 +109,7 @@ export default {
   columnsInPage: () => ['setting', 'columnsInPage'],
   columnGap: () => ['setting', 'columnGap'],
 
+  calculations: () => ['calculations'],
   calculationsTotal: () => ['calculations', 'contentTotal'],
   contentsCalculations: () => ['calculations', 'contents'],
   contentsCalculation: index => ['calculations', 'contents', index - 1],
@@ -106,6 +118,9 @@ export default {
   footerCalculations: () => ['calculations', 'footer'],
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
+  calculationsTargets: () => ['calculations', 'targets'],
+  annotationCalculations: () => ['calculations', 'annotations'],
+  annotationCalculation: id => ['calculations', 'annotations', id],
 
   selection: () => ['selection'],
 };

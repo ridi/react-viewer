@@ -1,8 +1,9 @@
 /* eslint no-restricted-globals: 0 */
-import { debounce, isExist } from './Util';
+import { fromEvent, timer } from 'rxjs';
+import { debounce } from 'rxjs/operators';
+import { isExist } from './Util';
 import DOMEventConstants from '../constants/DOMEventConstants';
 import { cached, clearCache } from './CacheStore';
-import { addEventListener } from './EventHandler';
 
 const Window = isExist(window) ? window : { addEventListener: () => {}, scrollBy: () => {} };
 const Document = isExist(document) ? document : { body: {}, scrollingElement: {}, documentElement: {} };
@@ -11,7 +12,10 @@ export const screenWidth = cached('screenWidth', () => Window.innerWidth);
 
 export const screenHeight = cached('screenHeight', () => Window.innerHeight);
 
-addEventListener(Window, DOMEventConstants.RESIZE, debounce(() => { clearCache('screenWidth', 'screenHeight'); }, 0));
+export const scrollLeft = () => {
+  if (Document.scrollingElement) return Document.scrollingElement.scrollLeft;
+  return Document.documentElement.scrollLeft || Document.body.scrollLeft;
+};
 
 export const scrollTop = () => {
   if (Document.scrollingElement) return Document.scrollingElement.scrollTop;
@@ -32,6 +36,10 @@ export const setScrollTop = (top) => {
   }
 };
 
+export const scrollTo = (top, left) => {
+  Window.scrollTo(left, top);
+};
+
 export const { scrollBy } = Window;
 
 export const offsetWidth = () => Document.body.offsetWidth;
@@ -39,6 +47,14 @@ export const offsetWidth = () => Document.body.offsetWidth;
 export const offsetHeight = () => Document.body.offsetHeight;
 
 export const waitThenRun = requestAnimationFrame || setTimeout || (func => func());
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+fromEvent(Window, DOMEventConstants.RESIZE).pipe(
+  debounce(() => timer(0)),
+).subscribe(() => clearCache('screenWidth', 'screenHeight'));
 
 export default {
   screenWidth,
@@ -50,4 +66,5 @@ export default {
   offsetWidth,
   offsetHeight,
   waitThenRun,
+  scrollTo,
 };

@@ -15,7 +15,7 @@ const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState
   .set(path.isLoaded(), true)
   .build();
 
-const unload = () => new ImmutableObjectBuilder(initialState)
+const unload = () => new ImmutableObjectBuilder(initialState())
   .set(path.isLoaded(), false)
   .build();
 
@@ -88,6 +88,8 @@ const invalidateCalculations = state => new ImmutableObjectBuilder(state)
   .set(path.isReadyToRead(), false)
   .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
+  .set(path.calculationsTargets(), [])
+  .set(path.annotationCalculations(), {})
   .build();
 
 const updateCalculationsTotal = (state, action) => new ImmutableObjectBuilder(state)
@@ -103,11 +105,25 @@ const updateSelection = (state, { selection }) => new ImmutableObjectBuilder(sta
   .set(path.selection(), selection)
   .build();
 
+const setCalculationsTargets = (state, { targets }) => new ImmutableObjectBuilder(state)
+  .set(path.calculationsTargets(), targets)
+  .build();
+
+const setContentsInScreen = (state, { contentIndexes }) => new ImmutableObjectBuilder(state)
+  .set(path.contents(), state.contents.map(({ index, ...others }) => (
+    { index, ...others, isInScreen: contentIndexes.includes(index) }
+  ))).build();
+
+const setCalculations = (state, { calculations }) => new ImmutableObjectBuilder(state)
+  .set(path.isAllCalculated(), true)
+  .set(path.calculations(), calculations)
+  .build();
+
 export default ({
   setting: customSetting = {},
 } = {}) => {
   const setting = { ...initialSettingState(), ...customSetting };
-  return createReducer({ ...initialState, setting }, {
+  return createReducer({ ...initialState(), setting }, {
     [actions.LOAD]: load,
     [actions.UNLOAD]: unload,
     [actions.SET_CONTENT_METADATA]: setContentMetadata,
@@ -123,5 +139,8 @@ export default ({
     [actions.UPDATE_FOOTER_CALCULATIONS]: updateFooterCalculation,
     [actions.UPDATE_CALCULATIONS_TOTAL]: updateCalculationsTotal,
     [actions.UPDATE_SELECTION]: updateSelection,
+    [actions.SET_CALCULATIONS_TARGETS]: setCalculationsTargets,
+    [actions.SET_CONTENTS_IN_SCREEN]: setContentsInScreen,
+    [actions.SET_CALCULATIONS]: setCalculations,
   });
 };

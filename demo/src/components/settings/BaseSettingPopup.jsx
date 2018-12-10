@@ -1,6 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { selectReaderSetting, ViewType, Connector } from '@ridi/react-viewer';
+import {
+  selectReaderSetting,
+  ViewType,
+  EventBus,
+  Events,
+} from '@ridi/react-viewer';
 import { selectIsVisibleSettingPopup } from '../../redux/Viewer.selector';
 
 export default class BaseSettingPopup extends React.Component {
@@ -14,7 +19,7 @@ export default class BaseSettingPopup extends React.Component {
   }
 
   onSettingChanged(settings) {
-    Connector.setting.updateSetting(settings);
+    EventBus.emit(Events.UPDATE_SETTING, settings);
   }
 
   renderSettings() {

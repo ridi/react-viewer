@@ -3,7 +3,10 @@ import setting from './SettingConnector';
 import current from './CurrentConnector';
 import BaseConnector from './BaseConnector';
 import selection from './SelectionConnector';
+import content from './ContentConnector';
+
 import { selectReader, selectReaderIsAllCalculated, selectReaderIsLoaded } from '../../redux/selector';
+import { load } from '../../redux/action';
 
 const core = new (class CoreConnector extends BaseConnector {
   isReaderLoaded() {
@@ -17,6 +20,10 @@ const core = new (class CoreConnector extends BaseConnector {
   getReaderState() {
     return selectReader(this.getState());
   }
+
+  restoreReaderState(state) {
+    this.store.dispatch(load(state));
+  }
 })();
 
 export const connect = (store) => {
@@ -25,6 +32,7 @@ export const connect = (store) => {
   setting.connect(store);
   current.connect(store);
   selection.connect(store);
+  content.connect(store);
 };
 
 export default {
@@ -34,4 +42,5 @@ export default {
   setting,
   current,
   selection,
+  content,
 };

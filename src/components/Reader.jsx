@@ -6,54 +6,55 @@ import { selectReaderContentFormat, selectReaderSetting } from '../redux/selecto
 import PropTypes, { SettingType } from './prop-types';
 import { ContentFormat } from '../constants/ContentConstants';
 import { ViewType } from '../constants/SettingConstants';
-import Events from '../constants/DOMEventConstants';
+import DOMEvents from '../constants/DOMEventConstants';
 import Connector from '../service/connector';
-import { isExist } from '../util/Util';
 import { addEventListener, removeEventListener } from '../util/EventHandler';
 import ReaderImageScrollScreen from './screen/ImageScrollScreen';
 import ReaderImagePageScreen from './screen/ImagePageScreen';
 import ContentFooter from './footer/ContentFooter';
+import EventBus, { Events } from '../event';
 
 class Reader extends React.Component {
+  static defaultProps = {
+    footer: null,
+    contentFooter: null,
+    selectable: false,
+    annotationable: false,
+    annotations: [],
+    children: null,
+  };
+
+  static propTypes = {
+    setting: SettingType,
+    footer: PropTypes.node,
+    contentFooter: PropTypes.node,
+    contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
+    selectable: PropTypes.bool,
+    annotationable: PropTypes.bool,
+    annotations: PropTypes.array,
+    children: PropTypes.node,
+  };
+
   constructor(props) {
     super(props);
     Connector.calculations.hasFooter = !!props.footer;
-    this.onTouched = this.onTouched.bind(this);
-    this.onScrolled = this.onScrolled.bind(this);
+
+    this.onUnmount = this.onUnmount.bind(this);
   }
 
   componentDidMount() {
-    const { onMount, onUnmount } = this.props;
-    if (isExist(onMount)) {
-      onMount();
-    }
-    if (isExist(onUnmount)) {
-      addEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
-    }
+    EventBus.emit(Events.MOUNTED);
+    addEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
   }
 
   componentWillUnmount() {
-    const { onUnmount } = this.props;
-    if (isExist(onUnmount)) {
-      onUnmount();
-      removeEventListener(window, Events.BEFORE_UNLOAD, onUnmount);
-    }
+    removeEventListener(window, DOMEvents.BEFORE_UNLOAD, this.onUnmount);
+    this.onUnmount();
   }
 
-  onTouched(e) {
-    const {
-      onTouched,
-    } = this.props;
-    if (isExist(onTouched)) {
-      onTouched(e);
-    }
-  }
-
-  onScrolled(e) {
-    const { onScrolled } = this.props;
-    if (isExist(onScrolled)) {
-      onScrolled(e);
-    }
+  onUnmount() {
+    EventBus.emit(Events.UNMOUNTED);
+    // EventBus.completeAll();
   }
 
   getScreen() {
@@ -77,28 +78,18 @@ class Reader extends React.Component {
     const {
       footer,
       contentFooter,
-      ignoreScroll,
-      disableCalculation,
       selectable,
       annotationable,
       annotations,
-      onSelectionChanged,
-      onAnnotationTouched,
       children,
     } = this.props;
 
     const props = {
       footer,
       contentFooter,
-      ignoreScroll,
-      disableCalculation,
-      onTouched: this.onTouched,
-      onScrolled: this.onScrolled,
       selectable,
       annotationable,
       annotations,
-      onSelectionChanged,
-      onAnnotationTouched,
     };
 
     if (contentFooter) {
@@ -108,42 +99,6 @@ class Reader extends React.Component {
     return <Screen {...props}>{children}</Screen>;
   }
 }
-
-Reader.defaultProps = {
-  footer: null,
-  contentFooter: null,
-  ignoreScroll: false,
-  disableCalculation: false,
-  onScrolled: null,
-  onMount: null,
-  onUnmount: null,
-  onTouched: null,
-  selectable: false,
-  annotationable: false,
-  annotations: [],
-  onSelectionChanged: null,
-  onAnnotationTouched: null,
-  children: null,
-};
-
-Reader.propTypes = {
-  setting: SettingType,
-  footer: PropTypes.node,
-  contentFooter: PropTypes.node,
-  ignoreScroll: PropTypes.bool,
-  disableCalculation: PropTypes.bool,
-  contentFormat: PropTypes.oneOf(ContentFormat.toList()).isRequired,
-  onTouched: PropTypes.func,
-  onMount: PropTypes.func,
-  onUnmount: PropTypes.func,
-  onScrolled: PropTypes.func,
-  selectable: PropTypes.bool,
-  annotationable: PropTypes.bool,
-  annotations: PropTypes.array,
-  onSelectionChanged: PropTypes.func,
-  onAnnotationTouched: PropTypes.func,
-  children: PropTypes.node,
-};
 
 const mapStateToProps = state => ({
   setting: selectReaderSetting(state),

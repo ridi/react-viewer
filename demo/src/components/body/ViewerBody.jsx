@@ -11,85 +11,67 @@ import Reader, {
   SelectionMode,
   selectReaderIsReadyToRead,
   ReaderJsHelper,
+  EventBus,
+  Events,
+  ContentFormat,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
 import {
-  requestLoadContent,
-  addAnnotation,
-  setAnnotations,
-  updateAnnotation, removeAnnotation, setContextMenu,
+  addAnnotation, updateAnnotation, removeAnnotation, setContextMenu, onScreenScrolled,
 } from '../../redux/Viewer.action';
-import { screenHeight, screenWidth } from '../../utils/BrowserWrapper';
-import Cache from '../../utils/Cache';
+import { screenWidth } from '../../utils/BrowserWrapper';
 import { Position } from '../../constants/ViewerConstants';
 import SelectionContextMenu from '../selection/SelectionContextMenu';
 
 class ViewerBody extends React.Component {
   constructor(props) {
     super(props);
-    this.readerCache = new Cache(
-      props.contentMeta.id,
-      key => `${key}_${screenWidth()}x${screenHeight()}_${Connector.setting.getSetting().viewType}`,
-    );
-    this.annotationCache = new Cache(props.contentMeta.id);
-
-    this.onReaderTouched = this.onReaderTouched.bind(this);
-    this.onReaderLoaded = this.onReaderLoaded.bind(this);
-    this.onReaderUnloaded = this.onReaderUnloaded.bind(this);
     this.onContentMenuItemClicked = this.onContentMenuItemClicked.bind(this);
-    this.onReaderSelectionChanged = this.onReaderSelectionChanged.bind(this);
-    this.onReaderAnnotationTouched = this.onReaderAnnotationTouched.bind(this);
-
     this.footer = <ViewerScreenFooter contentMeta={props.contentMeta} />;
     this.contentFooter = <small>content footer area...</small>;
   }
 
+  componentDidMount() {
+    EventBus.on(Events.SCROLL, this.onReaderScrolled.bind(this), this);
+    EventBus.on(Events.TOUCH, this.onReaderTouched.bind(this), this);
+    EventBus.on(Events.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
+    EventBus.on(Events.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
+    if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
+      EventBus.emit(Events.SET_ANNOTATIONS, this.props.annotations);
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    const { isReadyToRead, actionSetContextMenu } = this.props;
+    const { isReadyToRead, actionSetContextMenu, annotations } = this.props;
     if (prevProps.isReadyToRead && !isReadyToRead) {
       actionSetContextMenu(false);
     }
-  }
-
-  onReaderLoaded() {
-    const {
-      contentMeta,
-      actionLoad,
-      actionRequestLoadContent,
-      actionSetAnnotations,
-    } = this.props;
-    const readerState = this.readerCache.get();
-    if (readerState) {
-      actionLoad(readerState);
-    } else {
-      actionRequestLoadContent(contentMeta);
-    }
-    const annotationsState = this.annotationCache.get();
-    if (annotationsState) {
-      actionSetAnnotations(annotationsState);
+    if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
+      if (annotations !== prevProps.annotations) {
+        EventBus.emit(Events.SET_ANNOTATIONS, annotations);
+      }
     }
   }
 
-  onReaderUnloaded() {
-    const {
-      actionUnload,
-      annotations,
-    } = this.props;
-    if (!Connector.core.isReaderLoaded() || !Connector.core.isReaderAllCalculated()) return;
-    const currentState = Connector.core.getReaderState();
-    this.readerCache.set(currentState);
+  componentWillUnmount() {
+    EventBus.offByTarget(this);
+  }
 
-    this.annotationCache.set(annotations);
-
-    actionUnload();
+  onReaderScrolled() {
+    const { actionOnScreenScrolled } = this.props;
+    actionOnScreenScrolled();
   }
 
   onReaderTouched(event) {
-    const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
-    if (link) {
-      // TODO go to...
-      return;
+    try {
+      const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
+      if (link) {
+        // TODO go to...
+        return;
+      }
+    } catch (e) {
+      // ignore...
     }
     const { setting, onTouched } = this.props;
 
@@ -114,6 +96,7 @@ class ViewerBody extends React.Component {
       id,
       style,
       withHandle,
+      rects,
       ...others
     } = targetSelection;
     const updateSelection = {
@@ -149,7 +132,12 @@ class ViewerBody extends React.Component {
       return actionSetContextMenu(true, selection);
     }
     if (selectionMode === SelectionMode.AUTO_HIGHLIGHT) {
-      actionAddAnnotation({ ...selection, contentIndex: currentContentIndex });
+      const {
+        withHandle,
+        rects,
+        ...others
+      } = selection;
+      actionAddAnnotation({ ...others, contentIndex: currentContentIndex });
       Connector.selection.end();
       return actionSetContextMenu(false);
     }
@@ -182,23 +170,25 @@ class ViewerBody extends React.Component {
     );
   }
 
+  renderReader() {
+    const { annotations, contentMeta } = this.props;
+    return (
+      <Reader
+        footer={this.footer}
+        contentFooter={this.contentFooter}
+        onMount={this.onReaderLoaded}
+        onUnmount={this.onReaderUnloaded}
+        selectable={contentMeta.contentFormat === ContentFormat.HTML}
+        annotationable={contentMeta.contentFormat === ContentFormat.HTML}
+        annotations={annotations}
+      />
+    );
+  }
+
   render() {
-    const { onScrolled, annotations } = this.props;
     return (
       <>
-        <Reader
-          footer={this.footer}
-          contentFooter={this.contentFooter}
-          onMount={this.onReaderLoaded}
-          onUnmount={this.onReaderUnloaded}
-          onTouched={this.onReaderTouched}
-          onScrolled={onScrolled}
-          selectable
-          annotationable
-          annotations={annotations}
-          onSelectionChanged={this.onReaderSelectionChanged}
-          onAnnotationTouched={this.onReaderAnnotationTouched}
-        />
+        { this.renderReader() }
         { this.renderContextMenu() }
       </>
     );
@@ -208,20 +198,16 @@ class ViewerBody extends React.Component {
 ViewerBody.propTypes = {
   contentMeta: PropTypes.object.isRequired,
   onTouched: PropTypes.func.isRequired,
-  onScrolled: PropTypes.func.isRequired,
   currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  actionRequestLoadContent: PropTypes.func.isRequired,
   setting: PropTypes.object.isRequired,
-  actionLoad: PropTypes.func.isRequired,
-  actionUnload: PropTypes.func.isRequired,
   annotations: PropTypes.array.isRequired,
   actionAddAnnotation: PropTypes.func.isRequired,
-  actionSetAnnotations: PropTypes.func.isRequired,
   actionSetAnnotation: PropTypes.func.isRequired,
   actionRemoveAnnotation: PropTypes.func.isRequired,
   contextMenu: PropTypes.object.isRequired,
   actionSetContextMenu: PropTypes.func.isRequired,
   isReadyToRead: PropTypes.bool.isRequired,
+  actionOnScreenScrolled: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -234,14 +220,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actionRequestLoadContent: contentMeta => dispatch(requestLoadContent(contentMeta)),
   actionLoad: state => dispatch(load(state)),
   actionUnload: () => dispatch(unload()),
   actionAddAnnotation: annotation => dispatch(addAnnotation(annotation)),
-  actionSetAnnotations: annotations => dispatch(setAnnotations(annotations)),
   actionSetAnnotation: annotation => dispatch(updateAnnotation(annotation)),
   actionRemoveAnnotation: annotation => dispatch(removeAnnotation(annotation)),
   actionSetContextMenu: (isVisible, target) => dispatch(setContextMenu(isVisible, target)),
+  actionOnScreenScrolled: () => dispatch(onScreenScrolled()),
 });
 
 export default connect(
