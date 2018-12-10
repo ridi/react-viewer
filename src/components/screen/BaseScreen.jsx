@@ -24,6 +24,7 @@ import { ViewType } from '../../constants/SettingConstants';
 export default class BaseScreen extends React.Component {
   static defaultProps = {
     children: null,
+    annotations: [],
   };
 
   static propTypes = {
@@ -48,9 +49,6 @@ export default class BaseScreen extends React.Component {
   constructor(props) {
     super(props);
     this.wrapper = React.createRef();
-    this.state = {
-      annotations: [],
-    };
   }
 
   componentDidMount() {
@@ -92,6 +90,7 @@ export default class BaseScreen extends React.Component {
       selectable,
       selection,
       current,
+      annotations,
     } = this.props;
 
     return (
@@ -103,7 +102,7 @@ export default class BaseScreen extends React.Component {
         isReadyToRead={isReadyToRead}
         annotationable={annotationable}
         selectable={selectable}
-        annotations={this.state.annotations}
+        annotations={annotations}
         selection={selection}
         isLastPage={setting.viewType === ViewType.PAGE && current.contentIndex === FOOTER_INDEX}
       >

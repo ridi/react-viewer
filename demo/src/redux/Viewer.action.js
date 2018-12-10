@@ -33,7 +33,7 @@ export const onScreenScrolled = () => ({
 
 export const addAnnotation = annotation => ({
   type: ViewerUiActions.ADD_ANNOTATION,
-  annotation: { ...annotation, id: Date.now() },
+  annotation: { ...annotation, id: String(Date.now()) },
 });
 
 export const updateAnnotation = annotation => ({

@@ -11,6 +11,7 @@ import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { SelectionMode, SelectionParts } from '../..';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 import EventBus, { Events } from '../../event';
+import AnnotationStore from '../../store/AnnotationStore';
 
 class TouchableScreen extends React.Component {
   static defaultProps = {
@@ -92,14 +93,15 @@ class TouchableScreen extends React.Component {
     const { selectable, annotations } = this.props;
     const { clientX: x, clientY: y, target } = event.detail;
 
-    const selectionPart = target.getAttribute('data-type');
-    const selectionId = target.getAttribute('data-id');
+    const selectionPart = target.dataset.type;
+    const selectionId = target.dataset.id;
     if (event.type === TouchEventHandler.EVENT_TYPE.Touch) {
       Connector.selection.end();
       if (selectionPart === SelectionParts.TEXT && selectionId) {
         const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
         if (annotation) {
-          EventBus.emit(Events.core.TOUCH_ANNOTATION, annotation);
+          const calculationInfo = AnnotationStore.getCalculation(selectionId);
+          EventBus.emit(Events.core.TOUCH_ANNOTATION, { ...annotation, ...calculationInfo });
         } else {
           EventBus.emit(Events.core.TOUCH, event);
         }

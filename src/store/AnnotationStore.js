@@ -17,6 +17,7 @@ class AnnotationStore {
 
   set annotations(annotations) {
     this._annotations = annotations;
+    this._subject.next(this.getData());
   }
 
   get calculations() {
@@ -44,7 +45,7 @@ class AnnotationStore {
         isVisible: false,
       });
     }
-    this._calculations.get(id);
+    return this._calculations.get(id);
   }
 
   setCalculations(calculations, visibleIds) {
@@ -53,11 +54,15 @@ class AnnotationStore {
       this._calculations.set(updatedCalculation.id, {
         ...originalCalculation,
         ...updatedCalculation,
-        isVisible: visibleIds.includes(updatedCalculation.id),
+      });
+    });
+    this._calculations.forEach((originalCalculation, id) => {
+      this._calculations.set(id, {
+        ...originalCalculation,
+        isVisible: visibleIds.includes(id),
       });
     });
     this._subject.next(this.getData());
-    // EventBus.emit(Events.core.ANNOTATION_CALCULATIONS_CHANGED, this._calculations);
   }
 
   getData() {

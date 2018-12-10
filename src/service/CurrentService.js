@@ -5,6 +5,7 @@ import {
   debounce,
   distinctUntilChanged,
   catchError,
+  tap,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
@@ -26,7 +27,8 @@ class CurrentService extends BaseService {
     super.load();
 
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.calculation.CALCULATION_INVALIDATED);
-    this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED, Events.calculation.CALCULATION_COMPLETED);
+    this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED);
+    this.connectEvents(this.onCalculationCompleted.bind(this), Events.calculation.CALCULATION_COMPLETED);
     this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT_OFFSET);
     this.connectEvents(this.onScrolled.bind(this), Events.core.SCROLL);
     this.connectEvents(this.onMoved.bind(this), Events.core.MOVED);
@@ -145,12 +147,25 @@ class CurrentService extends BaseService {
     });
   }
 
-  onCalculated(calculateUpdate$, calculationComplete$) {
-    return merge(calculateUpdate$, calculationComplete$).pipe(
+  onCalculated(calculateUpdate$) {
+    return calculateUpdate$.pipe(
       filter(() => !this._isOffsetRestored),
     ).subscribe(() => {
       if (this._restoreCurrentOffset() !== null) {
         this._isOffsetRestored = true;
+      }
+    });
+  }
+
+  onCalculationCompleted(calculationComplete$) {
+    return calculationComplete$.subscribe(() => {
+      if (!this._isOffsetRestored) {
+        if (this._restoreCurrentOffset() !== null) {
+          this._isOffsetRestored = true;
+        }
+      }
+      if (!Connector.calculations.isReadyToRead()) {
+        Connector.calculations.setReadyToRead(true);
       }
     });
   }
@@ -222,11 +237,11 @@ class CurrentService extends BaseService {
     }
   }
 
-  onAnnotationCalculationNeeded(scroll$, moved$, annotationChanged$) {
+  onAnnotationCalculationNeeded(scroll$, moved$, annotationAdded$) {
     return merge(
       scroll$,
       moved$,
-      annotationChanged$,
+      annotationAdded$,
     ).subscribe(() => {
       const contentIndexes = Connector.content.getContentsInScreen();
 
