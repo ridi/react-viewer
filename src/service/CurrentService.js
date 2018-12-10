@@ -26,14 +26,14 @@ class CurrentService extends BaseService {
   load() {
     super.load();
 
-    this.connectEvents(this.onCalculationInvalidated.bind(this), Events.calculation.CALCULATION_INVALIDATED);
-    this.connectEvents(this.onCalculated.bind(this), Events.calculation.CALCULATION_UPDATED);
-    this.connectEvents(this.onCalculationCompleted.bind(this), Events.calculation.CALCULATION_COMPLETED);
-    this.connectEvents(this.onCurrentUpdated.bind(this), Events.core.UPDATE_CURRENT_OFFSET);
-    this.connectEvents(this.onScrolled.bind(this), Events.core.SCROLL);
-    this.connectEvents(this.onMoved.bind(this), Events.core.MOVED);
-    this.connectEvents(this.onAnnotationCalculationNeeded.bind(this), Events.core.SCROLL, Events.core.MOVED, Events.core.ANNOTATION_ADDED);
-    this.connectEvents(this.onAnnotationsSet.bind(this), Events.core.SET_ANNOTATIONS);
+    this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
+    this.connectEvents(this.onCalculated.bind(this), Events.CALCULATION_UPDATED);
+    this.connectEvents(this.onCalculationCompleted.bind(this), Events.CALCULATION_COMPLETED);
+    this.connectEvents(this.onCurrentUpdated.bind(this), Events.UPDATE_CURRENT_OFFSET);
+    this.connectEvents(this.onScrolled.bind(this), Events.SCROLL);
+    this.connectEvents(this.onMoved.bind(this), Events.MOVED);
+    this.connectEvents(this.onAnnotationCalculationNeeded.bind(this), Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED);
+    this.connectEvents(this.onAnnotationsSet.bind(this), Events.SET_ANNOTATIONS);
   }
 
   _restoreCurrentOffset() {
@@ -49,7 +49,7 @@ class CurrentService extends BaseService {
     if ((viewType === ViewType.PAGE)
       || (viewType === ViewType.SCROLL && calculationTotal >= screenHeight() + newOffset)) {
       this._isOffsetRestored = true;
-      EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, newOffset);
+      EventBus.emit(Events.UPDATE_CURRENT_OFFSET, newOffset);
       return newOffset;
     }
     return null;
@@ -184,7 +184,7 @@ class CurrentService extends BaseService {
       Connector.current.updateCurrent(current);
       Connector.calculations.setReadyToRead(false);
       this._setContentsInScreen(current);
-      EventBus.emit(Events.core.MOVE_TO_OFFSET, current.offset);
+      EventBus.emit(Events.MOVE_TO_OFFSET, current.offset);
     });
   }
 
@@ -204,7 +204,7 @@ class CurrentService extends BaseService {
   onMoved(move$) {
     return move$.subscribe(() => {
       Connector.calculations.setReadyToRead(true);
-      EventBus.emit(Events.calculation.READY_TO_READ);
+      EventBus.emit(Events.READY_TO_READ);
     });
   }
 
@@ -269,9 +269,9 @@ class CurrentService extends BaseService {
         added = true;
       }
       AnnotationStore.annotations = annotations;
-      EventBus.emit(Events.core.ANNOTATION_CHANGED, annotations);
+      EventBus.emit(Events.ANNOTATION_CHANGED, annotations);
       if (added) {
-        EventBus.emit(Events.core.ANNOTATION_ADDED);
+        EventBus.emit(Events.ANNOTATION_ADDED);
       }
     });
   }

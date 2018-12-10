@@ -37,10 +37,10 @@ class ImagePageScreen extends BaseScreen {
   }
 
   componentDidMount() {
-    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
     const isCalculated = Connector.calculations.isContentCalculated(1);
     if (!isCalculated) {
-      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: 1 });
+      EventBus.emit(Events.CALCULATE_CONTENT, { index: 1 });
     }
   }
 
@@ -58,7 +58,7 @@ class ImagePageScreen extends BaseScreen {
         this.wrapper.current.scrollLeft = 0;
         this.container.current.scrollLeft = offset * screenWidth();
       }
-      EventBus.emit(Events.core.MOVED);
+      EventBus.emit(Events.MOVED);
     }, 0);
   }
 

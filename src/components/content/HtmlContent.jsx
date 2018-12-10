@@ -43,7 +43,7 @@ class HtmlContent extends BaseContent {
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
-          EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index, contentNode: current, contentFooterNode: contentFooter });
+          EventBus.emit(Events.CALCULATE_CONTENT, { index, contentNode: current, contentFooterNode: contentFooter });
         });
     }
   }

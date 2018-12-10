@@ -22,10 +22,11 @@ class LoadService extends BaseService {
     calculations,
   } = {}) {
     super.load();
-    this.connectEvents(this.onSettingUpdated.bind(this), Events.setting.UPDATE_SETTING);
-    this.connectEvents(this.onContentLoaded.bind(this), Events.content.CONTENT_LOADED);
-    this.connectEvents(this.onContentError.bind(this), Events.content.CONTENT_ERROR);
-
+    this.connectEvents(this.onSettingUpdated.bind(this), Events.UPDATE_SETTING);
+    this.connectEvents(this.onContentLoaded.bind(this), Events.CONTENT_LOADED);
+    this.connectEvents(this.onContentError.bind(this), Events.CONTENT_ERROR);
+    this.connectEvents(this.onContentSetByUri.bind(this), Events.SET_CONTENTS_BY_URI);
+    this.connectEvents(this.onContentSetByValue.bind(this), Events.SET_CONTENTS_BY_VALUE);
     if (contents && contents.length > 0 && metadata) {
       Connector.content.setContentsByValue(metadata.format, metadata.binding, contents.map(c => c.content));
     }
@@ -42,7 +43,7 @@ class LoadService extends BaseService {
 
   afterLoaded() {
     if (Connector.content.isContentsLoaded()) {
-      EventBus.emit(Events.content.ALL_CONTENT_LOADED, Connector.content.getContents());
+      EventBus.emit(Events.ALL_CONTENT_LOADED, Connector.content.getContents());
     }
   }
 
@@ -59,7 +60,7 @@ class LoadService extends BaseService {
         next: ({ index, content }) => Connector.content.setContentLoaded(index, content),
         error: error => Logger.error(error),
         complete: (result) => {
-          EventBus.emit(Events.content.ALL_CONTENT_LOADED, result);
+          EventBus.emit(Events.ALL_CONTENT_LOADED, result);
         },
       });
     }
@@ -67,9 +68,22 @@ class LoadService extends BaseService {
 
   setContentsByValue(contentFormat, bindingType, contents) {
     Connector.content.setContentsByValue(contentFormat, bindingType, contents);
-    EventBus.emit(Events.content.ALL_CONTENT_LOADED, contents);
+    EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
   }
 
+  onContentSetByUri(contentSetByUri$) {
+    return contentSetByUri$.subscribe(({ data }) => {
+      const { contentFormat, bindingType, uris } = data;
+      this.setContentsByUri(contentFormat, bindingType, uris);
+    });
+  }
+
+  onContentSetByValue(contentSetByValue$) {
+    return contentSetByValue$.subscribe(({ data }) => {
+      const { contentFormat, bindingType, contents } = data;
+      this.setContentsByValue(contentFormat, bindingType, contents);
+    });
+  }
 
   onContentLoaded(contentLoaded$) {
     return contentLoaded$.subscribe(({ data }) => {
@@ -78,7 +92,7 @@ class LoadService extends BaseService {
       const contents = Connector.content.getContents();
       const allLoaded = contents.every(({ isContentLoaded, isContentOnError }) => isContentLoaded || isContentOnError);
       if (allLoaded) {
-        EventBus.emit(Events.content.ALL_CONTENT_LOADED, contents);
+        EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
       }
     });
   }
@@ -90,7 +104,7 @@ class LoadService extends BaseService {
       Connector.content.setContentError(index, error);
       const allLoaded = contents.every(({ isContentLoaded, isContentOnError }) => isContentLoaded || isContentOnError);
       if (allLoaded) {
-        EventBus.emit(Events.content.ALL_CONTENT_LOADED, contents);
+        EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
       }
     });
   }
@@ -101,7 +115,7 @@ class LoadService extends BaseService {
       tap(setting => Logger.debug(setting)),
     ).subscribe((setting) => {
       Connector.setting.updateSetting(setting);
-      EventBus.emit(Events.setting.SETTING_UPDATED, setting);
+      EventBus.emit(Events.SETTING_UPDATED, setting);
     });
   }
 }

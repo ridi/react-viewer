@@ -19,7 +19,7 @@ export default class BaseSettingPopup extends React.Component {
   }
 
   onSettingChanged(settings) {
-    EventBus.emit(Events.setting.UPDATE_SETTING, settings);
+    EventBus.emit(Events.UPDATE_SETTING, settings);
   }
 
   renderSettings() {

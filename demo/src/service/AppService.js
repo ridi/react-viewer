@@ -80,8 +80,8 @@ class AppService {
   }
 
   _connectWithReactViewer() {
-    EventBus.on(Events.core.MOUNTED, this.onMounted);
-    EventBus.on(Events.core.UNMOUNTED, this.onUnmounted);
+    EventBus.on(Events.MOUNTED, this.onMounted);
+    EventBus.on(Events.UNMOUNTED, this.onUnmounted);
     Connector.connect(this._store);
   }
 
@@ -96,9 +96,9 @@ class AppService {
     getJson(`./resources/contents/${id}/spine.json`)
       .then((spines) => {
         if (hasLoadedContent) {
-          Service.load.setContentsByValue(contentFormat, bindingType, spines.map(spine => spine.content));
+          EventBus.emit(Events.SET_CONTENTS_BY_VALUE, { contentFormat, bindingType, contents: spines.map(spine => spine.content) });
         } else {
-          Service.load.setContentsByUri(contentFormat, bindingType, spines.contents);
+          EventBus.emit(Events.SET_CONTENTS_BY_URI, { contentFormat, bindingType, uris: spines.contents });
         }
       });
   }

@@ -1,35 +1,26 @@
 import { BehaviorSubject } from 'rxjs';
-import EventBus from '../event/EventBus';
+import { share, tap } from 'rxjs/operators';
+import Logger from '../util/Logger';
 
 export default class BaseStore {
-  _obs$ = null;
-  _subscriptions = [];
+  _subject = null;
 
   constructor(initialValue = null) {
-    this._obs$ = new BehaviorSubject(initialValue);
-  }
-
-  load() {
-
-  }
-
-  unload() {
-    this._subscriptions.forEach(sub => sub.unsubscribe());
+    this._subject = (new BehaviorSubject(initialValue)).pipe(
+      tap(data => Logger.debugGroup(`📥 ${this.constructor.name}`, data)),
+      share(),
+    );
   }
 
   asObservable() {
-    return this._obs$;
+    return this._subject;
   }
 
-  next(value) {
-    this._obs$.next(value);
+  next() {
+    this._subject.next(this.getData());
   }
 
-  connectEvents(connectedTo, ...events) {
-    const obs$ = [...events.map(eventType => EventBus.asObservable(eventType))];
-    const subscription = connectedTo(...obs$);
-    if (subscription) {
-      this._subscriptions.push(subscription);
-    }
+  getData() {
+    throw new Error('Should implement `getData()` method');
   }
 }

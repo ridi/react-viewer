@@ -56,7 +56,7 @@ class DemoViewer extends React.Component {
 
     nextOffset = Math.max(0, Math.min(nextOffset, calculationsTotal - 1));
     if (currentOffset === nextOffset) return;
-    EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, nextOffset);
+    EventBus.emit(Events.UPDATE_CURRENT_OFFSET, nextOffset);
   }
 
   render() {

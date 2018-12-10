@@ -47,7 +47,7 @@ class HtmlPageScreen extends BaseScreen {
 
   componentDidMount() {
     super.componentDidMount();
-    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset, this);
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset, this);
   }
 
   componentWillUnmount() {
@@ -71,7 +71,7 @@ class HtmlPageScreen extends BaseScreen {
       if (cw.current && localOffset >= 0) {
         cw.current.scrollLeft = localOffset
           * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
-        EventBus.emit(Events.core.MOVED);
+        EventBus.emit(Events.MOVED);
       }
     }, 0);
   }

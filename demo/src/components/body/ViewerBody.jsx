@@ -33,12 +33,12 @@ class ViewerBody extends React.Component {
   }
 
   componentDidMount() {
-    EventBus.on(Events.core.SCROLL, this.onReaderScrolled.bind(this), this);
-    EventBus.on(Events.core.TOUCH, this.onReaderTouched.bind(this), this);
-    EventBus.on(Events.core.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
-    EventBus.on(Events.core.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
+    EventBus.on(Events.SCROLL, this.onReaderScrolled.bind(this), this);
+    EventBus.on(Events.TOUCH, this.onReaderTouched.bind(this), this);
+    EventBus.on(Events.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
+    EventBus.on(Events.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
     if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
-      EventBus.emit(Events.core.SET_ANNOTATIONS, this.props.annotations);
+      EventBus.emit(Events.SET_ANNOTATIONS, this.props.annotations);
     }
   }
 
@@ -49,7 +49,7 @@ class ViewerBody extends React.Component {
     }
     if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
       if (annotations !== prevProps.annotations) {
-        EventBus.emit(Events.core.SET_ANNOTATIONS, annotations);
+        EventBus.emit(Events.SET_ANNOTATIONS, annotations);
       }
     }
   }

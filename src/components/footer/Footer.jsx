@@ -13,14 +13,14 @@ export default class Footer extends React.PureComponent {
   componentDidMount() {
     const { isCalculated } = this.props;
     if (!isCalculated) {
-      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
+      EventBus.emit(Events.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
     }
   }
 
   componentDidUpdate() {
     const { isCalculated } = this.props;
     if (!isCalculated) {
-      EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
+      EventBus.emit(Events.CALCULATE_CONTENT, { index: FOOTER_INDEX, contentNode: this.wrapper.current });
     }
   }
 

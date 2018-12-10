@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { share, tap } from 'rxjs/operators';
-import { LOG } from './CoreEvents';
+import { LOG } from './Events';
 import Logger from '../util/Logger';
 
 const UNKNOWN_TARGET = 'unknown';

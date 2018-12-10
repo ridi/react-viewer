@@ -73,7 +73,7 @@ class ViewerScreenFooter extends Component {
             <button
               type="button"
               className="move_prev_page_button"
-              onClick={() => EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, calculationsTotal - 2)}
+              onClick={() => EventBus.emit(Events.UPDATE_CURRENT_OFFSET, calculationsTotal - 2)}
             >
               <SvgIcons
                 svgName="svg_arrow_6_left"

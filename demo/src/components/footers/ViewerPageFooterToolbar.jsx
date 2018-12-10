@@ -29,7 +29,7 @@ class ViewerPageFooterToolbar extends Component {
   }
 
   onSlideAfterChanged(offset) {
-    EventBus.emit(Events.core.UPDATE_CURRENT_OFFSET, offset);
+    EventBus.emit(Events.UPDATE_CURRENT_OFFSET, offset);
   }
 
   render() {

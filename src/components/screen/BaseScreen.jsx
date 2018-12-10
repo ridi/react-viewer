@@ -53,9 +53,9 @@ export default class BaseScreen extends React.Component {
 
   componentDidMount() {
     this.resizeEventSubscription = fromEvent(window, DOMEventConstants.RESIZE)
-      .subscribe(event => EventBus.emit(Events.core.RESIZE, event));
+      .subscribe(event => EventBus.emit(Events.RESIZE, event));
 
-    EventBus.on(Events.calculation.READY_TO_READ, () => {
+    EventBus.on(Events.READY_TO_READ, () => {
 
     }, this);
   }

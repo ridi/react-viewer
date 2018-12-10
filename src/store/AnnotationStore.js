@@ -1,15 +1,13 @@
 /* eslint no-param-reassign: 0 */
-import { BehaviorSubject } from 'rxjs';
-import { share, tap } from 'rxjs/operators';
-import Logger from '../util/Logger';
+import BaseStore from './BaseStore';
 
-class AnnotationStore {
+class AnnotationStore extends BaseStore {
   _annotations = [];
   _calculations = new Map();
-  _subject = (new BehaviorSubject(this._calculations)).pipe(
-    tap(data => Logger.debugGroup(`📥 ${this.constructor.name}`, data)),
-    share(),
-  );
+
+  constructor() {
+    super([]);
+  }
 
   get annotations() {
     return this._annotations;
@@ -17,24 +15,16 @@ class AnnotationStore {
 
   set annotations(annotations) {
     this._annotations = annotations;
-    this._subject.next(this.getData());
+    this.next();
   }
 
   get calculations() {
     return this._calculations;
   }
 
-  asObservable() {
-    return this._subject;
-  }
-
-  next(data) {
-    this._subject.next(data);
-  }
-
   invalidateCalculations() {
     this._calculations.clear();
-    this._subject.next(this.getData());
+    this.next();
   }
 
   getCalculation(id) {
@@ -62,7 +52,7 @@ class AnnotationStore {
         isVisible: visibleIds.includes(id),
       });
     });
-    this._subject.next(this.getData());
+    this.next();
   }
 
   getData() {

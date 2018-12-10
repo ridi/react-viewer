@@ -70,7 +70,7 @@ class CalculationService extends BaseService {
 
     const calculatedTotal = calculatedContents.reduce((sum, content) => sum + content.total, calculatedFooter.total);
     Connector.calculations.setCalculationsTotal(calculatedTotal, completed);
-    if (completed) EventBus.emit(Events.calculation.CALCULATION_COMPLETED);
+    if (completed) EventBus.emit(Events.CALCULATION_COMPLETED);
   }
 
   _calculateContent({ index, contentNode, contentFooter }) {
@@ -112,8 +112,8 @@ class CalculationService extends BaseService {
 
   load() {
     super.load();
-    this.connectEvents(this.onCalculateContent.bind(this), Events.calculation.CALCULATE_CONTENT);
-    this.connectEvents(this.onCalculated.bind(this), Events.content.ALL_CONTENT_LOADED, Events.core.RESIZE, Events.setting.SETTING_UPDATED);
+    this.connectEvents(this.onCalculateContent.bind(this), Events.CALCULATE_CONTENT);
+    this.connectEvents(this.onCalculated.bind(this), Events.ALL_CONTENT_LOADED, Events.RESIZE, Events.SETTING_UPDATED);
   }
 
   onCalculated(loadAllContent$, resize$, updateSetting$) {
@@ -121,7 +121,7 @@ class CalculationService extends BaseService {
       loadAllContent$.pipe(
         filter(() => {
           if (Connector.calculations.isCompleted()) {
-            EventBus.emit(Events.calculation.CALCULATION_COMPLETED);
+            EventBus.emit(Events.CALCULATION_COMPLETED);
             return false;
           }
           return true;
@@ -138,9 +138,9 @@ class CalculationService extends BaseService {
     ).pipe(
       tap(() => Connector.calculations.invalidate()),
       tap(() => Connector.calculations.setReadyToRead(false)),
-      tap(() => EventBus.emit(Events.calculation.CALCULATION_INVALIDATED)),
+      tap(() => EventBus.emit(Events.CALCULATION_INVALIDATED)),
       tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
-      switchMap(() => EventBus.asObservable(Events.calculation.CALCULATION_UPDATED)),
+      switchMap(() => EventBus.asObservable(Events.CALCULATION_UPDATED)),
       tap(() => this._checkAllCompleted()),
       map(() => this._getCalculationTargetContents()),
     ).subscribe({
@@ -154,7 +154,7 @@ class CalculationService extends BaseService {
     return calculateContent$.pipe(
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
-    ).subscribe(({ index, total }) => EventBus.emit(Events.calculation.CALCULATION_UPDATED, { index, total }));
+    ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));
   }
 }
 

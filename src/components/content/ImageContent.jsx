@@ -7,14 +7,14 @@ class ImageContent extends BaseContent {
   imageOnErrorHandler() {
     const { index, isContentOnError } = this.props.content;
     if (!isContentOnError) {
-      EventBus.emit(Events.content.CONTENT_ERROR, { index, error: '' });
+      EventBus.emit(Events.CONTENT_ERROR, { index, error: '' });
     }
   }
 
   imageOnLoadHandler() {
     const { index, isContentLoaded } = this.props.content;
     if (!isContentLoaded) {
-      EventBus.emit(Events.content.CONTENT_LOADED, { index, content: '' });
+      EventBus.emit(Events.CONTENT_LOADED, { index, content: '' });
     }
   }
 

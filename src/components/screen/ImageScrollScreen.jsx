@@ -32,8 +32,8 @@ class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
     this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
-      .subscribe(event => EventBus.emit(Events.core.SCROLL, event));
-    EventBus.on(Events.core.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
+      .subscribe(event => EventBus.emit(Events.SCROLL, event));
+    EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
 
     if (!this.listener) {
       const { contentFooter } = this.props;
@@ -41,7 +41,7 @@ class ImageScrollScreen extends BaseScreen {
       this.listener = this.waitForResources()
         .then(() => {
           if (!current.isConnected) return;
-          EventBus.emit(Events.calculation.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
+          EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
         });
     }
   }
@@ -69,7 +69,7 @@ class ImageScrollScreen extends BaseScreen {
   moveToOffset(offset) {
     waitThenRun(() => {
       setScrollTop(offset);
-      EventBus.emit(Events.core.MOVED);
+      EventBus.emit(Events.MOVED);
     }, 0);
   }
 

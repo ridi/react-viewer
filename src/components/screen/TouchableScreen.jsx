@@ -101,12 +101,12 @@ class TouchableScreen extends React.Component {
         const annotation = annotations.find(({ id }) => `${id}` === `${selectionId}`);
         if (annotation) {
           const calculationInfo = AnnotationStore.getCalculation(selectionId);
-          EventBus.emit(Events.core.TOUCH_ANNOTATION, { ...annotation, ...calculationInfo });
+          EventBus.emit(Events.TOUCH_ANNOTATION, { ...annotation, ...calculationInfo });
         } else {
-          EventBus.emit(Events.core.TOUCH, event);
+          EventBus.emit(Events.TOUCH, event);
         }
       } else {
-        EventBus.emit(Events.core.TOUCH, event);
+        EventBus.emit(Events.TOUCH, event);
       }
     } else if (selectable) {
       if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
@@ -132,7 +132,7 @@ class TouchableScreen extends React.Component {
           Connector.selection.expandIntoLower(x, y);
         }
         if (Connector.selection.isSelecting) {
-          EventBus.emit(Events.core.CHANGE_SELECTION, {
+          EventBus.emit(Events.CHANGE_SELECTION, {
             selection: Connector.selection.selection,
             selectionMode: Connector.selection.selectionMode,
           });
