@@ -41,11 +41,11 @@ const SizingWrapper = styled.div`
     display: block; width: 100%;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.05);
-    .svg_picture_1 {
+    .svg_reload_1 {
       display: inline-block; text-indent: -444px; font-size: 0; overflow: hidden;
-      background: url("data:image/svg+xml,${svgIcons[SvgIconConstants.PICTURE_1]('#e5e8eb')}") center center no-repeat;
+      background: url("data:image/svg+xml,${svgIcons[SvgIconConstants.RELOAD_1]('rgba(0, 0, 0, 0.4)')}") center center no-repeat;
       background-size: 100% 100%;
-      width: 66px; height: 52px; content: '';
+      width: 36px; height: 36px; content: '';
     }
   }
 `;
@@ -268,6 +268,4 @@ ScrollContents.defaultProps = {
   fontDomain: '',
 };
 
-export {
-  ScrollScreen, PageScreen, SizingWrapper, PageContents, ScrollContents,
-};
+export { ScrollScreen, PageScreen, SizingWrapper, PageContents, ScrollContents };

@@ -8,8 +8,10 @@ export default class LazyLoadImage extends React.Component {
       loaded: false,
       inView: false,
       error: false,
+      hash: '',
     };
     this.observer = null;
+    this.reloadImage = this.reloadImage.bind(this);
   }
 
   componentDidMount() {
@@ -53,22 +55,31 @@ export default class LazyLoadImage extends React.Component {
     this.setState({ loaded: true, error: true });
   }
 
+  reloadImage() {
+    this.setState({
+      loaded: false,
+      error: false,
+      hash: `#${Date.now()}`,
+      inView: true,
+    });
+  }
+
   renderImage() {
     const { src } = this.props;
-    const { inView, error } = this.state;
+    const { inView, error, hash } = this.state;
     if (!inView) {
       return null;
     }
     if (error) {
       return (
-        <div className="error_image_wrapper">
-          <span className="error_image svg_picture_1" />
-        </div>
+        <button className="error_image_wrapper" onClick={this.reloadImage}>
+          <span className="error_image svg_reload_1" />
+        </button>
       );
     }
     return (
       <img
-        src={src}
+        src={`${src}${hash}`}
         alt=""
         onLoad={() => this.imageOnLoadHandler()}
         onError={() => this.imageOnErrorHandler()}
