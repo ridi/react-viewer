@@ -43,9 +43,9 @@ const SizingWrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.05);
     .svg_reload_1 {
       display: inline-block; text-indent: -444px; font-size: 0; overflow: hidden;
-      background: url("data:image/svg+xml,${svgIcons[SvgIconConstants.RELOAD_1]('#a0a0a0')}") center center no-repeat;
+      background: url("data:image/svg+xml,${svgIcons[SvgIconConstants.RELOAD_1]('rgba(0, 0, 0, 0.4)')}") center center no-repeat;
       background-size: 100% 100%;
-      width: 48px; height: 48px; content: '';
+      width: 36px; height: 36px; content: '';
     }
   }
 `;
