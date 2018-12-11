@@ -104,6 +104,7 @@ class AppService {
   }
 
   onMounted() {
+    window.addEventListener('beforeunload', () => Service.unloadAll());
     const readerState = this._readerCache.get();
     if (readerState) {
       Service.loadAll(readerState);

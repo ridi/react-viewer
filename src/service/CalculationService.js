@@ -73,7 +73,7 @@ class CalculationService extends BaseService {
     if (completed) EventBus.emit(Events.CALCULATION_COMPLETED);
   }
 
-  _calculateContent({ index, contentNode, contentFooter }) {
+  _calculateContent({ index, contentNode, contentFooterNode }) {
     const { viewType, startWithBlankPage, columnsInPage } = Connector.setting.getSetting();
     const contentFormat = Connector.content.getContentFormat();
 
@@ -105,7 +105,7 @@ class CalculationService extends BaseService {
       map(() => ({
         index,
         total: contentNode.scrollHeight
-          + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),
+          + (isLastContent && contentFooterNode ? Connector.setting.getContentFooterHeight() : 0),
       })),
     );
   }

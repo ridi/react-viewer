@@ -188,8 +188,6 @@ class TouchableScreen extends React.Component {
       total,
       children,
       StyledTouchable,
-      annotationable,
-      selectable,
     } = this.props;
 
     return (
@@ -199,7 +197,6 @@ class TouchableScreen extends React.Component {
         innerRef={forwardedRef}
         id={SELECTION_BASE_CONTENT}
         total={total}
-        onClick={(!annotationable && !selectable) ? this.handleTouchEvent : null}
       >
         {this.renderSelectionLayer()}
         {children}

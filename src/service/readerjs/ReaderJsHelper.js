@@ -127,4 +127,12 @@ export default class ReaderJsHelper {
     const { contentIndex } = Connector.current.getCurrent();
     return ReaderJsHelper.get(contentIndex);
   }
+
+  static getCurrentFromCoord(x, y) {
+    // TODO implement
+  }
+
+  static getCurrentFromTouchEvent(event) {
+    // TODO implement
+  }
 }

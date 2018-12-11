@@ -92,7 +92,7 @@ class CurrentService extends BaseService {
     // try {
     //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
     // } catch (e) {
-    //   // ignore error
+    //   // ignore erro
     //   console.warn(e);
     // }
 
@@ -165,6 +165,7 @@ class CurrentService extends BaseService {
       }
       if (!Connector.calculations.isReadyToRead()) {
         Connector.calculations.setReadyToRead(true);
+        EventBus.emit(Events.READY_TO_READ);
       }
     });
   }

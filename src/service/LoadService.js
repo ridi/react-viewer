@@ -57,15 +57,14 @@ class LoadService extends BaseService {
       switchMap(({ uris }) => from(uris).pipe(
         mergeMap((uri, index) => ajax.getJSON(uri).pipe(
           map(data => ({ index: index + 1, content: data.value })),
-          catchError(error => Connector.content.setContentError(index, error)),
+          catchError(error => ({ index: index + 1, error })),
         )),
       )),
-    ).subscribe({
-      next: ({ index, content }) => Connector.content.setContentLoaded(index, content),
-      error: error => Logger.error(error),
-      complete: (result) => {
-        EventBus.emit(Events.ALL_CONTENT_LOADED, result);
-      },
+    ).subscribe(({ index, content, error }) => {
+      if (error) {
+        return EventBus.emit(Events.CONTENT_ERROR, { index, error });
+      }
+      return EventBus.emit(Events.CONTENT_LOADED, { index, content });
     });
   }
 

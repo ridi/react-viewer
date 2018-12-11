@@ -16,7 +16,6 @@ export const unloadAll = () => {
 export const loadAll = (restoreState) => {
   services.forEach(service => service.load(restoreState));
   services.forEach(service => service.afterLoaded(restoreState));
-  window.addEventListener('beforeunload', unloadAll);
 };
 
 export default {
