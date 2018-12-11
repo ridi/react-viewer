@@ -1,5 +1,6 @@
 {
   "requireCleanWorkingDir": false,
+  "requireUpstream": false,
   "src": {
     "beforeStartCommand": "node release.js check-preconditions"
   },
