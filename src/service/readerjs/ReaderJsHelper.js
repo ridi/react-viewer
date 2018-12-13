@@ -128,11 +128,11 @@ export default class ReaderJsHelper {
     return ReaderJsHelper.get(contentIndex);
   }
 
-  static getCurrentFromCoord(x, y) {
+  static getCurrentFromCoord(/* x, y */) {
     // TODO implement
   }
 
-  static getCurrentFromTouchEvent(event) {
+  static getCurrentFromTouchEvent(/* event */) {
     // TODO implement
   }
 }
