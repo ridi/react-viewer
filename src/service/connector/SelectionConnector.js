@@ -5,10 +5,6 @@ import BaseConnector from './BaseConnector';
 import { updateSelection } from '../../redux/action';
 import { RectsUtil } from '../../util/SelectionUtil';
 import Logger from '../../util/Logger';
-import SettingConnector from './SettingConnector';
-import { ViewType } from '../../constants/SettingConstants';
-import CalculationsConnector from './CalculationsConnector';
-import CurrentConnector from './CurrentConnector';
 
 class SelectionConnector extends BaseConnector {
   _isSelecting = false;

@@ -4,6 +4,7 @@
     "publishPath": "lib"
   },
   "dry-run": false,
+  "requireUpstream": false,
   "requireCleanWorkingDir": false,
   "buildCommand": "node ./script/release.js build && cp -rf package.json README.md CHANGELOG.md lib",
   "dist": {
