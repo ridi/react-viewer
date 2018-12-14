@@ -3,22 +3,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Reader, {
   Connector,
-  selectReaderCurrentContentIndex,
-  selectReaderSetting,
-  ViewType,
-  load,
-  unload,
-  SelectionMode,
-  selectReaderIsReadyToRead,
-  ReaderJsHelper,
+  ContentFormat,
   EventBus,
   Events,
-  ContentFormat,
+  load,
+  ReaderJsHelper,
+  SelectionMode,
+  selectReaderIsReadyToRead,
+  selectReaderSetting,
+  unload,
+  ViewType,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
 import {
-  addAnnotation, updateAnnotation, removeAnnotation, setContextMenu, onScreenScrolled,
+  addAnnotation,
+  onScreenScrolled,
+  removeAnnotation,
+  setContextMenu,
+  updateAnnotation,
 } from '../../redux/Viewer.action';
 import { screenWidth } from '../../utils/BrowserWrapper';
 import { Position } from '../../constants/ViewerConstants';
@@ -86,7 +89,6 @@ class ViewerBody extends React.Component {
 
   onContentMenuItemClicked(targetSelection) {
     const {
-      currentContentIndex,
       actionAddAnnotation,
       actionSetAnnotation,
       actionRemoveAnnotation,
@@ -102,7 +104,6 @@ class ViewerBody extends React.Component {
     const updateSelection = {
       id,
       ...others,
-      contentIndex: currentContentIndex,
       style,
     };
     if (!id) {
@@ -123,7 +124,6 @@ class ViewerBody extends React.Component {
 
   onReaderSelectionChanged({ selection, selectionMode }) {
     const {
-      currentContentIndex,
       actionAddAnnotation,
       actionSetContextMenu,
     } = this.props;
@@ -137,7 +137,7 @@ class ViewerBody extends React.Component {
         rects,
         ...others
       } = selection;
-      actionAddAnnotation({ ...others, contentIndex: currentContentIndex });
+      actionAddAnnotation(others);
       Connector.selection.end();
       return actionSetContextMenu(false);
     }
@@ -198,7 +198,6 @@ class ViewerBody extends React.Component {
 ViewerBody.propTypes = {
   contentMeta: PropTypes.object.isRequired,
   onTouched: PropTypes.func.isRequired,
-  currentContentIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   setting: PropTypes.object.isRequired,
   annotations: PropTypes.array.isRequired,
   actionAddAnnotation: PropTypes.func.isRequired,
@@ -212,7 +211,6 @@ ViewerBody.propTypes = {
 
 const mapStateToProps = state => ({
   isVisibleSettingPopup: state.viewer.ui.isVisibleSettingPopup,
-  currentContentIndex: selectReaderCurrentContentIndex(state),
   setting: selectReaderSetting(state),
   annotations: selectAnnotations(state),
   contextMenu: selectContextMenu(state),

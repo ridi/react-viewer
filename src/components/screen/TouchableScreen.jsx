@@ -3,7 +3,9 @@ import PropTypes from '../prop-types';
 import Connector from '../../service/connector';
 import {
   preventScrollEvent,
-  allowScrollEvent, addEventListener, removeEventListener,
+  allowScrollEvent,
+  addEventListener,
+  removeEventListener,
 } from '../../util/EventHandler';
 import { ViewType, SELECTION_BASE_CONTENT } from '../../constants/SettingConstants';
 import SelectionLayer from '../selection/SelectionLayer';
@@ -90,8 +92,13 @@ class TouchableScreen extends React.Component {
   handleTouchEvent(event) {
     if (!Connector.calculations.isReadyToRead()) return;
 
-    const { selectable, annotations } = this.props;
-    const { clientX: x, clientY: y, target } = event.detail;
+    const { selectable, annotations, viewType } = this.props;
+    const {
+      clientX: x,
+      clientY: y,
+      target,
+      pageY,
+    } = event.detail;
 
     const selectionPart = target.dataset.type;
     const selectionId = target.dataset.id;
@@ -112,7 +119,11 @@ class TouchableScreen extends React.Component {
       if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
         this.currentTouchStartPart = selectionPart;
         if (Connector.selection.selectionMode !== SelectionMode.USER_SELECTION) {
-          Connector.selection.start(x, y);
+          let { contentIndex } = Connector.current.getCurrent();
+          if (viewType === ViewType.SCROLL) {
+            contentIndex = Connector.calculations.getContentIndexAtOffset(pageY);
+          }
+          Connector.selection.start(x, y, contentIndex);
         }
       } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchMove) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {

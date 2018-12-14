@@ -51,6 +51,10 @@ class ReaderJsWrapper {
     return this.readerJs.context;
   }
 
+  get contentIndex() {
+    return this._contentIndex;
+  }
+
   _getContentNode() {
     return document.querySelector(`#${SettingConnector.getChapterId(this._contentIndex)} ${CONTENT_WRAPPER}`);
   }
@@ -116,23 +120,10 @@ class ReaderJsWrapper {
 export default class ReaderJsHelper {
   static _readerJs = {}; // [content_index] : [ReaderJsWrapper instance]
 
-  static get(contentIndex) {
+  static get(contentIndex = Connector.current.getCurrent().contentIndex) {
     if (!this._readerJs[contentIndex]) {
       this._readerJs[contentIndex] = new ReaderJsWrapper(contentIndex);
     }
     return this._readerJs[contentIndex];
-  }
-
-  static getCurrent() {
-    const { contentIndex } = Connector.current.getCurrent();
-    return ReaderJsHelper.get(contentIndex);
-  }
-
-  static getCurrentFromCoord(/* x, y */) {
-    // TODO implement
-  }
-
-  static getCurrentFromTouchEvent(/* event */) {
-    // TODO implement
   }
 }
