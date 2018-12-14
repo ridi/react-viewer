@@ -17,7 +17,7 @@ import {
   selectReaderContents,
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import SelectionConnector from './SelectionConnector';
 
 class CalculationsConnector extends BaseConnector {
@@ -122,6 +122,31 @@ class CalculationsConnector extends BaseConnector {
 
   setCalculations(calculations) {
     this.dispatch(setCalculations(calculations));
+  }
+
+  getContentIndexAtOffset(offset) {
+    const calculations = this.getContentCalculations();
+    const lastIndex = calculations.length;
+
+    let result = null;
+    calculations.forEach(({
+      offset: startOffset,
+      total,
+      isCalculated,
+      index,
+    }) => {
+      if (!isCalculated || startOffset === PRE_CALCULATION) {
+        return;
+      }
+      if (offset >= startOffset && offset < startOffset + total) {
+        result = index;
+        return;
+      }
+      if (index === lastIndex && offset >= startOffset + total) {
+        result = FOOTER_INDEX;
+      }
+    });
+    return result;
   }
 }
 

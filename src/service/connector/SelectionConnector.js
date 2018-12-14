@@ -1,15 +1,20 @@
 import ReaderJsHelper from '../readerjs/ReaderJsHelper';
-import Connector from './index';
 import { DefaultSelectionStyle, SelectionMode } from '../../constants/SelectionConstants';
 import { wordCount } from '../../util/Util';
 import BaseConnector from './BaseConnector';
 import { updateSelection } from '../../redux/action';
 import { RectsUtil } from '../../util/SelectionUtil';
+import Logger from '../../util/Logger';
+import SettingConnector from './SettingConnector';
+import { ViewType } from '../../constants/SettingConstants';
+import CalculationsConnector from './CalculationsConnector';
+import CurrentConnector from './CurrentConnector';
 
 class SelectionConnector extends BaseConnector {
   _isSelecting = false;
   _selection = null;
   _selectionMode = SelectionMode.NORMAL;
+  _contentIndex = null;
 
   get isSelecting() {
     return this._isSelecting;
@@ -27,11 +32,15 @@ class SelectionConnector extends BaseConnector {
     this._isSelecting = false;
     this._selection = null;
     this._selectionMode = SelectionMode.NORMAL;
+    this._contentIndex = null;
+  }
+
+  _getCurrentReaderJs() {
+    return ReaderJsHelper.get(this._contentIndex);
   }
 
   _cacheSelection(selectionModeForced = SelectionMode.NORMAL) {
-    const { contentIndex } = Connector.current.getCurrent();
-    const readerJs = ReaderJsHelper.getCurrent();
+    const readerJs = this._getCurrentReaderJs();
     const text = readerJs.sel.getText();
     const rects = readerJs.sel.getRects();
     const serializedRange = readerJs.sel.getRange().bind(readerJs).toSerializedString();
@@ -46,7 +55,7 @@ class SelectionConnector extends BaseConnector {
       text,
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
       style: DefaultSelectionStyle[selectionMode],
-      contentIndex,
+      contentIndex: this._contentIndex,
     };
     this._selectionMode = selectionMode;
     this.dispatch(updateSelection(this._selection));
@@ -56,9 +65,11 @@ class SelectionConnector extends BaseConnector {
     this._init();
   }
 
-  start(x, y) {
+  start(x, y, contentIndex) {
     this.end();
-    if (ReaderJsHelper.getCurrent().sel.start(x, y)) {
+
+    this._contentIndex = contentIndex;
+    if (this._getCurrentReaderJs().sel.start(x, y)) {
       this._isSelecting = true;
       this._cacheSelection();
       return true;
@@ -74,7 +85,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoUpper(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (ReaderJsHelper.getCurrent().sel.expandIntoUpper(x, y)) {
+      if (this._getCurrentReaderJs().sel.expandIntoUpper(x, y)) {
         this._cacheSelection(selectionModeForced);
         return true;
       }
@@ -84,7 +95,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoLower(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (ReaderJsHelper.getCurrent().sel.expandIntoLower(x, y)) {
+      if (this._getCurrentReaderJs().sel.expandIntoLower(x, y)) {
         this._cacheSelection(selectionModeForced);
         return true;
       }
@@ -99,7 +110,7 @@ class SelectionConnector extends BaseConnector {
       const rects = readerJs.getRectsFromSerializedRange(serializedRange);
       return new RectsUtil(rects).toAbsolute().getObject();
     } catch (e) {
-      console.warn(e);
+      Logger.warn(e);
       return [];
     }
   }

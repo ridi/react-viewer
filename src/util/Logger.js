@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 const _isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
 export default class Logger {
@@ -15,6 +16,10 @@ export default class Logger {
     if (_isDev) {
       console.table(...data);
     }
+  }
+
+  static warn(...data) {
+    console.warn(...data);
   }
 
   static error(...data) {

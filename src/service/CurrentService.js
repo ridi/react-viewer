@@ -54,34 +54,9 @@ class CurrentService extends BaseService {
     return null;
   }
 
-  _getContentIndexAtOffset(offset) {
-    const calculations = Connector.calculations.getContentCalculations();
-    const lastIndex = calculations.length;
-
-    let result = null;
-    calculations.forEach(({
-      offset: startOffset,
-      total,
-      isCalculated,
-      index,
-    }) => {
-      if (!isCalculated || startOffset === PRE_CALCULATION) {
-        return;
-      }
-      if (offset >= startOffset && offset < startOffset + total) {
-        result = index;
-        return;
-      }
-      if (index === lastIndex && offset >= startOffset + total) {
-        result = FOOTER_INDEX;
-      }
-    });
-    return result;
-  }
-
   _getCurrent(offset) {
     const { viewType } = Connector.setting.getSetting();
-    const contentIndex = this._getContentIndexAtOffset(offset);
+    const contentIndex = Connector.calculations.getContentIndexAtOffset(offset);
     if (contentIndex === null) return null;
 
     const { total, isCalculated, offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
