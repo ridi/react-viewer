@@ -3,11 +3,16 @@
     "publish": true,
     "publishPath": "lib"
   },
-  "dry-run": false,
-  "requireUpstream": false,
-  "requireCleanWorkingDir": false,
-  "buildCommand": "node ./script/release.js build && cp -rf package.json README.md CHANGELOG.md lib",
-  "dist": {
-    "afterReleaseCommand": "node ./script/release.js released"
+  "git": {
+    "requireUpstream": false,
+    "requireCleanWorkingDir": false
+  },
+  "scripts": {
+    "beforeStart": "npm install",
+    "beforeBump": "node ./script/release.js build",
+    "afterBump": "cp -rf package.json README.md CHANGELOG.md lib",
+    "beforeStage": null,
+    "changelog": "git log --pretty=format:\"* %s (%h)\" [REV_RANGE]",
+    "afterRelease": "node ./script/release.js released"
   }
 }
