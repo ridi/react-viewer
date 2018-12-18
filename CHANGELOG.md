@@ -6,6 +6,38 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.16]
+
+### Added
+
+-  Add additional information `viewPortRange` to `current` redux store
+
+### Fixed
+
+- Load reader.js using user touching position instead of `current` in redux store
+
+## [v1.0.0-alpha.15]
+
+### Changed
+
+- Upgrade and modify `.release-it.json` script
+
+## [v1.0.0-alpha.14]
+
+### Fixed
+
+- Fix selection issue when two contents in the screen on `viewType === Scroll`
+
+## [v1.0.0-alpha.13]
+
+### Added
+- Selection / Annotation management [PR#88](https://github.com/ridi/react-viewer/pull/88)
+
+### Breaking Changes
+- Lifecycle management with RxJs [PR#90](https://github.com/ridi/react-viewer/pull/90)
+
+## [v1.0.0-alpha.12]
+
 ## [v1.0.0-alpha.11]
 
 ### Fixed
@@ -146,7 +178,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.11...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...HEAD
+[v1.0.0-alpha.16]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.15...1.0.0-alpha.16
+[v1.0.0-alpha.15]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.14...1.0.0-alpha.15
+[v1.0.0-alpha.14]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.13...1.0.0-alpha.14
+[v1.0.0-alpha.13]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.12...1.0.0-alpha.13
+[v1.0.0-alpha.12]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.11...1.0.0-alpha.12
 [v1.0.0-alpha.11]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.10...1.0.0-alpha.11
 [v1.0.0-alpha.10]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.9...1.0.0-alpha.10
 [v1.0.0-alpha.9]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.8...1.0.0-alpha.9
