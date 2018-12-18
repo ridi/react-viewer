@@ -124,11 +124,13 @@ class CalculationsConnector extends BaseConnector {
     this.dispatch(setCalculations(calculations));
   }
 
-  getContentIndexAtOffset(offset) {
+  getContentIndexAndPositionAtOffset(offset) {
     const calculations = this.getContentCalculations();
     const lastIndex = calculations.length;
 
-    let result = null;
+    let contentIndex = null;
+    let position = null;
+
     calculations.forEach(({
       offset: startOffset,
       total,
@@ -139,14 +141,19 @@ class CalculationsConnector extends BaseConnector {
         return;
       }
       if (offset >= startOffset && offset < startOffset + total) {
-        result = index;
+        contentIndex = index;
         return;
       }
       if (index === lastIndex && offset >= startOffset + total) {
-        result = FOOTER_INDEX;
+        contentIndex = FOOTER_INDEX;
       }
     });
-    return result;
+
+    if (contentIndex !== null) {
+      const { offset: startOffset, total } = this.getCalculation(contentIndex);
+      position = (offset - startOffset) / total;
+    }
+    return { contentIndex, position };
   }
 }
 

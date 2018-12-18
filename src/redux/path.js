@@ -77,6 +77,7 @@ export const initialState = () => ({
     position: 0,
     offset: 0,  // page or scroll top
     viewType: ViewType.SCROLL,
+    viewPortRange: [],
   },
   setting: initialSettingState(),
   selection: null,

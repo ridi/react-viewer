@@ -29,6 +29,7 @@ class SelectionConnector extends BaseConnector {
     this._selection = null;
     this._selectionMode = SelectionMode.NORMAL;
     this._contentIndex = null;
+    this._position = null;
   }
 
   _getCurrentReaderJs() {
@@ -52,6 +53,7 @@ class SelectionConnector extends BaseConnector {
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
       style: DefaultSelectionStyle[selectionMode],
       contentIndex: this._contentIndex,
+      position: this._position,
     };
     this._selectionMode = selectionMode;
     this.dispatch(updateSelection(this._selection));
@@ -61,10 +63,11 @@ class SelectionConnector extends BaseConnector {
     this._init();
   }
 
-  start(x, y, contentIndex) {
+  start(x, y, contentIndex, position) {
     this.end();
 
     this._contentIndex = contentIndex;
+    this._position = position;
     if (this._getCurrentReaderJs().sel.start(x, y)) {
       this._isSelecting = true;
       this._cacheSelection();

@@ -56,13 +56,12 @@ class CurrentService extends BaseService {
 
   _getCurrent(offset) {
     const { viewType } = Connector.setting.getSetting();
-    const contentIndex = Connector.calculations.getContentIndexAtOffset(offset);
-    if (contentIndex === null) return null;
+    const { contentIndex, position } = Connector.calculations.getContentIndexAndPositionAtOffset(offset);
+    if (contentIndex === null || position === null) return null;
 
-    const { total, isCalculated, offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
-    if (!isCalculated) return null;
+    const offsetEnd = offset + (viewType === ViewType.SCROLL ? screenHeight() : 1);
+    const end = Connector.calculations.getContentIndexAndPositionAtOffset(offsetEnd);
 
-    const position = (offset - startOffset) / total;
     // let location = EMPTY_READ_LOCATION;
     // try {
     //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
@@ -77,6 +76,7 @@ class CurrentService extends BaseService {
       position,
       // location,
       viewType,
+      viewPortRange: [{ contentIndex, position }, end],
     };
   }
 

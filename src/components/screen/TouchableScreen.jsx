@@ -45,7 +45,7 @@ class TouchableScreen extends React.Component {
   }
 
   componentDidMount() {
-    const { current: node } = this.isSelectable() ? this.selectionRef : this.props.forwardedRef;
+    const { current: node } = this.props.forwardedRef;
     if (this.isSelectable()) {
       addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
       addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
@@ -119,11 +119,11 @@ class TouchableScreen extends React.Component {
       if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
         this.currentTouchStartPart = selectionPart;
         if (Connector.selection.selectionMode !== SelectionMode.USER_SELECTION) {
-          let { contentIndex } = Connector.current.getCurrent();
+          let current = Connector.current.getCurrent();
           if (viewType === ViewType.SCROLL) {
-            contentIndex = Connector.calculations.getContentIndexAtOffset(pageY);
+            current = Connector.calculations.getContentIndexAndPositionAtOffset(pageY);
           }
-          Connector.selection.start(x, y, contentIndex);
+          Connector.selection.start(x, y, current.contentIndex, current.position);
         }
       } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchMove) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {
