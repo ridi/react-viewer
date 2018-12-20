@@ -154,7 +154,17 @@ class CalculationService extends BaseService {
     return calculateContent$.pipe(
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
-    ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));
+    ).subscribe(({ index, total }) => {
+      const { viewType } = Connector.setting.getSetting();
+      const contentFormat = Connector.content.getContentFormat();
+      if (viewType === ViewType.PAGE && contentFormat === ContentFormat.IMAGE) {
+        // image, page인 경우 ALL_CONTENT_LOADED 보다 CALCULATION_UPDATED 이벤트가 먼저 불리는 경우가 있어 여기서 complete 체크
+        // todo 매끄럽게 고치기
+        this._checkAllCompleted();
+      } else {
+        EventBus.emit(Events.CALCULATION_UPDATED, { index, total });
+      }
+    });
   }
 }
 

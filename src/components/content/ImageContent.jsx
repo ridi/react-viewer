@@ -4,6 +4,13 @@ import BaseContent from './BaseContent';
 import EventBus, { Events } from '../../event';
 
 class ImageContent extends BaseContent {
+  constructor(props) {
+    super(props);
+
+    this.imageOnErrorHandler = this.imageOnErrorHandler.bind(this);
+    this.imageOnLoadHandler = this.imageOnLoadHandler.bind(this);
+  }
+
   imageOnErrorHandler() {
     const { index, isContentOnError } = this.props.content;
     if (!isContentOnError) {
@@ -32,8 +39,8 @@ class ImageContent extends BaseContent {
       <img
         src={src}
         alt=""
-        onLoad={() => this.imageOnLoadHandler()}
-        onError={() => this.imageOnErrorHandler()}
+        onLoad={this.imageOnLoadHandler}
+        onError={this.imageOnErrorHandler}
       />
     );
   }

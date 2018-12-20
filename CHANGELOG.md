@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.17]
+
+### Fixed
+
+- Fix calculation issue when `viewType === PAGE` and `contentFormat === IMAGE`
+
 ## [v1.0.0-alpha.16]
 
 ### Added
@@ -178,7 +184,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.17...HEAD
+[v1.0.0-alpha.16]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...1.0.0-alpha.17
 [v1.0.0-alpha.16]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.15...1.0.0-alpha.16
 [v1.0.0-alpha.15]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.14...1.0.0-alpha.15
 [v1.0.0-alpha.14]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.13...1.0.0-alpha.14
