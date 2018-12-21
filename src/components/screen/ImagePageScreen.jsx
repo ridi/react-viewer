@@ -42,6 +42,7 @@ class ImagePageScreen extends BaseScreen {
   }
 
   componentDidMount() {
+    super.componentDidMount();
     EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
     const isCalculated = Connector.calculations.isContentCalculated(1);
     if (!isCalculated) {
@@ -49,7 +50,15 @@ class ImagePageScreen extends BaseScreen {
     }
   }
 
+  componentDidUpdate() {
+    const isCalculated = Connector.calculations.isContentCalculated(1);
+    if (!isCalculated) {
+      EventBus.emit(Events.CALCULATE_CONTENT, { index: 1 });
+    }
+  }
+
   componentWillUnmount() {
+    super.componentWillUnmount();
     EventBus.offByTarget(this);
   }
 

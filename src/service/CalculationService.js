@@ -17,6 +17,7 @@ import { ContentFormat } from '../constants/ContentConstants';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { screenHeight, screenWidth } from '../util/BrowserWrapper';
+import AnnotationStore from '../store/AnnotationStore';
 
 class CalculationService extends BaseService {
   settingsAffectingCalculation = [
@@ -114,6 +115,15 @@ class CalculationService extends BaseService {
     super.load();
     this.connectEvents(this.onCalculateContent.bind(this), Events.CALCULATE_CONTENT);
     this.connectEvents(this.onCalculated.bind(this), Events.ALL_CONTENT_LOADED, Events.RESIZE, Events.SETTING_UPDATED);
+    this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
+  }
+
+  onCalculationInvalidated(invalidate$) {
+    return invalidate$.subscribe(() => {
+      Connector.calculations.setReadyToRead(false);
+      Connector.calculations.invalidate();
+      AnnotationStore.invalidateCalculations();
+    });
   }
 
   onCalculated(loadAllContent$, resize$, updateSetting$) {
@@ -136,8 +146,6 @@ class CalculationService extends BaseService {
         filter(settingName => !this.settingsAffectingCalculation.includes(settingName)),
       ),
     ).pipe(
-      tap(() => Connector.calculations.invalidate()),
-      tap(() => Connector.calculations.setReadyToRead(false)),
       tap(() => EventBus.emit(Events.CALCULATION_INVALIDATED)),
       tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
       switchMap(() => EventBus.asObservable(Events.CALCULATION_UPDATED)),
@@ -154,17 +162,7 @@ class CalculationService extends BaseService {
     return calculateContent$.pipe(
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
-    ).subscribe(({ index, total }) => {
-      const { viewType } = Connector.setting.getSetting();
-      const contentFormat = Connector.content.getContentFormat();
-      if (viewType === ViewType.PAGE && contentFormat === ContentFormat.IMAGE) {
-        // image, page인 경우 ALL_CONTENT_LOADED 보다 CALCULATION_UPDATED 이벤트가 먼저 불리는 경우가 있어 여기서 complete 체크
-        // todo 매끄럽게 고치기
-        this._checkAllCompleted();
-      } else {
-        EventBus.emit(Events.CALCULATION_UPDATED, { index, total });
-      }
-    });
+    ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));
   }
 }
 

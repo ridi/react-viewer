@@ -117,7 +117,6 @@ class CurrentService extends BaseService {
   onCalculationInvalidated(invalidate$) {
     return invalidate$.subscribe(() => {
       this._isOffsetRestored = false;
-      AnnotationStore.invalidateCalculations();
     });
   }
 
@@ -150,7 +149,6 @@ class CurrentService extends BaseService {
       filter(({ data: offset }) => offset !== null),
       map(({ data: offset }) => this._getCurrent(offset)),
       filter(current => current),
-      distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
       catchError((err, caught) => {
         Logger.error(err, caught);
         return NEVER;

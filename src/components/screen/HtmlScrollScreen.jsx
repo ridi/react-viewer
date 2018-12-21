@@ -47,7 +47,6 @@ class HtmlScrollScreen extends BaseScreen {
 
   constructor(props) {
     super(props);
-    this.calculate = this.calculate.bind(this);
     this.moveToOffset = this.moveToOffset.bind(this);
   }
 
@@ -67,18 +66,6 @@ class HtmlScrollScreen extends BaseScreen {
       this.scrollEventSubscription.unsubscribe();
       this.scrollEventSubscription = null;
     }
-  }
-
-  calculate(index, node) {
-    if (index === FOOTER_INDEX) {
-      Connector.calculations.setContentTotal(FOOTER_INDEX, node.offsetHeight);
-    }
-    const isLastContent = Connector.calculations.isLastContent(index);
-    const { contentFooter } = this.props;
-    waitThenRun(() => Connector.calculations.setContentTotal(
-      index,
-      node.scrollHeight + (isLastContent && contentFooter ? Connector.setting.getContentFooterHeight() : 0),
-    ));
   }
 
   moveToOffset(offset) {
