@@ -6,6 +6,7 @@ module.exports = {
     selectors: `${__dirname}/src/redux/selector.js`,
     reducer: `${__dirname}/src/redux/reducer.js`,
     reader: `${__dirname}/src/components/Reader.jsx`,
+    constants: `${__dirname}/src/constants/index.js`,
   },
   output: {
     path: `${__dirname}/lib/`,
