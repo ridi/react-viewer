@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.19]
+
+### Changed
+- Add `constants` entry to build option
+
 ## [v1.0.0-alpha.18]
 
 ### Fixed 
@@ -189,7 +194,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.19...HEAD
+[v1.0.0-alpha.19]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.19
 [v1.0.0-alpha.18]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.17...1.0.0-alpha.18
 [v1.0.0-alpha.17]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...1.0.0-alpha.17
 [v1.0.0-alpha.16]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.15...1.0.0-alpha.16
