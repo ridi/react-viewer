@@ -13,7 +13,7 @@ import BaseService from './BaseService';
 import Connector from './connector';
 import Logger from '../util/Logger';
 import { isExist } from '../util/Util';
-import { ContentFormat } from '..';
+import { ContentFormat } from '../constants/ContentConstants';
 
 class LoadService extends BaseService {
   load({

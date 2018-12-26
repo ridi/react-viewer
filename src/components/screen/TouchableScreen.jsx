@@ -10,7 +10,7 @@ import {
 import { ViewType, SELECTION_BASE_CONTENT } from '../../constants/SettingConstants';
 import SelectionLayer from '../selection/SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
-import { SelectionMode, SelectionParts } from '../..';
+import { SelectionMode, SelectionParts } from '../../constants/SelectionConstants';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 import EventBus, { Events } from '../../event';
 import AnnotationStore from '../../store/AnnotationStore';

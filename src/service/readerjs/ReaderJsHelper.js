@@ -6,8 +6,8 @@ import {
   EMPTY_READ_LOCATION,
   ViewType,
 } from '../../constants/SettingConstants';
-import Connector from '../connector';
 import SettingConnector from '../connector/SettingConnector';
+import CurrentConnector from '../connector/CurrentConnector';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 
@@ -28,7 +28,7 @@ class ReaderJsWrapper {
       return this._readerJs;
     }
 
-    const { viewType } = Connector.setting.getSetting();
+    const { viewType } = SettingConnector.getSetting();
     const node = this._getContentNode();
     if (node) {
       this._mount(node, viewType === ViewType.SCROLL);
@@ -60,7 +60,7 @@ class ReaderJsWrapper {
   }
 
   _isValid() {
-    const { viewType } = Connector.setting.getSetting();
+    const { viewType } = SettingConnector.getSetting();
     if (this._readerJs) {
       return ((viewType === ViewType.SCROLL) === this._readerJs.context.isScrollMode)
         && this._node
@@ -120,7 +120,7 @@ class ReaderJsWrapper {
 export default class ReaderJsHelper {
   static _readerJs = {}; // [content_index] : [ReaderJsWrapper instance]
 
-  static get(contentIndex = Connector.current.getCurrent().contentIndex) {
+  static get(contentIndex = CurrentConnector.getCurrent().contentIndex) {
     if (!this._readerJs[contentIndex]) {
       this._readerJs[contentIndex] = new ReaderJsWrapper(contentIndex);
     }

@@ -68,7 +68,7 @@ class SelectionConnector extends BaseConnector {
 
     this._contentIndex = contentIndex;
     this._position = position;
-    if (this._getCurrentReaderJs().sel.start(x, y)) {
+    if (this._getCurrentReaderJs().sel.start(x, y, '')) {
       this._isSelecting = true;
       this._cacheSelection();
       return true;
@@ -84,7 +84,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoUpper(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (this._getCurrentReaderJs().sel.expandIntoUpper(x, y)) {
+      if (this._getCurrentReaderJs().sel.expandIntoUpper(x, y, '')) {
         this._cacheSelection(selectionModeForced);
         return true;
       }
@@ -94,7 +94,7 @@ class SelectionConnector extends BaseConnector {
 
   expandIntoLower(x, y, selectionModeForced) {
     if (this._isSelecting) {
-      if (this._getCurrentReaderJs().sel.expandIntoLower(x, y)) {
+      if (this._getCurrentReaderJs().sel.expandIntoLower(x, y, '')) {
         this._cacheSelection(selectionModeForced);
         return true;
       }

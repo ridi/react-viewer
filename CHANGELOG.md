@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.21]
+
+### Fixed
+- Fix `Range.expand()` error in the Electron environment
+- Fix Some circular dependency issues
+
 ## [v1.0.0-alpha.20]
 
 ### Changed
@@ -194,7 +200,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.20...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...HEAD
+[v1.0.0-alpha.21]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.21
 [v1.0.0-alpha.20]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.20
 [v1.0.0-alpha.18]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.17...1.0.0-alpha.18
 [v1.0.0-alpha.17]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...1.0.0-alpha.17

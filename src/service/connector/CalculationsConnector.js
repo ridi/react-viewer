@@ -1,24 +1,23 @@
 import BaseConnector from './BaseConnector';
 import {
-  updateCalculationsTotal,
   invalidateCalculations,
-  updateFooterCalculation,
-  updateContentCalculation,
-  setReadyToRead,
-  setCalculationsTargets,
   setCalculations,
+  setCalculationsTargets,
+  setReadyToRead,
+  updateCalculationsTotal,
+  updateContentCalculation,
+  updateFooterCalculation,
 } from '../../redux/action';
 import {
-  selectReaderFooterCalculations,
-  selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
+  selectReaderContents,
+  selectReaderContentsCalculations,
+  selectReaderFooterCalculations,
   selectReaderIsAllCalculated,
   selectReaderIsInitContents,
-  selectReaderContents,
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
-import SelectionConnector from './SelectionConnector';
 
 class CalculationsConnector extends BaseConnector {
   // todo move to config
@@ -108,12 +107,6 @@ class CalculationsConnector extends BaseConnector {
   isLastContent(index) {
     const calculatedContents = selectReaderContents(this.getState());
     return index === calculatedContents.length;
-  }
-
-  getAnnotationCalculation(annotation) {
-    return {
-      rects: SelectionConnector.getRectsFromSerializedRange(annotation.contentIndex, annotation.serializedRange),
-    };
   }
 
   setTargets(targets) {
