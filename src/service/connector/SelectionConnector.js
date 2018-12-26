@@ -40,7 +40,7 @@ class SelectionConnector extends BaseConnector {
     const readerJs = this._getCurrentReaderJs();
     const text = readerJs.sel.getText();
     const rects = readerJs.sel.getRects();
-    const serializedRange = readerJs.sel.getRange().bind(readerJs).toSerializedString();
+    const serializedRange = readerJs.sel.getRange().toSerializedString();
 
     let selectionMode = selectionModeForced;
     if (selectionMode === SelectionMode.NORMAL) {
