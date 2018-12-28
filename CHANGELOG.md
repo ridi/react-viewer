@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Give more accurate meaning to `calculations.contents[].isCalculated` in Redux
 
+### Changed
+- Selection(Annotation) property renaming: `style` -> `color`
+
 ## [v1.0.0-alpha.21]
 
 ### Fixed
