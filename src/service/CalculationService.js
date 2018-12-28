@@ -46,30 +46,31 @@ class CalculationService extends BaseService {
         const content = Connector.content.getContents(index);
         return content.isContentLoaded || content.isContentOnError;
       })
-      .filter(({ isCalculated }) => !isCalculated)
+      .filter(({ total }) => total === PRE_CALCULATION)
       .map(({ index }) => index)
       .slice(0, contentCountAtATime);
   }
 
-  _checkAllCompleted() {
+  _checkAllCompleted({ index: lastCalculatedIndex, total: lastCalculatedTotal }) {
     const calculatedContents = Connector.calculations.getContentCalculations();
     const calculatedFooter = Connector.calculations.getFooterCalculations();
-    const contentFormat = Connector.content.getContentFormat();
 
-    calculatedContents.forEach(({ index, isCalculated, total }) => {
-      const offset = Connector.calculations.getStartOffset(index);
-      if (!isCalculated || offset === PRE_CALCULATION) return;
-      const nextIndex = (index === calculatedContents.length) ? FOOTER_INDEX : index + 1;
-      Connector.calculations.setStartOffset(nextIndex, offset + total);
+    const cache = calculatedContents
+      .map(({ index, total, offset }) => ({ index, total, offset }))
+      .concat([{ index: FOOTER_INDEX, offset: calculatedFooter.offset, total: calculatedFooter.total }]);
+
+    cache.forEach(({ index, total, offset }, i) => {
+      if (index === FOOTER_INDEX) return;
+      const currentTotal = index === lastCalculatedIndex ? lastCalculatedTotal : total;
+      if (currentTotal === PRE_CALCULATION || offset === PRE_CALCULATION) return;
+
+      cache[i + 1] = { ...cache[i + 1], offset: offset + currentTotal };
+      Connector.calculations.setStartOffset(cache[i + 1].index, offset + currentTotal);
     });
 
-    const isAllContentsCalculated = contentFormat === ContentFormat.HTML
-      ? calculatedContents.every(content => content.isCalculated)
-      : calculatedContents[0].isCalculated;
-    const isFooterCalculated = !Connector.calculations.hasFooter || calculatedFooter.isCalculated;
-    const completed = isAllContentsCalculated && isFooterCalculated;
+    const completed = cache.every(({ offset, total }) => offset !== PRE_CALCULATION && total !== PRE_CALCULATION);
+    const calculatedTotal = cache.reduce((sum, content) => sum + content.total, 0);
 
-    const calculatedTotal = calculatedContents.reduce((sum, content) => sum + content.total, calculatedFooter.total);
     Connector.calculations.setCalculationsTotal(calculatedTotal, completed);
     if (completed) EventBus.emit(Events.CALCULATION_COMPLETED);
   }
@@ -114,8 +115,9 @@ class CalculationService extends BaseService {
   load() {
     super.load();
     this.connectEvents(this.onCalculateContent.bind(this), Events.CALCULATE_CONTENT);
-    this.connectEvents(this.onCalculated.bind(this), Events.ALL_CONTENT_LOADED, Events.RESIZE, Events.SETTING_UPDATED);
+    this.connectEvents(this.onCalculationNeeded.bind(this), Events.ALL_CONTENT_LOADED, Events.RESIZE, Events.SETTING_UPDATED);
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
+    this.connectEvents(this.onCalculated.bind(this), Events.CALCULATION_UPDATED);
   }
 
   onCalculationInvalidated(invalidate$) {
@@ -126,7 +128,7 @@ class CalculationService extends BaseService {
     });
   }
 
-  onCalculated(loadAllContent$, resize$, updateSetting$) {
+  onCalculationNeeded(loadAllContent$, resize$, updateSetting$) {
     return merge(
       loadAllContent$.pipe(
         filter(() => {
@@ -149,7 +151,6 @@ class CalculationService extends BaseService {
       tap(() => EventBus.emit(Events.CALCULATION_INVALIDATED)),
       tap(() => Connector.calculations.setTargets(this._getCalculationTargetContents())),
       switchMap(() => EventBus.asObservable(Events.CALCULATION_UPDATED)),
-      tap(() => this._checkAllCompleted()),
       map(() => this._getCalculationTargetContents()),
     ).subscribe({
       next: nextTargets => Connector.calculations.setTargets(nextTargets),
@@ -163,6 +164,10 @@ class CalculationService extends BaseService {
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
     ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));
+  }
+
+  onCalculated(calculationUpdated$) {
+    return calculationUpdated$.subscribe(({ index, total }) => this._checkAllCompleted({ index, total }));
   }
 }
 

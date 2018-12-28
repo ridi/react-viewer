@@ -22,10 +22,14 @@ export const initialContentCalculationsState = index => ({
   index,
   isCalculated: false,
   offset: index === 1 ? 0 : PRE_CALCULATION,
-  total: 0,
+  total: PRE_CALCULATION,
 });
 
-export const initialFooterCalculationsState = () => ({ isCalculated: false, offset: PRE_CALCULATION, total: 0 });
+export const initialFooterCalculationsState = () => ({
+  isCalculated: false,
+  offset: PRE_CALCULATION,
+  total: PRE_CALCULATION,
+});
 
 export const initialSettingState = () => ({
   colorTheme: ReaderThemeType.WHITE,
@@ -67,7 +71,7 @@ export const initialState = () => ({
   calculations: {
     contents: [],
     footer: initialFooterCalculationsState(),
-    contentTotal: 0,
+    contentTotal: PRE_CALCULATION,
     targets: [],
     annotations: {},
   },

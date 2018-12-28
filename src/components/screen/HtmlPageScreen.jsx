@@ -16,7 +16,7 @@ import Connector from '../../service/connector';
 import Footer from '../footer/Footer';
 import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import HtmlContent from '../content/HtmlContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledContent, getStyledFooter } from '../styled';
 import EventBus, { Events } from '../../event';
@@ -84,7 +84,7 @@ class HtmlPageScreen extends BaseScreen {
     return (
       <Footer
         key="footer"
-        isCalculated={footerCalculations.isCalculated}
+        isCalculated={footerCalculations.total !== PRE_CALCULATION}
         content={footer}
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
@@ -97,17 +97,16 @@ class HtmlPageScreen extends BaseScreen {
     const {
       contentFooter,
     } = this.props;
-    const startOffset = Connector.calculations.getStartOffset(content.index);
+    const { offset, total } = Connector.calculations.getCalculation(content.index);
     const isLastContent = Connector.calculations.isLastContent(content.index);
-    const isCalculated = Connector.calculations.isContentCalculated(content.index);
 
     return (
       <HtmlContent
         key={`${content.uri}:${content.index}`}
         ref={this.getContentRef(content.index)}
         content={content}
-        isCalculated={isCalculated}
-        startOffset={startOffset}
+        isCalculated={total !== PRE_CALCULATION}
+        startOffset={offset}
         contentFooter={isLastContent ? contentFooter : null}
         StyledContent={StyledContent}
       />

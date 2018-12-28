@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+- Give more accurate meaning to `calculations.contents[].isCalculated` in Redux
+
 ## [v1.0.0-alpha.21]
 
 ### Fixed

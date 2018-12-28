@@ -30,7 +30,7 @@ import { BindingType, ContentFormat } from '../../constants/ContentConstants';
 import { makeSequence } from '../../util/Util';
 import ImageContent from '../content/ImageContent';
 import { StyledImagePageContent } from '../styled/StyledContent';
-import { FOOTER_INDEX } from '../../constants/CalculationsConstants';
+import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
 import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import EventBus, { Events } from '../../event';
@@ -84,7 +84,7 @@ class ImagePageScreen extends BaseScreen {
     return (
       <Footer
         content={footer}
-        isCalculated={footerCalculations.isCalculated}
+        isCalculated={footerCalculations.total !== PRE_CALCULATION}
         startOffset={startOffset}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.PAGE)}

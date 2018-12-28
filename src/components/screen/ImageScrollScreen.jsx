@@ -27,6 +27,7 @@ import { ViewType } from '../../constants/SettingConstants';
 import { getStyledFooter } from '../styled';
 import { ContentFormat } from '../../constants/ContentConstants';
 import EventBus, { Events } from '../../event';
+import { PRE_CALCULATION } from '../../constants/CalculationsConstants';
 
 class ImageScrollScreen extends BaseScreen {
   componentDidMount() {
@@ -78,7 +79,7 @@ class ImageScrollScreen extends BaseScreen {
     const { containerVerticalMargin } = this.props.setting;
     return (
       <Footer
-        isCalculated={footerCalculations.isCalculated}
+        isCalculated={footerCalculations.total !== PRE_CALCULATION}
         content={footer}
         containerVerticalMargin={containerVerticalMargin}
         StyledFooter={getStyledFooter(ContentFormat.IMAGE, ViewType.SCROLL)}

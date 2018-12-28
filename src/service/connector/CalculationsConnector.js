@@ -65,14 +65,11 @@ class CalculationsConnector extends BaseConnector {
   }
 
   setStartOffset(index, offset) {
-    if (index === FOOTER_INDEX) {
-      this.dispatch(updateFooterCalculation({ offset }));
-    } else {
-      const calculationOffset = this.getStartOffset(index);
-      if (calculationOffset !== offset) {
-        this.dispatch(updateContentCalculation({ index, offset }));
-      }
-    }
+    const { total, isCalculated } = this.getCalculation(index);
+    if (isCalculated) return;
+    this.dispatch(index === FOOTER_INDEX
+      ? updateFooterCalculation({ offset, isCalculated: total !== PRE_CALCULATION })
+      : updateContentCalculation({ index, offset, isCalculated: total !== PRE_CALCULATION }));
   }
 
   setReadyToRead(readyToRead = true) {
@@ -84,11 +81,11 @@ class CalculationsConnector extends BaseConnector {
   }
 
   setContentTotal(index, total) {
-    if (!this.isContentCalculated(index)) {
-      this.dispatch(index === FOOTER_INDEX
-        ? updateFooterCalculation({ total, isCalculated: true })
-        : updateContentCalculation({ index, total, isCalculated: true }));
-    }
+    const { offset, isCalculated } = this.getCalculation(index);
+    if (isCalculated) return;
+    this.dispatch(index === FOOTER_INDEX
+      ? updateFooterCalculation({ total, isCalculated: offset !== PRE_CALCULATION })
+      : updateContentCalculation({ index, total, isCalculated: offset !== PRE_CALCULATION }));
   }
 
   setCalculationsTotal(calculatedTotal, completed) {
@@ -130,7 +127,7 @@ class CalculationsConnector extends BaseConnector {
       isCalculated,
       index,
     }) => {
-      if (!isCalculated || startOffset === PRE_CALCULATION) {
+      if (!isCalculated) {
         return;
       }
       if (offset >= startOffset && offset < startOffset + total) {

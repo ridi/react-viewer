@@ -13,7 +13,7 @@ import { ViewType } from '../constants/SettingConstants';
 import { screenHeight, scrollTop } from '../util/BrowserWrapper';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
-import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
+import { FOOTER_INDEX } from '../constants/CalculationsConstants';
 import { hasIntersect } from '../util/Util';
 import AnnotationStore from '../store/AnnotationStore';
 import ReaderJsHelper from './readerjs/ReaderJsHelper';
@@ -39,7 +39,7 @@ class CurrentService extends BaseService {
     const { position, contentIndex } = Connector.current.getCurrent();
     const { offset, total, isCalculated } = Connector.calculations.getCalculation(contentIndex);
 
-    if (!isCalculated || offset === PRE_CALCULATION) return null;
+    if (!isCalculated) return null;
 
     const { viewType } = Connector.setting.getSetting();
     const calculationTotal = Connector.calculations.getCalculationsTotal();
@@ -92,9 +92,13 @@ class CurrentService extends BaseService {
       return [lastIndex];
     }
 
-    return calculations.filter(({ index, total: contentTotal, isCalculated }) => {
-      const offset = Connector.calculations.getStartOffset(index);
-      if (!isCalculated || offset === PRE_CALCULATION) return false;
+    return calculations.filter(({
+      index,
+      offset,
+      total: contentTotal,
+      isCalculated,
+    }) => {
+      if (!isCalculated) return false;
       const contentRange = [offset, index === FOOTER_INDEX ? total : offset + contentTotal];
       return hasIntersect(range, contentRange);
     }).map(({ index }) => index);
