@@ -96,7 +96,7 @@ class ViewerBody extends React.Component {
     } = this.props;
     const {
       id,
-      style,
+      color,
       withHandle,
       rects,
       ...others
@@ -104,13 +104,13 @@ class ViewerBody extends React.Component {
     const updateSelection = {
       id,
       ...others,
-      style,
+      color,
     };
     if (!id) {
       actionAddAnnotation(updateSelection);
-    } else if (!style) {
+    } else if (!color) {
       actionRemoveAnnotation(updateSelection);
-    } else if (style) {
+    } else if (color) {
       actionSetAnnotation(updateSelection);
     }
     Connector.selection.end();

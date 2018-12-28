@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { SelectionStyleType } from '@ridi/react-viewer';
 import { RangedAnnotationStyles } from '../../constants/SelectionConstants';
 
-const getButtonStyles = (style) => {
+const getButtonStyles = (color) => {
   const defaultProps = {
     width: '24px',
     height: '24px',
@@ -12,25 +12,25 @@ const getButtonStyles = (style) => {
     margin: '0 4px',
   };
 
-  if (style === null) {
+  if (color === null) {
     return {
       ...defaultProps,
       color: 'red',
       border: '2px solid red',
     };
   }
-  if (style.type === SelectionStyleType.HIGHLIGHT) {
+  if (color.type === SelectionStyleType.HIGHLIGHT) {
     return {
       ...defaultProps,
-      backgroundColor: style.color,
+      backgroundColor: color.color,
       border: 0,
     };
   }
-  if (style.type === SelectionStyleType.UNDERLINE) {
+  if (color.type === SelectionStyleType.UNDERLINE) {
     return {
       ...defaultProps,
       backgroundColor: '#fff',
-      border: `2px solid ${style.color}`,
+      border: `2px solid ${color.color}`,
     };
   }
   return defaultProps;
@@ -64,18 +64,18 @@ const SelectionContextMenu = ({
       >
         COLORS
       </h2>
-      { RangedAnnotationStyles.map(style => (
+      { RangedAnnotationStyles.map(color => (
         <button
           type="button"
-          key={`ContentMenu-${style.color}`}
-          style={getButtonStyles(style)}
+          key={`ContentMenu-${color.color}`}
+          style={getButtonStyles(color)}
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            onClickItem({ ...targetItem, style });
+            onClickItem({ ...targetItem, color });
           }}
         >
-          <span className="indent_hidden">{style.color}</span>
+          <span className="indent_hidden">{color.color}</span>
         </button>
       ))}
       <button
@@ -83,7 +83,7 @@ const SelectionContextMenu = ({
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          onClickItem({ ...targetItem, style: null });
+          onClickItem({ ...targetItem, color: null });
         }}
         style={getButtonStyles(null)}
       >

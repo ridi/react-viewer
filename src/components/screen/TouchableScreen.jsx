@@ -187,7 +187,6 @@ class TouchableScreen extends React.Component {
         annotationable={annotationable}
         selectable={selectable}
         viewType={viewType}
-        annotations={annotations}
         selection={selection}
       />
     );

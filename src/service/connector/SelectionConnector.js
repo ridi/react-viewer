@@ -51,7 +51,7 @@ class SelectionConnector extends BaseConnector {
       rects: new RectsUtil(rects).toAbsolute().getObject(),
       text,
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
-      style: DefaultSelectionStyle[selectionMode],
+      color: DefaultSelectionStyle[selectionMode],
       contentIndex: this._contentIndex,
       position: this._position,
     };
