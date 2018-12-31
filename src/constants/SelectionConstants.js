@@ -11,9 +11,9 @@ export const SelectionStyleType = {
 };
 
 export const DefaultSelectionStyle = {
-  [SelectionMode.NORMAL]: { color: 'rgb(31, 140, 230)', type: SelectionStyleType.HIGHLIGHT },
-  [SelectionMode.USER_SELECTION]: { color: 'rgb(31, 140, 230)', type: SelectionStyleType.HIGHLIGHT },
-  [SelectionMode.AUTO_HIGHLIGHT]: { color: 'rgb(231, 216, 124)', type: SelectionStyleType.HIGHLIGHT },
+  [SelectionMode.NORMAL]: { color: 'rgb(31, 140, 230)', style: SelectionStyleType.HIGHLIGHT },
+  [SelectionMode.USER_SELECTION]: { color: 'rgb(31, 140, 230)', style: SelectionStyleType.HIGHLIGHT },
+  [SelectionMode.AUTO_HIGHLIGHT]: { color: 'rgb(231, 216, 124)', style: SelectionStyleType.HIGHLIGHT },
 };
 
 export const SelectionParts = {

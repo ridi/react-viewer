@@ -4,7 +4,7 @@ import { SelectionStyleType, SelectionParts } from '../../constants/SelectionCon
 import SelectionHandle from './SelectionHandle';
 import Service from '../../service';
 
-const getRectProps = (rect, { color, type }) => {
+const getRectProps = (rect, { color, style }) => {
   const defaultProps = {
     key: `SelectionRange-rect-${rect.top}:${rect.left}:${rect.width}:${rect.height}`,
     x: rect.left,
@@ -13,14 +13,14 @@ const getRectProps = (rect, { color, type }) => {
     height: rect.height,
   };
 
-  if (type === SelectionStyleType.HIGHLIGHT) {
+  if (style === SelectionStyleType.HIGHLIGHT) {
     return {
       ...defaultProps,
       fill: color,
       fillOpacity: 0.3,
     };
   }
-  if (type === SelectionStyleType.UNDERLINE) {
+  if (style === SelectionStyleType.UNDERLINE) {
     return {
       ...defaultProps,
       fill: '#FFFFFF',  // 설정하지 않으면 빈 공간에 click 이벤트를 받을 수 없음

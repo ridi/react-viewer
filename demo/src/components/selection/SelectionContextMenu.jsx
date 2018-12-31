@@ -19,14 +19,14 @@ const getButtonStyles = (color) => {
       border: '2px solid red',
     };
   }
-  if (color.type === SelectionStyleType.HIGHLIGHT) {
+  if (color.style === SelectionStyleType.HIGHLIGHT) {
     return {
       ...defaultProps,
       backgroundColor: color.color,
       border: 0,
     };
   }
-  if (color.type === SelectionStyleType.UNDERLINE) {
+  if (color.style === SelectionStyleType.UNDERLINE) {
     return {
       ...defaultProps,
       backgroundColor: '#fff',

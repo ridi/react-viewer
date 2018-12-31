@@ -175,7 +175,6 @@ class TouchableScreen extends React.Component {
     const {
       annotationable,
       selectable,
-      annotations,
       selection,
       viewType,
       isLastPage,
