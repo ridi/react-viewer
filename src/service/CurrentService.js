@@ -32,7 +32,7 @@ class CurrentService extends BaseService {
     this.connectEvents(this.onScrolled.bind(this), Events.SCROLL);
     this.connectEvents(this.onMoved.bind(this), Events.MOVED);
     this.connectEvents(this.onAnnotationCalculationNeeded.bind(this), Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED);
-    this.connectEvents(this.onAnnotationsSet.bind(this), Events.SET_ANNOTATIONS);
+    this.connectEvents(this.onAnnotationsSet.bind(this), Events.SET_ANNOTATIONS, Events.ADD_ANNOTATION, Events.UPDATE_ANNOTATION, Events.REMOVE_ANNOTATION);
   }
 
   _restoreCurrentOffset() {
@@ -238,13 +238,32 @@ class CurrentService extends BaseService {
     });
   }
 
-  onAnnotationsSet(setAnnotation$) {
-    return setAnnotation$.subscribe(({ data: annotations }) => {
-      let added = false;
-      if (AnnotationStore.annotations.length < annotations.length) {
-        // annotation added
-        added = true;
-      }
+  onAnnotationsSet(setAnnotations$, addAnnotation$, updateAnnotation$, removeAnnotation$) {
+    return merge(
+      setAnnotations$.pipe(
+        map(({ data }) => data),
+      ),
+      addAnnotation$.pipe(
+        map(({ data }) => data),
+        map(({ data }) => [...AnnotationStore.annotations, data]),
+      ),
+      updateAnnotation$.pipe(
+        map(({ data }) => data),
+        map(({ data }) => AnnotationStore.annotations.map(item => ((item.id === data.id) ? data : item))),
+      ),
+      removeAnnotation$.pipe(
+        map(({ data }) => data),
+        map(({ data }) => {
+          const clone = [...AnnotationStore.annotations];
+          const index = clone.findIndex(item => item.id === data.id);
+          if (index > -1) {
+            clone.splice(clone.findIndex(item => item.id === data.id), 1);
+          }
+          return clone;
+        }),
+      ),
+    ).subscribe((annotations) => {
+      const added = AnnotationStore.annotations.length < annotations.length;
       AnnotationStore.annotations = annotations;
       EventBus.emit(Events.ANNOTATION_CHANGED, annotations);
       if (added) {

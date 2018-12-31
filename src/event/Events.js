@@ -21,6 +21,9 @@ export const SET_CONTENTS_BY_URI = Symbol('SET_CONTENTS_BY_URI'); // { contentFo
 export const SET_CONTENTS_BY_VALUE = Symbol('SET_CONTENTS_BY_VALUE'); // { contentFormat, bindingType, contents }
 
 export const SET_ANNOTATIONS = Symbol('SET_ANNOTATIONS');
+export const ADD_ANNOTATION = Symbol('ADD_ANNOTATION');
+export const UPDATE_ANNOTATION = Symbol('UPDATE_ANNOTATION');
+export const REMOVE_ANNOTATION = Symbol('REMOVE_ANNOTATION');
 export const ANNOTATION_ADDED = Symbol('ANNOTATION_ADDED');
 export const ANNOTATION_CHANGED = Symbol('ANNOTATION_CHANGED');
 
