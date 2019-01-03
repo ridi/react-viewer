@@ -2,7 +2,6 @@ import calculations from './CalculationsConnector';
 import setting from './SettingConnector';
 import current from './CurrentConnector';
 import BaseConnector from './BaseConnector';
-import selection from './SelectionConnector';
 import content from './ContentConnector';
 
 import { selectReader, selectReaderIsAllCalculated, selectReaderIsLoaded } from '../../redux/selector';
@@ -31,7 +30,6 @@ export const connect = (store) => {
   calculations.connect(store);
   setting.connect(store);
   current.connect(store);
-  selection.connect(store);
   content.connect(store);
 };
 
@@ -41,6 +39,5 @@ export default {
   calculations,
   setting,
   current,
-  selection,
   content,
 };

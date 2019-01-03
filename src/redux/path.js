@@ -48,13 +48,6 @@ export const initialSettingState = () => ({
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
 });
 
-export const initialAnnotationCalculationState = (id, contentIndex) => ({
-  id,
-  contentIndex,
-  rects: null,
-  isVisible: false,
-});
-
 export const initialState = () => ({
   status: {
     isLoaded: true,
@@ -73,7 +66,6 @@ export const initialState = () => ({
     footer: initialFooterCalculationsState(),
     contentTotal: PRE_CALCULATION,
     targets: [],
-    annotations: {},
   },
   current: {
     contentIndex: 1,
@@ -84,7 +76,6 @@ export const initialState = () => ({
     viewPortRange: [],
   },
   setting: initialSettingState(),
-  selection: null,
 });
 
 export default {
@@ -124,8 +115,4 @@ export default {
   footerCalculationsTotal: () => ['calculations', 'footer', 'total'],
   isFooterCalculated: () => ['calculations', 'footer', 'isCalculated'],
   calculationsTargets: () => ['calculations', 'targets'],
-  annotationCalculations: () => ['calculations', 'annotations'],
-  annotationCalculation: id => ['calculations', 'annotations', id],
-
-  selection: () => ['selection'],
 };

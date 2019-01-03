@@ -8,7 +8,6 @@ import {
   selectReaderCalculationsTotal,
   selectReaderContentFormat,
   selectReaderIsReadyToRead,
-  selectReaderSelection,
   selectReaderIsContentsLoaded,
 } from '../../redux/selector';
 import PropTypes, { ContentType, CurrentType, SettingType } from '../prop-types';
@@ -40,7 +39,6 @@ export default class BaseScreen extends React.Component {
     selectable: PropTypes.bool.isRequired,
     annotationable: PropTypes.bool.isRequired,
     annotations: PropTypes.array,
-    selection: PropTypes.object,
     isContentsLoaded: PropTypes.bool.isRequired,
   };
 
@@ -88,7 +86,6 @@ export default class BaseScreen extends React.Component {
       children,
       annotationable,
       selectable,
-      selection,
       current,
       annotations,
     } = this.props;
@@ -103,7 +100,6 @@ export default class BaseScreen extends React.Component {
         annotationable={annotationable}
         selectable={selectable}
         annotations={annotations}
-        selection={selection}
         isLastPage={setting.viewType === ViewType.PAGE && current.contentIndex === FOOTER_INDEX}
       >
         { (isContentsLoaded || contentFormat === ContentFormat.IMAGE) && this.renderContents() }
@@ -121,7 +117,6 @@ export const mapStateToProps = state => ({
   calculationsTotal: selectReaderCalculationsTotal(state),
   contentFormat: selectReaderContentFormat(state),
   isReadyToRead: selectReaderIsReadyToRead(state),
-  selection: selectReaderSelection(state),
   isContentsLoaded: selectReaderIsContentsLoaded(state),
 });
 

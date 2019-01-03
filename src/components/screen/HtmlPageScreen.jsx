@@ -69,8 +69,7 @@ class HtmlPageScreen extends BaseScreen {
       const startOffset = Connector.calculations.getStartOffset(contentIndex);
       const localOffset = offset - startOffset;
       if (cw.current && localOffset >= 0) {
-        cw.current.scrollLeft = localOffset
-          * (Connector.setting.getContainerWidth() + Connector.setting.getColumnGap());
+        cw.current.scrollLeft = Connector.current.getLeftOffset();
         EventBus.emit(Events.MOVED);
       }
     }, 0);

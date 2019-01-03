@@ -20,6 +20,8 @@ export const ALL_CONTENT_LOADED = Symbol('ALL_CONTENT_LOADED');
 export const SET_CONTENTS_BY_URI = Symbol('SET_CONTENTS_BY_URI'); // { contentFormat, bindingType, uris }
 export const SET_CONTENTS_BY_VALUE = Symbol('SET_CONTENTS_BY_VALUE'); // { contentFormat, bindingType, contents }
 
+export const END_SELECTION = Symbol('END_SELECTION');
+
 export const SET_ANNOTATIONS = Symbol('SET_ANNOTATIONS');
 export const ADD_ANNOTATION = Symbol('ADD_ANNOTATION');
 export const UPDATE_ANNOTATION = Symbol('UPDATE_ANNOTATION');

@@ -113,7 +113,7 @@ class ViewerBody extends React.Component {
     } else if (color) {
       actionSetAnnotation(updateSelection);
     }
-    Connector.selection.end();
+    EventBus.emit(Events.END_SELECTION);
     actionSetContextMenu(false);
   }
 
@@ -138,7 +138,7 @@ class ViewerBody extends React.Component {
         ...others
       } = selection;
       actionAddAnnotation(others);
-      Connector.selection.end();
+      EventBus.emit(Events.END_SELECTION);
       return actionSetContextMenu(false);
     }
     return actionSetContextMenu(false);

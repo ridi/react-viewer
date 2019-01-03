@@ -1,11 +1,13 @@
 import load from './LoadService';
 import calculation from './CalculationService';
 import current from './CurrentService';
+import selection from './SelectionService';
 
 const services = [
   load,
   calculation,
   current,
+  selection,
 ];
 
 export const unloadAll = () => {
@@ -24,4 +26,5 @@ export default {
   load,
   calculation,
   current,
+  selection,
 };

@@ -2,7 +2,7 @@ import React from 'react';
 
 const withStore = storeMap => (Component) => {
   class WithStore extends React.Component {
-    state = {};
+    state = Object.keys(storeMap).reduce((state, name) => ({ ...state, [name]: storeMap[name].getData() }), {});
     subs = [];
 
     componentDidMount() {

@@ -45,7 +45,7 @@ const Selection = ({
   if (!originalRects || originalRects.length === 0) return null;
   let rects = originalRects;
   if (type !== 'selection') {
-    rects = Service.current.toPageRelativeRects(originalRects);
+    rects = Service.selection.toPageRelativeRects(originalRects);
   }
   const firstRect = rects.length > 0 ? rects[0] : null;
   const lastRect = rects.length > 0 ? rects[rects.length - 1] : null;

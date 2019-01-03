@@ -1,4 +1,4 @@
-import { merge, timer, NEVER } from 'rxjs';
+import { timer, NEVER } from 'rxjs';
 import {
   map,
   filter,
@@ -15,9 +15,6 @@ import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX } from '../constants/CalculationsConstants';
 import { hasIntersect } from '../util/Util';
-import AnnotationStore from '../store/AnnotationStore';
-import ReaderJsHelper from './readerjs/ReaderJsHelper';
-import { RectsUtil } from '../util/SelectionUtil';
 
 class CurrentService extends BaseService {
   _isOffsetRestored = false;
@@ -28,11 +25,9 @@ class CurrentService extends BaseService {
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
     this.connectEvents(this.onCalculated.bind(this), Events.CALCULATION_UPDATED);
     this.connectEvents(this.onCalculationCompleted.bind(this), Events.CALCULATION_COMPLETED);
-    this.connectEvents(this.onCurrentUpdated.bind(this), Events.UPDATE_CURRENT_OFFSET);
+    this.connectEvents(this.onCurrentOffsetUpdated.bind(this), Events.UPDATE_CURRENT_OFFSET);
     this.connectEvents(this.onScrolled.bind(this), Events.SCROLL);
     this.connectEvents(this.onMoved.bind(this), Events.MOVED);
-    this.connectEvents(this.onAnnotationCalculationNeeded.bind(this), Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED);
-    this.connectEvents(this.onAnnotationsSet.bind(this), Events.SET_ANNOTATIONS, Events.ADD_ANNOTATION, Events.UPDATE_ANNOTATION, Events.REMOVE_ANNOTATION);
   }
 
   _restoreCurrentOffset() {
@@ -60,8 +55,11 @@ class CurrentService extends BaseService {
     if (contentIndex === null || position === null) return null;
 
     const offsetEnd = offset + (viewType === ViewType.SCROLL ? screenHeight() : 1);
-    const end = Connector.calculations.getContentIndexAndPositionAtOffset(offsetEnd);
+    let end = Connector.calculations.getContentIndexAndPositionAtOffset(offsetEnd);
 
+    if (end.contentIndex === null) {
+      end = { contentIndex: contentIndex + 1, position: 0 };
+    }
     // let location = EMPTY_READ_LOCATION;
     // try {
     //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
@@ -148,7 +146,7 @@ class CurrentService extends BaseService {
     });
   }
 
-  onCurrentUpdated(updateCurrentOffset$) {
+  onCurrentOffsetUpdated(updateCurrentOffset$) {
     return updateCurrentOffset$.pipe(
       filter(({ data: offset }) => offset !== null),
       map(({ data: offset }) => this._getCurrent(offset)),
@@ -180,112 +178,11 @@ class CurrentService extends BaseService {
 
   onMoved(move$) {
     return move$.subscribe(() => {
-      Connector.calculations.setReadyToRead(true);
-      EventBus.emit(Events.READY_TO_READ);
-    });
-  }
-
-  _getRectsFromSerializedRange(contentIndex, serializedRange) {
-    const { viewType } = Connector.setting.getSetting();
-
-    let xAdded = 0;
-    if (viewType === ViewType.PAGE) {
-      const { offset, viewType: currentViewType } = Connector.current.getCurrent();
-      if (currentViewType === ViewType.PAGE) {
-        const containerWidth = Connector.setting.getContainerWidth();
-        const columnGap = Connector.setting.getColumnGap();
-        const { offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
-        const localOffset = offset - startOffset;
-        xAdded = localOffset * (containerWidth + columnGap);
-      }
-    }
-
-    let readerJs;
-    try {
-      readerJs = ReaderJsHelper.get(contentIndex);
-      const rects = readerJs.getRectsFromSerializedRange(serializedRange);
-      return new RectsUtil(rects)
-        .toAbsolute()
-        .translateX(viewType === ViewType.PAGE ? xAdded : 0)
-        .getObject();
-    } catch (e) {
-      Logger.warn(e);
-      return [];
-    }
-  }
-
-  onAnnotationCalculationNeeded(scroll$, moved$, annotationAdded$) {
-    return merge(
-      scroll$,
-      moved$,
-      annotationAdded$,
-    ).subscribe(() => {
-      const contentIndexes = Connector.content.getContentsInScreen();
-
-      const annotationsInScreen = AnnotationStore.annotations
-        .filter(({ contentIndex: aci }) => contentIndexes.includes(aci));
-      const calculationTargets = annotationsInScreen
-        .filter(({ id }) => !AnnotationStore.calculations.has(id) || AnnotationStore.calculations.get(id).rects === null);
-
-      AnnotationStore.setCalculations(
-        calculationTargets.map(({ id, contentIndex, serializedRange }) => ({
-          id,
-          contentIndex,
-          rects: this._getRectsFromSerializedRange(contentIndex, serializedRange),
-        })),
-        annotationsInScreen.map(({ id }) => id),
-      );
-    });
-  }
-
-  onAnnotationsSet(setAnnotations$, addAnnotation$, updateAnnotation$, removeAnnotation$) {
-    return merge(
-      setAnnotations$.pipe(
-        map(({ data }) => data),
-      ),
-      addAnnotation$.pipe(
-        map(({ data }) => data),
-        map(({ data }) => [...AnnotationStore.annotations, data]),
-      ),
-      updateAnnotation$.pipe(
-        map(({ data }) => data),
-        map(({ data }) => AnnotationStore.annotations.map(item => ((item.id === data.id) ? data : item))),
-      ),
-      removeAnnotation$.pipe(
-        map(({ data }) => data),
-        map(({ data }) => {
-          const clone = [...AnnotationStore.annotations];
-          const index = clone.findIndex(item => item.id === data.id);
-          if (index > -1) {
-            clone.splice(clone.findIndex(item => item.id === data.id), 1);
-          }
-          return clone;
-        }),
-      ),
-    ).subscribe((annotations) => {
-      const added = AnnotationStore.annotations.length < annotations.length;
-      AnnotationStore.annotations = annotations;
-      EventBus.emit(Events.ANNOTATION_CHANGED, annotations);
-      if (added) {
-        EventBus.emit(Events.ANNOTATION_ADDED);
+      if (!Connector.calculations.isReadyToRead()) {
+        Connector.calculations.setReadyToRead(true);
+        EventBus.emit(Events.READY_TO_READ);
       }
     });
-  }
-
-  toPageRelativeRects(rects) {
-    const { viewType } = Connector.setting.getSetting();
-    if (viewType !== ViewType.PAGE) return rects;
-
-    const containerWidth = Connector.setting.getContainerWidth();
-    const columnGap = Connector.setting.getColumnGap();
-    const { offset, contentIndex } = Connector.current.getCurrent();
-    const { offset: startOffset } = Connector.calculations.getCalculation(contentIndex);
-    const localOffset = offset - startOffset;
-
-    return rects.map(({ left, ...others }) => ({
-      left: left - (localOffset * (containerWidth + columnGap)),
-      ...others,
-    }));
   }
 }
 

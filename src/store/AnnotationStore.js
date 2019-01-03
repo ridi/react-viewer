@@ -1,5 +1,6 @@
 /* eslint no-param-reassign: 0 */
 import BaseStore from './BaseStore';
+import Connector from '../service/connector';
 
 class AnnotationStore extends BaseStore {
   _annotations = [];
@@ -59,6 +60,16 @@ class AnnotationStore extends BaseStore {
     return this._annotations
       .filter(({ id }) => this._calculations.has(id) && this._calculations.get(id).isVisible)
       .map(annotation => ({ ...annotation, ...this._calculations.get(annotation.id) }));
+  }
+
+  getByPoint(x, y) {
+    const leftOffset = Connector.current.getLeftOffset();
+    const calculation = Array.from(this._calculations.values())
+      .find(({ rects }) => rects.some(rect => rect.contains(x + leftOffset, y)));
+    if (!calculation) return null;
+    const annotation = this._annotations.find(({ id }) => id === calculation.id);
+    if (!annotation) return null;
+    return { ...annotation, ...calculation };
   }
 }
 

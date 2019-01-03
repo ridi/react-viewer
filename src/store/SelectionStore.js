@@ -1,16 +1,19 @@
-import ReaderJsHelper from '../readerjs/ReaderJsHelper';
-import { DefaultSelectionStyle, SelectionMode } from '../../constants/SelectionConstants';
-import { wordCount } from '../../util/Util';
-import BaseConnector from './BaseConnector';
-import { updateSelection } from '../../redux/action';
-import { RectsUtil } from '../../util/SelectionUtil';
-import Logger from '../../util/Logger';
+import BaseStore from './BaseStore';
+import { DefaultSelectionStyle, SelectionMode } from '../constants';
+import ReaderJsHelper from '../service/readerjs/ReaderJsHelper';
+import { wordCount } from '../util/Util';
+import { RectsUtil } from '../util/SelectionUtil';
 
-class SelectionConnector extends BaseConnector {
+class SelectionStore extends BaseStore {
   _isSelecting = false;
   _selection = null;
   _selectionMode = SelectionMode.NORMAL;
   _contentIndex = null;
+
+  constructor() {
+    super({ selection: null, selectionMode: SelectionMode.NORMAL });
+    this._init();
+  }
 
   get isSelecting() {
     return this._isSelecting;
@@ -30,6 +33,7 @@ class SelectionConnector extends BaseConnector {
     this._selectionMode = SelectionMode.NORMAL;
     this._contentIndex = null;
     this._position = null;
+    this.next();
   }
 
   _getCurrentReaderJs() {
@@ -48,7 +52,7 @@ class SelectionConnector extends BaseConnector {
     }
     this._selection = {
       serializedRange,
-      rects: new RectsUtil(rects).toAbsolute().getObject(),
+      rects: new RectsUtil(rects).toAbsolute().build(),
       text,
       withHandle: selectionMode === SelectionMode.USER_SELECTION,
       color: DefaultSelectionStyle[selectionMode],
@@ -56,11 +60,14 @@ class SelectionConnector extends BaseConnector {
       position: this._position,
     };
     this._selectionMode = selectionMode;
-    this.dispatch(updateSelection(this._selection));
+    this.next();
   }
 
-  afterConnected() {
-    this._init();
+  getData() {
+    return {
+      selection: this._selection,
+      selectionMode: this._selectionMode,
+    };
   }
 
   start(x, y, contentIndex, position) {
@@ -78,7 +85,6 @@ class SelectionConnector extends BaseConnector {
 
   end() {
     this._init();
-    this.dispatch(updateSelection(this._selection));
     return true;
   }
 
@@ -101,18 +107,6 @@ class SelectionConnector extends BaseConnector {
     }
     return false;
   }
-
-  getRectsFromSerializedRange(contentIndex, serializedRange) {
-    let readerJs;
-    try {
-      readerJs = ReaderJsHelper.get(contentIndex);
-      const rects = readerJs.getRectsFromSerializedRange(serializedRange);
-      return new RectsUtil(rects).toAbsolute().getObject();
-    } catch (e) {
-      Logger.warn(e);
-      return [];
-    }
-  }
 }
 
-export default new SelectionConnector();
+export default new SelectionStore();

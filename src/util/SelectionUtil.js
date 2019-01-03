@@ -1,4 +1,4 @@
-
+/* eslint no-param-reassign: 0 */
 export class RectsUtil {
   constructor(rects) {
     this._rects = rects;
@@ -23,12 +23,11 @@ export class RectsUtil {
     return this;
   }
 
-  getObject() {
-    return this._rects.map(rect => ({
-      width: rect.width,
-      height: rect.height,
-      top: rect.top + this._offsets.top,
-      left: rect.left + this._offsets.left,
-    }));
+  build() {
+    return this._rects.map((rect) => {
+      rect.top += this._offsets.top;
+      rect.left += this._offsets.left;
+      return rect;
+    });
   }
 }
