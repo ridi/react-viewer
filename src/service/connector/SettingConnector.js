@@ -29,8 +29,8 @@ class SettingConnector extends BaseConnector {
     const containerWidth = width - (containerHorizontalMargin * 2);
 
     if (contentFormat === ContentFormat.HTML) {
-      const extendedMargin = Math.ceil(containerWidth * (contentPaddingInPercent / 100));
-      return width - (extendedMargin * 2);
+      const extendedMargin = Math.ceil(width * (contentPaddingInPercent / 100));
+      return containerWidth - (extendedMargin * 2);
     }
     if (contentFormat === ContentFormat.IMAGE && viewType === ViewType.SCROLL) {
       return containerWidth;
