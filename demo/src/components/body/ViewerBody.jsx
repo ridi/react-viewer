@@ -45,9 +45,9 @@ class ViewerBody extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { isReadyToRead, actionSetContextMenu, annotations } = this.props;
+    const { isReadyToRead, annotations } = this.props;
     if (prevProps.isReadyToRead && !isReadyToRead) {
-      actionSetContextMenu(false);
+      this.setContextMenuInfo(false);
     }
     if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
       if (annotations !== prevProps.annotations) {
@@ -91,7 +91,6 @@ class ViewerBody extends React.Component {
       actionAddAnnotation,
       actionSetAnnotation,
       actionRemoveAnnotation,
-      actionSetContextMenu,
     } = this.props;
     const {
       id,
@@ -113,22 +112,20 @@ class ViewerBody extends React.Component {
       actionSetAnnotation(updateSelection);
     }
     EventBus.emit(Events.END_SELECTION);
-    actionSetContextMenu(false);
+    this.setContextMenuInfo(false);
   }
 
   onReaderAnnotationTouched(annotation) {
-    const { actionSetContextMenu } = this.props;
-    actionSetContextMenu(true, annotation);
+    this.setContextMenuInfo(true, annotation);
   }
 
   onReaderSelectionChanged({ selection, selectionMode }) {
     const {
       actionAddAnnotation,
-      actionSetContextMenu,
     } = this.props;
 
     if (selectionMode === SelectionMode.USER_SELECTION) {
-      return actionSetContextMenu(true, selection);
+      return this.setContextMenuInfo(true, selection);
     }
     if (selectionMode === SelectionMode.AUTO_HIGHLIGHT) {
       const {
@@ -138,9 +135,20 @@ class ViewerBody extends React.Component {
       } = selection;
       actionAddAnnotation(others);
       EventBus.emit(Events.END_SELECTION);
-      return actionSetContextMenu(false);
+      return this.setContextMenuInfo(false);
     }
-    return actionSetContextMenu(false);
+    return this.setContextMenuInfo(false);
+  }
+
+  setContextMenuInfo(isVisible, targetSelection = null) {
+    const { actionSetContextMenu } = this.props;
+    let target = null;
+    if (targetSelection) {
+      const { rects, ...others } = targetSelection;
+      const lastRect = rects.length > 0 ? rects[rects.length - 1] : null;
+      target = { ...others, position: lastRect ? { top: lastRect.top + lastRect.height, left: lastRect.left + lastRect.width } : null };
+    }
+    actionSetContextMenu(isVisible, target);
   }
 
   renderPageButtons() {
@@ -156,13 +164,12 @@ class ViewerBody extends React.Component {
 
   renderContextMenu() {
     const { isVisible, target } = this.props.contextMenu;
-    if (!isVisible) return null;
+    if (!isVisible || !target.position) return null;
 
-    const lastRect = target.rects.length > 0 ? target.rects[target.rects.length - 1] : null;
     return (
       <SelectionContextMenu
-        top={lastRect.top + lastRect.height}
-        left={lastRect.left + lastRect.width}
+        top={target.position.top}
+        left={target.position.left}
         targetItem={target}
         onClickItem={this.onContentMenuItemClicked}
       />

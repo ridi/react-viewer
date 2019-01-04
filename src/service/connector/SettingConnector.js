@@ -1,7 +1,6 @@
 import BaseConnector from './BaseConnector';
 import { screenHeight, screenWidth } from '../../util/BrowserWrapper';
 import {
-  CHAPTER_INDICATOR_ID_PREFIX,
   CHAPTER_ID_PREFIX,
   DEFAULT_FONT,
 } from '../../constants/StyledConstants';
@@ -144,10 +143,6 @@ class SettingConnector extends BaseConnector {
 
   getScrollingContentGap(withUnit = false) {
     return withUnit ? '50px' : 50;
-  }
-
-  getChapterIndicatorId(chapterNum) {
-    return `${CHAPTER_INDICATOR_ID_PREFIX}${chapterNum}`;
   }
 
   getChapterId(chapterNum) {

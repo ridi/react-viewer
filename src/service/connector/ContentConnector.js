@@ -2,10 +2,11 @@ import BaseConnector from './BaseConnector';
 import {
   setContentsByValue,
   setContentsByUri,
-  updateContent, updateContentError, setContentsInScreen,
+  updateContent,
+  updateContentError,
+  setContentsInScreen,
 } from '../../redux/action';
 import { selectReaderContentFormat, selectReaderContents, selectReaderIsContentsLoaded } from '../../redux/selector';
-import SettingConnector from './SettingConnector';
 
 class ContentConnector extends BaseConnector {
   setContentsByUri(contentFormat, bindingType, uris) {
@@ -27,10 +28,8 @@ class ContentConnector extends BaseConnector {
   setContentLoaded(index, content) {
     const contents = this.getContents();
     const isAllLoaded = contents.every(c => c.index === index || c.isContentLoaded || c.isContentOnError);
-    const isHTML = selectReaderContentFormat(this.getState());
-    const prefix = isHTML ? `<pre id="${SettingConnector.getChapterIndicatorId(index)}"></pre>` : '';
 
-    this.dispatch(updateContent(index, `${prefix}${content}`, isAllLoaded));
+    this.dispatch(updateContent(index, content, isAllLoaded));
   }
 
   setContentError(index, error) {
