@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Changed
-- Content caching with revised `<img>` tag (contains `width` and `height` property)
+## [v1.0.0-alpha.23]
+
+### Added
+- Revise images in HTML content via `@ridi/reader.js`
+- Content caching revised `<img>` tag (contains `width` and `height` property)
 
 ## [v1.0.0-alpha.22]
 
@@ -216,7 +219,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.22...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.23...HEAD
+[v1.0.0-alpha.23]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.22...1.0.0-alpha.23
 [v1.0.0-alpha.22]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...1.0.0-alpha.22
 [v1.0.0-alpha.21]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.20...1.0.0-alpha.21
 [v1.0.0-alpha.20]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.20
