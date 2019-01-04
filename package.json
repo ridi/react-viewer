@@ -33,7 +33,7 @@
     "url": "git+https://github.com/ridi/react-viewer.git"
   },
   "dependencies": {
-    "@ridi/reader.js": "^2.0.0-alpha.7",
+    "@ridi/reader.js": "^2.0.0-alpha.8",
     "prop-types": "^15.6.2",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",

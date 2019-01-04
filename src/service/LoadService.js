@@ -29,6 +29,7 @@ class LoadService extends BaseService {
     this.connectEvents(this.onContentError.bind(this), Events.CONTENT_ERROR);
     this.connectEvents(this.onContentSetByUri.bind(this), Events.SET_CONTENTS_BY_URI);
     this.connectEvents(this.onContentSetByValue.bind(this), Events.SET_CONTENTS_BY_VALUE);
+    this.connectEvents(this.onContentUpdated.bind(this), Events.UPDATE_CONTENT);
     if (contents && contents.length > 0 && metadata) {
       Connector.content.setContentsByValue(metadata.format, metadata.binding, contents.map(c => c.content));
     }
@@ -107,6 +108,13 @@ class LoadService extends BaseService {
     ).subscribe((setting) => {
       Connector.setting.updateSetting(setting);
       EventBus.emit(Events.SETTING_UPDATED, setting);
+    });
+  }
+
+  onContentUpdated(contentUpdated$) {
+    return contentUpdated$.subscribe(({ data }) => {
+      const { index, content } = data;
+      Connector.content.updateContent(index, content);
     });
   }
 }

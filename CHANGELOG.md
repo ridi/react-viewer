@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- Content caching with revised `<img>` tag (contains `width` and `height` property)
+
 ## [v1.0.0-alpha.22]
 
 ### Added

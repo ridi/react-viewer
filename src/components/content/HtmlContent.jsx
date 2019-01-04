@@ -5,14 +5,11 @@ import Connector from '../../service/connector';
 import { addEventListener } from '../../util/EventHandler';
 import BaseContent from './BaseContent';
 import EventBus, { Events } from '../../event';
+import ReaderJsHelper from '../../service/readerjs/ReaderJsHelper';
 
 class HtmlContent extends BaseContent {
-  constructor(props) {
-    super(props);
-
-    this.contentRef = React.createRef();
-    this.listener = null;
-  }
+  contentRef = React.createRef();
+  listener = null;
 
   componentDidMount() {
     super.componentDidMount();
@@ -39,17 +36,20 @@ class HtmlContent extends BaseContent {
     const { contentFooter, forwardedRef } = this.props;
     const { index } = this.props.content;
     if (!this.listener) {
-      const { current } = forwardedRef;
+      const { current: wrapperRef } = forwardedRef;
+      const { current: contentRef } = this.contentRef;
       this.listener = this.waitForResources()
         .then(() => {
-          if (!current.isConnected) return;
-          EventBus.emit(Events.CALCULATE_CONTENT, { index, contentNode: current, contentFooterNode: contentFooter });
+          if (!wrapperRef.isConnected) return;
+          EventBus.emit(Events.CALCULATE_CONTENT, { index, contentNode: wrapperRef, contentFooterNode: contentFooter });
+          EventBus.emit(Events.UPDATE_CONTENT, { index, content: contentRef.innerHTML });
         });
     }
   }
 
   waitForResources() {
     // images
+    const { index } = this.props.content;
     const images = [...this.contentRef.current.querySelectorAll('img')]
       .filter(img => !img.complete)
       .map(img => new Promise((resolve) => {
@@ -61,18 +61,20 @@ class HtmlContent extends BaseContent {
     if (document.fonts && document.fonts.ready) {
       fonts.push(document.fonts.ready);
     }
-    return Promise.all([...images, ...fonts]);
+    return Promise.all([...images, ...fonts])
+      .then(() => new Promise(resolve => ReaderJsHelper.get(index).content.reviseImages(resolve)));
   }
 
-  renderContent(contentPrefix = '') {
+  renderContent() {
     const { content } = this.props.content;
-    const { contentFooter, className, children } = this.props;
+    const { contentFooter, children } = this.props;
+
     return (
       <>
         <section
           ref={this.contentRef}
-          className={`content_container ${className}`}
-          dangerouslySetInnerHTML={{ __html: `${contentPrefix} ${content}` }}
+          className="content_container"
+          dangerouslySetInnerHTML={{ __html: content }}
         />
         {contentFooter}
         {children}
@@ -83,7 +85,6 @@ class HtmlContent extends BaseContent {
   render() {
     const { index } = this.props.content;
     const { startOffset, StyledContent, forwardedRef } = this.props;
-    const prefix = `<pre id="${Connector.setting.getChapterIndicatorId(index)}"></pre>`;
     return (
       <StyledContent
         id={`${Connector.setting.getChapterId(index)}`}
@@ -93,7 +94,7 @@ class HtmlContent extends BaseContent {
         startOffset={startOffset}
         innerRef={forwardedRef}
       >
-        {this.renderContent(prefix)}
+        {this.renderContent()}
       </StyledContent>
     );
   }
@@ -101,7 +102,6 @@ class HtmlContent extends BaseContent {
 
 HtmlContent.defaultProps = {
   contentFooter: null,
-  className: '',
   StyledContent: () => {},
   children: null,
   forwardedRef: React.createRef(),
@@ -109,7 +109,6 @@ HtmlContent.defaultProps = {
 
 HtmlContent.propTypes = {
   content: ContentType,
-  className: PropTypes.string,
   startOffset: PropTypes.number.isRequired,
   contentFooter: PropTypes.node,
   isCalculated: PropTypes.bool.isRequired,

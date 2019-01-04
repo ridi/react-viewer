@@ -19,6 +19,7 @@ export const ALL_CONTENT_LOADED = Symbol('ALL_CONTENT_LOADED');
 
 export const SET_CONTENTS_BY_URI = Symbol('SET_CONTENTS_BY_URI'); // { contentFormat, bindingType, uris }
 export const SET_CONTENTS_BY_VALUE = Symbol('SET_CONTENTS_BY_VALUE'); // { contentFormat, bindingType, contents }
+export const UPDATE_CONTENT = Symbol('UPDATE_CONTENT');
 
 export const END_SELECTION = Symbol('END_SELECTION');
 
