@@ -6,11 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.22]
+
+### Added
+- Added more events related with annotation
+
 ### Fixed
 - Give more accurate meaning to `calculations.contents[].isCalculated` in Redux
+- Fix `SettingConnector.getContainerWidthInternal()` calculation 
 
 ### Changed
 - Selection(Annotation) property renaming: `style` -> `color`
+- Make RxJS-based `SelectionStore` replacing with Redux-based `SelectionConnector`
 
 ## [v1.0.0-alpha.21]
 
@@ -206,8 +213,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...HEAD
-[v1.0.0-alpha.21]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.21
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.22...HEAD
+[v1.0.0-alpha.22]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...1.0.0-alpha.22
+[v1.0.0-alpha.21]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.20...1.0.0-alpha.21
 [v1.0.0-alpha.20]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.18...1.0.0-alpha.20
 [v1.0.0-alpha.18]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.17...1.0.0-alpha.18
 [v1.0.0-alpha.17]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.16...1.0.0-alpha.17
