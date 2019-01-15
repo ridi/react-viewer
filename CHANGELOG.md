@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.24]
+
+### Fixed
+- Invalidate all calculations after `SET_ANNOTATIONS` event is occurred
+
 ## [v1.0.0-alpha.23]
 
 ### Added
@@ -219,7 +224,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.23...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.24...HEAD
+[v1.0.0-alpha.24]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.23...1.0.0-alpha.24
 [v1.0.0-alpha.23]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.22...1.0.0-alpha.23
 [v1.0.0-alpha.22]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...1.0.0-alpha.22
 [v1.0.0-alpha.21]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.20...1.0.0-alpha.21
