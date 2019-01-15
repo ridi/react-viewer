@@ -1,6 +1,6 @@
 import { merge } from 'rxjs';
 import {
-  map,
+  map, tap,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
@@ -18,7 +18,7 @@ class SelectionService extends BaseService {
   load() {
     super.load();
     this.connectEvents(this.onAnnotationCalculationNeeded.bind(this),
-      Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED);
+      Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED, Events.SET_ANNOTATIONS);
     this.connectEvents(this.onAnnotationsSet.bind(this),
       Events.SET_ANNOTATIONS, Events.ADD_ANNOTATION, Events.UPDATE_ANNOTATION, Events.REMOVE_ANNOTATION);
     this.connectEvents(this.onSelectionEnd.bind(this), Events.END_SELECTION);
@@ -39,11 +39,12 @@ class SelectionService extends BaseService {
     }
   }
 
-  onAnnotationCalculationNeeded(scroll$, moved$, annotationAdded$) {
+  onAnnotationCalculationNeeded(scroll$, moved$, annotationAdded$, annotationSet$) {
     return merge(
       scroll$,
       moved$,
       annotationAdded$,
+      annotationSet$.pipe(tap(() => AnnotationStore.invalidateCalculations())),
     ).subscribe(() => {
       const contentIndexes = Connector.content.getContentsInScreen();
 
