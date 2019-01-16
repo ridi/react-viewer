@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.25]
+
+### Fixed
+- Fix issue window resizing cannot trigger recalculation on image + scroll view mode
+
 ## [v1.0.0-alpha.24]
 
 ### Fixed
@@ -224,7 +229,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.24...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.25...HEAD
+[v1.0.0-alpha.25]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.24...1.0.0-alpha.25
 [v1.0.0-alpha.24]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.23...1.0.0-alpha.24
 [v1.0.0-alpha.23]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.22...1.0.0-alpha.23
 [v1.0.0-alpha.22]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.21...1.0.0-alpha.22
