@@ -6,13 +6,11 @@ import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
+  selectReaderIsAllCalculated,
 } from '../../redux/selector';
 import {
-  setScrollTop, waitThenRun,
+  setScrollTop, waitContentResources, waitThenRun,
 } from '../../util/BrowserWrapper';
-import {
-  addEventListener,
-} from '../../util/EventHandler';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
   mapStateToProps as readerBaseScreenMapStateToProps,
@@ -36,10 +34,22 @@ class ImageScrollScreen extends BaseScreen {
       .subscribe(event => EventBus.emit(Events.SCROLL, event));
     EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
 
-    if (!this.listener) {
-      const { contentFooter } = this.props;
-      const { current } = this.wrapper;
-      this.listener = this.waitForResources()
+    const { contentFooter, isAllCalculated } = this.props;
+    const { current } = this.wrapper;
+    if (!isAllCalculated) {
+      waitContentResources(current)
+        .then(() => {
+          if (!current.isConnected) return;
+          EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
+        });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { contentFooter, isAllCalculated } = this.props;
+    const { current } = this.wrapper;
+    if (prevProps.isAllCalculated && !isAllCalculated) {
+      waitContentResources(current)
         .then(() => {
           if (!current.isConnected) return;
           EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
@@ -54,17 +64,6 @@ class ImageScrollScreen extends BaseScreen {
       this.scrollEventSubscription.unsubscribe();
       this.scrollEventSubscription = null;
     }
-  }
-
-  waitForResources() {
-    // images
-    const images = [...this.wrapper.current.querySelectorAll('img')]
-      .filter(img => !img.complete)
-      .map(img => new Promise((resolve) => {
-        addEventListener(img, 'load', () => resolve());
-        addEventListener(img, 'error', () => resolve());
-      }));
-    return Promise.all([...images]);
   }
 
   moveToOffset(offset) {
@@ -91,11 +90,13 @@ class ImageScrollScreen extends BaseScreen {
     const {
       current,
       contentFooter,
+      isAllCalculated,
     } = this.props;
 
     return (
       <ImageContent
         key={`${content.uri}:${content.index}`}
+        isCalculated={isAllCalculated}
         content={content}
         currentOffset={current.offset}
         src={content.uri || content.content}
@@ -136,6 +137,7 @@ ImageScrollScreen.propTypes = {
   actionUpdateContentError: PropTypes.func.isRequired,
   footerCalculations: FooterCalculationsType.isRequired,
   contentFooter: PropTypes.node,
+  isAllCalculated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -144,6 +146,7 @@ const mapStateToProps = state => ({
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
+  isAllCalculated: selectReaderIsAllCalculated(state),
 });
 
 const mapDispatchToProps = dispatch => ({
