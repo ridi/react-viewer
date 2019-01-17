@@ -12,6 +12,7 @@ import Reader, {
   selectReaderSetting,
   unload,
   ViewType,
+  TouchEvent,
 } from '@ridi/react-viewer';
 import { selectAnnotations, selectContextMenu } from '../../redux/Viewer.selector';
 import ViewerScreenFooter from '../footers/ViewerScreenFooter';
@@ -37,7 +38,6 @@ class ViewerBody extends React.Component {
   componentDidMount() {
     EventBus.on(Events.SCROLL, this.onReaderScrolled.bind(this), this);
     EventBus.on(Events.TOUCH, this.onReaderTouched.bind(this), this);
-    EventBus.on(Events.TOUCH_ANNOTATION, this.onReaderAnnotationTouched.bind(this), this);
     EventBus.on(Events.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
     if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {
       EventBus.emit(Events.SET_ANNOTATIONS, this.props.annotations);
@@ -66,6 +66,9 @@ class ViewerBody extends React.Component {
   }
 
   onReaderTouched(event) {
+    if (event.type === TouchEvent.TouchAnnotation) {
+      return this.onReaderAnnotationTouched(event);
+    }
     try {
       const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
       if (link) {
@@ -115,8 +118,8 @@ class ViewerBody extends React.Component {
     this.setContextMenuInfo(false);
   }
 
-  onReaderAnnotationTouched(annotation) {
-    this.setContextMenuInfo(true, annotation);
+  onReaderAnnotationTouched({ detail }) {
+    this.setContextMenuInfo(true, detail.annotation);
   }
 
   onReaderSelectionChanged({ selection, selectionMode }) {

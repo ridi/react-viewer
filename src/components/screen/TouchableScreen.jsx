@@ -5,12 +5,13 @@ import {
   preventScrollEvent,
   allowScrollEvent,
   addEventListener,
-  removeEventListener,
+  removeEventListener, CustomEvent,
 } from '../../util/EventHandler';
 import { ViewType, SELECTION_BASE_CONTENT } from '../../constants/SettingConstants';
 import SelectionLayer from '../selection/SelectionLayer';
 import TouchEventHandler from '../../util/event/TouchEventHandler';
 import { SelectionMode, SelectionParts } from '../../constants/SelectionConstants';
+import { TouchEvent } from '../../constants/TouchEventConstants';
 import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 import EventBus, { Events } from '../../event';
 import AnnotationStore from '../../store/AnnotationStore';
@@ -46,11 +47,11 @@ class TouchableScreen extends React.Component {
   componentDidMount() {
     const { current: node } = this.props.forwardedRef;
     if (this.isSelectable()) {
-      addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
-      addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
-      addEventListener(node, TouchEventHandler.EVENT_TYPE.TouchEnd, this.handleTouchEvent);
+      addEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
+      addEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
+      addEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
     }
-    addEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
+    addEventListener(node, TouchEvent.Touch, this.handleTouchEvent);
     this.touchHandler = new TouchEventHandler(node);
     this.touchHandler.attach();
     this.handleScrollEvent();
@@ -64,11 +65,11 @@ class TouchableScreen extends React.Component {
     const { current: node } = this.isSelectable() ? this.selectionRef : this.props.forwardedRef;
     this.touchHandler.detach();
     if (this.isSelectable()) {
-      removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchStart, this.handleTouchEvent);
-      removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchMove, this.handleTouchEvent);
-      removeEventListener(node, TouchEventHandler.EVENT_TYPE.TouchEnd, this.handleTouchEvent);
+      removeEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
+      removeEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
+      removeEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
     }
-    removeEventListener(node, TouchEventHandler.EVENT_TYPE.Touch, this.handleTouchEvent);
+    removeEventListener(node, TouchEvent.Touch, this.handleTouchEvent);
     this.handleScrollEvent(true);
   }
 
@@ -101,17 +102,19 @@ class TouchableScreen extends React.Component {
     } = event.detail;
 
     const selectionPart = target.dataset.type;
-    if (event.type === TouchEventHandler.EVENT_TYPE.Touch) {
+    if (event.type === TouchEvent.Touch) {
       SelectionStore.end();
 
       const annotation = AnnotationStore.getByPoint(pageX, pageY);
       if (annotation) {
-        EventBus.emit(Events.TOUCH_ANNOTATION, annotation);
+        EventBus.emit(Events.TOUCH, new CustomEvent(TouchEvent.TouchAnnotation, {
+          detail: { ...event.detail, annotation },
+        }));
       } else {
         EventBus.emit(Events.TOUCH, event);
       }
     } else if (selectable) {
-      if (event.type === TouchEventHandler.EVENT_TYPE.TouchStart) {
+      if (event.type === TouchEvent.TouchStart) {
         this.currentTouchStartPart = selectionPart;
         if (SelectionStore.selectionMode !== SelectionMode.USER_SELECTION) {
           let current = Connector.current.getCurrent();
@@ -120,7 +123,7 @@ class TouchableScreen extends React.Component {
           }
           SelectionStore.start(x, y, current.contentIndex, current.position);
         }
-      } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchMove) {
+      } else if (event.type === TouchEvent.TouchMove) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {
           SelectionStore.expandIntoUpper(x, y, SelectionMode.USER_SELECTION);
         } else if (this.currentTouchStartPart === SelectionParts.LOWER_HANDLE) {
@@ -129,7 +132,7 @@ class TouchableScreen extends React.Component {
           SelectionStore.expandIntoLower(x, y);
         }
         this.handleTouchMoveInEdge(event);
-      } else if (event.type === TouchEventHandler.EVENT_TYPE.TouchEnd) {
+      } else if (event.type === TouchEvent.TouchEnd) {
         if (this.currentTouchStartPart === SelectionParts.UPPER_HANDLE) {
           SelectionStore.expandIntoUpper(x, y, SelectionMode.USER_SELECTION);
         } else if (this.currentTouchStartPart === SelectionParts.LOWER_HANDLE) {

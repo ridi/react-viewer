@@ -5,15 +5,9 @@ import {
   removeEventListener,
   CustomEvent,
 } from '../EventHandler';
+import { TouchEvent } from '../../constants/TouchEventConstants';
 
 export default class TouchEventHandler {
-  static EVENT_TYPE = {
-    Touch: 'ReaderTouch',
-    TouchStart: 'ReaderTouchStart',
-    TouchMove: 'ReaderTouchMove',
-    TouchEnd: 'ReaderTouchEnd',
-  };
-
   static DELAY_FOR_TOUCHMOVE = 300;
 
   constructor(element) {
@@ -89,13 +83,13 @@ export default class TouchEventHandler {
     this.isTouchMode = event.type === DOMEventConstants.TOUCH_START;
     this.startTime = Date.now();
     this.isStarted = true;
-    this.addEvent(TouchEventHandler.EVENT_TYPE.TouchStart, event);
+    this.addEvent(TouchEvent.TouchStart, event);
   }
 
   move(event) {
     if (!this.isStarted || this.ignoreEvent(event)) return;
 
-    this.addEvent(TouchEventHandler.EVENT_TYPE.TouchMove, event);
+    this.addEvent(TouchEvent.TouchMove, event);
     if (Date.now() - this.startTime >= TouchEventHandler.DELAY_FOR_TOUCHMOVE) {
       this.emitEvents();
     }
@@ -106,10 +100,10 @@ export default class TouchEventHandler {
     if (!this.isStarted || this.ignoreEvent(event)) return;
 
     if (Date.now() - this.startTime >= TouchEventHandler.DELAY_FOR_TOUCHMOVE) {
-      this.addEvent(TouchEventHandler.EVENT_TYPE.TouchEnd, event);
+      this.addEvent(TouchEvent.TouchEnd, event);
     } else {
       this.resetEvent();
-      this.addEvent(TouchEventHandler.EVENT_TYPE.Touch, event);
+      this.addEvent(TouchEvent.Touch, event);
     }
     this.emitEvents();
     this.init();
