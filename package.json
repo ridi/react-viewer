@@ -1,6 +1,6 @@
 {
   "name": "@ridi/react-viewer",
-  "version": "1.0.0-alpha.25",
+  "version": "1.0.0-alpha.26",
   "license": "MIT",
   "description": "React-Redux based viewer for EPUB and comics",
   "main": "index.js",
