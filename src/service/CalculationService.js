@@ -18,9 +18,10 @@ import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { screenHeight, screenWidth } from '../util/BrowserWrapper';
 import AnnotationStore from '../store/AnnotationStore';
+import ReaderJsHelper from './readerjs/ReaderJsHelper';
 
 class CalculationService extends BaseService {
-  settingsAffectingCalculation = [
+  static settingsAffectingCalculation = [
     'viewType',
     'font',
     'fontSizeInPx',
@@ -34,6 +35,10 @@ class CalculationService extends BaseService {
     'containerVerticalMargin',
     'maxWidth',
   ];
+
+  static defaultConfigs = {
+    beforeContentCalculated: (/* contentIndex, readerJsHelper */) => Promise.resolve(),
+  };
 
   _getCalculationTargetContents() {
     const contentCountAtATime = 4;
@@ -112,8 +117,8 @@ class CalculationService extends BaseService {
     );
   }
 
-  load() {
-    super.load();
+  load(_, config) {
+    this.config = { ...CalculationService.defaultConfigs, ...config };
     this.connectEvents(this.onCalculateContent.bind(this), Events.CALCULATE_CONTENT);
     this.connectEvents(this.onCalculationNeeded.bind(this), Events.ALL_CONTENT_LOADED, Events.RESIZE, Events.SETTING_UPDATED);
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
@@ -145,7 +150,7 @@ class CalculationService extends BaseService {
         distinctUntilChanged(({ w: bw, h: bh }, { w: aw, h: ah }) => bw === aw && bh === ah),
       ),
       updateSetting$.pipe(
-        filter(settingName => !this.settingsAffectingCalculation.includes(settingName)),
+        filter(settingName => !CalculationService.settingsAffectingCalculation.includes(settingName)),
       ),
     ).pipe(
       tap(() => EventBus.emit(Events.CALCULATION_INVALIDATED)),
@@ -163,6 +168,9 @@ class CalculationService extends BaseService {
     return calculateContent$.pipe(
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
+      mergeMap(({ index, total }) => of(this.config.beforeContentCalculated(index, ReaderJsHelper.get(index))).pipe(
+        map(() => ({ index, total })),
+      )),
     ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));
   }
 

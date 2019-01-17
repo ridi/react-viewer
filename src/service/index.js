@@ -15,9 +15,9 @@ export const unloadAll = () => {
   services.forEach(service => service.unload());
 };
 
-export const loadAll = (restoreState) => {
-  services.forEach(service => service.load(restoreState));
-  services.forEach(service => service.afterLoaded(restoreState));
+export const loadAll = (restoreState, config = {}) => {
+  services.forEach(service => service.load(restoreState, config));
+  services.forEach(service => service.afterLoaded(restoreState, config));
 };
 
 export default {
