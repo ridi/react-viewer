@@ -41,7 +41,8 @@ class ImageScrollScreen extends BaseScreen {
         .then(() => {
           if (!current.isConnected) return;
           EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
-        });
+        })
+        .catch(() => { /* ignore */ });
     }
   }
 
@@ -53,7 +54,8 @@ class ImageScrollScreen extends BaseScreen {
         .then(() => {
           if (!current.isConnected) return;
           EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
-        });
+        })
+        .catch(() => { /* ignore */ });
     }
   }
 

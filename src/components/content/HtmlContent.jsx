@@ -39,12 +39,20 @@ class HtmlContent extends BaseContent {
       const { current: wrapperRef } = forwardedRef;
       const { current: contentRef } = this.contentRef;
       this.listener = waitContentResources(contentRef)
-        .then(() => new Promise(resolve => ReaderJsHelper.get(index).content.reviseImages(resolve)))
+        .then(() => new Promise((resolve) => {
+          try {
+            ReaderJsHelper.get(index).content.reviseImages(resolve);
+          } catch (e) {
+            /* ignore */
+            resolve();
+          }
+        }))
         .then(() => {
           if (!wrapperRef.isConnected) return;
           EventBus.emit(Events.CALCULATE_CONTENT, { index, contentNode: wrapperRef, contentFooterNode: contentFooter });
           EventBus.emit(Events.UPDATE_CONTENT, { index, content: contentRef.innerHTML });
-        });
+        })
+        .catch(() => { /* ignore */ });
     }
   }
 
