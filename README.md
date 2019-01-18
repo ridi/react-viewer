@@ -55,8 +55,6 @@ export default ViewerPage extends React.Component {
 
 `Reader`'s properties:
 
-* `onMount`(func): called after reader is mounted
-* `onUnmount`(func): called after reader is unmounted
 * `footer`(node): markup for the footer area
 * `contentFooter`(node): markup for the content footer area
 * `selectable`(boolean): set reader to be selectable
@@ -65,12 +63,69 @@ export default ViewerPage extends React.Component {
 
 ### Events
 
-* `Events.SCROLL`: Screen is scrolled
-* `Events.TOUCH`: Screen is touched
-* `Events.TOUCH_ANNOTATION`: An annotation item is touched
-* `Events.CHANGE_SELECTION`: Current selection is changed
-* `Events.MOUNTED`: `<Reader>` has been mounted
-* `Events.UNMOUNTED`: `<Reader>` has been unmounted
+Below events can be used with `EventBus` 
+
+```js
+import { EventBus, Events, TouchEvent } from '@ridi/react-viewer';
+
+EventBus.on(Events.TOUCH, (event) => {
+  const { clientX, clientY, annotation } = event.detail;
+  if (event.type === TouchEvent.TouchAnnotation) {
+    console.log(annotation);
+  } else {
+    console.log(clientX, clientY);
+  }
+});
+
+EventBus.emit(Events.SET_CONTENTS_BY_URI, { ... });
+```
+
+* `Events.SET_CONTENTS_BY_URI` (emmitable): Check out [Render Contents](#render-contents) section for more details
+  - params:
+    - `data`(`Object`)
+      - `contentFormat`(`ContentFormat`)
+      - `bindingType`(`BindingType`)
+      - `uris`(`Array`): Array of uri to fetch content
+* `Events.SET_CONTENTS_BY_VALUE` (emmitable): Check out [Render Contents](#render-contents) section for more details
+  - params:
+    - `data`(`Object`)
+      - `contentFormat`(`ContentFormat`)
+      - `bindingType`(`BindingType`)
+      - `contents`(`Array`): Array of HTML document(`contentFormat` === `ContentFormat.HTML`) or base64 encoded image source(`contentFormat` === `ContentFormat.IMAGE`)
+* `Events.SCROLL`(listenable): Screen is scrolled
+  - params:
+    - `event`(`ScrollEvent`)
+* `Events.TOUCH`(listenable): Screen is touched (or annotation is touched)
+  - params:
+    - `event`(`TouchEvent`)
+      - `type`(`TouchEvent`): `TouchEvent.Touch` or `TouchEvent.AnnotationTouch`
+      - `detail`
+        - `screenX`
+        - `screenY`
+        - `clientX`
+        - `clientY`
+        - `pageX`
+        - `pageY`
+        - `type`: original event type
+        - `target`: original event target
+        - `annotation`: annotation info
+* `Events.CHANGE_SELECTION`(listenable): Current selection is changed
+  - params:
+    - `event`(`Object`)
+      - `selection`: selection info
+      - `selectionMode`(`SelectionMode`)
+* `Events.MOUNTED`(listenable): `<Reader>` has been mounted
+* `Events.UNMOUNTED`(listenable): `<Reader>` has been unmounted
+
+### Hooks
+
+You would use hooks when you want to intercept some point of reader's lifecycle.
+Hook implementations can return value in any forms compatible with [RxJS's ObservableInput](https://rxjs-dev.firebaseapp.com/api/index/type-alias/ObservableInput). 
+
+* `beforeContentCalculated`: executed just right before per content calculation is completed
+  * params:
+    * `contentIndex`(number): index number of current calculating content
+    * `readerJsHelper`(`ReaderJsHelper`): `ReaderJsHelper` instance mounted on this current calculating content
 
 ### Render Contents
 
