@@ -1,4 +1,9 @@
-import { merge, of, timer } from 'rxjs';
+import {
+  merge,
+  of,
+  from,
+  timer,
+} from 'rxjs';
 import {
   filter,
   tap,
@@ -168,7 +173,7 @@ class CalculationService extends BaseService {
     return calculateContent$.pipe(
       mergeMap(({ data }) => this._calculateContent(data)),
       tap(({ index, total }) => Connector.calculations.setContentTotal(index, total)),
-      mergeMap(({ index, total }) => of(this.config.beforeContentCalculated(index, ReaderJsHelper.get(index))).pipe(
+      mergeMap(({ index, total }) => from(this.config.beforeContentCalculated(index, ReaderJsHelper.get(index))).pipe(
         map(() => ({ index, total })),
       )),
     ).subscribe(({ index, total }) => EventBus.emit(Events.CALCULATION_UPDATED, { index, total }));

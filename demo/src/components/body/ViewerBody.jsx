@@ -67,7 +67,8 @@ class ViewerBody extends React.Component {
 
   onReaderTouched(event) {
     if (event.type === TouchEvent.TouchAnnotation) {
-      return this.onReaderAnnotationTouched(event);
+      this.onReaderAnnotationTouched(event);
+      return;
     }
     try {
       const link = ReaderJsHelper.getCurrent().content.getLinkFromElement(event.detail.target);
