@@ -115,6 +115,14 @@ class ReaderJsWrapper {
   getRectsFromSerializedRange(serializedRange) {
     return this.readerJs.getRectsFromSerializedRange(serializedRange);
   }
+
+  getOffsetFromSerializedRange(serializedRange) {
+    return this.readerJs.getOffsetFromSerializedRange(serializedRange);
+  }
+
+  getOffsetFromAnchor(anchor) {
+    return this.readerJs.getOffsetFromAnchor(anchor);
+  }
 }
 
 export default class ReaderJsHelper {
