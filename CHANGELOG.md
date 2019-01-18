@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.27]
+
+### Added
+
+- Add `getOffsetFromSerializedRange` and `getOffsetFromAnchor` methods to `ReaderJsHelper`
+- Add a hook `beforeContentCalculated` for calculation service
+
+### Fixed
+
+- Fix SelectionLayer(svg) layer style
+- Prevent uncaught errors from Promise
+
 ## [v1.0.0-alpha.26]
 
 ### Changed
@@ -235,7 +247,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.26...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.27...HEAD
+[v1.0.0-alpha.27]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.26...1.0.0-alpha.27
 [v1.0.0-alpha.26]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.25...1.0.0-alpha.26
 [v1.0.0-alpha.25]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.24...1.0.0-alpha.25
 [v1.0.0-alpha.24]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.23...1.0.0-alpha.24

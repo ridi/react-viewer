@@ -37,15 +37,17 @@ const store = createStore( ... );
 Connector.connect(store);
 ```
 
-### `Reader` Component
+### Quick start
 
-`Reader` component provides all functionality of viewer and renders viewer body.
+`Service` must be loaded for initializing Reader's lifecycle.
 
-Put `Reader` component into your component.
+And put `Reader` component into your component.
+
 ```js
 import React from 'react';
-import Reader from '@ridi/react-viewer';
+import Reader, { Service } from '@ridi/react-viewer';
 
+Service.loadAll();
 export default ViewerPage extends React.Component {
     render() {
         return <Reader />;
@@ -53,13 +55,27 @@ export default ViewerPage extends React.Component {
 };
 ```
 
-`Reader`'s properties:
+#### `Service`
+
+- `loadAll`
+  - params:
+    - `restoreState`(`Object`): state object for restoring redux store
+    - `config`(`Object`)
+      - `beforeContentCalculated`: Check out [Hooks](#hooks) section for more details
+
+#### `<Reader>` Component
+
+`Reader` component provides all functionality of viewer and renders viewer body.
+
+Here are `Reader`'s properties:
 
 * `footer`(node): markup for the footer area
 * `contentFooter`(node): markup for the content footer area
 * `selectable`(boolean): set reader to be selectable
 * `annotationable`(boolean): set reader to be annotationable
 * `annotations`(array): annotation list is composed of items that has distinct `id` property. 
+
+
 
 ### Events
 
