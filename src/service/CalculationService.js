@@ -43,6 +43,7 @@ class CalculationService extends BaseService {
 
   static defaultConfigs = {
     beforeContentCalculated: (/* contentIndex, readerJsHelper */) => Promise.resolve(),
+    afterContentCalculated: (/* calculations */) => Promise.resolve(),
   };
 
   _getCalculationTargetContents() {
@@ -83,6 +84,8 @@ class CalculationService extends BaseService {
 
     Connector.calculations.setCalculationsTotal(calculatedTotal, completed);
     if (completed) EventBus.emit(Events.CALCULATION_COMPLETED);
+
+    return cache;
   }
 
   _calculateContent({ index, contentNode, contentFooterNode }) {
@@ -180,7 +183,10 @@ class CalculationService extends BaseService {
   }
 
   onCalculated(calculationUpdated$) {
-    return calculationUpdated$.subscribe(({ index, total }) => this._checkAllCompleted({ index, total }));
+    return calculationUpdated$.pipe(
+      map(({ index, total }) => this._checkAllCompleted({ index, total })),
+      mergeMap(calculations => from(this.config.afterContentCalculated(calculations))),
+    ).subscribe();
   }
 }
 

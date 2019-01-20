@@ -135,7 +135,7 @@ EventBus.emit(Events.SET_CONTENTS_BY_URI, { ... });
 
 ### Hooks
 
-You would use hooks when you want to intercept some point of reader's lifecycle.
+You would use *hooks* when you want to intercept some point of reader's lifecycle.
 Hook implementations can return value in any forms compatible with [RxJS's ObservableInput](https://rxjs-dev.firebaseapp.com/api/index/type-alias/ObservableInput). 
 
 * `beforeContentCalculated`: executed just right before per content calculation is completed
@@ -143,17 +143,19 @@ Hook implementations can return value in any forms compatible with [RxJS's Obser
     * `contentIndex`(number): index number of current calculating content
     * `readerJsHelper`(`ReaderJsHelper`): `ReaderJsHelper` instance mounted on this current calculating content
 
+* `afterContentCalculated`: executed just right after per content calculation is completed
+  * params:
+    * `calculations`(Array): current status of calculations
+
 ### Render Contents
 
-#### `setContentsByValue` or `setContentsByUri`
+#### `Events.SET_CONTENTS_BY_URI` or `Events.SET_CONTENTS_BY_VALUE`
 
-Whole contents including metadata are set in a time.
-Dispatch `setContents(ByValue/byUri)` action with already loaded content or content's URIs.
+Whole contents with metadata must set in a time.
+Emit `Events.SET_CONTENTS_BY_(URI/VALUE)` event with URIs of contents or contents loaded already.
 
 ```js
 import {
-  setContentsByValue,
-  setContentsByUri,
   ContentFormat,
   BindingType,
   EventBus,
