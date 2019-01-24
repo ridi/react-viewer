@@ -36,7 +36,7 @@ class ViewerBody extends React.Component {
   }
 
   componentDidMount() {
-    EventBus.on(Events.SCROLL, this.onReaderScrolled.bind(this), this);
+    EventBus.on(Events.SCROLL_DEBOUNCED, this.onReaderScrolled.bind(this), this);
     EventBus.on(Events.TOUCH, this.onReaderTouched.bind(this), this);
     EventBus.on(Events.CHANGE_SELECTION, this.onReaderSelectionChanged.bind(this), this);
     if (this.props.contentMeta.contentFormat === ContentFormat.HTML) {

@@ -18,7 +18,7 @@ class SelectionService extends BaseService {
   load() {
     super.load();
     this.connectEvents(this.onAnnotationCalculationNeeded.bind(this),
-      Events.SCROLL, Events.MOVED, Events.ANNOTATION_ADDED, Events.SET_ANNOTATIONS);
+      Events.SCROLL_DEBOUNCED, Events.MOVED, Events.ANNOTATION_ADDED, Events.SET_ANNOTATIONS);
     this.connectEvents(this.onAnnotationsSet.bind(this),
       Events.SET_ANNOTATIONS, Events.ADD_ANNOTATION, Events.UPDATE_ANNOTATION, Events.REMOVE_ANNOTATION);
     this.connectEvents(this.onSelectionEnd.bind(this), Events.END_SELECTION);
@@ -39,9 +39,9 @@ class SelectionService extends BaseService {
     }
   }
 
-  onAnnotationCalculationNeeded(scroll$, moved$, annotationAdded$, annotationSet$) {
+  onAnnotationCalculationNeeded(scrollDebounced$, moved$, annotationAdded$, annotationSet$) {
     return merge(
-      scroll$,
+      scrollDebounced$,
       moved$,
       annotationAdded$,
       annotationSet$.pipe(tap(() => AnnotationStore.invalidateCalculations())),

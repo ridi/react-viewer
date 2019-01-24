@@ -1,5 +1,6 @@
 import { timer, NEVER } from 'rxjs';
 import {
+  tap,
   map,
   filter,
   debounce,
@@ -10,7 +11,7 @@ import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
 import Connector from './connector';
 import { ViewType } from '../constants/SettingConstants';
-import { screenHeight, scrollTop } from '../util/BrowserWrapper';
+import { screenHeight, scrollLeft, scrollTop } from '../util/BrowserWrapper';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX } from '../constants/CalculationsConstants';
@@ -167,8 +168,9 @@ class CurrentService extends BaseService {
     return scroll$.pipe(
       filter(() => Connector.calculations.isReadyToRead()),
       debounce(() => timer(DOMEventDelayConstants.SCROLL)),
-      map(() => scrollTop()),
-      map(scrollY => this._getCurrent(scrollY)),
+      map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
+      tap(({ scrollX, scrollY }) => EventBus.emit(Events.SCROLL_DEBOUNCED, { scrollX, scrollY })),
+      map(({ scrollY }) => this._getCurrent(scrollY)),
       distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
     ).subscribe((current) => {
       Connector.current.updateCurrent(current);

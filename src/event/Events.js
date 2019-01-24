@@ -7,6 +7,7 @@ export const MOVED = Symbol('MOVED');
 
 export const RESIZE = Symbol('RESIZE');
 export const SCROLL = Symbol('SCROLL'); // {scrollX, scrollY}
+export const SCROLL_DEBOUNCED = Symbol('SCROLL_DEBOUNCED'); // {scrollX, scrollY}
 export const TOUCH = Symbol('TOUCH'); // {event, item}
 
 export const CHANGE_SELECTION = Symbol('CHANGE_SELECTION'); // { selection, selectionMode }
