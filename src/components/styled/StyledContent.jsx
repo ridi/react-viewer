@@ -52,6 +52,12 @@ const StyledHtmlContent = () => `
   img {
     max-width: 100%;
   }
+
+  * {
+    line-height: inherit !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+  }
 `;
 
 const StyledImageContent = ({ visible }) => `
