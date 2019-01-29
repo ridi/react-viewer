@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.30]
+
+### Changed
+
+- Upgrade `@ridi/reader.js` 
+
 ## [v1.0.0-alpha.29]
 
 ### Added
@@ -259,7 +265,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.29...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.30...HEAD
+[v1.0.0-alpha.30]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.29...1.0.0-alpha.30
 [v1.0.0-alpha.29]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.28...1.0.0-alpha.29
 [v1.0.0-alpha.28]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.27...1.0.0-alpha.28
 [v1.0.0-alpha.27]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.26...1.0.0-alpha.27
