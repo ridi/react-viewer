@@ -13,10 +13,10 @@
   "dependencies": {
     "prop-types": "^15.6.2",
     "rc-slider": "^8.6.3",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",
     "store": "^2.0.12"
