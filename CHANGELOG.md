@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.32]
+
+### Changed
+
+- Renamed setting `fontSizeInPx` -> `fontSizeInEm`
+- Upgrade some dev dependencies
+
+## [v1.0.0-alpha.31]
+
+### Fixed
+
+- Fix content style
+
 ## [v1.0.0-alpha.30]
 
 ### Changed

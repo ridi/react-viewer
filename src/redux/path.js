@@ -34,7 +34,7 @@ export const initialFooterCalculationsState = () => ({
 export const initialSettingState = () => ({
   colorTheme: ReaderThemeType.WHITE,
   font: 'system',
-  fontSizeInPx: 16,       // px (12px ~ 48px)
+  fontSizeInEm: 1,       // em (0.1em ~ 5.0em)
   contentPaddingInPercent: 12, // % (0 ~ 25%)
   contentWidthInPercent: 100,  // % (50% ~ 100%)
   lineHeightInEm: 1.67,   // em (1.0 ~ 3.0)

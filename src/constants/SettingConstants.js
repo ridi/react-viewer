@@ -7,7 +7,7 @@ export const EMPTY_READ_LOCATION = '-1#-1';
 export const INVALID_PAGE = -1;
 export const INVALID_OFFSET = -1;
 
-export const FONT_SIZE_RANGE = [12.0, 48.0];
+export const FONT_SIZE_RANGE = [0.1, 5.0];
 export const CONTENT_PADDING_RANGE = [0.0, 25.0];
 export const CONTENT_WIDTH_RANGE = [50.0, 100.0];
 export const LINE_HEIGHT_RANGE = [1.0, 3.0];

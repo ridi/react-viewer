@@ -30,7 +30,7 @@ export const CurrentType = PropTypes.shape({
 export const SettingType = PropTypes.shape({
   colorTheme: PropTypes.string.isRequired,
   font: PropTypes.string.isRequired,
-  fontSizeInPx: PropTypes.number.isRequired,
+  fontSizeInEm: PropTypes.number.isRequired,
   contentPaddingInPercent: PropTypes.number.isRequired,
   contentWidthInPercent: PropTypes.number.isRequired,
   lineHeightInEm: PropTypes.number.isRequired,

@@ -9,10 +9,6 @@ const StyledBaseTouchable = styled.div`
 const StyledScrollTouchable = StyledBaseTouchable.extend``;
 const StyledPageTouchable = StyledBaseTouchable.extend`
   overflow: hidden;
-  white-space: nowrap;
-  font-size: 0px;
-  letter-spacing: 0;
-  word-spacing: 0;
   height: ${() => `${screenHeight()}px`}
 `;
 
@@ -24,4 +20,9 @@ export const StyledHtmlScrollTouchable = StyledScrollTouchable.extend`
 `;
 export const StyledImageScrollTouchable = StyledScrollTouchable.extend``;
 export const StyledHtmlPageTouchable = StyledPageTouchable.extend``;
-export const StyledImagePageTouchable = StyledPageTouchable.extend``;
+export const StyledImagePageTouchable = StyledPageTouchable.extend`
+  white-space: nowrap;
+  font-size: 0px;
+  letter-spacing: 0;
+  word-spacing: 0;
+`;

@@ -90,8 +90,8 @@ class SettingConnector extends BaseConnector {
   }
 
   getFontSize(withUnit = false) {
-    const { fontSizeInPx } = this.getSetting();
-    return withUnit ? `${fontSizeInPx}px` : fontSizeInPx;
+    const { fontSizeInEm } = this.getSetting();
+    return withUnit ? `${fontSizeInEm}em` : fontSizeInEm;
   }
 
   getLineHeight(withUnit = false) {

@@ -22,7 +22,7 @@ const NovelSpineSetting = ({ item, onChanged, setting }) => (
       title={ViewerSpinType.toString(item)}
       buttonTarget={`set_${item}`}
       value={{
-        [ViewerSpinType.FONT_SIZE]: setting.fontSizeInPx,
+        [ViewerSpinType.FONT_SIZE]: setting.fontSizeInEm,
         [ViewerSpinType.LINE_HEIGHT]: setting.lineHeightInEm,
         [ViewerSpinType.PADDING]: setting.contentPaddingInPercent,
       }[item]}

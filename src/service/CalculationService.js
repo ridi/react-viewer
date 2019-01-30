@@ -29,7 +29,7 @@ class CalculationService extends BaseService {
   static settingsAffectingCalculation = [
     'viewType',
     'font',
-    'fontSizeInPx',
+    'fontSizeInEm',
     'contentPaddingInPercent',
     'contentWidthInPercent',
     'lineHeightInEm',

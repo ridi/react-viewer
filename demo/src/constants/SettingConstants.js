@@ -14,7 +14,7 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
     _ViewerSpinType.LINE_HEIGHT,
   ],
   _STRING_MAP: {
-    [_ViewerSpinType.FONT_SIZE]: '글자 크기(px)',
+    [_ViewerSpinType.FONT_SIZE]: '글자 크기(em)',
     [_ViewerSpinType.PADDING]: '문단 좌우 패딩(%)',
     [_ViewerSpinType.LINE_HEIGHT]: '줄 간격(em)',
   },
@@ -22,13 +22,13 @@ export const ViewerSpinType = makeConstants(updateObject(_ViewerSpinType, {
   toReaderSettingType: (type) => {
     switch (type) {
       case _ViewerSpinType.FONT_SIZE:
-        return 'fontSizeInPx';
+        return 'fontSizeInEm';
       case _ViewerSpinType.PADDING:
         return 'contentPaddingInPercent';
       case _ViewerSpinType.LINE_HEIGHT:
         return 'lineHeightInEm';
       default:
-        return 'fontSizeInPx';
+        return 'fontSizeInEm';
     }
   },
 });

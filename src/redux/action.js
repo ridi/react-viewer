@@ -65,9 +65,9 @@ export const updateCurrent = current => ({
 
 export const updateSetting = (setting) => {
   const valid = {};
-  if (isExist(setting.fontSizeInPx)) {
-    valid.fontSizeInPx = Math.min(
-      Math.max(setting.fontSizeInPx, FONT_SIZE_RANGE[0]),
+  if (isExist(setting.fontSizeInEm)) {
+    valid.fontSizeInEm = Math.min(
+      Math.max(setting.fontSizeInEm, FONT_SIZE_RANGE[0]),
       FONT_SIZE_RANGE[1],
     );
   }

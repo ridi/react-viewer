@@ -38,25 +38,12 @@ const StyledHtmlContent = () => `
          local("Tahoma");
   }
 
-  font-size: ${Connector.setting.getFontSize(true)};
-  line-height: ${Connector.setting.getLineHeight(true)};
-  font-family: ${Connector.setting.getFont()};
-  
-  h1, h2, h3, h4, h5, h6, p, th, td, div, label, textarea, a, li, input, button, textarea, select, address {
-    font-size: 1em;
-    line-height: inherit;
-    font-family: inherit;
-    text-align: justify;
-  }
+  font-size: ${Connector.setting.getFontSize(true)} !important;
+  line-height: ${Connector.setting.getLineHeight(true)} !important;
+  font-family: ${Connector.setting.getFont()} !important;
   
   img {
     max-width: 100%;
-  }
-
-  * {
-    line-height: inherit !important;
-    font-size: inherit !important;
-    font-family: inherit !important;
   }
 `;
 
