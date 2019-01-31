@@ -1,6 +1,6 @@
 {
   "name": "@ridi/react-viewer",
-  "version": "1.0.0-alpha.32",
+  "version": "1.0.0-alpha.33",
   "license": "MIT",
   "description": "React-Redux based viewer for EPUB and comics",
   "main": "index.js",
@@ -33,7 +33,7 @@
     "url": "git+https://github.com/ridi/react-viewer.git"
   },
   "dependencies": {
-    "@ridi/reader.js": "^2.0.0-alpha.9",
+    "@ridi/reader.js": "^2.0.0-alpha.10",
     "prop-types": "^15.6.2",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",
