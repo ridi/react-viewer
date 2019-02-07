@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { SelectionStyleType, SelectionParts } from '../../constants/SelectionConstants';
 import SelectionHandle from './SelectionHandle';
 import Service from '../../service';
+import { screenWidth } from '../../util/BrowserWrapper';
+import { hasIntersect } from '../../util/Util';
+import SettingConnector from '../../service/connector/SettingConnector';
 
 const getRectProps = (rect, { color, style }) => {
   const defaultProps = {
@@ -31,6 +34,15 @@ const getRectProps = (rect, { color, style }) => {
     };
   }
   return defaultProps;
+};
+
+const isVisible = ({ left, width }) => {
+  const w = screenWidth();
+  const containerMargin = SettingConnector.getContainerHorizontalMargin();
+  const leftMargin = [0, containerMargin];
+  const rightMargin = [w - containerMargin, w];
+  const rect = [left, left + width];
+  return !hasIntersect(rect, leftMargin) && !hasIntersect(rect, rightMargin);
 };
 
 const Selection = ({
@@ -64,7 +76,7 @@ const Selection = ({
       )
       }
       {rects.map(rect => (
-        <rect
+        isVisible(rect) && <rect
           data-id={item.id}
           data-type={SelectionParts.TEXT}
           style={{ mixBlendMode: 'multiply' }}

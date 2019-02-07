@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - The children of `<Reader>` component are mounted regardless of status of contents loading.
+- Hide annotation's rects outside content area
 
 ## [v1.0.0-alpha.33]
 
