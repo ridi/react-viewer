@@ -104,7 +104,7 @@ export default class BaseScreen extends React.Component {
       >
         { (isContentsLoaded || contentFormat === ContentFormat.IMAGE) && this.renderContents() }
         { isContentsLoaded && this.renderFooter() }
-        { isContentsLoaded && children }
+        { children }
       </TouchableScreen>
     );
   }

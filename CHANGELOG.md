@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- The children of `<Reader>` component are mounted regardless of status of contents loading.
+
 ## [v1.0.0-alpha.33]
 
 ### Changed
