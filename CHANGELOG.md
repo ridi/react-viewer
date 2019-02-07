@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.34]
+
 ### Fixed
 
 - The children of `<Reader>` component are mounted regardless of status of contents loading.
@@ -289,7 +291,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.33...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.34...HEAD
+[v1.0.0-alpha.34]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.33...1.0.0-alpha.34
 [v1.0.0-alpha.33]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.32...1.0.0-alpha.33
 [v1.0.0-alpha.32]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.31...1.0.0-alpha.32
 [v1.0.0-alpha.31]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.30...1.0.0-alpha.31
