@@ -10,7 +10,6 @@ import {
 export const actions = {
   LOAD: 'READER:LOAD',
   UNLOAD: 'READER:UNLOAD',
-  SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
   SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
   SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
   SET_READY_TO_READ: 'READER:SET_READY_TO_READ',
@@ -37,25 +36,25 @@ export const unload = () => ({
   type: actions.UNLOAD,
 });
 
-export const setContentMetadata = (contentFormat, bindingType, contentCount) => ({
-  type: actions.SET_CONTENT_METADATA,
-  contentFormat,
-  bindingType,
-  contentCount,
-});
-
-export const setContentsByValue = (contentFormat, bindingType, contents) => ({
+export const setContentsByValue = (contentFormat, bindingType, contents, startOffset = 0) => ({
   type: actions.SET_CONTENTS_BY_VALUE,
   contentFormat,
   bindingType,
   contents: contents.map(content => ({ content, isContentLoaded: true })),
+  startOffset,
 });
 
-export const setContentsByUri = (contentFormat, bindingType, uris) => ({
+export const setContentsByUri = (contentFormat, bindingType, uris, startOffset = 0) => ({
   type: actions.SET_CONTENTS_BY_URI,
   contentFormat,
   bindingType,
-  contents: uris.map(uri => ({ uri, isContentLoaded: false })),
+  contents: uris.map((uri) => {
+    if (typeof uri === 'string') {
+      return { uri, isContentLoaded: false };
+    }
+    return { ...uri, isContentLoaded: false };
+  }),
+  startOffset,
 });
 
 export const updateCurrent = current => ({
@@ -101,11 +100,12 @@ export const updateSetting = (setting) => {
   };
 };
 
-export const updateContent = (index, content, isAllLoaded = false) => ({
+export const updateContent = (index, content, isAllLoaded = false, ratio) => ({
   type: actions.UPDATE_CONTENT,
   index,
   content,
   isAllLoaded,
+  ratio,
 });
 
 export const updateContentError = (index, error, isAllLoaded = false) => ({
@@ -115,8 +115,9 @@ export const updateContentError = (index, error, isAllLoaded = false) => ({
   isAllLoaded,
 });
 
-export const invalidateCalculations = () => ({
+export const invalidateCalculations = (startOffset = 0) => ({
   type: actions.INVALIDATE_CALCULATIONS,
+  startOffset,
 });
 
 export const updateContentCalculation = calculation => ({

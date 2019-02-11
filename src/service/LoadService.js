@@ -13,7 +13,7 @@ import BaseService from './BaseService';
 import Connector from './connector';
 import Logger from '../util/Logger';
 import { isExist } from '../util/Util';
-import { ContentFormat } from '../constants/ContentConstants';
+import { ContentFormat, PRE_CALCULATED_RATIO } from '../constants/ContentConstants';
 
 class LoadService extends BaseService {
   load({
@@ -30,11 +30,11 @@ class LoadService extends BaseService {
     this.connectEvents(this.onContentSetByUri.bind(this), Events.SET_CONTENTS_BY_URI);
     this.connectEvents(this.onContentSetByValue.bind(this), Events.SET_CONTENTS_BY_VALUE);
     this.connectEvents(this.onContentUpdated.bind(this), Events.UPDATE_CONTENT);
-    if (contents && contents.length > 0 && metadata) {
-      Connector.content.setContentsByValue(metadata.format, metadata.binding, contents.map(c => c.content));
-    }
     if (setting) {
       Connector.setting.updateSetting(setting);
+    }
+    if (contents && contents.length > 0 && metadata) {
+      Connector.content.setContentsByValue(metadata.format, metadata.binding, contents.map(c => c.content));
     }
     if (current && isExist(current.contentIndex) && isExist(current.position)) {
       Connector.current.updateCurrent(current);
@@ -79,8 +79,8 @@ class LoadService extends BaseService {
 
   onContentLoaded(contentLoaded$) {
     return contentLoaded$.subscribe(({ data }) => {
-      const { index, content = null } = data;
-      Connector.content.setContentLoaded(index, content);
+      const { index, content = null, ratio = PRE_CALCULATED_RATIO } = data;
+      Connector.content.setContentLoaded(index, content, ratio);
       const contents = Connector.content.getContents();
       const allLoaded = contents.every(({ isContentLoaded, isContentOnError }) => isContentLoaded || isContentOnError);
       if (allLoaded) {

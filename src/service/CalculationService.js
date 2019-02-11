@@ -18,7 +18,7 @@ import EventBus, { Events } from '../event';
 import Connector from './connector';
 import { ViewType } from '../constants/SettingConstants';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../constants/CalculationsConstants';
-import { ContentFormat } from '../constants/ContentConstants';
+import { ContentFormat, PRE_CALCULATED_RATIO } from '../constants/ContentConstants';
 import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { screenHeight, screenWidth } from '../util/BrowserWrapper';
@@ -75,12 +75,14 @@ class CalculationService extends BaseService {
       const currentTotal = index === lastCalculatedIndex ? lastCalculatedTotal : total;
       if (currentTotal === PRE_CALCULATION || offset === PRE_CALCULATION) return;
 
-      cache[i + 1] = { ...cache[i + 1], offset: offset + currentTotal };
-      Connector.calculations.setStartOffset(cache[i + 1].index, offset + currentTotal);
+      const isFooter = cache[i + 1].index === FOOTER_INDEX;
+      const startOffset = isFooter ? Math.ceil(offset + currentTotal) : offset + currentTotal;
+      cache[i + 1] = { ...cache[i + 1], offset: startOffset };
+      Connector.calculations.setStartOffset(cache[i + 1].index, startOffset);
     });
 
     const completed = cache.every(({ offset, total }) => offset !== PRE_CALCULATION && total !== PRE_CALCULATION);
-    const calculatedTotal = cache.reduce((sum, content) => sum + content.total, 0);
+    const calculatedTotal = cache[cache.length - 1].offset + cache[cache.length - 1].total;
 
     Connector.calculations.setCalculationsTotal(calculatedTotal, completed);
     if (completed) EventBus.emit(Events.CALCULATION_COMPLETED);
@@ -88,8 +90,13 @@ class CalculationService extends BaseService {
     return cache;
   }
 
-  _calculateContent({ index, contentNode, contentFooterNode }) {
-    const { viewType, startWithBlankPage, columnsInPage } = Connector.setting.getSetting();
+  _calculateContent({
+    index,
+    contentNode,
+    ratio = PRE_CALCULATED_RATIO,
+    contentFooterNode,
+  }) {
+    const { viewType, columnsInPage } = Connector.setting.getSetting();
     const contentFormat = Connector.content.getContentFormat();
 
     // PAGE
@@ -99,8 +106,7 @@ class CalculationService extends BaseService {
         return of({ index, total: hasFooter ? 1 : 0 });
       }
       if (contentFormat === ContentFormat.IMAGE) {
-        const contents = Connector.content.getContents();
-        return of({ index, total: Math.ceil((contents.length + startWithBlankPage) / columnsInPage) });
+        return of({ index, total: 1 / columnsInPage });
       }
       return timer().pipe(
         map(() => ({
@@ -114,6 +120,9 @@ class CalculationService extends BaseService {
     if (index === FOOTER_INDEX) {
       const total = contentNode.scrollHeight;
       return of({ index, total });
+    }
+    if (contentFormat === ContentFormat.IMAGE && ratio !== PRE_CALCULATED_RATIO) {
+      return of({ index, total: Connector.setting.getContainerWidth() * ratio });
     }
     const isLastContent = Connector.calculations.isLastContent(index);
     return timer().pipe(

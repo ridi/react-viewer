@@ -1,4 +1,4 @@
-import { BindingType, ContentFormat } from '../constants/ContentConstants';
+import { BindingType, ContentFormat, PRE_CALCULATED_RATIO } from '../constants/ContentConstants';
 import { EMPTY_READ_LOCATION, ReaderThemeType, ViewType } from '../constants/SettingConstants';
 import {
   DEFAULT_CONTENT_FOOTER_HEIGHT,
@@ -16,19 +16,25 @@ export const initialContentState = index => ({
   isContentLoaded: false,
   isContentOnError: false,
   isInScreen: false,
+  ratio: PRE_CALCULATED_RATIO,
 });
 
-export const initialContentCalculationsState = index => ({
+export const initialContentCalculationsState = (
   index,
-  isCalculated: false,
-  offset: index === 1 ? 0 : PRE_CALCULATION,
-  total: PRE_CALCULATION,
+  startOffset = 0,
+  offset = (index === 1 ? startOffset : PRE_CALCULATION),
+  total = PRE_CALCULATION,
+) => ({
+  index,
+  isCalculated: offset !== PRE_CALCULATION && total !== PRE_CALCULATION,
+  offset,
+  total,
 });
 
-export const initialFooterCalculationsState = () => ({
-  isCalculated: false,
-  offset: PRE_CALCULATION,
-  total: PRE_CALCULATION,
+export const initialFooterCalculationsState = (offset = PRE_CALCULATION, total = PRE_CALCULATION) => ({
+  isCalculated: offset !== PRE_CALCULATION && total !== PRE_CALCULATION,
+  offset,
+  total,
 });
 
 export const initialSettingState = () => ({
@@ -81,6 +87,7 @@ export const initialState = () => ({
 export default {
   contents: () => ['contents'],
   content: index => ['contents', index - 1, 'content'],
+  contentRatio: index => ['contents', index - 1, 'ratio'],
   isContentLoaded: index => ['contents', index - 1, 'isContentLoaded'],
   isContentOnError: index => ['contents', index - 1, 'isContentOnError'],
   contentError: index => ['contents', index - 1, 'error'],

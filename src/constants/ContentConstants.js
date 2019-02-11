@@ -1,6 +1,8 @@
 import makeConstants from '../util/Constant';
 import { updateObject } from '../util/Util';
 
+export const PRE_CALCULATED_RATIO = -1;
+
 const _BindingType = {
   LEFT: 0,
   RIGHT: 1,

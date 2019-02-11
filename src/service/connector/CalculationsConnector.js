@@ -18,6 +18,7 @@ import {
   selectReaderIsReadyToRead,
 } from '../../redux/selector';
 import { FOOTER_INDEX, PRE_CALCULATION } from '../../constants/CalculationsConstants';
+import SettingConnector from './SettingConnector';
 
 class CalculationsConnector extends BaseConnector {
   // todo move to config
@@ -32,7 +33,8 @@ class CalculationsConnector extends BaseConnector {
   }
 
   invalidate() {
-    this.dispatch(invalidateCalculations());
+    const { startWithBlankPage, columnsInPage } = SettingConnector.getSetting();
+    this.dispatch(invalidateCalculations(startWithBlankPage / columnsInPage));
   }
 
   isCompleted() {

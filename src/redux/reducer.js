@@ -8,7 +8,7 @@ import path, {
 import createReducer from '../util/Reducer';
 import { actions } from './action';
 import { ImmutableObjectBuilder } from '../util/ImmutabilityHelper';
-import { makeSequence, updateObject } from '../util/Util';
+import { updateObject } from '../util/Util';
 import { ContentFormat } from '../constants/ContentConstants';
 
 const load = (state, { state: newState }) => new ImmutableObjectBuilder(newState)
@@ -19,21 +19,12 @@ const unload = () => new ImmutableObjectBuilder(initialState())
   .set(path.isLoaded(), false)
   .build();
 
-const setContentMetadata = (state, { contentFormat, bindingType, contentCount }) => new ImmutableObjectBuilder(state)
-  .set(path.isInitContents(), true)
-  .set(path.contentFormat(), contentFormat)
-  .set(path.bindingType(), bindingType)
-  .set(path.contents(), makeSequence(contentCount, 1).map(initialContentState))
-  .set(path.contentsCalculations(), contentFormat === ContentFormat.HTML
-    ? makeSequence(contentCount, 1).map(initialContentCalculationsState)
-    : [initialContentCalculationsState(1)])
-  .build();
-
 const setContents = (state, {
   type,
   contentFormat,
   bindingType,
   contents,
+  startOffset = 0,
 }) => new ImmutableObjectBuilder(state)
   .set(path.isInitContents(), true)
   .set(path.contentFormat(), contentFormat)
@@ -41,8 +32,11 @@ const setContents = (state, {
   .set(path.contents(), contents.map((content, i) => updateObject(initialContentState(i + 1), content)))
   .set(path.isContentsLoaded(), type === actions.SET_CONTENTS_BY_VALUE)
   .set(path.contentsCalculations(), contentFormat === ContentFormat.HTML
-    ? contents.map((_, i) => initialContentCalculationsState(i + 1))
-    : [initialContentCalculationsState(1)])
+    ? contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset))
+    : contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset, i, 1)))
+  .set(path.footerCalculations(), contentFormat === ContentFormat.HTML
+    ? initialFooterCalculationsState()
+    : initialFooterCalculationsState(contents.length, 1))
   .build();
 
 const updateCurrent = (state, { current }) => new ImmutableObjectBuilder(state)
@@ -55,6 +49,7 @@ const updateSetting = (state, { setting }) => new ImmutableObjectBuilder(state)
 
 const updateContent = (state, action) => new ImmutableObjectBuilder(state)
   .set(path.content(action.index), action.content)
+  .set(path.contentRatio(action.index), action.ratio)
   .set(path.isContentLoaded(action.index), true)
   .set(path.isContentOnError(action.index), false)
   .set(path.contentError(action.index), null)
@@ -83,10 +78,10 @@ const updateFooterCalculation = (state, { calculation }) => new ImmutableObjectB
   )
   .build();
 
-const invalidateCalculations = state => new ImmutableObjectBuilder(state)
+const invalidateCalculations = (state, { startOffset }) => new ImmutableObjectBuilder(state)
   .set(path.isAllCalculated(), false)
   .set(path.isReadyToRead(), false)
-  .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index)))
+  .set(path.contentsCalculations(), state.calculations.contents.map(s => initialContentCalculationsState(s.index, startOffset)))
   .set(path.footerCalculations(), initialFooterCalculationsState())
   .set(path.calculationsTargets(), [])
   .build();
@@ -125,7 +120,6 @@ export default ({
   return createReducer({ ...initialState(), setting }, {
     [actions.LOAD]: load,
     [actions.UNLOAD]: unload,
-    [actions.SET_CONTENT_METADATA]: setContentMetadata,
     [actions.SET_CONTENTS_BY_VALUE]: setContents,
     [actions.SET_CONTENTS_BY_URI]: setContents,
     [actions.SET_READY_TO_READ]: setReadyToRead,

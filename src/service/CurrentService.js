@@ -61,17 +61,10 @@ class CurrentService extends BaseService {
     if (end.contentIndex === null) {
       end = { contentIndex: contentIndex + 1, position: 0 };
     }
-    // let location = EMPTY_READ_LOCATION;
-    // try {
-    //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
-    // } catch (e) {
-    //   // ignore erro
-    //   console.warn(e);
-    // }
 
     return {
       contentIndex,
-      offset,
+      offset: Math.floor(offset),
       position,
       // location,
       viewType,
@@ -151,7 +144,7 @@ class CurrentService extends BaseService {
     return updateCurrentOffset$.pipe(
       filter(({ data: offset }) => offset !== null),
       map(({ data: offset }) => this._getCurrent(offset)),
-      filter(current => current),
+      filter(current => !!current),
       catchError((err, caught) => {
         Logger.error(err, caught);
         return NEVER;
@@ -171,7 +164,12 @@ class CurrentService extends BaseService {
       map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
       tap(({ scrollX, scrollY }) => EventBus.emit(Events.SCROLL_DEBOUNCED, { scrollX, scrollY })),
       map(({ scrollY }) => this._getCurrent(scrollY)),
+      filter(current => !!current),
       distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
+      catchError((err, caught) => {
+        Logger.error(err, caught);
+        return NEVER;
+      }),
     ).subscribe((current) => {
       Connector.current.updateCurrent(current);
       this._setContentsInScreen(current);
