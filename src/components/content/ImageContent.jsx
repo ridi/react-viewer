@@ -19,35 +19,15 @@ export default class ImageContent extends BaseContent {
 
     this.imageOnErrorHandler = this.imageOnErrorHandler.bind(this);
     this.imageOnLoadHandler = this.imageOnLoadHandler.bind(this);
-    this.imageInScreenHandler = this.imageInScreenHandler.bind(this);
   }
 
   componentDidMount() {
     super.componentDidMount();
-    const { content } = this.props;
-    if (!content.isContentLoaded) {
-      const { columnsInPage } = Connector.setting.getSetting();
-      const { contentIndex } = Connector.current.getCurrent();
-      const margin = 3 * columnsInPage;
-
-      if (Math.abs(contentIndex - content.index) <= margin) {
-        this.setState({ imageInScreen: true });
-      }
-    }
+    this.checkImageInScreen();
   }
 
   componentDidUpdate() {
-    const { content } = this.props;
-    if (!content.isContentLoaded) {
-      const { columnsInPage } = Connector.setting.getSetting();
-      const { contentIndex } = Connector.current.getCurrent();
-      const margin = 3 * columnsInPage;
-
-      if (Math.abs(contentIndex - content.index) <= margin) {
-        this.setState({ imageInScreen: true });
-        console.log('IntersectionObserver', content.index);
-      }
-    }
+    this.checkImageInScreen();
   }
 
   componentWillUnmount() {
@@ -58,6 +38,19 @@ export default class ImageContent extends BaseContent {
     if (this.timeout) {
       clearTimeout(this.timeout);
       this.timeout = null;
+    }
+  }
+
+  checkImageInScreen() {
+    const { content } = this.props;
+    if (!content.isContentLoaded) {
+      const { columnsInPage } = Connector.setting.getSetting();
+      const { contentIndex } = Connector.current.getCurrent();
+      const margin = 3 * columnsInPage;
+
+      if (Math.abs(contentIndex - content.index) <= margin) {
+        this.setState({ imageInScreen: true });
+      }
     }
   }
 
@@ -78,10 +71,6 @@ export default class ImageContent extends BaseContent {
       }
       EventBus.emit(Events.CONTENT_LOADED, { index, content: '', ratio });
     }
-  }
-
-  imageInScreenHandler() {
-    this.setState({ imageInScreen: true });
   }
 
   renderImage() {
