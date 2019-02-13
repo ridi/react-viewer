@@ -15,6 +15,7 @@ export const UPDATE_CURRENT_OFFSET = Symbol('UPDATE_CURRENT_OFFSET');
 
 export const CONTENT_LOADED = Symbol('CONTENT_LOADED');
 export const CONTENT_ERROR = Symbol('CONTENT_ERROR');
+export const ALL_CONTENT_READY = Symbol('ALL_CONTENT_READY');
 export const ALL_CONTENT_LOADED = Symbol('ALL_CONTENT_LOADED');
 
 export const SET_CONTENTS_BY_URI = Symbol('SET_CONTENTS_BY_URI'); // { contentFormat, bindingType, uris }
@@ -32,6 +33,7 @@ export const ANNOTATION_CHANGED = Symbol('ANNOTATION_CHANGED');
 
 export const CALCULATION_INVALIDATED = Symbol('CALCULATION_INVALIDATED');
 export const CALCULATION_UPDATED = Symbol('CALCULATION_UPDATED');
+export const CALCULATIONS_SET = Symbol('CALCULATIONS_SET');
 export const READY_TO_READ = Symbol('READY_TO_READ');
 export const CALCULATION_COMPLETED = Symbol('CALUCLATION_COMPLETED');
 export const CALCULATE_CONTENT = Symbol('CALCULATE_CONTENT');

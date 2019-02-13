@@ -54,6 +54,13 @@ export const initialSettingState = () => ({
   containerVerticalMargin: DEFAULT_VERTICAL_MARGIN,
 });
 
+export const initialCalculationsState = () => ({
+  contents: [],
+  footer: initialFooterCalculationsState(),
+  contentTotal: PRE_CALCULATION,
+  targets: [],
+});
+
 export const initialState = () => ({
   status: {
     isLoaded: true,
@@ -67,12 +74,7 @@ export const initialState = () => ({
     binding: BindingType.LEFT,
   },
   contents: [],
-  calculations: {
-    contents: [],
-    footer: initialFooterCalculationsState(),
-    contentTotal: PRE_CALCULATION,
-    targets: [],
-  },
+  calculations: initialCalculationsState(),
   current: {
     contentIndex: 1,
     location: EMPTY_READ_LOCATION,
@@ -92,6 +94,7 @@ export default {
   isContentOnError: index => ['contents', index - 1, 'isContentOnError'],
   contentError: index => ['contents', index - 1, 'error'],
 
+  metadata: () => ['metadata'],
   contentFormat: () => ['metadata', 'format'],
   bindingType: () => ['metadata', 'binding'],
 

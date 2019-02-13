@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Improve page calculation for `viewType === IMAGE`
+- Implement lazy loading
+
 ## [v1.0.0-alpha.34]
 
 ### Fixed

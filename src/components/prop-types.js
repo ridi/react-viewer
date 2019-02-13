@@ -8,6 +8,7 @@ export const ContentType = PropTypes.shape({
   content: PropTypes.string,
   isContentLoaded: PropTypes.bool.isRequired,
   isContentOnError: PropTypes.bool.isRequired,
+  ratio: PropTypes.number,
 });
 
 export const ContentCalculationsType = PropTypes.shape({

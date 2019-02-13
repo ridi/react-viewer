@@ -4,6 +4,7 @@ import path, {
   initialSettingState,
   initialContentState,
   initialState,
+  initialCalculationsState,
 } from './path';
 import createReducer from '../util/Reducer';
 import { actions } from './action';
@@ -20,24 +21,29 @@ const unload = () => new ImmutableObjectBuilder(initialState())
   .build();
 
 const setContents = (state, {
-  type,
-  contentFormat,
-  bindingType,
+  metadata,
   contents,
   startOffset = 0,
-}) => new ImmutableObjectBuilder(state)
-  .set(path.isInitContents(), true)
-  .set(path.contentFormat(), contentFormat)
-  .set(path.bindingType(), bindingType)
-  .set(path.contents(), contents.map((content, i) => updateObject(initialContentState(i + 1), content)))
-  .set(path.isContentsLoaded(), type === actions.SET_CONTENTS_BY_VALUE)
-  .set(path.contentsCalculations(), contentFormat === ContentFormat.HTML
-    ? contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset))
-    : contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset, i, 1)))
-  .set(path.footerCalculations(), contentFormat === ContentFormat.HTML
-    ? initialFooterCalculationsState()
-    : initialFooterCalculationsState(contents.length, 1))
-  .build();
+  resetCalculations = false,
+  isAllLoaded = false,
+}) => {
+  const builder = new ImmutableObjectBuilder(state)
+    .set(path.isInitContents(), true)
+    .set(path.metadata(), metadata)
+    .set(path.contents(), contents.map((content, i) => updateObject(initialContentState(i + 1), content)))
+    .set(path.isContentsLoaded(), isAllLoaded);
+
+  if (resetCalculations) {
+    builder
+      .set(path.contentsCalculations(), metadata.format === ContentFormat.HTML
+        ? contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset))
+        : contents.map((_, i) => initialContentCalculationsState(i + 1, startOffset, i, 1)))
+      .set(path.footerCalculations(), metadata.format === ContentFormat.HTML
+        ? initialFooterCalculationsState()
+        : initialFooterCalculationsState(contents.length, 1));
+  }
+  return builder.build();
+};
 
 const updateCurrent = (state, { current }) => new ImmutableObjectBuilder(state)
   .set(path.current(), updateObject(state.current, current))
@@ -109,8 +115,7 @@ const setContentsInScreen = (state, { contentIndexes }) => new ImmutableObjectBu
   ))).build();
 
 const setCalculations = (state, { calculations }) => new ImmutableObjectBuilder(state)
-  .set(path.isAllCalculated(), true)
-  .set(path.calculations(), calculations)
+  .set(path.calculations(), { ...initialCalculationsState(), ...calculations })
   .build();
 
 export default ({
@@ -120,8 +125,7 @@ export default ({
   return createReducer({ ...initialState(), setting }, {
     [actions.LOAD]: load,
     [actions.UNLOAD]: unload,
-    [actions.SET_CONTENTS_BY_VALUE]: setContents,
-    [actions.SET_CONTENTS_BY_URI]: setContents,
+    [actions.SET_CONTENTS]: setContents,
     [actions.SET_READY_TO_READ]: setReadyToRead,
     [actions.UPDATE_SETTING]: updateSetting,
     [actions.UPDATE_CONTENT]: updateContent,

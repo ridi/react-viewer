@@ -113,7 +113,14 @@ class CalculationsConnector extends BaseConnector {
   }
 
   setCalculations(calculations) {
+    const { contents, footer, contentTotal } = calculations;
+    const isCompleted = contents.every(cal => cal.isCalculated)
+      && (!this.hasFooter || (footer && footer.isCalculated));
     this.dispatch(setCalculations(calculations));
+
+    if (isCompleted) {
+      this.setCalculationsTotal(contentTotal, isCompleted);
+    }
   }
 
   getContentIndexAndPositionAtOffset(offset) {

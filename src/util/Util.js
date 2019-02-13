@@ -1,35 +1,37 @@
 
 
-export function isExist(object) {
-  return object !== undefined && object !== null;
+export function isExist(...object) {
+  return object.every(o => o !== undefined && o !== null);
 }
 
-export function isEmpty(object) {
-  if (!isExist(object)) {
-    return true;
-  }
+export function isEmpty(...object) {
+  return object.every((o) => {
+    if (!isExist(o)) {
+      return true;
+    }
 
-  if (object.constructor === Object && Object.keys(object).length === 0) {
-    return true;
-  }
+    if (o.constructor === Object && Object.keys(o).length === 0) {
+      return true;
+    }
 
-  if (typeof object === 'string' || object instanceof String) {
-    return object.trim() === '';
-  }
+    if (typeof o === 'string' || o instanceof String) {
+      return o.trim() === '';
+    }
 
-  if (Array.isArray(object)) {
-    return object.length === 0;
-  }
+    if (Array.isArray(o)) {
+      return o.length === 0;
+    }
 
-  return false;
+    return false;
+  });
 }
 
-export function isArray(arr) {
-  return Array.isArray(arr);
+export function isArray(...object) {
+  return object.every(o => Array.isArray(o));
 }
 
-export function isObject(obj) {
-  return !isArray(obj) && obj === Object(obj);
+export function isObject(...object) {
+  return object.every(o => !isArray(o) && o === Object(o));
 }
 
 export const cloneObject = (object) => {

@@ -2,6 +2,7 @@ import BaseConnector from './BaseConnector';
 import {
   setContentsByValue,
   setContentsByUri,
+  setContents,
   updateContent,
   updateContentError,
   setContentsInScreen,
@@ -10,14 +11,18 @@ import { selectReaderContentFormat, selectReaderContents, selectReaderIsContents
 import SettingConnector from './SettingConnector';
 
 class ContentConnector extends BaseConnector {
-  setContentsByUri(contentFormat, bindingType, uris) {
-    const { startWithBlankPage, columnsInPage } = SettingConnector.getSetting();
-    this.dispatch(setContentsByUri(contentFormat, bindingType, uris, startWithBlankPage / columnsInPage));
+  setContents(metadata, contents) {
+    this.dispatch(setContents(metadata, contents, contents.every(c => c.isContentLoaded || c.isContentOnError)));
   }
 
-  setContentsByValue(contentFormat, bindingType, contents) {
+  setContentsByUri(metadata, uris) {
     const { startWithBlankPage, columnsInPage } = SettingConnector.getSetting();
-    this.dispatch(setContentsByValue(contentFormat, bindingType, contents, startWithBlankPage / columnsInPage));
+    this.dispatch(setContentsByUri(metadata, uris, startWithBlankPage / columnsInPage));
+  }
+
+  setContentsByValue(metadata, contents) {
+    const { startWithBlankPage, columnsInPage } = SettingConnector.getSetting();
+    this.dispatch(setContentsByValue(metadata, contents, startWithBlankPage / columnsInPage));
   }
 
   getContents(index = null) {

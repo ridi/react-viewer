@@ -10,8 +10,7 @@ import {
 export const actions = {
   LOAD: 'READER:LOAD',
   UNLOAD: 'READER:UNLOAD',
-  SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
-  SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
+  SET_CONTENTS: 'READER:SET_CONTENTS',
   SET_READY_TO_READ: 'READER:SET_READY_TO_READ',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
   UPDATE_CURRENT: 'READER:UPDATE_CURRENT',
@@ -36,18 +35,25 @@ export const unload = () => ({
   type: actions.UNLOAD,
 });
 
-export const setContentsByValue = (contentFormat, bindingType, contents, startOffset = 0) => ({
-  type: actions.SET_CONTENTS_BY_VALUE,
-  contentFormat,
-  bindingType,
-  contents: contents.map(content => ({ content, isContentLoaded: true })),
-  startOffset,
+export const setContents = (metadata, contents, isAllLoaded) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
+  contents,
+  isAllLoaded,
 });
 
-export const setContentsByUri = (contentFormat, bindingType, uris, startOffset = 0) => ({
-  type: actions.SET_CONTENTS_BY_URI,
-  contentFormat,
-  bindingType,
+export const setContentsByValue = (metadata, contents, startOffset = 0) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
+  contents: contents.map(content => ({ content, isContentLoaded: true })),
+  startOffset,
+  resetCalculations: true,
+  isAllLoaded: true,
+});
+
+export const setContentsByUri = (metadata, uris, startOffset = 0) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
   contents: uris.map((uri) => {
     if (typeof uri === 'string') {
       return { uri, isContentLoaded: false };
@@ -55,6 +61,8 @@ export const setContentsByUri = (contentFormat, bindingType, uris, startOffset =
     return { ...uri, isContentLoaded: false };
   }),
   startOffset,
+  resetCalculations: true,
+  isAllLoaded: false,
 });
 
 export const updateCurrent = current => ({

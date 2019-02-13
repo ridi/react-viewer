@@ -101,7 +101,7 @@ class ImagePageScreen extends BaseScreen {
   }
 
   getBlankPage(index) {
-    return <section className="comic_page" key={`blank:${index}`} />;
+    return <section className="image_container" key={`blank:${index}`} />;
   }
 
   getContents() {
