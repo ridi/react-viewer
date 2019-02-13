@@ -76,12 +76,14 @@ const Selection = ({
       )
       }
       {rects.map(rect => (
-        isVisible(rect) && <rect
-          data-id={item.id}
-          data-type={SelectionParts.TEXT}
-          style={{ mixBlendMode: 'multiply' }}
-          {...getRectProps(rect, color)}
-        />
+        isVisible(rect) && (
+          <rect
+            data-id={item.id}
+            data-type={SelectionParts.TEXT}
+            style={{ mixBlendMode: 'multiply' }}
+            {...getRectProps(rect, color)}
+          />
+        )
       ))}
       {withHandle
       && (

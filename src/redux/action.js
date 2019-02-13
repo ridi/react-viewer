@@ -10,9 +10,7 @@ import {
 export const actions = {
   LOAD: 'READER:LOAD',
   UNLOAD: 'READER:UNLOAD',
-  SET_CONTENT_METADATA: 'READER:SET_CONTENT_METADATA',
-  SET_CONTENTS_BY_URI: 'READER:SET_CONTENTS_BY_URI',
-  SET_CONTENTS_BY_VALUE: 'READER:SET_CONTENTS_BY_VALUE',
+  SET_CONTENTS: 'READER:SET_CONTENTS',
   SET_READY_TO_READ: 'READER:SET_READY_TO_READ',
   UPDATE_SETTING: 'READER:UPDATE_SETTING',
   UPDATE_CURRENT: 'READER:UPDATE_CURRENT',
@@ -37,25 +35,34 @@ export const unload = () => ({
   type: actions.UNLOAD,
 });
 
-export const setContentMetadata = (contentFormat, bindingType, contentCount) => ({
-  type: actions.SET_CONTENT_METADATA,
-  contentFormat,
-  bindingType,
-  contentCount,
+export const setContents = (metadata, contents, isAllLoaded) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
+  contents,
+  isAllLoaded,
 });
 
-export const setContentsByValue = (contentFormat, bindingType, contents) => ({
-  type: actions.SET_CONTENTS_BY_VALUE,
-  contentFormat,
-  bindingType,
+export const setContentsByValue = (metadata, contents, startOffset = 0) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
   contents: contents.map(content => ({ content, isContentLoaded: true })),
+  startOffset,
+  resetCalculations: true,
+  isAllLoaded: true,
 });
 
-export const setContentsByUri = (contentFormat, bindingType, uris) => ({
-  type: actions.SET_CONTENTS_BY_URI,
-  contentFormat,
-  bindingType,
-  contents: uris.map(uri => ({ uri, isContentLoaded: false })),
+export const setContentsByUri = (metadata, uris, startOffset = 0) => ({
+  type: actions.SET_CONTENTS,
+  metadata,
+  contents: uris.map((uri) => {
+    if (typeof uri === 'string') {
+      return { uri, isContentLoaded: false };
+    }
+    return { ...uri, isContentLoaded: false };
+  }),
+  startOffset,
+  resetCalculations: true,
+  isAllLoaded: false,
 });
 
 export const updateCurrent = current => ({
@@ -101,11 +108,12 @@ export const updateSetting = (setting) => {
   };
 };
 
-export const updateContent = (index, content, isAllLoaded = false) => ({
+export const updateContent = (index, content, isAllLoaded = false, ratio) => ({
   type: actions.UPDATE_CONTENT,
   index,
   content,
   isAllLoaded,
+  ratio,
 });
 
 export const updateContentError = (index, error, isAllLoaded = false) => ({
@@ -115,8 +123,9 @@ export const updateContentError = (index, error, isAllLoaded = false) => ({
   isAllLoaded,
 });
 
-export const invalidateCalculations = () => ({
+export const invalidateCalculations = (startOffset = 0) => ({
   type: actions.INVALIDATE_CALCULATIONS,
+  startOffset,
 });
 
 export const updateContentCalculation = calculation => ({

@@ -1,14 +1,57 @@
 import React from 'react';
 import PropTypes, { ContentType } from '../prop-types';
 import BaseContent from './BaseContent';
+import { PRE_CALCULATED_RATIO } from '../../constants/ContentConstants';
 import EventBus, { Events } from '../../event';
+import { ViewType } from '../../constants/SettingConstants';
+import Connector from '../../service/connector';
 
-class ImageContent extends BaseContent {
+export default class ImageContent extends BaseContent {
+  imageRef = React.createRef();
+  wrapperRef = React.createRef();
+
   constructor(props) {
     super(props);
 
+    this.state = {
+      imageInScreen: false,
+    };
+
     this.imageOnErrorHandler = this.imageOnErrorHandler.bind(this);
     this.imageOnLoadHandler = this.imageOnLoadHandler.bind(this);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.checkImageInScreen();
+  }
+
+  componentDidUpdate() {
+    this.checkImageInScreen();
+  }
+
+  componentWillUnmount() {
+    if (this.observer) {
+      this.observer.unobserve(this.wrapperRef.current);
+      this.observer = null;
+    }
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+  }
+
+  checkImageInScreen() {
+    const { content } = this.props;
+    if (!content.isContentLoaded) {
+      const { columnsInPage } = Connector.setting.getSetting();
+      const { contentIndex } = Connector.current.getCurrent();
+      const margin = 3 * columnsInPage;
+
+      if (Math.abs(contentIndex - content.index) <= margin) {
+        this.setState({ imageInScreen: true });
+      }
+    }
   }
 
   imageOnErrorHandler() {
@@ -21,7 +64,12 @@ class ImageContent extends BaseContent {
   imageOnLoadHandler() {
     const { index, isContentLoaded } = this.props.content;
     if (!isContentLoaded) {
-      EventBus.emit(Events.CONTENT_LOADED, { index, content: '' });
+      let ratio = PRE_CALCULATED_RATIO;
+      if (this.imageRef.current) {
+        const { naturalWidth: w, naturalHeight: h } = this.imageRef.current;
+        ratio = h / w;
+      }
+      EventBus.emit(Events.CONTENT_LOADED, { index, content: '', ratio });
     }
   }
 
@@ -35,8 +83,11 @@ class ImageContent extends BaseContent {
         </div>
       );
     }
+
     return (
       <img
+        className="img"
+        ref={this.imageRef}
         src={src}
         alt=""
         onLoad={this.imageOnLoadHandler}
@@ -46,16 +97,24 @@ class ImageContent extends BaseContent {
   }
 
   render() {
-    const { contentFooter, children } = this.props;
-    const { isContentLoaded } = this.props.content;
+    const { contentFooter } = this.props;
+    const { isContentLoaded, ratio } = this.props.content;
+    const { imageInScreen } = this.state;
+    const { viewType } = Connector.setting.getSetting();
+    const style = {};
+    const renderImage = imageInScreen || isContentLoaded;
+
+    if (viewType === ViewType.SCROLL) {
+      style.paddingBottom = ratio === PRE_CALCULATED_RATIO ? '140%' : `${ratio * 100}%`;
+    }
     return (
       <section
-        ref={this.props.forwardedRef}
-        className={`comic_page ${isContentLoaded ? 'loaded' : ''} ${contentFooter ? 'has_content_footer' : ''}`}
+        ref={this.wrapperRef}
+        className={`image_container ${isContentLoaded ? 'loaded' : ''} ${contentFooter ? 'has_content_footer' : ''}`}
+        style={style}
       >
-        {this.renderImage()}
-        {contentFooter}
-        {children}
+        {renderImage && this.renderImage()}
+        {renderImage && contentFooter}
       </section>
     );
   }
@@ -63,16 +122,11 @@ class ImageContent extends BaseContent {
 
 ImageContent.defaultProps = {
   contentFooter: null,
-  forwardedRef: React.createRef(),
-  children: null,
 };
 
 ImageContent.propTypes = {
   src: PropTypes.string,
   content: ContentType.isRequired,
   contentFooter: PropTypes.node,
-  forwardedRef: PropTypes.any,
-  children: PropTypes.node,
+  isCalculated: PropTypes.bool,
 };
-
-export default React.forwardRef((props, ref) => <ImageContent forwardedRef={ref} {...props} />);

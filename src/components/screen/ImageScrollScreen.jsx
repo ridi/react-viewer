@@ -6,10 +6,9 @@ import {
   selectReaderContentsCalculations,
   selectReaderCalculationsTotal,
   selectReaderFooterCalculations,
-  selectReaderIsAllCalculated,
 } from '../../redux/selector';
 import {
-  setScrollTop, waitContentResources, waitThenRun,
+  setScrollTop, waitThenRun,
 } from '../../util/BrowserWrapper';
 import PropTypes, { FooterCalculationsType, ContentCalculationsType, ContentType } from '../prop-types';
 import BaseScreen, {
@@ -33,30 +32,6 @@ class ImageScrollScreen extends BaseScreen {
     this.scrollEventSubscription = fromEvent(window, DOMEventConstants.SCROLL)
       .subscribe(event => EventBus.emit(Events.SCROLL, event));
     EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
-
-    const { contentFooter, isAllCalculated } = this.props;
-    const { current } = this.wrapper;
-    if (!isAllCalculated) {
-      waitContentResources(current)
-        .then(() => {
-          if (!current.isConnected) return;
-          EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
-        })
-        .catch(() => { /* ignore */ });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { contentFooter, isAllCalculated } = this.props;
-    const { current } = this.wrapper;
-    if (prevProps.isAllCalculated && !isAllCalculated) {
-      waitContentResources(current)
-        .then(() => {
-          if (!current.isConnected) return;
-          EventBus.emit(Events.CALCULATE_CONTENT, { index: 1, contentNode: current, contentFooterNode: contentFooter });
-        })
-        .catch(() => { /* ignore */ });
-    }
   }
 
   componentWillUnmount() {
@@ -92,13 +67,13 @@ class ImageScrollScreen extends BaseScreen {
     const {
       current,
       contentFooter,
-      isAllCalculated,
+      contentsCalculations,
     } = this.props;
 
     return (
       <ImageContent
         key={`${content.uri}:${content.index}`}
-        isCalculated={isAllCalculated}
+        isCalculated={contentsCalculations[content.index - 1].total !== PRE_CALCULATION}
         content={content}
         currentOffset={current.offset}
         src={content.uri || content.content}
@@ -139,7 +114,6 @@ ImageScrollScreen.propTypes = {
   actionUpdateContentError: PropTypes.func.isRequired,
   footerCalculations: FooterCalculationsType.isRequired,
   contentFooter: PropTypes.node,
-  isAllCalculated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -148,7 +122,6 @@ const mapStateToProps = state => ({
   contentsCalculations: selectReaderContentsCalculations(state),
   calculationsTotal: selectReaderCalculationsTotal(state),
   footerCalculations: selectReaderFooterCalculations(state),
-  isAllCalculated: selectReaderIsAllCalculated(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -44,17 +44,6 @@ class ImagePageScreen extends BaseScreen {
   componentDidMount() {
     super.componentDidMount();
     EventBus.on(Events.MOVE_TO_OFFSET, this.moveToOffset.bind(this), this);
-    const isCalculated = Connector.calculations.isContentCalculated(1);
-    if (!isCalculated) {
-      EventBus.emit(Events.CALCULATE_CONTENT, { index: 1 });
-    }
-  }
-
-  componentDidUpdate() {
-    const isCalculated = Connector.calculations.isContentCalculated(1);
-    if (!isCalculated) {
-      EventBus.emit(Events.CALCULATE_CONTENT, { index: 1 });
-    }
   }
 
   componentWillUnmount() {
@@ -96,23 +85,23 @@ class ImagePageScreen extends BaseScreen {
     const {
       current,
       contentFooter,
+      contentsCalculations,
     } = this.props;
 
     return (
       <ImageContent
         key={`${content.uri}:${content.index}`}
+        isCalculated={contentsCalculations[content.index - 1].total !== PRE_CALCULATION}
         content={content}
         currentOffset={current.offset}
         src={content.uri || content.content}
-        onContentLoaded={this.onContentLoaded}
-        onContentError={this.onContentError}
         contentFooter={Connector.calculations.isLastContent(content.index) ? contentFooter : null}
       />
     );
   }
 
   getBlankPage(index) {
-    return <section className="comic_page" key={`blank:${index}`} />;
+    return <section className="image_container" key={`blank:${index}`} />;
   }
 
   getContents() {

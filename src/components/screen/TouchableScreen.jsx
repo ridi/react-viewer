@@ -16,6 +16,7 @@ import { screenHeight, scrollBy } from '../../util/BrowserWrapper';
 import EventBus, { Events } from '../../event';
 import AnnotationStore from '../../store/AnnotationStore';
 import SelectionStore from '../../store/SelectionStore';
+import { ContentFormat } from '../../constants/ContentConstants';
 
 class TouchableScreen extends React.Component {
   static defaultProps = {
@@ -151,7 +152,8 @@ class TouchableScreen extends React.Component {
   handleScrollEvent(forceAllow = false) {
     // TODO isReadyToRead 체크를 제거할 수 있을까?
     const { viewType, forwardedRef, isReadyToRead } = this.props;
-    if (forceAllow) {
+    const contentFormat = Connector.content.getContentFormat();
+    if (forceAllow || contentFormat === ContentFormat.IMAGE) {
       allowScrollEvent(forwardedRef.current);
       return;
     }

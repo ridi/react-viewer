@@ -96,10 +96,12 @@ export const StyledImageScrollContent = StyledBaseContent.extend`
   ${StyledScrollContent}
   margin: 0 auto;
   .content_container {
+    position: relative;
     margin: 0 auto;
     width: ${() => Connector.setting.getContentWidth(1, true)};
-    img {
+    .img {
       width: 100%;
+      position: absolute;
     }
   }
 `;
@@ -111,15 +113,15 @@ export const StyledImagePageContent = StyledBaseContent.extend`
   margin: 0 auto;
   .content_container {
     &.two_images_in_page {
-      .comic_page {
+      .image_container {
         &:nth-child(odd) { img { margin-right: 0; } }
         &:nth-child(even) { img { margin-left: 0; } }
       }
     } 
     
-    .comic_page {
+    .image_container {
       height: 100%;
-      img {
+      .img {
         width: auto; height: auto;
         max-width: 100%; max-height: 100%;
         top: 50%;

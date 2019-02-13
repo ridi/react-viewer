@@ -12,8 +12,8 @@ import EventBus, { Events } from '../event';
 import BaseService from './BaseService';
 import Connector from './connector';
 import Logger from '../util/Logger';
-import { isExist } from '../util/Util';
-import { ContentFormat } from '../constants/ContentConstants';
+import { isEmpty, isExist } from '../util/Util';
+import { ContentFormat, PRE_CALCULATED_RATIO } from '../constants/ContentConstants';
 
 class LoadService extends BaseService {
   load({
@@ -30,17 +30,29 @@ class LoadService extends BaseService {
     this.connectEvents(this.onContentSetByUri.bind(this), Events.SET_CONTENTS_BY_URI);
     this.connectEvents(this.onContentSetByValue.bind(this), Events.SET_CONTENTS_BY_VALUE);
     this.connectEvents(this.onContentUpdated.bind(this), Events.UPDATE_CONTENT);
-    if (contents && contents.length > 0 && metadata) {
-      Connector.content.setContentsByValue(metadata.format, metadata.binding, contents.map(c => c.content));
-    }
+
     if (setting) {
       Connector.setting.updateSetting(setting);
     }
-    if (current && isExist(current.contentIndex) && isExist(current.position)) {
-      Connector.current.updateCurrent(current);
-    }
-    if (calculations && isExist(calculations.contents) && isExist(calculations.footer) && isExist(calculations.contentTotal)) {
-      Connector.calculations.setCalculations(calculations);
+
+    if (!isEmpty(contents) && isExist(metadata)) {
+      const restoreContents = contents.map(content => ({
+        ...content,
+        error: null,
+        isContentLoaded: !isEmpty(content.content),
+        isContentOnError: false,
+        isInScreen: false,
+      }));
+      Connector.content.setContents(metadata, restoreContents);
+
+      if (current && isExist(current.contentIndex, current.position)) {
+        Connector.current.updateCurrent(current);
+      }
+      if (calculations && isExist(calculations.contents, calculations.footer, calculations.contentTotal)) {
+        Connector.calculations.setCalculations(calculations);
+      }
+
+      EventBus.emit(Events.ALL_CONTENT_READY);
     }
   }
 
@@ -52,9 +64,10 @@ class LoadService extends BaseService {
 
   onContentSetByUri(contentSetByUri$) {
     return contentSetByUri$.pipe(
-      map(({ data }) => ({ contentFormat: data.contentFormat, bindingType: data.bindingType, uris: data.uris })),
-      tap(({ contentFormat, bindingType, uris }) => Connector.content.setContentsByUri(contentFormat, bindingType, uris)),
-      filter(({ contentFormat }) => contentFormat === ContentFormat.HTML),
+      map(({ data }) => ({ format: data.contentFormat, binding: data.bindingType, uris: data.uris })),
+      tap(({ format, binding, uris }) => Connector.content.setContentsByUri({ format, binding }, uris)),
+      tap(() => EventBus.emit(Events.ALL_CONTENT_READY)),
+      filter(({ format }) => format === ContentFormat.HTML),
       switchMap(({ uris }) => from(uris).pipe(
         mergeMap((uri, index) => ajax.getJSON(uri).pipe(
           map(data => ({ index: index + 1, content: data.value })),
@@ -72,15 +85,16 @@ class LoadService extends BaseService {
   onContentSetByValue(contentSetByValue$) {
     return contentSetByValue$.subscribe(({ data }) => {
       const { contentFormat, bindingType, contents } = data;
-      Connector.content.setContentsByValue(contentFormat, bindingType, contents);
+      Connector.content.setContentsByValue({ format: contentFormat, binding: bindingType }, contents);
+      EventBus.emit(Events.ALL_CONTENT_READY);
       EventBus.emit(Events.ALL_CONTENT_LOADED, contents);
     });
   }
 
   onContentLoaded(contentLoaded$) {
     return contentLoaded$.subscribe(({ data }) => {
-      const { index, content = null } = data;
-      Connector.content.setContentLoaded(index, content);
+      const { index, content = null, ratio = PRE_CALCULATED_RATIO } = data;
+      Connector.content.setContentLoaded(index, content, ratio);
       const contents = Connector.content.getContents();
       const allLoaded = contents.every(({ isContentLoaded, isContentOnError }) => isContentLoaded || isContentOnError);
       if (allLoaded) {

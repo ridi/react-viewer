@@ -19,7 +19,8 @@ class FontSetting extends Component {
         <button
           type="button"
           // TODO ${item.family} style
-          className={`font_button setting_button ${item.family} ${viewerScreenSettings.font === item.family ? 'active' : ''}`}
+          className={`font_button setting_button ${viewerScreenSettings.font === item.family ? 'active' : ''}`}
+          style={{ fontFamily: item.family }}
           onClick={() => onChanged && onChanged(item.family)}
         >
           {item.name}

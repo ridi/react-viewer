@@ -1,4 +1,4 @@
-import { timer, NEVER } from 'rxjs';
+import { timer, NEVER, merge } from 'rxjs';
 import {
   tap,
   map,
@@ -6,6 +6,7 @@ import {
   debounce,
   distinctUntilChanged,
   catchError,
+  mergeMap,
 } from 'rxjs/operators';
 import BaseService from './BaseService';
 import EventBus, { Events } from '../event';
@@ -24,7 +25,7 @@ class CurrentService extends BaseService {
     super.load();
 
     this.connectEvents(this.onCalculationInvalidated.bind(this), Events.CALCULATION_INVALIDATED);
-    this.connectEvents(this.onCalculated.bind(this), Events.CALCULATION_UPDATED);
+    this.connectEvents(this.onCalculated.bind(this), Events.CALCULATION_UPDATED, Events.CALCULATIONS_SET);
     this.connectEvents(this.onCalculationCompleted.bind(this), Events.CALCULATION_COMPLETED);
     this.connectEvents(this.onCurrentOffsetUpdated.bind(this), Events.UPDATE_CURRENT_OFFSET);
     this.connectEvents(this.onScrolled.bind(this), Events.SCROLL);
@@ -61,17 +62,10 @@ class CurrentService extends BaseService {
     if (end.contentIndex === null) {
       end = { contentIndex: contentIndex + 1, position: 0 };
     }
-    // let location = EMPTY_READ_LOCATION;
-    // try {
-    //   location = ReaderJsHelper.get(contentIndex).getNodeLocationOfCurrentPage();
-    // } catch (e) {
-    //   // ignore erro
-    //   console.warn(e);
-    // }
 
     return {
       contentIndex,
-      offset,
+      offset: Math.round(offset),
       position,
       // location,
       viewType,
@@ -123,12 +117,21 @@ class CurrentService extends BaseService {
     });
   }
 
-  onCalculated(calculateUpdate$) {
-    return calculateUpdate$.pipe(
-      filter(() => !this._isOffsetRestored),
+  onCalculated(calculateUpdate$, calculationsSet$) {
+    return merge(
+      calculateUpdate$.pipe(
+        filter(() => !this._isOffsetRestored),
+      ),
+      calculationsSet$.pipe(
+        mergeMap(() => timer()),
+      ),
     ).subscribe(() => {
       if (this._restoreCurrentOffset() !== null) {
         this._isOffsetRestored = true;
+      }
+      if (!Connector.calculations.isReadyToRead()) {
+        Connector.calculations.setReadyToRead(true);
+        EventBus.emit(Events.READY_TO_READ);
       }
     });
   }
@@ -151,7 +154,7 @@ class CurrentService extends BaseService {
     return updateCurrentOffset$.pipe(
       filter(({ data: offset }) => offset !== null),
       map(({ data: offset }) => this._getCurrent(offset)),
-      filter(current => current),
+      filter(current => !!current),
       catchError((err, caught) => {
         Logger.error(err, caught);
         return NEVER;
@@ -171,7 +174,12 @@ class CurrentService extends BaseService {
       map(() => ({ scrollX: scrollLeft(), scrollY: scrollTop() })),
       tap(({ scrollX, scrollY }) => EventBus.emit(Events.SCROLL_DEBOUNCED, { scrollX, scrollY })),
       map(({ scrollY }) => this._getCurrent(scrollY)),
+      filter(current => !!current),
       distinctUntilChanged((x, y) => x.offset === y.offset && x.viewType === y.viewType),
+      catchError((err, caught) => {
+        Logger.error(err, caught);
+        return NEVER;
+      }),
     ).subscribe((current) => {
       Connector.current.updateCurrent(current);
       this._setContentsInScreen(current);
