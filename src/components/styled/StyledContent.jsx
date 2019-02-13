@@ -38,11 +38,9 @@ const StyledHtmlContent = () => `
          local("Tahoma");
   }
 
-  * {
-    font-size: ${Connector.setting.getFontSize(true)} !important;
-    line-height: ${Connector.setting.getLineHeight(true)} !important;
-    font-family: ${Connector.setting.getFont()} !important;
-  }
+  font-size: ${Connector.setting.getFontSize(true)} !important;
+  line-height: ${Connector.setting.getLineHeight(true)} !important;
+  font-family: ${Connector.setting.getFont()} !important;
   
   img {
     max-width: 100%;
