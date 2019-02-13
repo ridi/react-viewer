@@ -65,7 +65,7 @@ class CurrentService extends BaseService {
 
     return {
       contentIndex,
-      offset: Math.floor(offset),
+      offset: Math.round(offset),
       position,
       // location,
       viewType,
