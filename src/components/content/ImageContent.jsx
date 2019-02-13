@@ -24,24 +24,28 @@ export default class ImageContent extends BaseContent {
 
   componentDidMount() {
     super.componentDidMount();
-    const {
-      content,
-      isContentLoaded,
-    } = this.props;
-    if (!isContentLoaded) {
-      if ('IntersectionObserver' in window) {
-        const wrapper = this.wrapperRef.current;
-        const { columnsInPage } = Connector.setting.getSetting();
-        this.observer = new IntersectionObserver((entries) => {
-          if (entries.some(({ isIntersecting, intersectionRatio }) => isIntersecting || intersectionRatio > 0)) {
-            this.imageInScreenHandler();
-            this.observer.unobserve(wrapper);
-            this.observer = null;
-          }
-        }, { threshold: 0, rootMargin: `${200 * columnsInPage}%` });
-        this.observer.observe(wrapper);
-      } else {
-        this.timeout = setTimeout(this.imageInScreenHandler, (content.index - 1) * 200);
+    const { content } = this.props;
+    if (!content.isContentLoaded) {
+      const { columnsInPage } = Connector.setting.getSetting();
+      const { contentIndex } = Connector.current.getCurrent();
+      const margin = 3 * columnsInPage;
+
+      if (Math.abs(contentIndex - content.index) <= margin) {
+        this.setState({ imageInScreen: true });
+      }
+    }
+  }
+
+  componentDidUpdate() {
+    const { content } = this.props;
+    if (!content.isContentLoaded) {
+      const { columnsInPage } = Connector.setting.getSetting();
+      const { contentIndex } = Connector.current.getCurrent();
+      const margin = 3 * columnsInPage;
+
+      if (Math.abs(contentIndex - content.index) <= margin) {
+        this.setState({ imageInScreen: true });
+        console.log('IntersectionObserver', content.index);
       }
     }
   }
