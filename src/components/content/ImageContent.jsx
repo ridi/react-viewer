@@ -29,7 +29,6 @@ export default class ImageContent extends BaseContent {
       isContentLoaded,
     } = this.props;
     if (!isContentLoaded) {
-
       if ('IntersectionObserver' in window) {
         const wrapper = this.wrapperRef.current;
         const { columnsInPage } = Connector.setting.getSetting();
