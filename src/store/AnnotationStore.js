@@ -16,6 +16,12 @@ class AnnotationStore extends BaseStore {
 
   set annotations(annotations) {
     this._annotations = annotations;
+    // todo improve
+    this._calculations.forEach((cal) => {
+      if (!annotations.some(({ id }) => id === cal.id)) {
+        this._calculations.delete(cal.id);
+      }
+    });
     this.next();
   }
 
