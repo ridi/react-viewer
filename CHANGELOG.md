@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.0-alpha.36]
+
+### Fixed
+
+- `AnnotationStore`'s bug was fixed.
+
 ## [v1.0.0-alpha.35]
 
 ### Fixed
@@ -298,7 +304,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.35...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.36...HEAD
+[v1.0.0-alpha.36]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.35...1.0.0-alpha.36
 [v1.0.0-alpha.35]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.34...1.0.0-alpha.35
 [v1.0.0-alpha.34]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.33...1.0.0-alpha.34
 [v1.0.0-alpha.33]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.32...1.0.0-alpha.33
