@@ -129,10 +129,6 @@ class CurrentService extends BaseService {
       if (this._restoreCurrentOffset() !== null) {
         this._isOffsetRestored = true;
       }
-      if (!Connector.calculations.isReadyToRead()) {
-        Connector.calculations.setReadyToRead(true);
-        EventBus.emit(Events.READY_TO_READ);
-      }
     });
   }
 
@@ -189,7 +185,7 @@ class CurrentService extends BaseService {
   onMoved(move$) {
     return move$.subscribe(() => {
       if (!Connector.calculations.isReadyToRead()) {
-        Connector.calculations.setReadyToRead(true);
+        Connector.calculations.setReadyToRead(true, 4);
         EventBus.emit(Events.READY_TO_READ);
       }
     });
