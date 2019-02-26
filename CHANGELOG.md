@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v1.0.2]
+
 ### Fixed
 
 - Fix offset restoration bug in `IMAGE` viewer
@@ -314,7 +316,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
 - Reduce library bundle size by excluding peer dependencies from bundled file
 
-[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/ridi/react-viewer/compare/1.0.2...HEAD
+[v1.0.2]: https://github.com/ridi/react-viewer/compare/1.0.1...1.0.2
 [v1.0.1]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.36...1.0.1
 [v1.0.0-alpha.36]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.35...1.0.0-alpha.36
 [v1.0.0-alpha.35]: https://github.com/ridi/react-viewer/compare/1.0.0-alpha.34...1.0.0-alpha.35
