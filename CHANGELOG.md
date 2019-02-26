@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix offset restoration bug in `IMAGE` viewer
+
 ## [v1.0.1]
 
 ### Fixed

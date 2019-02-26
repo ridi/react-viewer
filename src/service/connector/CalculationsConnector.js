@@ -139,6 +139,10 @@ class CalculationsConnector extends BaseConnector {
       if (!isCalculated) {
         return;
       }
+      if (index === 1 && offset < startOffset) {
+        contentIndex = index;
+        return;
+      }
       if (offset >= startOffset && offset < startOffset + total) {
         contentIndex = index;
         return;

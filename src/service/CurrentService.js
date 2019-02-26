@@ -17,6 +17,7 @@ import Logger from '../util/Logger';
 import DOMEventDelayConstants from '../constants/DOMEventDelayConstants';
 import { FOOTER_INDEX } from '../constants/CalculationsConstants';
 import { hasIntersect } from '../util/Util';
+import { ContentFormat } from '../constants/ContentConstants';
 
 class CurrentService extends BaseService {
   _isOffsetRestored = false;
@@ -32,9 +33,22 @@ class CurrentService extends BaseService {
     this.connectEvents(this.onMoved.bind(this), Events.MOVED);
   }
 
+  _restoreImageCurrentOffset() {
+    const { contentIndex } = Connector.current.getCurrent();
+    const { offset, total, isCalculated } = Connector.calculations.getCalculation(contentIndex);
+    if (!isCalculated) return null;
+    const newOffset = Math.floor(total + offset);
+    this._isOffsetRestored = true;
+    EventBus.emit(Events.UPDATE_CURRENT_OFFSET, newOffset);
+    return newOffset;
+  }
+
   _restoreCurrentOffset() {
     const { position, contentIndex } = Connector.current.getCurrent();
     const { offset, total, isCalculated } = Connector.calculations.getCalculation(contentIndex);
+    if (Connector.content.getContentFormat() === ContentFormat.IMAGE) {
+      return this._restoreImageCurrentOffset();
+    }
 
     if (!isCalculated) return null;
 
