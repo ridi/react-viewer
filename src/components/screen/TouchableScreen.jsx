@@ -47,11 +47,9 @@ class TouchableScreen extends React.Component {
 
   componentDidMount() {
     const { current: node } = this.props.forwardedRef;
-    if (this.isSelectable()) {
-      addEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
-      addEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
-      addEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
-    }
+    addEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
+    addEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
+    addEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
     addEventListener(node, TouchEvent.Touch, this.handleTouchEvent);
     this.touchHandler = new TouchEventHandler(node);
     this.touchHandler.attach();
@@ -65,11 +63,9 @@ class TouchableScreen extends React.Component {
   componentWillUnmount() {
     const { current: node } = this.isSelectable() ? this.selectionRef : this.props.forwardedRef;
     this.touchHandler.detach();
-    if (this.isSelectable()) {
-      removeEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
-      removeEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
-      removeEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
-    }
+    removeEventListener(node, TouchEvent.TouchStart, this.handleTouchEvent);
+    removeEventListener(node, TouchEvent.TouchMove, this.handleTouchEvent);
+    removeEventListener(node, TouchEvent.TouchEnd, this.handleTouchEvent);
     removeEventListener(node, TouchEvent.Touch, this.handleTouchEvent);
     this.handleScrollEvent(true);
   }
@@ -91,9 +87,14 @@ class TouchableScreen extends React.Component {
   }
 
   handleTouchEvent(event) {
+    const { annotationable, selectable, viewType } = this.props;
+    if (!annotationable && !selectable) {
+      EventBus.emit(Events.TOUCH, event);
+      return;
+    }
+
     if (!Connector.calculations.isReadyToRead()) return;
 
-    const { selectable, viewType } = this.props;
     const {
       clientX: x,
       clientY: y,
@@ -104,13 +105,16 @@ class TouchableScreen extends React.Component {
 
     const selectionPart = target.dataset.type;
     if (event.type === TouchEvent.Touch) {
-      SelectionStore.end();
-
-      const annotation = AnnotationStore.getByPoint(pageX, pageY);
-      if (annotation) {
-        EventBus.emit(Events.TOUCH, new CustomEvent(TouchEvent.TouchAnnotation, {
-          detail: { ...event.detail, annotation },
-        }));
+      if (selectable) {
+        SelectionStore.end();
+      }
+      if (annotationable) {
+        const annotation = AnnotationStore.getByPoint(pageX, pageY);
+        if (annotation) {
+          EventBus.emit(Events.TOUCH, new CustomEvent(TouchEvent.TouchAnnotation, {
+            detail: { ...event.detail, annotation },
+          }));
+        }
       } else {
         EventBus.emit(Events.TOUCH, event);
       }

@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Emit all kind of the `TouchEvents` if reader is not selectable.
+
 ## [v1.0.2]
 
 ### Fixed

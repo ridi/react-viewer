@@ -31,6 +31,7 @@ module.exports = {
             ['@babel/plugin-proposal-class-properties', { loose: false }],
             ['@babel/plugin-transform-classes', { loose: true }],
             ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
+            ['@babel/plugin-transform-typeof-symbol'],
             ['@babel/plugin-transform-react-jsx'],
             ['@babel/plugin-transform-proto-to-assign'],
           ],
