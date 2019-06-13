@@ -19,15 +19,15 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "webpack",
-    "build:type": "dts-bundle --name 'reader' --main ./src/index.d.ts --out ../dist/typings/index.d.ts"
+    "build": "webpack && tsc --declaration --project .",
+    "build:type": "dts-bundle --name '@ridi/react-viewer' --main ./src/index.d.ts --out ../dist/typings/index.d.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ridi/react-viewer.git"
   },
   "dependencies": {
-    "@ridi/epub-parser": "^0.5.5",
+    "@ridi/epub-parser": "^0.5.6",
     "@ridi/eslint-config": "^4.1.1",
     "@ridi/reader.js": "2.0.0-alpha.10",
     "axios": "^0.18.0",

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ViewTypeButton from './ViewTypeButton';
-import { SettingContext, PagingContext, ViewType, EpubService, SettingUtil } from '../../../dist';
+import { SettingContext, PagingContext, ViewType, EpubService, SettingUtil } from '@ridi/react-viewer';
 
 const Header: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);

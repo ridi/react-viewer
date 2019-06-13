@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {SettingContext, SettingDispatchContext, SettingActionType, ViewType} from '../../../dist';
+import {SettingContext, SettingDispatchContext, SettingActionType, ViewType} from '@ridi/react-viewer';
 
 interface ViewTypeButtonProperty {
   viewType: ViewType,

@@ -19,11 +19,16 @@
     "sourceMap": true,
     "strict": true,
     "target": "es5",
-    "types": [
+    "typeRoots": [
       "../dist/typings"
-    ]
+    ],
+    "baseUrl": "./src/client",
+    "paths": {
+      "@ridi/react-viewer": ["../../../dist"]
+    }
   },
   "exclude": [
-    "node_modules"
+    "../node_modules",
+    "./node_modules"
   ]
 }

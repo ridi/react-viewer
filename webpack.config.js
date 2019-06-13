@@ -5,7 +5,7 @@ module.exports = {
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: '[id].js',
+    filename: '[name].js',
     library: 'reader',
     libraryTarget: 'umd',
   },
