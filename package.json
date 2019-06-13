@@ -1,5 +1,5 @@
 {
-  "name": "@ridi/react-viewer",
+  "name": "@ridi/react-reader",
   "version": "1.0.3",
   "license": "MIT",
   "description": "React-Redux based viewer for EPUB and comics",
@@ -7,17 +7,6 @@
   "typescript": {
     "definition": "dist/typings/index.d.ts"
   },
-  "files": [
-    "index.js",
-    "actions.js",
-    "connectors.js",
-    "reader.js",
-    "reducer.js",
-    "selectors.js",
-    "constants.js",
-    "README.md",
-    "CHANGELOG.md"
-  ],
   "scripts": {
     "build": "webpack && tsc --declaration --project .",
     "build:type": "dts-bundle --name '@ridi/react-viewer' --main ./src/index.d.ts --out ../dist/typings/index.d.ts"
