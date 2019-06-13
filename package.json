@@ -8,8 +8,10 @@
     "definition": "dist/typings/index.d.ts"
   },
   "scripts": {
-    "build": "webpack && tsc --declaration --project .",
-    "build:type": "dts-bundle --name '@ridi/react-viewer' --main ./src/index.d.ts --out ../dist/typings/index.d.ts"
+    "build": "concurrently \"npm run build:webpack\" \"npm run build:dec\" && npm run build:type",
+    "build:webpack": "webpack",
+    "build:dec": "tsc --declaration --project .",
+    "build:type": "dts-bundle --name '@ridi/react-reader' --main ./src/index.d.ts --out ../dist/typings/index.d.ts"
   },
   "repository": {
     "type": "git",

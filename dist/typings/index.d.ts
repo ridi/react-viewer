@@ -3,30 +3,30 @@
 //   ../react
 //   ../@ridi/reader.js/web
 
-declare module '@ridi/react-viewer' {
-    import EpubReader from '@ridi/react-viewer/components/EpubReader';
-    import Loading from '@ridi/react-viewer/components/Loading';
-    import EpubService from '@ridi/react-viewer/EpubService';
-    import * as SettingUtil from '@ridi/react-viewer/SettingUtil';
+declare module '@ridi/react-reader' {
+    import EpubReader from '@ridi/react-reader/components/EpubReader';
+    import Loading from '@ridi/react-reader/components/Loading';
+    import EpubService from '@ridi/react-reader/EpubService';
+    import * as SettingUtil from '@ridi/react-reader/SettingUtil';
     export { EpubReader, Loading, EpubService, SettingUtil };
-    export * from '@ridi/react-viewer/contexts';
-    export * from '@ridi/react-viewer/ReaderJsHelper';
+    export * from '@ridi/react-reader/contexts';
+    export * from '@ridi/react-reader/ReaderJsHelper';
 }
 
-declare module '@ridi/react-viewer/components/EpubReader' {
+declare module '@ridi/react-reader/components/EpubReader' {
     const EpubReader: () => JSX.Element;
     export default EpubReader;
 }
 
-declare module '@ridi/react-viewer/components/Loading' {
+declare module '@ridi/react-reader/components/Loading' {
     /** @jsx jsx */
     import * as React from 'react';
     const Loading: React.FunctionComponent;
     export default Loading;
 }
 
-declare module '@ridi/react-viewer/EpubService' {
-    import { PagingAction, SettingAction, StatusAction } from "@ridi/react-viewer/contexts";
+declare module '@ridi/react-reader/EpubService' {
+    import { PagingAction, SettingAction, StatusAction } from "@ridi/react-reader/contexts";
     import * as React from "react";
     interface FontData {
         href: string;
@@ -51,8 +51,8 @@ declare module '@ridi/react-viewer/EpubService' {
     export {};
 }
 
-declare module '@ridi/react-viewer/SettingUtil' {
-    import { SettingState } from "@ridi/react-viewer/contexts";
+declare module '@ridi/react-reader/SettingUtil' {
+    import { SettingState } from "@ridi/react-reader/contexts";
     export const isScroll: ({ viewType }: SettingState) => boolean;
     export const columnsInPage: ({ viewType }: SettingState) => number;
     export const columnGap: ({ columnGapInPercent }: SettingState) => number;
@@ -60,14 +60,14 @@ declare module '@ridi/react-viewer/SettingUtil' {
     export const containerHeight: ({ containerVerticalMargin }: SettingState) => number;
 }
 
-declare module '@ridi/react-viewer/contexts' {
-    export * from '@ridi/react-viewer/contexts/SettingContext';
-    export * from '@ridi/react-viewer/contexts/PagingContext';
-    export * from '@ridi/react-viewer/contexts/StatusContext';
-    export * from '@ridi/react-viewer/contexts/EpubContextProvider';
+declare module '@ridi/react-reader/contexts' {
+    export * from '@ridi/react-reader/contexts/SettingContext';
+    export * from '@ridi/react-reader/contexts/PagingContext';
+    export * from '@ridi/react-reader/contexts/StatusContext';
+    export * from '@ridi/react-reader/contexts/EpubContextProvider';
 }
 
-declare module '@ridi/react-viewer/ReaderJsHelper' {
+declare module '@ridi/react-reader/ReaderJsHelper' {
     import { Context, Reader } from '@ridi/reader.js/web';
     class ReaderJsHelper {
         readonly readerJs: Reader | null;
@@ -89,7 +89,7 @@ declare module '@ridi/react-viewer/ReaderJsHelper' {
     export default _default;
 }
 
-declare module '@ridi/react-viewer/contexts/SettingContext' {
+declare module '@ridi/react-reader/contexts/SettingContext' {
     import { Reducer } from "react";
     export enum ViewType {
         SCROLL = 0,
@@ -122,7 +122,7 @@ declare module '@ridi/react-viewer/contexts/SettingContext' {
     }>;
 }
 
-declare module '@ridi/react-viewer/contexts/PagingContext' {
+declare module '@ridi/react-reader/contexts/PagingContext' {
     import * as React from 'react';
     export enum PagingActionType {
         UPDATE_PAGING = 0
@@ -145,7 +145,7 @@ declare module '@ridi/react-viewer/contexts/PagingContext' {
     }>;
 }
 
-declare module '@ridi/react-viewer/contexts/StatusContext' {
+declare module '@ridi/react-reader/contexts/StatusContext' {
     import * as React from 'react';
     export enum StatusActionType {
         SET_START_TO_READ = 0
@@ -164,7 +164,7 @@ declare module '@ridi/react-viewer/contexts/StatusContext' {
     }>;
 }
 
-declare module '@ridi/react-viewer/contexts/EpubContextProvider' {
+declare module '@ridi/react-reader/contexts/EpubContextProvider' {
     import * as React from 'react';
     export const EpubContextProvider: React.FunctionComponent<{
         children: React.ReactNode;
