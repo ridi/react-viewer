@@ -53,6 +53,7 @@ const EpubReader = () => {
 
   return (
     <div
+      id="reader_root"
       css={styles.wrapper(settingState)}
       ref={contentRef}
       dangerouslySetInnerHTML={{ __html: content }}

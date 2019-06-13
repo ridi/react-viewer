@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "lib": [
@@ -9,7 +8,7 @@
     ],
     "module": "es6",
     "moduleResolution": "node",
-    "noEmit": true,
+    "emitDeclarationOnly": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "preserveConstEnums": true,
@@ -18,8 +17,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "es5",
-    "declaration": true,
+    "declaration": true
   },
+  "include": ["src", "typings"],
   "exclude": [
     "node_modules"
   ]

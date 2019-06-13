@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {SettingContext, SettingDispatchContext, SettingActionType, ViewType} from './reader/contexts';
+import {SettingContext, SettingDispatchContext, SettingActionType, ViewType} from '../../../dist';
 
 interface ViewTypeButtonProperty {
   viewType: ViewType,

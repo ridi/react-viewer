@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Footer from './Footer';
-import Loading from './reader/components/Loading';
 import Header from './Header';
-import { EpubReader } from './reader';
-import { EpubContextProvider } from './reader/contexts';
+import { Loading, EpubReader, EpubContextProvider } from '../../../dist';
 
 const App: React.FunctionComponent = () => (
   <EpubContextProvider>

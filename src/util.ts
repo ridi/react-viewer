@@ -14,9 +14,8 @@ export function withMeasure(run: () => Promise<any> | any, message: string, ...o
   };
 }
 
-
 export function getRootElement(): HTMLElement | null {
-  return document.getElementById('content');
+  return document.getElementById('reader_root');
 }
 
 export function getScrollWidth(): number {

@@ -1,14 +1,26 @@
 {
   "presets": [
-    ["@babel/preset-env", { "useBuiltIns": "entry" }],
+    "@babel/preset-env",
+    "@babel/typescript",
     "@babel/preset-react"
   ],
   "plugins": [
     ["@babel/plugin-proposal-class-properties", { "loose": false }],
-    ["@babel/plugin-transform-classes", { "loose": true }],
     ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
-    ["@babel/plugin-transform-typeof-symbol"],
-    ["@babel/plugin-transform-react-jsx"],
-    ["@babel/plugin-transform-proto-to-assign"]
-  ]
+    ["@babel/plugin-transform-classes", { "loose": true }],
+    ["@babel/plugin-transform-proto-to-assign"],
+    ["@babel/plugin-transform-runtime"]
+  ],
+  "env": {
+    "production": {
+      "plugins": [
+        ["emotion", { "hoist": true }]
+      ]
+    },
+    "development": {
+      "plugins": [
+        ["emotion", { "sourceMap": true, "autoLabel": true }]
+      ]
+    }
+  }
 }

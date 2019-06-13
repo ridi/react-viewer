@@ -1,8 +1,6 @@
 import * as React from 'react';
 import ViewTypeButton from './ViewTypeButton';
-import { SettingContext, PagingContext, ViewType } from './reader/contexts';
-import EpubService from './reader/EpubService';
-import {columnGap, isScroll} from "./reader/SettingUtil";
+import { SettingContext, PagingContext, ViewType, EpubService, SettingUtil } from '../../../dist';
 
 const Header: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
@@ -14,7 +12,12 @@ const Header: React.FunctionComponent = () => {
   const onFileChanged = () => {
     const { current: fileInput } = fileInputRef;
     if (fileInput && fileInput.files) {
-      EpubService.load(fileInput.files[0], pagingState.currentPage, isScroll(settingState), columnGap(settingState));
+      EpubService.load(
+        fileInput.files[0],
+        pagingState.currentPage,
+        SettingUtil.isScroll(settingState),
+        SettingUtil.columnGap(settingState),
+      );
     }
   };
 

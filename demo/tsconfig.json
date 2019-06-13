@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "checkJs": false,
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "lib": [
@@ -18,7 +19,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "es5",
-    "declaration": true,
+    "types": [
+      "../dist/typings"
+    ]
   },
   "exclude": [
     "node_modules"

@@ -1,47 +1,39 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   context: __dirname,
   entry: {
-    index: path.join(__dirname, 'src/index.jsx'),
-    bundleLoader: [
-      '@babel/polyfill',
-      'url-search-params-polyfill',
-      'whatwg-fetch',
-      path.join(__dirname, 'src/bundleLoader.js'),
-    ],
+    index: path.join(__dirname, 'src/client/index.tsx'),
   },
   output: {
-    path: `${__dirname}`,
-    filename: 'resources/js/[name].js',
+    path: `${__dirname}/public/js`,
+    filename: '[id].js',
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(tsx?)|(jsx?)$/,
         loader: 'babel-loader',
         exclude: [/node_modules/],
-        query: {
-          presets: [
-            ['@babel/preset-env', { useBuiltIns: 'entry' }],
-            '@babel/preset-react',
-          ],
-          plugins: [
-            ['@babel/plugin-proposal-class-properties', { loose: false }],
-            ['@babel/plugin-transform-classes', { loose: true }],
-            ['@babel/plugin-proposal-object-rest-spread', { useBuiltIns: true }],
-            ['@babel/plugin-transform-react-jsx'],
-            ['@babel/plugin-transform-proto-to-assign'],
-          ],
-        },
       },
     ],
   },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json'],
-    alias: {
-      '@ridi/react-viewer': path.join(__dirname, '../lib'),
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000,
+    proxy: {
+      '/api/**': 'http://localhost:8080',
+      changeOrigin: true,
     },
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: `${__dirname}/public/index.html`,
+    }),
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   mode: 'production',
 };
