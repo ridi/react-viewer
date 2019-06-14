@@ -15,7 +15,12 @@ const Footer: React.FunctionComponent = () => {
 
   const onInputCurrentPage = (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
-      EpubService.goToPage(currentPage, pagingState.pageUnit, SettingUtil.isScroll(settingState), SettingUtil.columnsInPage(settingState));
+      EpubService.goToPage({
+        page: currentPage,
+        pageUnit: pagingState.pageUnit,
+        isScroll: SettingUtil.isScroll(settingState),
+        columnsInPage: SettingUtil.columnsInPage(settingState),
+      });
     } else if (isHtmlInputElement(e.target)) {
       setCurrentPage(parseInt(e.target.value || '1', 10));
     }

@@ -6,9 +6,9 @@
 declare module '@ridi/react-reader' {
     import EpubReader from '@ridi/react-reader/components/EpubReader';
     import Loading from '@ridi/react-reader/components/Loading';
-    import EpubService from '@ridi/react-reader/EpubService';
     import * as SettingUtil from '@ridi/react-reader/SettingUtil';
-    export { EpubReader, Loading, EpubService, SettingUtil };
+    export { EpubReader, Loading, SettingUtil, };
+    export * from '@ridi/react-reader/EpubService';
     export * from '@ridi/react-reader/contexts';
     export * from '@ridi/react-reader/ReaderJsHelper';
 }
@@ -25,32 +25,6 @@ declare module '@ridi/react-reader/components/Loading' {
     export default Loading;
 }
 
-declare module '@ridi/react-reader/EpubService' {
-    import { PagingAction, SettingAction, StatusAction } from "@ridi/react-reader/contexts";
-    import * as React from "react";
-    interface FontData {
-        href: string;
-    }
-    interface EpubParsedData {
-        fonts?: Array<FontData>;
-        styles?: Array<String>;
-        spines?: Array<String>;
-        unzipPath: string;
-    }
-    export default class EpubService {
-        static dispatchSetting?: React.Dispatch<SettingAction>;
-        static dispatchStatus?: React.Dispatch<StatusAction>;
-        static dispatchPaging?: React.Dispatch<PagingAction>;
-        static init(dispatchSetting: React.Dispatch<SettingAction>, dispatchStatus: React.Dispatch<StatusAction>, dispatchPaging: React.Dispatch<PagingAction>): void;
-        static goToPage: (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<void>;
-        static invalidate: (currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
-        static load: (file: File, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
-        static loadWithParsedData: (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
-        static updateCurrent: (pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<any>;
-    }
-    export {};
-}
-
 declare module '@ridi/react-reader/SettingUtil' {
     import { SettingState } from "@ridi/react-reader/contexts";
     export const isScroll: ({ viewType }: SettingState) => boolean;
@@ -58,6 +32,67 @@ declare module '@ridi/react-reader/SettingUtil' {
     export const columnGap: ({ columnGapInPercent }: SettingState) => number;
     export const containerWidth: ({ containerHorizontalMargin, contentPaddingInPercent }: SettingState) => number;
     export const containerHeight: ({ containerVerticalMargin }: SettingState) => number;
+}
+
+declare module '@ridi/react-reader/EpubService' {
+    import { PagingAction, SettingAction, StatusAction } from '@ridi/react-reader/contexts';
+    import * as React from 'react';
+    export interface FontData {
+        href: string;
+    }
+    export interface EpubParsedData {
+        fonts?: Array<FontData>;
+        styles?: Array<String>;
+        spines?: Array<String>;
+        unzipPath: string;
+    }
+    export interface PagingResult {
+        totalPage: number;
+        pageUnit: number;
+        fullHeight: number;
+        fullWidth: number;
+    }
+    export class EpubService {
+        static dispatchSetting?: React.Dispatch<SettingAction>;
+        static dispatchStatus?: React.Dispatch<StatusAction>;
+        static dispatchPaging?: React.Dispatch<PagingAction>;
+        static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
+            dispatchSetting: React.Dispatch<SettingAction>;
+            dispatchStatus: React.Dispatch<StatusAction>;
+            dispatchPaging: React.Dispatch<PagingAction>;
+        }): void;
+        static goToPage: ({ page, pageUnit, isScroll, columnsInPage, }: {
+            page: number;
+            pageUnit: number;
+            isScroll: boolean;
+            columnsInPage: number;
+        }) => Promise<void>;
+        static invalidate: ({ currentPage, isScroll, columnGap, columnsInPage, }: {
+            currentPage: number;
+            isScroll: boolean;
+            columnGap: number;
+            columnsInPage: number;
+        }) => Promise<void>;
+        static load: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+            metadata: EpubParsedData;
+            currentPage: number;
+            isScroll: boolean;
+            columnGap: number;
+            columnsInPage: number;
+        }) => Promise<void>;
+        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+            metadata: EpubParsedData;
+            currentPage: number;
+            isScroll: boolean;
+            columnGap: number;
+            columnsInPage: number;
+        }) => Promise<void>;
+        static updateCurrent: ({ pageUnit, isScroll, columnsInPage }: {
+            pageUnit: number;
+            isScroll: boolean;
+            columnsInPage: number;
+        }) => Promise<any>;
+    }
 }
 
 declare module '@ridi/react-reader/contexts' {

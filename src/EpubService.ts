@@ -1,34 +1,37 @@
-import axios from 'axios';
-import {getClientHeight, getClientWidth, getScrollHeight, getScrollWidth, measure} from './util';
-import Events, {SET_CONTENT} from './Events';
+import { getClientHeight, getClientWidth, getScrollHeight, getScrollWidth, measure } from './util';
+import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
-import {PagingAction, PagingActionType, SettingAction, StatusAction, StatusActionType } from "./contexts";
-import * as React from "react";
+import { PagingAction, PagingActionType, SettingAction, StatusAction, StatusActionType } from './contexts';
+import * as React from 'react';
 
-interface FontData {
+export interface FontData {
   href: string,
 }
 
-interface EpubParsedData {
+export interface EpubParsedData {
   fonts?: Array<FontData>,
   styles?: Array<String>,
   spines?: Array<String>,
   unzipPath: string,
 }
 
-interface PagingResult {
+export interface PagingResult {
   totalPage: number,
   pageUnit: number,
   fullHeight: number,
   fullWidth: number,
 }
 
-export default class EpubService {
+export class EpubService {
   static dispatchSetting?: React.Dispatch<SettingAction>;
   static dispatchStatus?: React.Dispatch<StatusAction>;
   static dispatchPaging?: React.Dispatch<PagingAction>;
 
-  static init(dispatchSetting: React.Dispatch<SettingAction>, dispatchStatus: React.Dispatch<StatusAction>, dispatchPaging: React.Dispatch<PagingAction>) {
+  static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
+    dispatchSetting: React.Dispatch<SettingAction>,
+    dispatchStatus: React.Dispatch<StatusAction>,
+    dispatchPaging: React.Dispatch<PagingAction>,
+  }) {
     EpubService.dispatchStatus = dispatchStatus;
     EpubService.dispatchSetting = dispatchSetting;
     EpubService.dispatchPaging = dispatchPaging;
@@ -52,7 +55,7 @@ export default class EpubService {
     return result;
   };
 
-  private static appendStyles = async (metadata: EpubParsedData): Promise<void> => {
+  private static appendStyles = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     return measure(() => {
       if (!metadata.styles) return;
       const element = document.createElement('style');
@@ -82,7 +85,7 @@ export default class EpubService {
     }), `${imageCount} images loaded`);
   };
 
-  private static prepareFonts = async (metadata: EpubParsedData): Promise<void> => {
+  private static prepareFonts = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     if (!metadata.fonts) return Promise.resolve();
     const fontFaces = metadata.fonts.map(font => font.href).map((href) => {
       const name = href.split('/').slice(-1)[0].replace(/\./g, '_');
@@ -94,7 +97,15 @@ export default class EpubService {
     }), `${metadata.fonts.length} fonts loaded`);
   };
 
-  private static startPaging = async (isScroll: boolean, columnGap: number, columnsInPage: number): Promise<PagingResult> => {
+  private static startPaging = async ({
+    isScroll,
+    columnGap,
+    columnsInPage,
+  }: {
+    isScroll: boolean,
+    columnGap: number,
+    columnsInPage: number,
+  }): Promise<PagingResult> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
       const paging: PagingResult = {
@@ -120,7 +131,36 @@ export default class EpubService {
     }, 'Paging done');
   };
 
-  static goToPage = async (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number): Promise<void> => {
+  private static restoreCurrent = async ({
+    page,
+    pageUnit,
+    isScroll,
+    columnsInPage,
+  }: {
+    page: number,
+    pageUnit: number,
+    isScroll: boolean,
+    columnsInPage: number,
+  }): Promise<void> => {
+    return measure(() => EpubService.goToPage({
+      page,
+      pageUnit,
+      isScroll,
+      columnsInPage,
+    }), `Restore current page => ${page}`);
+  };
+
+  static goToPage = async ({
+    page,
+    pageUnit,
+    isScroll,
+    columnsInPage,
+  }: {
+    page: number,
+    pageUnit: number,
+    isScroll: boolean,
+    columnsInPage: number,
+  }): Promise<void> => {
     return measure(async () => {
       if (!EpubService.dispatchPaging) return;
       if (isScroll) {
@@ -135,17 +175,23 @@ export default class EpubService {
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
-  private static restoreCurrent = async (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number): Promise<void> => {
-    return measure(() => EpubService.goToPage(page, pageUnit, isScroll, columnsInPage), `Restore current page => ${page}`);
-  };
-
-  static invalidate = async (currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
+  static invalidate = async ({
+    currentPage,
+    isScroll,
+    columnGap,
+    columnsInPage,
+  }: {
+    currentPage: number,
+    isScroll: boolean,
+    columnGap: number,
+    columnsInPage: number,
+  }): Promise<void> => {
     const _invalidate = async () => {
       try {
         await EpubService.waitImagesLoaded();
         await ReaderJsHelper.reviseImages();
-        const { pageUnit } = await EpubService.startPaging(isScroll, columnGap, columnsInPage);
-        await EpubService.restoreCurrent(currentPage, pageUnit, isScroll, columnsInPage);
+        const { pageUnit } = await EpubService.startPaging({ isScroll, columnGap, columnsInPage });
+        await EpubService.restoreCurrent({ page: currentPage, pageUnit, isScroll, columnsInPage });
       } catch (e) {
         console.error(e);
       }
@@ -153,50 +199,34 @@ export default class EpubService {
     return EpubService.inLoadingState(_invalidate);
   };
 
-  private static parseBook = async (file: File): Promise<EpubParsedData> => {
-    return new Promise((resolve, reject) => {
-      axios.get(`/api/book?filename=${encodeURI(file.name)}`).then((response) => {
-        return resolve(response.data);
-      }).catch((error) => {
-        if (error.response.status === 404) {
-          const formData = new FormData();
-          formData.append('file', file);
-          return axios.post('/api/book/upload', formData).then(response => resolve(response.data));
-        }
-        reject(error);
-      });
-    });
-  };
-
-  static load = async (file: File, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
+  static load = async ({
+    metadata,
+    currentPage,
+    isScroll,
+    columnGap,
+    columnsInPage,
+  }: {
+    metadata: EpubParsedData,
+    currentPage: number,
+    isScroll: boolean,
+    columnGap: number,
+    columnsInPage: number,
+  }): Promise<void> => {
     return EpubService.inLoadingState(async () => {
       try {
-        const metadata = await EpubService.parseBook(file);
-        await EpubService.appendStyles(metadata);
-        await EpubService.prepareFonts(metadata);
+        await EpubService.appendStyles({ metadata });
+        await EpubService.prepareFonts({ metadata });
         Events.emit(SET_CONTENT, metadata.spines);
-        await EpubService.invalidate(currentPage, isScroll, columnGap, columnsInPage);
+        await EpubService.invalidate({ currentPage, isScroll, columnGap, columnsInPage });
       } catch (e) {
         console.error(e);
       }
     });
   };
 
-  static loadWithParsedData = async (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
-    return EpubService.inLoadingState(async () => {
-      try {
-        await EpubService.appendStyles(metadata);
-        await EpubService.prepareFonts(metadata);
-        Events.emit(SET_CONTENT, metadata.spines);
-        await EpubService.invalidate(currentPage, isScroll, columnGap, columnsInPage);
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  };
+  static loadWithParsedData = EpubService.load;
 
-
-  static updateCurrent = async (pageUnit: number, isScroll: boolean, columnsInPage: number) => {
+  static updateCurrent = async ({ pageUnit, isScroll, columnsInPage }: { pageUnit: number, isScroll: boolean, columnsInPage: number }) => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
       let currentPage;
@@ -208,8 +238,6 @@ export default class EpubService {
         currentPage = (Math.floor(scrollLeft / pageUnit) * columnsInPage) + 1;
       }
       EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage } });
-    }, 'update current page');
+    }, 'update current page').catch(error => console.error(error));
   };
-
 }
-

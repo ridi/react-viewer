@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import * as React from 'react';
-import {PagingContext, SettingContext, StatusContext} from '../../contexts';
-import {columnGap, columnsInPage, isScroll} from '../../SettingUtil';
+import { PagingContext, SettingContext, StatusContext } from '../../contexts';
+import { columnGap, columnsInPage, isScroll } from '../../SettingUtil';
 import Events, { SET_CONTENT } from '../../Events';
 import ReaderJsHelper from '../../ReaderJsHelper';
-import EpubService from '../../EpubService';
+import { EpubService } from '../../EpubService';
 import * as styles from './styles';
 
 const EpubReader = () => {
@@ -30,10 +30,19 @@ const EpubReader = () => {
   }, []);
 
   React.useEffect(() => {
-    const invalidate = () => EpubService.invalidate(pagingState.currentPage, isScroll(settingState), columnGap(settingState), columnsInPage(settingState));
+    const invalidate = () => EpubService.invalidate({
+      currentPage: pagingState.currentPage,
+      isScroll: isScroll(settingState),
+      columnGap: columnGap(settingState),
+      columnsInPage: columnsInPage(settingState),
+    }).catch(error => console.error(error));
     const updateCurrent = () => {
       if (!statusState.startToRead) return;
-      EpubService.updateCurrent(pagingState.pageUnit, isScroll(settingState), columnsInPage(settingState));
+      EpubService.updateCurrent({
+        pageUnit: pagingState.pageUnit,
+        isScroll: isScroll(settingState),
+        columnsInPage: columnsInPage(settingState),
+      }).catch(error => console.error(error));
     };
 
     window.addEventListener('resize', invalidate);
@@ -48,7 +57,12 @@ const EpubReader = () => {
     if (contentRef.current) {
       ReaderJsHelper.mount(contentRef.current, isScroll(settingState));
     }
-    EpubService.invalidate(pagingState.currentPage, isScroll(settingState), columnGap(settingState), columnsInPage(settingState));
+    EpubService.invalidate({
+      currentPage: pagingState.currentPage,
+      isScroll: isScroll(settingState),
+      columnGap: columnGap(settingState),
+      columnsInPage: columnsInPage(settingState),
+    }).catch(error => console.error(error));
   }, [settingState]);
 
   return (
