@@ -99,7 +99,7 @@ declare module '@ridi/react-reader/contexts' {
     export * from '@ridi/react-reader/contexts/SettingContext';
     export * from '@ridi/react-reader/contexts/PagingContext';
     export * from '@ridi/react-reader/contexts/StatusContext';
-    export * from '@ridi/react-reader/contexts/EpubContextProvider';
+    export * from '@ridi/react-reader/contexts/EpubProvider';
 }
 
 declare module '@ridi/react-reader/ReaderJsHelper' {
@@ -198,9 +198,9 @@ declare module '@ridi/react-reader/contexts/StatusContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/EpubContextProvider' {
+declare module '@ridi/react-reader/contexts/EpubProvider' {
     import * as React from 'react';
-    export const EpubContextProvider: React.FunctionComponent<{
+    export const EpubProvider: React.FunctionComponent<{
         children: React.ReactNode;
     }>;
 }

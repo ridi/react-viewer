@@ -14,7 +14,7 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   return <>{children}</>;
 };
 
-export const EpubContextProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
+export const EpubProvider: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <SettingContextProvider>
       <PagingContextProvider>

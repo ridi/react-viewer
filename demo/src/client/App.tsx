@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Footer from './Footer';
 import Header from './Header';
-import { Loading, EpubReader, EpubContextProvider } from '@ridi/react-reader';
+import { Loading, EpubReader, EpubProvider } from '@ridi/react-reader';
 
 const App: React.FunctionComponent = () => (
-  <EpubContextProvider>
+  <EpubProvider>
     <Header />
     <EpubReader />
     <Footer />
     <Loading />
-  </EpubContextProvider>
+  </EpubProvider>
 );
 
 export default App;
