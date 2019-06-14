@@ -92,9 +92,12 @@ export class EpubService {
       return new FontFace(name, `url("${metadata.unzipPath}/${href}")`);
     });
 
-    return measure(() => Promise.all(fontFaces.map(fontFace => fontFace.load())).then(() => {
-      fontFaces.forEach(f => (document as any).fonts.add(f));
-    }), `${metadata.fonts.length} fonts loaded`);
+    return measure(
+      () => Promise.all(
+        fontFaces.map(fontFace => fontFace.load()
+          .then(() => (document as any).fonts.add(fontFace))
+          .catch((error) => console.warn('font loading error: ', error)),
+        )), `${metadata.fonts.length} fonts loaded`);
   };
 
   private static startPaging = async ({
@@ -213,14 +216,10 @@ export class EpubService {
     columnsInPage: number,
   }): Promise<void> => {
     return EpubService.inLoadingState(async () => {
-      try {
-        await EpubService.appendStyles({ metadata });
-        await EpubService.prepareFonts({ metadata });
-        Events.emit(SET_CONTENT, metadata.spines);
-        await EpubService.invalidate({ currentPage, isScroll, columnGap, columnsInPage });
-      } catch (e) {
-        console.error(e);
-      }
+      await EpubService.appendStyles({ metadata });
+      await EpubService.prepareFonts({ metadata });
+      Events.emit(SET_CONTENT, metadata.spines);
+      await EpubService.invalidate({ currentPage, isScroll, columnGap, columnsInPage });
     });
   };
 

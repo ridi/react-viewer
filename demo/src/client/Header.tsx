@@ -33,25 +33,24 @@ const Header: React.FunctionComponent = () => {
   };
 
   const onFileChanged = () => {
-    const {current: fileInput} = fileInputRef;
+    const { current: fileInput } = fileInputRef;
     if (fileInput && fileInput.files) {
       loadFile(fileInput.files[0])
-        .then((metadata: EpubParsedData) => {
-          EpubService.load({
-            metadata,
-            currentPage: pagingState.currentPage,
-            isScroll: SettingUtil.isScroll(settingState),
-            columnGap: SettingUtil.columnGap(settingState),
-            columnsInPage: SettingUtil.columnsInPage(settingState),
-          })
-        })
-        .catch((error) => console.error(error));
+      .then((metadata: EpubParsedData) => {
+        EpubService.load({
+          metadata,
+          currentPage: pagingState.currentPage,
+          isScroll: SettingUtil.isScroll(settingState),
+          columnGap: SettingUtil.columnGap(settingState),
+          columnsInPage: SettingUtil.columnsInPage(settingState),
+        }).catch((error) => console.error(error));
+      }).catch((error) => console.error(error));
     }
   };
 
   const onFileOpen = () => {
-    const {current: fileInput} = fileInputRef;
-    const {current: fileOpenButton} = fileOpenButtonRef;
+    const { current: fileInput } = fileInputRef;
+    const { current: fileOpenButton } = fileOpenButtonRef;
     if (fileOpenButton) fileOpenButton.blur();
     if (fileInput) fileInput.click();
   };
