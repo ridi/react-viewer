@@ -20,12 +20,12 @@ export default class EpubService {
     private static waitImagesLoaded;
     private static prepareFonts;
     private static startPaging;
-    static goToPage: (page: number, pageUnit: number, isScroll: boolean) => Promise<void>;
+    static goToPage: (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<void>;
     private static restoreCurrent;
-    static invalidate: (currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
+    static invalidate: (currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
     private static parseBook;
-    static load: (file: File, currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
-    static loadWithParsedData: (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
-    static updateCurrent: (pageUnit: number, isScroll: boolean) => Promise<any>;
+    static load: (file: File, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
+    static loadWithParsedData: (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
+    static updateCurrent: (pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<any>;
 }
 export {};

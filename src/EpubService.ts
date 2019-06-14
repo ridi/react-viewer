@@ -2,13 +2,7 @@ import axios from 'axios';
 import {getClientHeight, getClientWidth, getScrollHeight, getScrollWidth, measure} from './util';
 import Events, {SET_CONTENT} from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
-import {
-  PagingAction,
-  PagingActionType,
-  SettingAction,
-  StatusAction,
-  StatusActionType,
-} from "./contexts";
+import {PagingAction, PagingActionType, SettingAction, StatusAction, StatusActionType } from "./contexts";
 import * as React from "react";
 
 interface FontData {
@@ -100,7 +94,7 @@ export default class EpubService {
     }), `${metadata.fonts.length} fonts loaded`);
   };
 
-  private static startPaging = async (isScroll: boolean, columnGap: number): Promise<PagingResult> => {
+  private static startPaging = async (isScroll: boolean, columnGap: number, columnsInPage: number): Promise<PagingResult> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
       const paging: PagingResult = {
@@ -112,12 +106,12 @@ export default class EpubService {
       if (isScroll) {
         paging.pageUnit = getClientHeight();
         paging.fullHeight = getScrollHeight();
-        // 어차피 스크롤보기에서 마지막 페이지에 도달하는 것은 불가능하므로, Math.floor로 계산
+        // 어차피 스크롤보기에서 마지막 페이지에 도달하는 것은 거의 불가능하므로, Math.floor로 계산
         paging.totalPage = Math.floor(paging.fullHeight / paging.pageUnit);
       } else {
         paging.pageUnit = getClientWidth() + columnGap;
         paging.fullWidth = getScrollWidth();
-        paging.totalPage = Math.ceil(paging.fullWidth / paging.pageUnit);
+        paging.totalPage = Math.ceil(paging.fullWidth / paging.pageUnit) * columnsInPage;
       }
 
       EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging });
@@ -126,7 +120,7 @@ export default class EpubService {
     }, 'Paging done');
   };
 
-  static goToPage = async (page: number, pageUnit: number, isScroll: boolean): Promise<void> => {
+  static goToPage = async (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number): Promise<void> => {
     return measure(async () => {
       if (!EpubService.dispatchPaging) return;
       if (isScroll) {
@@ -134,23 +128,24 @@ export default class EpubService {
         document.documentElement.scrollTop = (page - 1) * pageUnit;
       } else {
         document.documentElement.scrollTop = 0;
-        document.documentElement.scrollLeft = (page - 1) * pageUnit;
+        document.documentElement.scrollLeft = Math.floor((page - 1) / columnsInPage) * pageUnit;
+        console.log(`scrollLeft => ${Math.floor((page - 1) / columnsInPage) * pageUnit}`);
       }
       EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage: page } });
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
-  private static restoreCurrent = async (page: number, pageUnit: number, isScroll: boolean): Promise<void> => {
-    return measure(() => EpubService.goToPage(page, pageUnit, isScroll), `Restore current page => ${page}`);
+  private static restoreCurrent = async (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number): Promise<void> => {
+    return measure(() => EpubService.goToPage(page, pageUnit, isScroll, columnsInPage), `Restore current page => ${page}`);
   };
 
-  static invalidate = async (currentPage: number, isScroll: boolean, columnGap: number): Promise<void> => {
+  static invalidate = async (currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
     const _invalidate = async () => {
       try {
         await EpubService.waitImagesLoaded();
         await ReaderJsHelper.reviseImages();
-        const { pageUnit } = await EpubService.startPaging(isScroll, columnGap);
-        await EpubService.restoreCurrent(currentPage, pageUnit, isScroll);
+        const { pageUnit } = await EpubService.startPaging(isScroll, columnGap, columnsInPage);
+        await EpubService.restoreCurrent(currentPage, pageUnit, isScroll, columnsInPage);
       } catch (e) {
         console.error(e);
       }
@@ -173,27 +168,27 @@ export default class EpubService {
     });
   };
 
-  static load = async (file: File, currentPage: number, isScroll: boolean, columnGap: number): Promise<void> => {
+  static load = async (file: File, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
     return EpubService.inLoadingState(async () => {
       try {
         const metadata = await EpubService.parseBook(file);
         await EpubService.appendStyles(metadata);
         await EpubService.prepareFonts(metadata);
         Events.emit(SET_CONTENT, metadata.spines);
-        await EpubService.invalidate(currentPage, isScroll, columnGap);
+        await EpubService.invalidate(currentPage, isScroll, columnGap, columnsInPage);
       } catch (e) {
         console.error(e);
       }
     });
   };
 
-  static loadWithParsedData = async (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number): Promise<void> => {
+  static loadWithParsedData = async (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number): Promise<void> => {
     return EpubService.inLoadingState(async () => {
       try {
         await EpubService.appendStyles(metadata);
         await EpubService.prepareFonts(metadata);
         Events.emit(SET_CONTENT, metadata.spines);
-        await EpubService.invalidate(currentPage, isScroll, columnGap);
+        await EpubService.invalidate(currentPage, isScroll, columnGap, columnsInPage);
       } catch (e) {
         console.error(e);
       }
@@ -201,16 +196,18 @@ export default class EpubService {
   };
 
 
-  static updateCurrent = async (pageUnit: number, isScroll: boolean) => {
+  static updateCurrent = async (pageUnit: number, isScroll: boolean, columnsInPage: number) => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
+      let currentPage;
       if (isScroll) {
         const { scrollTop } = document.documentElement;
-        EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage: Math.floor(scrollTop / pageUnit) + 1 } });
+        currentPage = Math.floor(scrollTop / pageUnit) + 1;
       } else {
         const { scrollLeft } = document.documentElement;
-        EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage: Math.floor(scrollLeft / pageUnit) + 1 } });
+        currentPage = (Math.floor(scrollLeft / pageUnit) * columnsInPage) + 1;
       }
+      EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage } });
     }, 'update current page');
   };
 

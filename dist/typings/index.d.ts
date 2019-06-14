@@ -42,11 +42,11 @@ declare module '@ridi/react-reader/EpubService' {
         static dispatchStatus?: React.Dispatch<StatusAction>;
         static dispatchPaging?: React.Dispatch<PagingAction>;
         static init(dispatchSetting: React.Dispatch<SettingAction>, dispatchStatus: React.Dispatch<StatusAction>, dispatchPaging: React.Dispatch<PagingAction>): void;
-        static goToPage: (page: number, pageUnit: number, isScroll: boolean) => Promise<void>;
-        static invalidate: (currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
-        static load: (file: File, currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
-        static loadWithParsedData: (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number) => Promise<void>;
-        static updateCurrent: (pageUnit: number, isScroll: boolean) => Promise<any>;
+        static goToPage: (page: number, pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<void>;
+        static invalidate: (currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
+        static load: (file: File, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
+        static loadWithParsedData: (metadata: EpubParsedData, currentPage: number, isScroll: boolean, columnGap: number, columnsInPage: number) => Promise<void>;
+        static updateCurrent: (pageUnit: number, isScroll: boolean, columnsInPage: number) => Promise<any>;
     }
     export {};
 }
@@ -113,7 +113,6 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
         maxWidth: number;
         containerHorizontalMargin: number;
         containerVerticalMargin: number;
-        contentWidthInPercent: number;
     };
     export const initialSettingState: SettingState;
     export const settingReducer: Reducer<SettingState, SettingAction>;

@@ -17,6 +17,7 @@ const Header: React.FunctionComponent = () => {
         pagingState.currentPage,
         SettingUtil.isScroll(settingState),
         SettingUtil.columnGap(settingState),
+        SettingUtil.columnsInPage(settingState),
       );
     }
   };

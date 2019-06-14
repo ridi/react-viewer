@@ -21,7 +21,6 @@ export declare type SettingState = {
     maxWidth: number;
     containerHorizontalMargin: number;
     containerVerticalMargin: number;
-    contentWidthInPercent: number;
 };
 export declare const initialSettingState: SettingState;
 export declare const settingReducer: Reducer<SettingState, SettingAction>;
