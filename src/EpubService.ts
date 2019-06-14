@@ -159,16 +159,17 @@ export default class EpubService {
   };
 
   private static parseBook = async (file: File): Promise<EpubParsedData> => {
-    return axios.get(`/api/book?filename=${encodeURI(file.name)}`).then((response) => {
-      return response.data;
-    }).catch((error) => {
-      if (error.response.status === 404) {
-        const formData = new FormData();
-        formData.append('file', file);
-        axios.post('api/book/upload', formData).then(response => response.data);
-      } else {
-        console.error(error);
-      }
+    return new Promise((resolve, reject) => {
+      axios.get(`/api/book?filename=${encodeURI(file.name)}`).then((response) => {
+        return resolve(response.data);
+      }).catch((error) => {
+        if (error.response.status === 404) {
+          const formData = new FormData();
+          formData.append('file', file);
+          return axios.post('/api/book/upload', formData).then(response => resolve(response.data));
+        }
+        reject(error);
+      });
     });
   };
 
