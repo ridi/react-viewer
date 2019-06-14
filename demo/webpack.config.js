@@ -7,8 +7,8 @@ module.exports = {
     index: path.join(__dirname, 'src/client/index.tsx'),
   },
   output: {
-    path: `${__dirname}/public/js`,
-    filename: '[id].js',
+    path: `${__dirname}/public`,
+    filename: '[name].js',
   },
   module: {
     rules: [

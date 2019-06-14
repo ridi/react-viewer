@@ -4,9 +4,7 @@
   "license": "MIT",
   "description": "React-Redux based viewer for EPUB and comics",
   "main": "dist/index.js",
-  "typescript": {
-    "definition": "dist/typings/index.d.ts"
-  },
+  "typings": "dist/typings/index.d.ts",
   "scripts": {
     "build": "concurrently \"npm run build:webpack\" \"npm run build:dec\" && npm run build:type",
     "build:webpack": "webpack",

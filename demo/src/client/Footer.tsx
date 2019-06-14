@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SettingContext, PagingContext, SettingUtil, EpubService } from '@ridi/react-viewer';
+import { SettingContext, PagingContext, SettingUtil, EpubService } from '@ridi/react-reader';
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
 const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(target as HTMLInputElement).value;

@@ -83,6 +83,11 @@ app.post('/api/book/upload', (request, response) => {
   });
 });
 
+app.use(function(err, req, res, next) {
+  res.status(500);
+  res.render('error', { error: err });
+});
+
 app.listen(port, () => {
   console.log(`Express listening on port ${port}.`);
 });
