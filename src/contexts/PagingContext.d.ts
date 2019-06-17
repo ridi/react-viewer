@@ -7,6 +7,7 @@ export declare type PagingAction = {
     paging: Partial<PagingState>;
 };
 export declare type SpinePagingState = {
+    spineIndex: number;
     offset: number;
     total: number;
 };

@@ -38,7 +38,7 @@ declare module '@ridi/react-reader/SettingUtil' {
 }
 
 declare module '@ridi/react-reader/EpubService' {
-    import { PagingAction, SettingAction, SettingState, StatusAction } from '@ridi/react-reader/contexts';
+    import { PagingAction, SettingAction, SettingState, SpinePagingState, StatusAction } from '@ridi/react-reader/contexts';
     import * as React from 'react';
     export interface FontData {
         href: string;
@@ -58,39 +58,35 @@ declare module '@ridi/react-reader/EpubService' {
             dispatchStatus: React.Dispatch<StatusAction>;
             dispatchPaging: React.Dispatch<PagingAction>;
         }): void;
-        static goToPage: ({ page, pageUnit, isScroll, columnsInPage, }: {
+        static goToPage: ({ page, pageUnit, isScroll, }: {
             page: number;
             pageUnit: number;
             isScroll: boolean;
-            columnsInPage: number;
         }) => Promise<void>;
-        static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
+        static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, }: {
             currentPage: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
-            columnsInPage: number;
         }) => Promise<void>;
-        static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
+        static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
             metadata: EpubParsedData;
             currentPage: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
-            columnsInPage: number;
         }) => Promise<void>;
-        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
+        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
             metadata: EpubParsedData;
             currentPage: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
-            columnsInPage: number;
         }) => Promise<void>;
-        static updateCurrent: ({ pageUnit, isScroll, columnsInPage }: {
+        static updateCurrent: ({ pageUnit, isScroll, spines, }: {
             pageUnit: number;
             isScroll: boolean;
-            columnsInPage: number;
+            spines: SpinePagingState[];
         }) => Promise<any>;
         static updateSetting: (setting: Partial<SettingState>) => void;
     }
@@ -168,6 +164,7 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         paging: Partial<PagingState>;
     };
     export type SpinePagingState = {
+        spineIndex: number;
         offset: number;
         total: number;
     };

@@ -8,6 +8,7 @@ export enum PagingActionType {
 export type PagingAction = { type: PagingActionType.UPDATE_PAGING, paging: Partial<PagingState> };
 
 export type SpinePagingState = {
+  spineIndex: number, // 1-based
   offset: number,
   total: number,
 };

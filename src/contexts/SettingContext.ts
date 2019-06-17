@@ -21,7 +21,6 @@ export type SettingState = {
   maxWidth: number,
   containerHorizontalMargin: number,
   containerVerticalMargin: number,
-  // contentWidthInPercent: number,
 };
 
 export const initialSettingState: SettingState = {

@@ -19,7 +19,6 @@ const Footer: React.FunctionComponent = () => {
         page: currentPage,
         pageUnit: pagingState.pageUnit,
         isScroll: SettingUtil.isScroll(settingState),
-        columnsInPage: SettingUtil.columnsInPage(settingState),
       });
     } else if (isHtmlInputElement(e.target)) {
       setCurrentPage(parseInt(e.target.value || '1', 10));

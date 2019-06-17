@@ -7,6 +7,8 @@ import Events, { SET_CONTENT } from '../../Events';
 import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
 import { EpubService } from '../../EpubService';
 import * as styles from './styles';
+import { isScroll } from '../../SettingUtil';
+import { getContentRootElement } from '../../util';
 
 const EpubReader = () => {
   const contentRef: React.RefObject<HTMLDivElement> = React.useRef(null);
@@ -38,7 +40,6 @@ const EpubReader = () => {
     isScroll: SettingUtil.isScroll(settingState),
     columnWidth: SettingUtil.columnWidth(settingState),
     columnGap: SettingUtil.columnGap(settingState),
-    columnsInPage: SettingUtil.columnsInPage(settingState),
   }).catch(error => console.error(error));
 
   const updateCurrent = () => {
@@ -46,7 +47,7 @@ const EpubReader = () => {
     EpubService.updateCurrent({
       pageUnit: pagingState.pageUnit,
       isScroll: SettingUtil.isScroll(settingState),
-      columnsInPage: SettingUtil.columnsInPage(settingState),
+      spines: pagingState.spines,
     }).catch(error => console.error(error));
   };
 
@@ -60,10 +61,12 @@ const EpubReader = () => {
 
   React.useEffect(() => {
     window.addEventListener('resize', invalidate);
-    window.addEventListener('scroll', updateCurrent);
+    const rootElement = isScroll(settingState) ? window : getContentRootElement();
+    if (rootElement) rootElement.addEventListener('scroll', updateCurrent);
     return () => {
       window.removeEventListener('resize', invalidate);
-      window.removeEventListener('scroll', updateCurrent);
+      const rootElement = isScroll(settingState) ? window : getContentRootElement();
+      if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
   }, [settingState, pagingState, statusState]);
 

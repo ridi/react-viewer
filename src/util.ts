@@ -9,7 +9,7 @@ export const getRootElement = (): Element | null => {
   if (document.scrollingElement) return document.scrollingElement;
   return document.documentElement || document.body;
 };
-export const getContentRootElement = (): Element | null => document.getElementById('content_root');
+export const getContentRootElement = (): HTMLElement | null => document.getElementById('content_root');
 
 export const getScrollWidth = (): number => {
   const rootElement = getContentRootElement();

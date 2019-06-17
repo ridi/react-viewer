@@ -1,6 +1,6 @@
 export declare function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
 export declare const getRootElement: () => Element | null;
-export declare const getContentRootElement: () => Element | null;
+export declare const getContentRootElement: () => HTMLElement | null;
 export declare const getScrollWidth: () => number;
 export declare const getScrollHeight: () => number;
 export declare const getScrollLeft: () => number;
