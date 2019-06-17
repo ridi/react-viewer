@@ -11,6 +11,7 @@ const scrollContentWrapper = () => css`
 const pageContentWrapper = (setting: SettingState) => css`
   column-width: ${SettingUtil.columnWidth(setting)}px;
   column-gap: ${SettingUtil.columnGap(setting)}px;
+  column-fill: auto;
   height: 100%;
   
   article {

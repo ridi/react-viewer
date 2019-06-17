@@ -10,15 +10,14 @@
     "build:webpack": "webpack",
     "build:dec": "tsc --declaration --project .",
     "build:type": "dts-bundle --name \"@ridi/react-reader\" --main ./src/index.d.ts --out ../dist/typings/index.d.ts",
-    "build:watch": "onchange \"**\" -e \"**/*.js\" -e \"**/*.d.ts\" -e \"demo/**\" -- npm run build"
+    "build:watch": "onchange -i \"**/*.ts\" \"**/*.tsx\" -e \"**/*.d.ts\" -e \"demo/**\" -- npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ridi/react-viewer.git"
   },
   "dependencies": {
-    "@ridi/eslint-config": "^4.1.1",
-    "@ridi/reader.js": "2.0.0-alpha.10",
+    "@ridi/reader.js": "2.0.0-alpha.11",
     "eventemitter3": "^3.1.2"
   },
   "devDependencies": {
@@ -26,6 +25,7 @@
     "@babel/core": "^7.4.0",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
     "@babel/plugin-transform-classes": "^7.4.0",
     "@babel/plugin-transform-proto-to-assign": "^7.2.0",

@@ -5,7 +5,8 @@
     "@babel/preset-react"
   ],
   "plugins": [
-    ["@babel/plugin-proposal-class-properties", { "loose": false }],
+    ["@babel/plugin-proposal-export-default-from"],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
     ["@babel/plugin-proposal-object-rest-spread", { "useBuiltIns": true }],
     ["@babel/plugin-transform-classes", { "loose": true }],
     ["@babel/plugin-transform-proto-to-assign"],

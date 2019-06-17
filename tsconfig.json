@@ -18,9 +18,5 @@
     "strict": true,
     "target": "es5",
     "declaration": true
-  },
-  "include": ["src", "typings"],
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

@@ -159,6 +159,7 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
     export const settingReducer: Reducer<SettingState, SettingAction>;
     export const SettingDispatchContext: import("react").Context<import("react").Dispatch<SettingAction>>, SettingContext: import("react").Context<SettingState>, SettingContextProvider: import("react").FunctionComponent<{
         children: import("react").ReactNode;
+        customInitialState?: SettingState | undefined;
     }>;
 }
 
@@ -182,6 +183,7 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
     export const PagingReducer: React.Reducer<PagingState, PagingAction>;
     export const PagingDispatchContext: React.Context<React.Dispatch<PagingAction>>, PagingContext: React.Context<PagingState>, PagingContextProvider: React.FunctionComponent<{
         children: React.ReactNode;
+        customInitialState?: PagingState | undefined;
     }>;
 }
 
@@ -201,13 +203,21 @@ declare module '@ridi/react-reader/contexts/StatusContext' {
     export const StatusReducer: React.Reducer<StatusState, StatusAction>;
     export const StatusDispatchContext: React.Context<React.Dispatch<StatusAction>>, StatusContext: React.Context<StatusState>, StatusContextProvider: React.FunctionComponent<{
         children: React.ReactNode;
+        customInitialState?: StatusState | undefined;
     }>;
 }
 
 declare module '@ridi/react-reader/contexts/EpubProvider' {
+    import { PagingState } from '@ridi/react-reader/contexts/PagingContext';
+    import { StatusState } from '@ridi/react-reader/contexts/StatusContext';
+    import { SettingState } from '@ridi/react-reader/contexts/SettingContext';
     import * as React from 'react';
-    export const EpubProvider: React.FunctionComponent<{
+    export interface EpubProviderProps {
         children: React.ReactNode;
-    }>;
+        settingState?: SettingState;
+        pagingState?: PagingState;
+        statusState?: StatusState;
+    }
+    export const EpubProvider: React.FunctionComponent<EpubProviderProps>;
 }
 

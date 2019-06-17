@@ -34,12 +34,8 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-    alias: {
-      '@ridi/react-viewer': path.join(__dirname, '../dist'),
-    },
     modules: [
       path.resolve(__dirname, 'node_modules'),
-      path.resolve(__dirname, './src'),
     ],
   },
   mode: 'production',
