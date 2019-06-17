@@ -27,35 +27,38 @@ const EpubReader = () => {
       maxSelectionLength);
   };
 
-  React.useEffect(() => {
+  const mountReaderJs = () => {
     if (contentRef.current) {
       ReaderJsHelper.mount(contentRef.current, createContext());
     }
+  };
 
+  const invalidate = () => EpubService.invalidate({
+    currentPage: pagingState.currentPage,
+    isScroll: SettingUtil.isScroll(settingState),
+    columnWidth: SettingUtil.columnWidth(settingState),
+    columnGap: SettingUtil.columnGap(settingState),
+    columnsInPage: SettingUtil.columnsInPage(settingState),
+  }).catch(error => console.error(error));
+
+  const updateCurrent = () => {
+    if (!statusState.startToRead) return;
+    EpubService.updateCurrent({
+      pageUnit: pagingState.pageUnit,
+      isScroll: SettingUtil.isScroll(settingState),
+      columnsInPage: SettingUtil.columnsInPage(settingState),
+    }).catch(error => console.error(error));
+  };
+
+  React.useEffect(() => {
+    mountReaderJs();
     Events.on(SET_CONTENT, setSpineContent);
-
     return () => {
       Events.off(SET_CONTENT, setSpineContent);
     };
   }, []);
 
   React.useEffect(() => {
-    const invalidate = () => EpubService.invalidate({
-      currentPage: pagingState.currentPage,
-      isScroll: SettingUtil.isScroll(settingState),
-      columnWidth: SettingUtil.columnWidth(settingState),
-      columnGap: SettingUtil.columnGap(settingState),
-      columnsInPage: SettingUtil.columnsInPage(settingState),
-    }).catch(error => console.error(error));
-    const updateCurrent = () => {
-      if (!statusState.startToRead) return;
-      EpubService.updateCurrent({
-        pageUnit: pagingState.pageUnit,
-        isScroll: SettingUtil.isScroll(settingState),
-        columnsInPage: SettingUtil.columnsInPage(settingState),
-      }).catch(error => console.error(error));
-    };
-
     window.addEventListener('resize', invalidate);
     window.addEventListener('scroll', updateCurrent);
     return () => {
@@ -65,16 +68,8 @@ const EpubReader = () => {
   }, [settingState, pagingState, statusState]);
 
   React.useEffect(() => {
-    if (contentRef.current) {
-      ReaderJsHelper.mount(contentRef.current, createContext());
-    }
-    EpubService.invalidate({
-      currentPage: pagingState.currentPage,
-      isScroll: SettingUtil.isScroll(settingState),
-      columnWidth: SettingUtil.columnWidth(settingState),
-      columnGap: SettingUtil.columnGap(settingState),
-      columnsInPage: SettingUtil.columnsInPage(settingState),
-    }).catch(error => console.error(error));
+    mountReaderJs();
+    invalidate();
   }, [settingState]);
 
   return (
