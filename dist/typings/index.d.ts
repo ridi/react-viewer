@@ -38,7 +38,7 @@ declare module '@ridi/react-reader/SettingUtil' {
 }
 
 declare module '@ridi/react-reader/EpubService' {
-    import { PagingAction, SettingAction, StatusAction } from '@ridi/react-reader/contexts';
+    import { PagingAction, SettingAction, SettingState, StatusAction } from '@ridi/react-reader/contexts';
     import * as React from 'react';
     export interface FontData {
         href: string;
@@ -98,6 +98,7 @@ declare module '@ridi/react-reader/EpubService' {
             isScroll: boolean;
             columnsInPage: number;
         }) => Promise<any>;
+        static updateSetting: (setting: Partial<SettingState>) => void;
     }
 }
 

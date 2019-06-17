@@ -1,4 +1,4 @@
-import { PagingAction, SettingAction, StatusAction } from './contexts';
+import { PagingAction, SettingAction, SettingState, StatusAction } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -65,4 +65,5 @@ export declare class EpubService {
         isScroll: boolean;
         columnsInPage: number;
     }) => Promise<any>;
+    static updateSetting: (setting: Partial<SettingState>) => void;
 }

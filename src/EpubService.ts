@@ -14,6 +14,8 @@ import {
   PagingAction,
   PagingActionType,
   SettingAction,
+  SettingActionType,
+  SettingState,
   StatusAction,
   StatusActionType,
 } from './contexts';
@@ -257,5 +259,10 @@ export class EpubService {
       }
       EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage } });
     }, 'update current page').catch(error => console.error(error));
+  };
+
+  static updateSetting = (setting: Partial<SettingState>) => {
+    if (!EpubService.dispatchSetting) return;
+    EpubService.dispatchSetting({ type: SettingActionType.UPDATE_SETTING, setting });
   };
 }

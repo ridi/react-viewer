@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {SettingContext, SettingDispatchContext, SettingActionType, ViewType} from '@ridi/react-reader';
+import {SettingContext, EpubService, ViewType} from '@ridi/react-reader';
 
 interface ViewTypeButtonProperty {
   viewType: ViewType,
@@ -7,7 +7,6 @@ interface ViewTypeButtonProperty {
 
 const ViewTypeButton: React.FunctionComponent<ViewTypeButtonProperty> = ({ viewType }) => {
   const settingState = React.useContext(SettingContext);
-  const settingDispatch = React.useContext(SettingDispatchContext);
 
   const getLabel = (viewType: ViewType): string => {
     if (viewType === ViewType.SCROLL) return '스크롤 보기';
@@ -20,7 +19,7 @@ const ViewTypeButton: React.FunctionComponent<ViewTypeButtonProperty> = ({ viewT
   return (
     <button
       type="button"
-      onClick={() => settingDispatch({ type: SettingActionType.UPDATE_SETTING, setting: { viewType } })}
+      onClick={() => EpubService.updateSetting({ viewType })}
       className={settingState.viewType === viewType ? 'active' : ''}
     >
       {getLabel(viewType)}
