@@ -35,13 +35,6 @@ const EpubReader = () => {
     }
   };
 
-  const invalidate = () => EpubService.invalidate({
-    currentPage: pagingState.currentPage,
-    isScroll: SettingUtil.isScroll(settingState),
-    columnWidth: SettingUtil.columnWidth(settingState),
-    columnGap: SettingUtil.columnGap(settingState),
-  }).catch(error => console.error(error));
-
   const updateCurrent = () => {
     if (!statusState.startToRead) return;
     EpubService.updateCurrent({
@@ -50,6 +43,15 @@ const EpubReader = () => {
       spines: pagingState.spines,
     }).catch(error => console.error(error));
   };
+
+  const invalidate = () => EpubService.invalidate({
+    currentPage: pagingState.currentPage,
+    isScroll: SettingUtil.isScroll(settingState),
+    columnWidth: SettingUtil.columnWidth(settingState),
+    columnGap: SettingUtil.columnGap(settingState),
+  })
+  .then(updateCurrent)
+  .catch(error => console.error(error));
 
   React.useEffect(() => {
     mountReaderJs();
