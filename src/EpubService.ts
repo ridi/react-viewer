@@ -1,5 +1,6 @@
 import {
   getClientHeight,
+  getContentRootElement,
   getScrollHeight,
   getScrollLeft,
   getScrollTop,
@@ -13,6 +14,7 @@ import ReaderJsHelper from './ReaderJsHelper';
 import {
   PagingAction,
   PagingActionType,
+  PagingState,
   SettingAction,
   SettingActionType,
   SettingState,
@@ -30,13 +32,6 @@ export interface EpubParsedData {
   styles?: Array<String>,
   spines?: Array<String>,
   unzipPath: string,
-}
-
-export interface PagingResult {
-  totalPage: number,
-  pageUnit: number,
-  fullHeight: number,
-  fullWidth: number,
 }
 
 export class EpubService {
@@ -127,24 +122,35 @@ export class EpubService {
     columnGap: number,
     columnWidth: number,
     columnsInPage: number,
-  }): Promise<PagingResult> => {
+  }): Promise<Pick<PagingState, 'totalPage'|'pageUnit'|'fullHeight'|'fullWidth'|'spines'>> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
-      const paging: PagingResult = {
+      const paging: Pick<PagingState, 'totalPage'|'pageUnit'|'fullHeight'|'fullWidth'|'spines'> = {
         totalPage: 0,
         pageUnit: 0,
         fullHeight: 0,
         fullWidth: 0,
+        spines: [],
       };
+      const contentRoot = getContentRootElement();
+      const spines = contentRoot ? Array.from(contentRoot.getElementsByTagName('article')) : [];
       if (isScroll) {
         paging.pageUnit = getClientHeight();
         paging.fullHeight = getScrollHeight();
         // 어차피 스크롤보기에서 마지막 페이지에 도달하는 것은 거의 불가능하므로, Math.floor로 계산
         paging.totalPage = Math.floor(paging.fullHeight / paging.pageUnit);
+        spines.reduce((offset, { scrollHeight }) => {
+          paging.spines.push({ offset, total: scrollHeight });
+          return offset + scrollHeight;
+        }, 0);
       } else {
         paging.pageUnit = columnWidth + columnGap;
         paging.fullWidth = getScrollWidth();
         paging.totalPage = Math.ceil(paging.fullWidth / paging.pageUnit) * columnsInPage;
+        spines.reduce((offset, { scrollWidth }) => {
+          paging.spines.push({ offset, total: scrollWidth });
+          return offset + scrollWidth;
+        }, 0);
       }
 
       EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging });

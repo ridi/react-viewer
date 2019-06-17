@@ -6,12 +6,19 @@ export declare type PagingAction = {
     type: PagingActionType.UPDATE_PAGING;
     paging: Partial<PagingState>;
 };
+export declare type SpinePagingState = {
+    offset: number;
+    total: number;
+};
 export declare type PagingState = {
     totalPage: number;
-    currentPage: number;
     fullHeight: number;
     fullWidth: number;
     pageUnit: number;
+    currentPage: number;
+    currentSpineIndex: number;
+    currentPosition: number;
+    spines: Array<SpinePagingState>;
 };
 export declare const initialPagingState: PagingState;
 export declare const PagingReducer: React.Reducer<PagingState, PagingAction>;

@@ -49,12 +49,6 @@ declare module '@ridi/react-reader/EpubService' {
         spines?: Array<String>;
         unzipPath: string;
     }
-    export interface PagingResult {
-        totalPage: number;
-        pageUnit: number;
-        fullHeight: number;
-        fullWidth: number;
-    }
     export class EpubService {
         static dispatchSetting?: React.Dispatch<SettingAction>;
         static dispatchStatus?: React.Dispatch<StatusAction>;
@@ -173,12 +167,19 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         type: PagingActionType.UPDATE_PAGING;
         paging: Partial<PagingState>;
     };
+    export type SpinePagingState = {
+        offset: number;
+        total: number;
+    };
     export type PagingState = {
         totalPage: number;
-        currentPage: number;
         fullHeight: number;
         fullWidth: number;
         pageUnit: number;
+        currentPage: number;
+        currentSpineIndex: number;
+        currentPosition: number;
+        spines: Array<SpinePagingState>;
     };
     export const initialPagingState: PagingState;
     export const PagingReducer: React.Reducer<PagingState, PagingAction>;

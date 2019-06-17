@@ -9,12 +9,6 @@ export interface EpubParsedData {
     spines?: Array<String>;
     unzipPath: string;
 }
-export interface PagingResult {
-    totalPage: number;
-    pageUnit: number;
-    fullHeight: number;
-    fullWidth: number;
-}
 export declare class EpubService {
     static dispatchSetting?: React.Dispatch<SettingAction>;
     static dispatchStatus?: React.Dispatch<StatusAction>;
