@@ -49,4 +49,4 @@ export const {
   DispatchContext: SettingDispatchContext,
   StateContext: SettingContext,
   ContextProvider: SettingContextProvider,
-} = generateContext(settingReducer, initialSettingState);
+} = generateContext(settingReducer, initialSettingState, 'Setting');

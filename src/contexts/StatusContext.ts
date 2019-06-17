@@ -28,4 +28,4 @@ export const {
   DispatchContext: StatusDispatchContext,
   StateContext: StatusContext,
   ContextProvider: StatusContextProvider,
-} = generateContext(StatusReducer, initialStatusState);
+} = generateContext(StatusReducer, initialStatusState, 'Status');

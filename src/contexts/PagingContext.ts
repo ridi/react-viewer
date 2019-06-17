@@ -36,4 +36,4 @@ export const {
   DispatchContext: PagingDispatchContext,
   StateContext: PagingContext,
   ContextProvider: PagingContextProvider,
-} = generateContext(PagingReducer, initialPagingState);
+} = generateContext(PagingReducer, initialPagingState, 'Paging');

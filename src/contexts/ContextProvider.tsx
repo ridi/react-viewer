@@ -6,9 +6,12 @@ interface ContextResult<S, A> {
   ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: S }>
 }
 
-export function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState: S): ContextResult<S, A> {
+export function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState: S, displayName?: string): ContextResult<S, A> {
   const DispatchContext: React.Context<React.Dispatch<A>> = React.createContext<React.Dispatch<A>>(() => {});
   const StateContext: React.Context<S> = React.createContext<S>(initialState);
+
+  DispatchContext.displayName = displayName ? `Dispatch.${displayName}` : 'Dispatch.Context';
+  StateContext.displayName = displayName ? `State.${displayName}` : 'Context.State';
 
   const ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: S }> = ({ children, customInitialState }) => {
     const [state, dispatch] = React.useReducer(reducer, customInitialState || initialState);
@@ -21,6 +24,8 @@ export function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState
       </DispatchContext.Provider>
     );
   };
+
+  ContextProvider.displayName = displayName ? `${displayName}Provider` : 'ContextProvider';
   return {
     DispatchContext,
     StateContext,

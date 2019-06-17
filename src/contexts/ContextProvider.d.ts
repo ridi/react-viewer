@@ -7,5 +7,5 @@ interface ContextResult<S, A> {
         customInitialState?: S;
     }>;
 }
-export declare function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState: S): ContextResult<S, A>;
+export declare function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState: S, displayName?: string): ContextResult<S, A>;
 export {};
