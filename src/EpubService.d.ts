@@ -37,23 +37,26 @@ export declare class EpubService {
         isScroll: boolean;
         columnsInPage: number;
     }) => Promise<void>;
-    static invalidate: ({ currentPage, isScroll, columnGap, columnsInPage, }: {
+    static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
         currentPage: number;
         isScroll: boolean;
+        columnWidth: number;
         columnGap: number;
         columnsInPage: number;
     }) => Promise<void>;
-    static load: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+    static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
         metadata: EpubParsedData;
         currentPage: number;
         isScroll: boolean;
+        columnWidth: number;
         columnGap: number;
         columnsInPage: number;
     }) => Promise<void>;
-    static loadWithParsedData: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+    static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
         metadata: EpubParsedData;
         currentPage: number;
         isScroll: boolean;
+        columnWidth: number;
         columnGap: number;
         columnsInPage: number;
     }) => Promise<void>;

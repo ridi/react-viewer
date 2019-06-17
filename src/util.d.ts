@@ -1,7 +1,11 @@
 export declare function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
-export declare function withMeasure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): () => Promise<any>;
-export declare function getRootElement(): HTMLElement | null;
-export declare function getScrollWidth(): number;
-export declare function getScrollHeight(): number;
-export declare function getClientWidth(): number;
-export declare function getClientHeight(): number;
+export declare const getRootElement: () => Element | null;
+export declare const getContentRootElement: () => Element | null;
+export declare const getScrollWidth: () => number;
+export declare const getScrollHeight: () => number;
+export declare const getScrollLeft: () => number;
+export declare const getScrollTop: () => number;
+export declare const setScrollLeft: (scrollLeft: number) => void;
+export declare const setScrollTop: (scrollTop: number) => void;
+export declare const getClientWidth: () => number;
+export declare const getClientHeight: () => number;

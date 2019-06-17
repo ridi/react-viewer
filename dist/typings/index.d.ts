@@ -26,11 +26,14 @@ declare module '@ridi/react-reader/components/Loading' {
 }
 
 declare module '@ridi/react-reader/SettingUtil' {
-    import { SettingState } from "@ridi/react-reader/contexts";
+    import { SettingState } from '@ridi/react-reader/contexts';
     export const isScroll: ({ viewType }: SettingState) => boolean;
+    export const isDoublePage: ({ viewType }: SettingState) => boolean;
     export const columnsInPage: ({ viewType }: SettingState) => number;
+    export const columnWidth: (setting: SettingState) => number;
     export const columnGap: ({ columnGapInPercent }: SettingState) => number;
-    export const containerWidth: ({ containerHorizontalMargin, contentPaddingInPercent }: SettingState) => number;
+    export const contentPadding: ({ contentPaddingInPercent }: SettingState) => number;
+    export const containerWidth: (setting: SettingState) => number;
     export const containerHeight: ({ containerVerticalMargin }: SettingState) => number;
 }
 
@@ -67,23 +70,26 @@ declare module '@ridi/react-reader/EpubService' {
             isScroll: boolean;
             columnsInPage: number;
         }) => Promise<void>;
-        static invalidate: ({ currentPage, isScroll, columnGap, columnsInPage, }: {
+        static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
             currentPage: number;
             isScroll: boolean;
+            columnWidth: number;
             columnGap: number;
             columnsInPage: number;
         }) => Promise<void>;
-        static load: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+        static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
             metadata: EpubParsedData;
             currentPage: number;
             isScroll: boolean;
+            columnWidth: number;
             columnGap: number;
             columnsInPage: number;
         }) => Promise<void>;
-        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnGap, columnsInPage, }: {
+        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, columnsInPage, }: {
             metadata: EpubParsedData;
             currentPage: number;
             isScroll: boolean;
+            columnWidth: number;
             columnGap: number;
             columnsInPage: number;
         }) => Promise<void>;
@@ -110,8 +116,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
         readonly content: any;
         readonly context: any;
         _setDebugMode(debugMode?: boolean): void;
-        _createContext(node: HTMLElement, isScrollMode: boolean, maxSelectionLength?: number): Context;
-        mount(contentRoot: HTMLElement, isScroll: boolean): void;
+        mount(contentRoot: HTMLElement, context: Context): void;
         unmount(): void;
         reviseImages(): Promise<any>;
         getOffsetFromNodeLocation(location: any): number | null;
@@ -122,6 +127,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
     }
     const _default: ReaderJsHelper;
     export default _default;
+    export { Context };
 }
 
 declare module '@ridi/react-reader/contexts/SettingContext' {

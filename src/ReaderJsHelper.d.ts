@@ -6,8 +6,7 @@ declare class ReaderJsHelper {
     readonly content: any;
     readonly context: any;
     _setDebugMode(debugMode?: boolean): void;
-    _createContext(node: HTMLElement, isScrollMode: boolean, maxSelectionLength?: number): Context;
-    mount(contentRoot: HTMLElement, isScroll: boolean): void;
+    mount(contentRoot: HTMLElement, context: Context): void;
     unmount(): void;
     reviseImages(): Promise<any>;
     getOffsetFromNodeLocation(location: any): number | null;
@@ -18,3 +17,4 @@ declare class ReaderJsHelper {
 }
 declare const _default: ReaderJsHelper;
 export default _default;
+export { Context };

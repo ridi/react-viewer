@@ -1,4 +1,4 @@
-import { Context, Reader, Util } from '@ridi/reader.js/web';
+import { Context, Reader } from '@ridi/reader.js/web';
 import { measure } from './util';
 
 const DETECTION_TYPE = 'top'; // bottom or top
@@ -29,18 +29,11 @@ class ReaderJsHelper {
     }
   }
 
-  _createContext(node: HTMLElement, isScrollMode: boolean, maxSelectionLength: number = 1000) {
-    const columnGap = Util.getStylePropertyIntValue(node, 'column-gap');
-    const width = window.innerWidth - columnGap;
-    const height = window.innerHeight;
-    return new Context(width, height, columnGap, false, isScrollMode, maxSelectionLength);
-  }
-
-  mount(contentRoot: HTMLElement, isScroll: boolean) {
+  mount(contentRoot: HTMLElement, context: Context) {
     if (this._readerJs) {
       this.unmount();
     }
-    this._readerJs = new Reader(contentRoot, this._createContext(contentRoot, isScroll));
+    this._readerJs = new Reader(contentRoot, context);
     this._setDebugMode(process.env.NODE_ENV === 'development');
   }
 
@@ -96,3 +89,4 @@ class ReaderJsHelper {
 }
 
 export default new ReaderJsHelper();
+export { Context };

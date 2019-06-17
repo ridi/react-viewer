@@ -2,9 +2,9 @@
 import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { PagingContext, SettingContext, StatusContext } from '../../contexts';
-import { columnGap, columnsInPage, isScroll } from '../../SettingUtil';
+import * as SettingUtil from '../../SettingUtil';
 import Events, { SET_CONTENT } from '../../Events';
-import ReaderJsHelper from '../../ReaderJsHelper';
+import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
 import { EpubService } from '../../EpubService';
 import * as styles from './styles';
 
@@ -17,9 +17,19 @@ const EpubReader = () => {
 
   const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
 
+  const createContext = (maxSelectionLength: number = 1000): Context => {
+    return new Context(
+      SettingUtil.containerWidth(settingState),
+      SettingUtil.containerHeight(settingState),
+      SettingUtil.columnGap(settingState),
+      SettingUtil.isDoublePage(settingState),
+      SettingUtil.isScroll(settingState),
+      maxSelectionLength);
+  };
+
   React.useEffect(() => {
     if (contentRef.current) {
-      ReaderJsHelper.mount(contentRef.current, isScroll(settingState));
+      ReaderJsHelper.mount(contentRef.current, createContext());
     }
 
     Events.on(SET_CONTENT, setSpineContent);
@@ -32,16 +42,17 @@ const EpubReader = () => {
   React.useEffect(() => {
     const invalidate = () => EpubService.invalidate({
       currentPage: pagingState.currentPage,
-      isScroll: isScroll(settingState),
-      columnGap: columnGap(settingState),
-      columnsInPage: columnsInPage(settingState),
+      isScroll: SettingUtil.isScroll(settingState),
+      columnWidth: SettingUtil.columnWidth(settingState),
+      columnGap: SettingUtil.columnGap(settingState),
+      columnsInPage: SettingUtil.columnsInPage(settingState),
     }).catch(error => console.error(error));
     const updateCurrent = () => {
       if (!statusState.startToRead) return;
       EpubService.updateCurrent({
         pageUnit: pagingState.pageUnit,
-        isScroll: isScroll(settingState),
-        columnsInPage: columnsInPage(settingState),
+        isScroll: SettingUtil.isScroll(settingState),
+        columnsInPage: SettingUtil.columnsInPage(settingState),
       }).catch(error => console.error(error));
     };
 
@@ -55,23 +66,25 @@ const EpubReader = () => {
 
   React.useEffect(() => {
     if (contentRef.current) {
-      ReaderJsHelper.mount(contentRef.current, isScroll(settingState));
+      ReaderJsHelper.mount(contentRef.current, createContext());
     }
     EpubService.invalidate({
       currentPage: pagingState.currentPage,
-      isScroll: isScroll(settingState),
-      columnGap: columnGap(settingState),
-      columnsInPage: columnsInPage(settingState),
+      isScroll: SettingUtil.isScroll(settingState),
+      columnWidth: SettingUtil.columnWidth(settingState),
+      columnGap: SettingUtil.columnGap(settingState),
+      columnsInPage: SettingUtil.columnsInPage(settingState),
     }).catch(error => console.error(error));
   }, [settingState]);
 
   return (
-    <div
-      id="reader_root"
-      css={styles.wrapper(settingState)}
-      ref={contentRef}
-      dangerouslySetInnerHTML={{ __html: content }}
-    />
+    <div id="content_root" css={styles.wrapper(settingState)}>
+      <div
+        css={styles.contentWrapper(settingState)}
+        ref={contentRef}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    </div>
   );
 };
 

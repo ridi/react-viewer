@@ -41,6 +41,7 @@ const Header: React.FunctionComponent = () => {
           metadata,
           currentPage: pagingState.currentPage,
           isScroll: SettingUtil.isScroll(settingState),
+          columnWidth: SettingUtil.columnWidth(settingState),
           columnGap: SettingUtil.columnGap(settingState),
           columnsInPage: SettingUtil.columnsInPage(settingState),
         }).catch((error) => console.error(error));
