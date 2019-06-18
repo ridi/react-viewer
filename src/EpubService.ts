@@ -51,9 +51,9 @@ export class EpubService {
 
   private static setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
+      if (!EpubService.dispatchStatus) return resolve();
+      EpubService.dispatchStatus({ type: StatusActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
-        if (!EpubService.dispatchStatus) return resolve();
-        EpubService.dispatchStatus({ type: StatusActionType.SET_READY_TO_READ, readyToRead });
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
       }, 0);
