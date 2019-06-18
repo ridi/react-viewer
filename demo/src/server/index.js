@@ -83,7 +83,7 @@ app.post('/api/book/upload', (request, response) => {
   });
 });
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(500);
   res.render('error', { error: err });
 });

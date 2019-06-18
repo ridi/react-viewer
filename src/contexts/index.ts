@@ -1,4 +1,4 @@
-export * from './SettingContext';
-export * from './PagingContext';
-export * from './StatusContext';
+export * from './EpubSettingContext';
+export * from './EpubPagingContext';
+export * from './EpubStatusContext';
 export * from './EpubProvider';

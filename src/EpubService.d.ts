@@ -1,4 +1,4 @@
-import { PagingAction, SettingAction, SettingState, SpinePagingState, StatusAction } from './contexts';
+import { EpubPagingAction, EpubSettingAction, EpubSettingState, SpinePagingState, EpubStatusAction } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -10,13 +10,13 @@ export interface EpubParsedData {
     unzipPath: string;
 }
 export declare class EpubService {
-    static dispatchSetting?: React.Dispatch<SettingAction>;
-    static dispatchStatus?: React.Dispatch<StatusAction>;
-    static dispatchPaging?: React.Dispatch<PagingAction>;
+    static dispatchSetting?: React.Dispatch<EpubSettingAction>;
+    static dispatchStatus?: React.Dispatch<EpubStatusAction>;
+    static dispatchPaging?: React.Dispatch<EpubPagingAction>;
     static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-        dispatchSetting: React.Dispatch<SettingAction>;
-        dispatchStatus: React.Dispatch<StatusAction>;
-        dispatchPaging: React.Dispatch<PagingAction>;
+        dispatchSetting: React.Dispatch<EpubSettingAction>;
+        dispatchStatus: React.Dispatch<EpubStatusAction>;
+        dispatchPaging: React.Dispatch<EpubPagingAction>;
     }): void;
     private static setReadyToRead;
     private static inLoadingState;
@@ -67,5 +67,5 @@ export declare class EpubService {
         isScroll: boolean;
         spines: SpinePagingState[];
     }) => Promise<any>;
-    static updateSetting: (setting: Partial<SettingState>) => Promise<void>;
+    static updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
 }

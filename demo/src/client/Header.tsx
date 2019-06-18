@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ViewTypeButton from './ViewTypeButton';
 import {
-  SettingContext,
-  PagingContext,
+  EpubSettingContext,
+  EpubPagingContext,
   ViewType,
   EpubService,
   SettingUtil,
@@ -14,8 +14,8 @@ const Header: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
   const fileOpenButtonRef: React.RefObject<HTMLButtonElement> = React.useRef(null);
 
-  const settingState = React.useContext(SettingContext);
-  const pagingState = React.useContext(PagingContext);
+  const settingState = React.useContext(EpubSettingContext);
+  const pagingState = React.useContext(EpubPagingContext);
 
   const loadFile = async (file: File): Promise<EpubParsedData> => {
     return new Promise((resolve, reject) => {

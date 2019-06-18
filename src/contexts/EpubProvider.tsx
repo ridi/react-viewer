@@ -1,13 +1,13 @@
-import { PagingContextProvider, PagingDispatchContext, PagingState } from './PagingContext';
-import { StatusContextProvider, StatusDispatchContext, StatusState } from './StatusContext';
-import { SettingContextProvider, SettingDispatchContext, SettingState } from './SettingContext';
+import { EpubPagingContextProvider, EpubPagingDispatchContext, EpubPagingState } from './EpubPagingContext';
+import { EpubStatusContextProvider, EpubStatusDispatchContext, StatusState } from './EpubStatusContext';
+import { EpubSettingContextProvider, EpubSettingDispatchContext, EpubSettingState } from './EpubSettingContext';
 import * as React from 'react';
 import { EpubService } from '../EpubService';
 
 const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
-  const dispatchSetting = React.useContext(SettingDispatchContext);
-  const dispatchStatus = React.useContext(StatusDispatchContext);
-  const dispatchPaging = React.useContext(PagingDispatchContext);
+  const dispatchSetting = React.useContext(EpubSettingDispatchContext);
+  const dispatchStatus = React.useContext(EpubStatusDispatchContext);
+  const dispatchPaging = React.useContext(EpubPagingDispatchContext);
 
   EpubService.init({ dispatchSetting, dispatchStatus, dispatchPaging });
 
@@ -16,21 +16,21 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
 
 export interface EpubProviderProps {
   children: React.ReactNode,
-  settingState ?: Partial<SettingState>,
-  pagingState?: Partial<PagingState>,
+  settingState ?: Partial<EpubSettingState>,
+  pagingState?: Partial<EpubPagingState>,
   statusState?: Partial<StatusState>,
 }
 
 export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, pagingState, statusState }: EpubProviderProps) => {
   return (
-    <SettingContextProvider customInitialState={settingState}>
-      <PagingContextProvider customInitialState={pagingState}>
-        <StatusContextProvider customInitialState={statusState}>
+    <EpubSettingContextProvider customInitialState={settingState}>
+      <EpubPagingContextProvider customInitialState={pagingState}>
+        <EpubStatusContextProvider customInitialState={statusState}>
           <EpubContextInitializer>
             { children }
           </EpubContextInitializer>
-        </StatusContextProvider>
-      </PagingContextProvider>
-    </SettingContextProvider>
+        </EpubStatusContextProvider>
+      </EpubPagingContextProvider>
+    </EpubSettingContextProvider>
   );
 };

@@ -27,19 +27,19 @@ declare module '@ridi/react-reader/components/Loading' {
 }
 
 declare module '@ridi/react-reader/SettingUtil' {
-    import { SettingState } from '@ridi/react-reader/contexts';
-    export const isScroll: ({ viewType }: SettingState) => boolean;
-    export const isDoublePage: ({ viewType }: SettingState) => boolean;
-    export const columnsInPage: ({ viewType }: SettingState) => number;
-    export const columnWidth: (setting: SettingState) => number;
-    export const columnGap: ({ columnGapInPercent }: SettingState) => number;
-    export const contentPadding: ({ contentPaddingInPercent }: SettingState) => number;
-    export const containerWidth: (setting: SettingState) => number;
-    export const containerHeight: ({ containerVerticalMargin }: SettingState) => number;
+    import { EpubSettingState } from '@ridi/react-reader/contexts';
+    export const isScroll: ({ viewType }: EpubSettingState) => boolean;
+    export const isDoublePage: ({ viewType }: EpubSettingState) => boolean;
+    export const columnsInPage: ({ viewType }: EpubSettingState) => number;
+    export const columnWidth: (setting: EpubSettingState) => number;
+    export const columnGap: ({ columnGapInPercent }: EpubSettingState) => number;
+    export const contentPadding: ({ contentPaddingInPercent }: EpubSettingState) => number;
+    export const containerWidth: (setting: EpubSettingState) => number;
+    export const containerHeight: ({ containerVerticalMargin }: EpubSettingState) => number;
 }
 
 declare module '@ridi/react-reader/EpubService' {
-    import { PagingAction, SettingAction, SettingState, SpinePagingState, StatusAction } from '@ridi/react-reader/contexts';
+    import { EpubPagingAction, EpubSettingAction, EpubSettingState, SpinePagingState, EpubStatusAction } from '@ridi/react-reader/contexts';
     import * as React from 'react';
     export interface FontData {
         href: string;
@@ -51,13 +51,13 @@ declare module '@ridi/react-reader/EpubService' {
         unzipPath: string;
     }
     export class EpubService {
-        static dispatchSetting?: React.Dispatch<SettingAction>;
-        static dispatchStatus?: React.Dispatch<StatusAction>;
-        static dispatchPaging?: React.Dispatch<PagingAction>;
+        static dispatchSetting?: React.Dispatch<EpubSettingAction>;
+        static dispatchStatus?: React.Dispatch<EpubStatusAction>;
+        static dispatchPaging?: React.Dispatch<EpubPagingAction>;
         static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-            dispatchSetting: React.Dispatch<SettingAction>;
-            dispatchStatus: React.Dispatch<StatusAction>;
-            dispatchPaging: React.Dispatch<PagingAction>;
+            dispatchSetting: React.Dispatch<EpubSettingAction>;
+            dispatchStatus: React.Dispatch<EpubStatusAction>;
+            dispatchPaging: React.Dispatch<EpubPagingAction>;
         }): void;
         static goToPage: ({ page, pageUnit, isScroll, }: {
             page: number;
@@ -92,14 +92,14 @@ declare module '@ridi/react-reader/EpubService' {
             isScroll: boolean;
             spines: SpinePagingState[];
         }) => Promise<any>;
-        static updateSetting: (setting: Partial<SettingState>) => Promise<void>;
+        static updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
     }
 }
 
 declare module '@ridi/react-reader/contexts' {
-    export * from '@ridi/react-reader/contexts/SettingContext';
-    export * from '@ridi/react-reader/contexts/PagingContext';
-    export * from '@ridi/react-reader/contexts/StatusContext';
+    export * from '@ridi/react-reader/contexts/EpubSettingContext';
+    export * from '@ridi/react-reader/contexts/EpubPagingContext';
+    export * from '@ridi/react-reader/contexts/EpubStatusContext';
     export * from '@ridi/react-reader/contexts/EpubProvider';
 }
 
@@ -134,13 +134,13 @@ declare module '@ridi/react-reader/constants' {
     }
 }
 
-declare module '@ridi/react-reader/contexts/SettingContext' {
+declare module '@ridi/react-reader/contexts/EpubSettingContext' {
     import { Reducer } from "react";
     import { ViewType } from '@ridi/react-reader/constants';
-    export enum SettingActionType {
+    export enum EpubSettingActionType {
         UPDATE_SETTING = "update_setting"
     }
-    export enum SettingProperties {
+    export enum EpubSettingProperties {
         VIEW_TYPE = "viewType",
         FONT = "font",
         FONT_SIZE_IN_EM = "fontSizeInEm",
@@ -150,34 +150,34 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
         CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
         CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin"
     }
-    export type SettingAction = {
-        type: SettingActionType.UPDATE_SETTING;
-        setting: Partial<SettingState>;
+    export type EpubSettingAction = {
+        type: EpubSettingActionType.UPDATE_SETTING;
+        setting: Partial<EpubSettingState>;
     };
-    export type SettingState = {
-        [SettingProperties.VIEW_TYPE]: ViewType;
-        [SettingProperties.FONT]: string;
-        [SettingProperties.FONT_SIZE_IN_EM]: number;
-        [SettingProperties.LINE_HEIGHT_IN_EM]: number;
-        [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
-        [SettingProperties.COLUMN_GAP_IN_PERCENT]: number;
-        [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
-        [SettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
+    export type EpubSettingState = {
+        [EpubSettingProperties.VIEW_TYPE]: ViewType;
+        [EpubSettingProperties.FONT]: string;
+        [EpubSettingProperties.FONT_SIZE_IN_EM]: number;
+        [EpubSettingProperties.LINE_HEIGHT_IN_EM]: number;
+        [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
+        [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number;
+        [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
+        [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
     };
-    export const initialSettingState: SettingState;
-    export const settingReducer: Reducer<SettingState, SettingAction>;
-    export const SettingDispatchContext: import("react").Context<import("react").Dispatch<SettingAction>>, SettingContext: import("react").Context<SettingState>, SettingContextProvider: import("react").FunctionComponent<{
+    export const initialEpubSettingState: EpubSettingState;
+    export const EpubSettingReducer: Reducer<EpubSettingState, EpubSettingAction>;
+    export const EpubSettingDispatchContext: import("react").Context<import("react").Dispatch<EpubSettingAction>>, EpubSettingContext: import("react").Context<EpubSettingState>, EpubSettingContextProvider: import("react").FunctionComponent<{
         children: import("react").ReactNode;
-        customInitialState?: Partial<SettingState> | undefined;
+        customInitialState?: Partial<EpubSettingState> | undefined;
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/PagingContext' {
+declare module '@ridi/react-reader/contexts/EpubPagingContext' {
     import * as React from 'react';
-    export enum PagingActionType {
+    export enum EpubPagingActionType {
         UPDATE_PAGING = "update_paging"
     }
-    export enum PagingProperties {
+    export enum EpubPagingProperties {
         TOTAL_PAGE = "totalPage",
         FULL_HEIGHT = "fullHeight",
         FULL_WIDTH = "fullWidth",
@@ -187,9 +187,9 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         CURRENT_POSITION = "currentPosition",
         SPINES = "spines"
     }
-    export type PagingAction = {
-        type: PagingActionType.UPDATE_PAGING;
-        paging: Partial<PagingState>;
+    export type EpubPagingAction = {
+        type: EpubPagingActionType.UPDATE_PAGING;
+        paging: Partial<EpubPagingState>;
     };
     export type SpinePagingState = {
         spineIndex: number;
@@ -198,56 +198,56 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         pageOffset: number;
         totalPage: number;
     };
-    export type PagingState = {
-        [PagingProperties.TOTAL_PAGE]: number;
-        [PagingProperties.FULL_HEIGHT]: number;
-        [PagingProperties.FULL_WIDTH]: number;
-        [PagingProperties.PAGE_UNIT]: number;
-        [PagingProperties.CURRENT_PAGE]: number;
-        [PagingProperties.CURRENT_SPINE_INDEX]: number;
-        [PagingProperties.CURRENT_POSITION]: number;
-        [PagingProperties.SPINES]: Array<SpinePagingState>;
+    export type EpubPagingState = {
+        [EpubPagingProperties.TOTAL_PAGE]: number;
+        [EpubPagingProperties.FULL_HEIGHT]: number;
+        [EpubPagingProperties.FULL_WIDTH]: number;
+        [EpubPagingProperties.PAGE_UNIT]: number;
+        [EpubPagingProperties.CURRENT_PAGE]: number;
+        [EpubPagingProperties.CURRENT_SPINE_INDEX]: number;
+        [EpubPagingProperties.CURRENT_POSITION]: number;
+        [EpubPagingProperties.SPINES]: Array<SpinePagingState>;
     };
-    export const initialPagingState: PagingState;
-    export const PagingReducer: React.Reducer<PagingState, PagingAction>;
-    export const PagingDispatchContext: React.Context<React.Dispatch<PagingAction>>, PagingContext: React.Context<PagingState>, PagingContextProvider: React.FunctionComponent<{
+    export const initialEpubPagingState: EpubPagingState;
+    export const EpubPagingReducer: React.Reducer<EpubPagingState, EpubPagingAction>;
+    export const EpubPagingDispatchContext: React.Context<React.Dispatch<EpubPagingAction>>, EpubPagingContext: React.Context<EpubPagingState>, EpubPagingContextProvider: React.FunctionComponent<{
         children: React.ReactNode;
-        customInitialState?: Partial<PagingState> | undefined;
+        customInitialState?: Partial<EpubPagingState> | undefined;
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/StatusContext' {
+declare module '@ridi/react-reader/contexts/EpubStatusContext' {
     import * as React from 'react';
-    export enum StatusActionType {
+    export enum EpubStatusActionType {
         SET_READY_TO_READ = "set_ready_to_read"
     }
-    export enum StatusProperties {
+    export enum EpubStatusProperties {
         READY_TO_READ = "readyToRead"
     }
-    export type StatusAction = {
-        type: StatusActionType.SET_READY_TO_READ;
+    export type EpubStatusAction = {
+        type: EpubStatusActionType.SET_READY_TO_READ;
         readyToRead: boolean;
     };
     export type StatusState = {
-        [StatusProperties.READY_TO_READ]: boolean;
+        [EpubStatusProperties.READY_TO_READ]: boolean;
     };
-    export const initialStatusState: StatusState;
-    export const StatusReducer: React.Reducer<StatusState, StatusAction>;
-    export const StatusDispatchContext: React.Context<React.Dispatch<StatusAction>>, StatusContext: React.Context<StatusState>, StatusContextProvider: React.FunctionComponent<{
+    export const initialEpubStatusState: StatusState;
+    export const EpubStatusReducer: React.Reducer<StatusState, EpubStatusAction>;
+    export const EpubStatusDispatchContext: React.Context<React.Dispatch<EpubStatusAction>>, EpubStatusContext: React.Context<StatusState>, EpubStatusContextProvider: React.FunctionComponent<{
         children: React.ReactNode;
         customInitialState?: Partial<StatusState> | undefined;
     }>;
 }
 
 declare module '@ridi/react-reader/contexts/EpubProvider' {
-    import { PagingState } from '@ridi/react-reader/contexts/PagingContext';
-    import { StatusState } from '@ridi/react-reader/contexts/StatusContext';
-    import { SettingState } from '@ridi/react-reader/contexts/SettingContext';
+    import { EpubPagingState } from '@ridi/react-reader/contexts/EpubPagingContext';
+    import { StatusState } from '@ridi/react-reader/contexts/EpubStatusContext';
+    import { EpubSettingState } from '@ridi/react-reader/contexts/EpubSettingContext';
     import * as React from 'react';
     export interface EpubProviderProps {
         children: React.ReactNode;
-        settingState?: Partial<SettingState>;
-        pagingState?: Partial<PagingState>;
+        settingState?: Partial<EpubSettingState>;
+        pagingState?: Partial<EpubPagingState>;
         statusState?: Partial<StatusState>;
     }
     export const EpubProvider: React.FunctionComponent<EpubProviderProps>;

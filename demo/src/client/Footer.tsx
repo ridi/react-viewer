@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { SettingContext, PagingContext, SettingUtil, EpubService } from '@ridi/react-reader';
+import { EpubSettingContext, EpubPagingContext, SettingUtil, EpubService } from '@ridi/react-reader';
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
 const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(target as HTMLInputElement).value;
 
 const Footer: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(PagingContext);
-  const settingState = React.useContext(SettingContext);
+  const pagingState = React.useContext(EpubPagingContext);
+  const settingState = React.useContext(EpubSettingContext);
 
   // 로컬에서만 유지되는 값
   const [currentPage, setCurrentPage] = React.useState(pagingState.currentPage);

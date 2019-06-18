@@ -12,14 +12,16 @@ import {
 import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
 import {
-  PagingAction,
-  PagingActionType, PagingProperties,
-  PagingState,
-  SettingAction,
-  SettingActionType,
-  SettingState, SpinePagingState,
-  StatusAction,
-  StatusActionType,
+  EpubPagingAction,
+  EpubPagingActionType,
+  EpubPagingProperties,
+  EpubPagingState,
+  EpubSettingAction,
+  EpubSettingActionType,
+  EpubSettingState,
+  SpinePagingState,
+  EpubStatusAction,
+  EpubStatusActionType,
 } from './contexts';
 import * as React from 'react';
 
@@ -35,14 +37,14 @@ export interface EpubParsedData {
 }
 
 export class EpubService {
-  static dispatchSetting?: React.Dispatch<SettingAction>;
-  static dispatchStatus?: React.Dispatch<StatusAction>;
-  static dispatchPaging?: React.Dispatch<PagingAction>;
+  static dispatchSetting?: React.Dispatch<EpubSettingAction>;
+  static dispatchStatus?: React.Dispatch<EpubStatusAction>;
+  static dispatchPaging?: React.Dispatch<EpubPagingAction>;
 
   static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-    dispatchSetting: React.Dispatch<SettingAction>,
-    dispatchStatus: React.Dispatch<StatusAction>,
-    dispatchPaging: React.Dispatch<PagingAction>,
+    dispatchSetting: React.Dispatch<EpubSettingAction>,
+    dispatchStatus: React.Dispatch<EpubStatusAction>,
+    dispatchPaging: React.Dispatch<EpubPagingAction>,
   }) {
     EpubService.dispatchStatus = dispatchStatus;
     EpubService.dispatchSetting = dispatchSetting;
@@ -52,7 +54,7 @@ export class EpubService {
   private static setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
       if (!EpubService.dispatchStatus) return resolve();
-      EpubService.dispatchStatus({ type: StatusActionType.SET_READY_TO_READ, readyToRead });
+      EpubService.dispatchStatus({ type: EpubStatusActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
@@ -120,10 +122,10 @@ export class EpubService {
     isScroll: boolean,
     columnGap: number,
     columnWidth: number,
-  }): Promise<Pick<PagingState, PagingProperties.TOTAL_PAGE | PagingProperties.PAGE_UNIT | PagingProperties.FULL_HEIGHT | PagingProperties.FULL_WIDTH | PagingProperties.SPINES>> => {
+  }): Promise<Pick<EpubPagingState, EpubPagingProperties.TOTAL_PAGE | EpubPagingProperties.PAGE_UNIT | EpubPagingProperties.FULL_HEIGHT | EpubPagingProperties.FULL_WIDTH | EpubPagingProperties.SPINES>> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
-      const paging: Pick<PagingState, PagingProperties.TOTAL_PAGE | PagingProperties.PAGE_UNIT | PagingProperties.FULL_HEIGHT | PagingProperties.FULL_WIDTH | PagingProperties.SPINES> = {
+      const paging: Pick<EpubPagingState, EpubPagingProperties.TOTAL_PAGE | EpubPagingProperties.PAGE_UNIT | EpubPagingProperties.FULL_HEIGHT | EpubPagingProperties.FULL_WIDTH | EpubPagingProperties.SPINES> = {
         totalPage: 0,
         pageUnit: 0,
         fullHeight: 0,
@@ -180,7 +182,7 @@ export class EpubService {
         });
       }
 
-      EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging });
+      EpubService.dispatchPaging({ type: EpubPagingActionType.UPDATE_PAGING, paging });
       console.log('paging result =>', paging);
       return paging;
     }, 'Paging done');
@@ -260,7 +262,7 @@ export class EpubService {
         setScrollTop(0);
         console.log(`scrollLeft => ${(page - 1) * pageUnit}`);
       }
-      EpubService.dispatchPaging({ type: PagingActionType.UPDATE_PAGING, paging: { currentPage: page } });
+      EpubService.dispatchPaging({ type: EpubPagingActionType.UPDATE_PAGING, paging: { currentPage: page } });
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
@@ -341,15 +343,15 @@ export class EpubService {
         }
       }
       EpubService.dispatchPaging({
-        type: PagingActionType.UPDATE_PAGING,
+        type: EpubPagingActionType.UPDATE_PAGING,
         paging: { currentPage, currentSpineIndex, currentPosition },
       });
     }, 'update current page').catch(error => console.error(error));
   };
 
-  static updateSetting = async (setting: Partial<SettingState>) => {
+  static updateSetting = async (setting: Partial<EpubSettingState>) => {
     if (!EpubService.dispatchSetting) return;
     await EpubService.setReadyToRead(false);
-    EpubService.dispatchSetting({ type: SettingActionType.UPDATE_SETTING, setting });
+    EpubService.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
   };
 }

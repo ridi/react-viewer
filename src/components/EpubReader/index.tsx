@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import * as React from 'react';
-import { PagingContext, SettingContext, StatusContext } from '../../contexts';
+import { EpubPagingContext, EpubSettingContext, EpubStatusContext } from '../../contexts';
 import * as SettingUtil from '../../SettingUtil';
 import Events, { SET_CONTENT } from '../../Events';
 import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
@@ -13,9 +13,9 @@ import { getContentRootElement } from '../../util';
 const EpubReader = () => {
   const contentRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const [content, setContent] = React.useState('');
-  const pagingState = React.useContext(PagingContext);
-  const settingState = React.useContext(SettingContext);
-  const statusState = React.useContext(StatusContext);
+  const pagingState = React.useContext(EpubPagingContext);
+  const settingState = React.useContext(EpubSettingContext);
+  const statusState = React.useContext(EpubStatusContext);
 
   const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
 

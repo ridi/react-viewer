@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {SettingContext, EpubService, ViewType} from '@ridi/react-reader';
+import { EpubSettingContext, EpubService, ViewType } from '@ridi/react-reader';
 
 interface ViewTypeButtonProperty {
   viewType: ViewType,
 }
 
 const ViewTypeButton: React.FunctionComponent<ViewTypeButtonProperty> = ({ viewType }) => {
-  const settingState = React.useContext(SettingContext);
+  const settingState = React.useContext(EpubSettingContext);
 
   const getLabel = (viewType: ViewType): string => {
     if (viewType === ViewType.SCROLL) return '스크롤 보기';

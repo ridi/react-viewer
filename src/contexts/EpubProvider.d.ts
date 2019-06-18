@@ -1,11 +1,11 @@
-import { PagingState } from './PagingContext';
-import { StatusState } from './StatusContext';
-import { SettingState } from './SettingContext';
+import { EpubPagingState } from './EpubPagingContext';
+import { StatusState } from './EpubStatusContext';
+import { EpubSettingState } from './EpubSettingContext';
 import * as React from 'react';
 export interface EpubProviderProps {
     children: React.ReactNode;
-    settingState?: Partial<SettingState>;
-    pagingState?: Partial<PagingState>;
+    settingState?: Partial<EpubSettingState>;
+    pagingState?: Partial<EpubPagingState>;
     statusState?: Partial<StatusState>;
 }
 export declare const EpubProvider: React.FunctionComponent<EpubProviderProps>;

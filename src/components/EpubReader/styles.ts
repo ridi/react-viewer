@@ -1,28 +1,28 @@
 import { css } from '@emotion/core';
-import { SettingProperties, SettingState } from '../../contexts';
+import { EpubSettingProperties, EpubSettingState } from '../../contexts';
 import * as SettingUtil from '../../SettingUtil';
 
-const fontFamilyStyle = (setting: SettingState) => {
-  if (setting[SettingProperties.FONT] === 'default') {
+const fontFamilyStyle = (setting: EpubSettingState) => {
+  if (setting[EpubSettingProperties.FONT] === 'default') {
     return css ``;
   }
   return css `
-    font-family: ${setting[SettingProperties.FONT]} !important;
+    font-family: ${setting[EpubSettingProperties.FONT]} !important;
     p {
       font-family: inherit !important;
     }
   `;
 };
 
-const contentsStyle = (setting: SettingState) => {
+const contentsStyle = (setting: EpubSettingState) => {
   return css `
     article {
       word-break: break-word;
       -webkit-tap-highlight-color: transparent;
       
       ${fontFamilyStyle(setting)}
-      font-size: ${setting[SettingProperties.FONT_SIZE_IN_EM]}em !important;
-      line-height: ${setting[SettingProperties.LINE_HEIGHT_IN_EM]}em !important;
+      font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
+      line-height: ${setting[EpubSettingProperties.LINE_HEIGHT_IN_EM]}em !important;
 
       html {
         padding: 0 !important;
@@ -142,14 +142,14 @@ const contentsStyle = (setting: SettingState) => {
   `;
 };
 
-const scrollContentWrapper = (setting: SettingState) => css`
+const scrollContentWrapper = (setting: EpubSettingState) => css`
   article: {
     padding-bottom: 50px; 
   }
   ${contentsStyle(setting)}
 `;
 
-const pageContentWrapper = (setting: SettingState) => css`
+const pageContentWrapper = (setting: EpubSettingState) => css`
   column-width: ${SettingUtil.columnWidth(setting)}px;
   column-gap: ${SettingUtil.columnGap(setting)}px;
   column-fill: auto;
@@ -164,14 +164,14 @@ const pageContentWrapper = (setting: SettingState) => css`
   ${contentsStyle(setting)}
 `;
 
-export const contentWrapper = (setting: SettingState) => {
+export const contentWrapper = (setting: EpubSettingState) => {
   if (SettingUtil.isScroll(setting)) {
     return scrollContentWrapper(setting);
   }
   return pageContentWrapper(setting);
 };
 
-export const wrapper = (setting: SettingState) => {
+export const wrapper = (setting: EpubSettingState) => {
   if (SettingUtil.isScroll(setting)) {
     return css`
       margin: ${setting.containerVerticalMargin}px ${setting.containerHorizontalMargin + SettingUtil.contentPadding(setting)}px;
