@@ -347,8 +347,9 @@ export class EpubService {
     }, 'update current page').catch(error => console.error(error));
   };
 
-  static updateSetting = (setting: Partial<SettingState>) => {
+  static updateSetting = async (setting: Partial<SettingState>) => {
     if (!EpubService.dispatchSetting) return;
+    await EpubService.setReadyToRead(false);
     EpubService.dispatchSetting({ type: SettingActionType.UPDATE_SETTING, setting });
   };
 }

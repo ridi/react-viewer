@@ -67,5 +67,5 @@ export declare class EpubService {
         isScroll: boolean;
         spines: SpinePagingState[];
     }) => Promise<any>;
-    static updateSetting: (setting: Partial<SettingState>) => void;
+    static updateSetting: (setting: Partial<SettingState>) => Promise<void>;
 }

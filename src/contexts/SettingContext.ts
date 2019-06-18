@@ -13,7 +13,6 @@ export enum SettingProperties {
   LINE_HEIGHT_IN_EM = 'lineHeightInEm',
   CONTENT_PADDING_IN_PERCENT = 'contentPaddingInPercent',
   COLUMN_GAP_IN_PERCENT = 'columnGapInPercent',
-  MAX_WIDTH = 'maxWidth',
   CONTAINER_HORIZONTAL_MARGIN = 'containerHorizontalMargin',
   CONTAINER_VERTICAL_MARGIN = 'containerVerticalMargin',
 }
@@ -27,7 +26,6 @@ export type SettingState = {
   [SettingProperties.LINE_HEIGHT_IN_EM]: number,
   [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number,
   [SettingProperties.COLUMN_GAP_IN_PERCENT]: number,
-  [SettingProperties.MAX_WIDTH]: number,
   [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number,
   [SettingProperties.CONTAINER_VERTICAL_MARGIN]: number,
 };
@@ -39,7 +37,6 @@ export const initialSettingState: SettingState = {
   [SettingProperties.LINE_HEIGHT_IN_EM]: 1.67,   // em (1.0 ~ 3.0)
   [SettingProperties.CONTENT_PADDING_IN_PERCENT]: 12, // % (0 ~ 25%)
   [SettingProperties.COLUMN_GAP_IN_PERCENT]: 5,  // % (1% ~ 20%)
-  [SettingProperties.MAX_WIDTH]: 700,
   [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: 30,
   [SettingProperties.CONTAINER_VERTICAL_MARGIN]: 35,
   // contentWidthInPercent: 100,  // % (50% ~ 100%)

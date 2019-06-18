@@ -92,7 +92,7 @@ declare module '@ridi/react-reader/EpubService' {
             isScroll: boolean;
             spines: SpinePagingState[];
         }) => Promise<any>;
-        static updateSetting: (setting: Partial<SettingState>) => void;
+        static updateSetting: (setting: Partial<SettingState>) => Promise<void>;
     }
 }
 
@@ -147,7 +147,6 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
         LINE_HEIGHT_IN_EM = "lineHeightInEm",
         CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
         COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
-        MAX_WIDTH = "maxWidth",
         CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
         CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin"
     }
@@ -162,7 +161,6 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
         [SettingProperties.LINE_HEIGHT_IN_EM]: number;
         [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
         [SettingProperties.COLUMN_GAP_IN_PERCENT]: number;
-        [SettingProperties.MAX_WIDTH]: number;
         [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
         [SettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
     };

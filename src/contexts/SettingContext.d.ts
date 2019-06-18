@@ -10,7 +10,6 @@ export declare enum SettingProperties {
     LINE_HEIGHT_IN_EM = "lineHeightInEm",
     CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
     COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
-    MAX_WIDTH = "maxWidth",
     CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
     CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin"
 }
@@ -25,7 +24,6 @@ export declare type SettingState = {
     [SettingProperties.LINE_HEIGHT_IN_EM]: number;
     [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
     [SettingProperties.COLUMN_GAP_IN_PERCENT]: number;
-    [SettingProperties.MAX_WIDTH]: number;
     [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
     [SettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
 };
