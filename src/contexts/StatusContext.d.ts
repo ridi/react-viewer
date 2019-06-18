@@ -13,5 +13,5 @@ export declare const initialStatusState: StatusState;
 export declare const StatusReducer: React.Reducer<StatusState, StatusAction>;
 export declare const StatusDispatchContext: React.Context<React.Dispatch<StatusAction>>, StatusContext: React.Context<StatusState>, StatusContextProvider: React.FunctionComponent<{
     children: React.ReactNode;
-    customInitialState?: StatusState | undefined;
+    customInitialState?: Partial<StatusState> | undefined;
 }>;

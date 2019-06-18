@@ -16,9 +16,9 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
 
 export interface EpubProviderProps {
   children: React.ReactNode,
-  settingState ?: SettingState,
-  pagingState?: PagingState,
-  statusState?: StatusState,
+  settingState ?: Partial<SettingState>,
+  pagingState?: Partial<PagingState>,
+  statusState?: Partial<StatusState>,
 }
 
 export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, pagingState, statusState }: EpubProviderProps) => {

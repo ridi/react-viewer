@@ -3,7 +3,7 @@ import * as React from "react";
 interface ContextResult<S, A> {
   DispatchContext: React.Context<React.Dispatch<A>>;
   StateContext: React.Context<S>;
-  ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: S }>
+  ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: Partial<S> }>
 }
 
 export function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState: S, displayName?: string): ContextResult<S, A> {
@@ -13,8 +13,8 @@ export function generateContext<S, A>(reducer: React.Reducer<S, A>, initialState
   DispatchContext.displayName = displayName ? `Dispatch.${displayName}` : 'Dispatch.Context';
   StateContext.displayName = displayName ? `State.${displayName}` : 'Context.State';
 
-  const ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: S }> = ({ children, customInitialState }) => {
-    const [state, dispatch] = React.useReducer(reducer, customInitialState || initialState);
+  const ContextProvider: React.FunctionComponent<{ children: React.ReactNode, customInitialState?: Partial<S> }> = ({ children, customInitialState }) => {
+    const [state, dispatch] = React.useReducer(reducer, { ... initialState, ...(customInitialState || {}) });
 
     return (
       <DispatchContext.Provider value={dispatch}>

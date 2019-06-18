@@ -27,5 +27,5 @@ export declare const initialPagingState: PagingState;
 export declare const PagingReducer: React.Reducer<PagingState, PagingAction>;
 export declare const PagingDispatchContext: React.Context<React.Dispatch<PagingAction>>, PagingContext: React.Context<PagingState>, PagingContextProvider: React.FunctionComponent<{
     children: React.ReactNode;
-    customInitialState?: PagingState | undefined;
+    customInitialState?: Partial<PagingState> | undefined;
 }>;

@@ -4,8 +4,8 @@ import { SettingState } from './SettingContext';
 import * as React from 'react';
 export interface EpubProviderProps {
     children: React.ReactNode;
-    settingState?: SettingState;
-    pagingState?: PagingState;
-    statusState?: StatusState;
+    settingState?: Partial<SettingState>;
+    pagingState?: Partial<PagingState>;
+    statusState?: Partial<StatusState>;
 }
 export declare const EpubProvider: React.FunctionComponent<EpubProviderProps>;

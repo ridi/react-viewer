@@ -4,12 +4,12 @@ import Header from './Header';
 import { Loading, EpubReader, EpubProvider, ViewType, PagingState } from '@ridi/react-reader';
 
 const initialSettingState = {
-  viewType: ViewType.PAGE12,
-  fontSizeInEm: 1,
-  lineHeightInEm: 1.67,
-  contentPaddingInPercent: 5,
-  columnGapInPercent: 5,
-  maxWidth: 700,
+  viewType: ViewType.PAGE1,
+  // fontSizeInEm: 1,
+  // lineHeightInEm: 1.67,
+  // contentPaddingInPercent: 5,
+  // columnGapInPercent: 5,
+  // maxWidth: 700,
   containerHorizontalMargin: 50,
   containerVerticalMargin: 60,
 };

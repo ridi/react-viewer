@@ -26,5 +26,5 @@ export declare const initialSettingState: SettingState;
 export declare const settingReducer: Reducer<SettingState, SettingAction>;
 export declare const SettingDispatchContext: import("react").Context<import("react").Dispatch<SettingAction>>, SettingContext: import("react").Context<SettingState>, SettingContextProvider: import("react").FunctionComponent<{
     children: import("react").ReactNode;
-    customInitialState?: SettingState | undefined;
+    customInitialState?: Partial<SettingState> | undefined;
 }>;
