@@ -10,6 +10,7 @@ export declare enum SettingActionType {
 }
 export declare enum SettingProperties {
     VIEW_TYPE = "viewType",
+    FONT = "font",
     FONT_SIZE_IN_EM = "fontSizeInEm",
     LINE_HEIGHT_IN_EM = "lineHeightInEm",
     CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
@@ -24,6 +25,7 @@ export declare type SettingAction = {
 };
 export declare type SettingState = {
     [SettingProperties.VIEW_TYPE]: ViewType;
+    [SettingProperties.FONT]: string;
     [SettingProperties.FONT_SIZE_IN_EM]: number;
     [SettingProperties.LINE_HEIGHT_IN_EM]: number;
     [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;

@@ -14,6 +14,7 @@ export enum SettingActionType {
 
 export enum SettingProperties {
   VIEW_TYPE = 'viewType',
+  FONT = 'font',
   FONT_SIZE_IN_EM = 'fontSizeInEm',
   LINE_HEIGHT_IN_EM = 'lineHeightInEm',
   CONTENT_PADDING_IN_PERCENT = 'contentPaddingInPercent',
@@ -27,6 +28,7 @@ export type SettingAction = { type: SettingActionType.UPDATE_SETTING, setting: P
 
 export type SettingState = {
   [SettingProperties.VIEW_TYPE]: ViewType,
+  [SettingProperties.FONT]: string,
   [SettingProperties.FONT_SIZE_IN_EM]: number,
   [SettingProperties.LINE_HEIGHT_IN_EM]: number,
   [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number,
@@ -38,6 +40,7 @@ export type SettingState = {
 
 export const initialSettingState: SettingState = {
   [SettingProperties.VIEW_TYPE]: ViewType.SCROLL,
+  [SettingProperties.FONT]: 'default',
   [SettingProperties.FONT_SIZE_IN_EM]: 1,        // em (0.1em ~ 5.0em)
   [SettingProperties.LINE_HEIGHT_IN_EM]: 1.67,   // em (1.0 ~ 3.0)
   [SettingProperties.CONTENT_PADDING_IN_PERCENT]: 12, // % (0 ~ 25%)

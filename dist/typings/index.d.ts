@@ -137,6 +137,7 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
     }
     export enum SettingProperties {
         VIEW_TYPE = "viewType",
+        FONT = "font",
         FONT_SIZE_IN_EM = "fontSizeInEm",
         LINE_HEIGHT_IN_EM = "lineHeightInEm",
         CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
@@ -151,6 +152,7 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
     };
     export type SettingState = {
         [SettingProperties.VIEW_TYPE]: ViewType;
+        [SettingProperties.FONT]: string;
         [SettingProperties.FONT_SIZE_IN_EM]: number;
         [SettingProperties.LINE_HEIGHT_IN_EM]: number;
         [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
