@@ -174,7 +174,7 @@ export const contentWrapper = (setting: SettingState) => {
 export const wrapper = (setting: SettingState) => {
   if (SettingUtil.isScroll(setting)) {
     return css`
-      margin: ${setting.containerVerticalMargin}px ${setting.containerHorizontalMargin}px;
+      margin: ${setting.containerVerticalMargin}px ${setting.containerHorizontalMargin + SettingUtil.contentPadding(setting)}px;
     `;
   }
 
