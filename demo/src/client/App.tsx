@@ -2,13 +2,13 @@ import * as React from 'react';
 import Footer from './Footer';
 import Header from './Header';
 import {
-  Loading,
   EpubReader,
   EpubProvider,
   ViewType,
   EpubSettingProperties,
   EpubPagingProperties,
 } from '@ridi/react-reader';
+import Loading from './Loading';
 
 const initialSettingState = {
   [EpubSettingProperties.VIEW_TYPE]: ViewType.PAGE1,

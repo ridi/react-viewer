@@ -5,9 +5,8 @@
 
 declare module '@ridi/react-reader' {
     import EpubReader from '@ridi/react-reader/components/EpubReader';
-    import Loading from '@ridi/react-reader/components/Loading';
     import * as SettingUtil from '@ridi/react-reader/SettingUtil';
-    export { EpubReader, Loading, SettingUtil, };
+    export { EpubReader, SettingUtil };
     export * from '@ridi/react-reader/EpubService';
     export * from '@ridi/react-reader/contexts';
     export * from '@ridi/react-reader/ReaderJsHelper';
@@ -17,13 +16,6 @@ declare module '@ridi/react-reader' {
 declare module '@ridi/react-reader/components/EpubReader' {
     const EpubReader: () => JSX.Element;
     export default EpubReader;
-}
-
-declare module '@ridi/react-reader/components/Loading' {
-    /** @jsx jsx */
-    import * as React from 'react';
-    const Loading: React.FunctionComponent;
-    export default Loading;
 }
 
 declare module '@ridi/react-reader/SettingUtil' {

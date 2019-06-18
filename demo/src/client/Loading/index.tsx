@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import * as React from 'react';
 import { jsx } from '@emotion/core';
-import { EpubStatusContext } from '../../contexts';
+import { EpubStatusContext } from '@ridi/react-reader';
 import * as styles from './styles';
 
 const Loading: React.FunctionComponent = () => {
