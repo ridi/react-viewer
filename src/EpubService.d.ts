@@ -18,7 +18,7 @@ export declare class EpubService {
         dispatchStatus: React.Dispatch<StatusAction>;
         dispatchPaging: React.Dispatch<PagingAction>;
     }): void;
-    private static setStartToRead;
+    private static setReadyToRead;
     private static inLoadingState;
     private static appendStyles;
     private static waitImagesLoaded;

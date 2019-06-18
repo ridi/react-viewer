@@ -2,23 +2,27 @@ import {generateContext} from './ContextProvider';
 import * as React from 'react';
 
 export enum StatusActionType {
-  SET_START_TO_READ,
+  SET_READY_TO_READ = 'set_ready_to_read',
 }
 
-export type StatusAction = { type: StatusActionType.SET_START_TO_READ, startToRead: boolean };
+export enum StatusProperties {
+  READY_TO_READ = 'readyToRead',
+}
+
+export type StatusAction = { type: StatusActionType.SET_READY_TO_READ, readyToRead: boolean };
 
 export type StatusState = {
-  startToRead: boolean,
+  [StatusProperties.READY_TO_READ]: boolean,
 };
 
 export const initialStatusState: StatusState = {
-  startToRead: false,
+  [StatusProperties.READY_TO_READ]: false,
 };
 
 export const StatusReducer: React.Reducer<StatusState, StatusAction> = (state, action) => {
   switch(action.type) {
-    case StatusActionType.SET_START_TO_READ:
-      return { ...state, startToRead: action.startToRead };
+    case StatusActionType.SET_READY_TO_READ:
+      return { ...state, readyToRead: action.readyToRead };
     default:
       return state;
   }

@@ -127,27 +127,37 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
 declare module '@ridi/react-reader/contexts/SettingContext' {
     import { Reducer } from "react";
     export enum ViewType {
-        SCROLL = 0,
-        PAGE1 = 1,
-        PAGE12 = 2,
-        PAGE23 = 3
+        SCROLL = "scroll",
+        PAGE1 = "page1",
+        PAGE12 = "page12",
+        PAGE23 = "page23"
     }
     export enum SettingActionType {
-        UPDATE_SETTING = 0
+        UPDATE_SETTING = "update_setting"
+    }
+    export enum SettingProperties {
+        VIEW_TYPE = "viewType",
+        FONT_SIZE_IN_EM = "fontSizeInEm",
+        LINE_HEIGHT_IN_EM = "lineHeightInEm",
+        CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
+        COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
+        MAX_WIDTH = "maxWidth",
+        CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
+        CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin"
     }
     export type SettingAction = {
         type: SettingActionType.UPDATE_SETTING;
         setting: Partial<SettingState>;
     };
     export type SettingState = {
-        viewType: ViewType;
-        fontSizeInEm: number;
-        lineHeightInEm: number;
-        contentPaddingInPercent: number;
-        columnGapInPercent: number;
-        maxWidth: number;
-        containerHorizontalMargin: number;
-        containerVerticalMargin: number;
+        [SettingProperties.VIEW_TYPE]: ViewType;
+        [SettingProperties.FONT_SIZE_IN_EM]: number;
+        [SettingProperties.LINE_HEIGHT_IN_EM]: number;
+        [SettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
+        [SettingProperties.COLUMN_GAP_IN_PERCENT]: number;
+        [SettingProperties.MAX_WIDTH]: number;
+        [SettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
+        [SettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
     };
     export const initialSettingState: SettingState;
     export const settingReducer: Reducer<SettingState, SettingAction>;
@@ -160,7 +170,17 @@ declare module '@ridi/react-reader/contexts/SettingContext' {
 declare module '@ridi/react-reader/contexts/PagingContext' {
     import * as React from 'react';
     export enum PagingActionType {
-        UPDATE_PAGING = 0
+        UPDATE_PAGING = "update_paging"
+    }
+    export enum PagingProperties {
+        TOTAL_PAGE = "totalPage",
+        FULL_HEIGHT = "fullHeight",
+        FULL_WIDTH = "fullWidth",
+        PAGE_UNIT = "pageUnit",
+        CURRENT_PAGE = "currentPage",
+        CURRENT_SPINE_INDEX = "currentSpineIndex",
+        CURRENT_POSITION = "currentPosition",
+        SPINES = "spines"
     }
     export type PagingAction = {
         type: PagingActionType.UPDATE_PAGING;
@@ -174,14 +194,14 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         totalPage: number;
     };
     export type PagingState = {
-        totalPage: number;
-        fullHeight: number;
-        fullWidth: number;
-        pageUnit: number;
-        currentPage: number;
-        currentSpineIndex: number;
-        currentPosition: number;
-        spines: Array<SpinePagingState>;
+        [PagingProperties.TOTAL_PAGE]: number;
+        [PagingProperties.FULL_HEIGHT]: number;
+        [PagingProperties.FULL_WIDTH]: number;
+        [PagingProperties.PAGE_UNIT]: number;
+        [PagingProperties.CURRENT_PAGE]: number;
+        [PagingProperties.CURRENT_SPINE_INDEX]: number;
+        [PagingProperties.CURRENT_POSITION]: number;
+        [PagingProperties.SPINES]: Array<SpinePagingState>;
     };
     export const initialPagingState: PagingState;
     export const PagingReducer: React.Reducer<PagingState, PagingAction>;
@@ -194,14 +214,17 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
 declare module '@ridi/react-reader/contexts/StatusContext' {
     import * as React from 'react';
     export enum StatusActionType {
-        SET_START_TO_READ = 0
+        SET_READY_TO_READ = "set_ready_to_read"
+    }
+    export enum StatusProperties {
+        READY_TO_READ = "readyToRead"
     }
     export type StatusAction = {
-        type: StatusActionType.SET_START_TO_READ;
-        startToRead: boolean;
+        type: StatusActionType.SET_READY_TO_READ;
+        readyToRead: boolean;
     };
     export type StatusState = {
-        startToRead: boolean;
+        [StatusProperties.READY_TO_READ]: boolean;
     };
     export const initialStatusState: StatusState;
     export const StatusReducer: React.Reducer<StatusState, StatusAction>;

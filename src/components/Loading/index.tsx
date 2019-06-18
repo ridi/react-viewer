@@ -7,9 +7,9 @@ import * as styles from './styles';
 const Loading: React.FunctionComponent = () => {
   const statusContext = React.useContext(StatusContext);
 
-  console.log(`startToRead: ${statusContext.startToRead}`);
+  console.log(`readyToRead: ${statusContext.readyToRead}`);
 
-  if (statusContext.startToRead) return null;
+  if (statusContext.readyToRead) return null;
   return (
     <div css={styles.wrapper}>Loading...</div>
   );

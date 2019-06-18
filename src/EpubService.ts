@@ -13,7 +13,7 @@ import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
 import {
   PagingAction,
-  PagingActionType,
+  PagingActionType, PagingProperties,
   PagingState,
   SettingAction,
   SettingActionType,
@@ -49,21 +49,21 @@ export class EpubService {
     EpubService.dispatchPaging = dispatchPaging;
   }
 
-  private static setStartToRead = async (startToRead: boolean) => {
+  private static setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!EpubService.dispatchStatus) return resolve();
-        EpubService.dispatchStatus({ type: StatusActionType.SET_START_TO_READ, startToRead });
-        console.log(`startToRead => ${startToRead}`);
+        EpubService.dispatchStatus({ type: StatusActionType.SET_READY_TO_READ, readyToRead });
+        console.log(`readyToRead => ${readyToRead}`);
         resolve();
       }, 0);
     });
   };
 
   private static inLoadingState = async (run: () => any) => {
-    await EpubService.setStartToRead(false);
+    await EpubService.setReadyToRead(false);
     const result = await run();
-    await EpubService.setStartToRead(true);
+    await EpubService.setReadyToRead(true);
     return result;
   };
 
@@ -120,10 +120,10 @@ export class EpubService {
     isScroll: boolean,
     columnGap: number,
     columnWidth: number,
-  }): Promise<Pick<PagingState, 'totalPage' | 'pageUnit' | 'fullHeight' | 'fullWidth' | 'spines'>> => {
+  }): Promise<Pick<PagingState, PagingProperties.TOTAL_PAGE | PagingProperties.PAGE_UNIT | PagingProperties.FULL_HEIGHT | PagingProperties.FULL_WIDTH | PagingProperties.SPINES>> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
-      const paging: Pick<PagingState, 'totalPage' | 'pageUnit' | 'fullHeight' | 'fullWidth' | 'spines'> = {
+      const paging: Pick<PagingState, PagingProperties.TOTAL_PAGE | PagingProperties.PAGE_UNIT | PagingProperties.FULL_HEIGHT | PagingProperties.FULL_WIDTH | PagingProperties.SPINES> = {
         totalPage: 0,
         pageUnit: 0,
         fullHeight: 0,

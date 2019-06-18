@@ -36,7 +36,7 @@ const EpubReader = () => {
   };
 
   const updateCurrent = () => {
-    if (!statusState.startToRead) return;
+    if (!statusState.readyToRead) return;
     EpubService.updateCurrent({
       pageUnit: pagingState.pageUnit,
       isScroll: SettingUtil.isScroll(settingState),

@@ -1,6 +1,16 @@
 import * as React from 'react';
 export declare enum PagingActionType {
-    UPDATE_PAGING = 0
+    UPDATE_PAGING = "update_paging"
+}
+export declare enum PagingProperties {
+    TOTAL_PAGE = "totalPage",
+    FULL_HEIGHT = "fullHeight",
+    FULL_WIDTH = "fullWidth",
+    PAGE_UNIT = "pageUnit",
+    CURRENT_PAGE = "currentPage",
+    CURRENT_SPINE_INDEX = "currentSpineIndex",
+    CURRENT_POSITION = "currentPosition",
+    SPINES = "spines"
 }
 export declare type PagingAction = {
     type: PagingActionType.UPDATE_PAGING;
@@ -14,14 +24,14 @@ export declare type SpinePagingState = {
     totalPage: number;
 };
 export declare type PagingState = {
-    totalPage: number;
-    fullHeight: number;
-    fullWidth: number;
-    pageUnit: number;
-    currentPage: number;
-    currentSpineIndex: number;
-    currentPosition: number;
-    spines: Array<SpinePagingState>;
+    [PagingProperties.TOTAL_PAGE]: number;
+    [PagingProperties.FULL_HEIGHT]: number;
+    [PagingProperties.FULL_WIDTH]: number;
+    [PagingProperties.PAGE_UNIT]: number;
+    [PagingProperties.CURRENT_PAGE]: number;
+    [PagingProperties.CURRENT_SPINE_INDEX]: number;
+    [PagingProperties.CURRENT_POSITION]: number;
+    [PagingProperties.SPINES]: Array<SpinePagingState>;
 };
 export declare const initialPagingState: PagingState;
 export declare const PagingReducer: React.Reducer<PagingState, PagingAction>;

@@ -1,13 +1,16 @@
 import * as React from 'react';
 export declare enum StatusActionType {
-    SET_START_TO_READ = 0
+    SET_READY_TO_READ = "set_ready_to_read"
+}
+export declare enum StatusProperties {
+    READY_TO_READ = "readyToRead"
 }
 export declare type StatusAction = {
-    type: StatusActionType.SET_START_TO_READ;
-    startToRead: boolean;
+    type: StatusActionType.SET_READY_TO_READ;
+    readyToRead: boolean;
 };
 export declare type StatusState = {
-    startToRead: boolean;
+    [StatusProperties.READY_TO_READ]: boolean;
 };
 export declare const initialStatusState: StatusState;
 export declare const StatusReducer: React.Reducer<StatusState, StatusAction>;
