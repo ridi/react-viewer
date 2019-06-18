@@ -63,22 +63,25 @@ declare module '@ridi/react-reader/EpubService' {
             pageUnit: number;
             isScroll: boolean;
         }) => Promise<void>;
-        static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, }: {
-            currentPage: number;
+        static invalidate: ({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap, }: {
+            currentSpineIndex: number;
+            currentPosition: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
         }) => Promise<void>;
-        static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
+        static load: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
+            currentSpineIndex: number;
+            currentPosition: number;
             metadata: EpubParsedData;
-            currentPage: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
         }) => Promise<void>;
-        static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
+        static loadWithParsedData: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
+            currentSpineIndex: number;
+            currentPosition: number;
             metadata: EpubParsedData;
-            currentPage: number;
             isScroll: boolean;
             columnWidth: number;
             columnGap: number;
@@ -167,6 +170,8 @@ declare module '@ridi/react-reader/contexts/PagingContext' {
         spineIndex: number;
         offset: number;
         total: number;
+        pageOffset: number;
+        totalPage: number;
     };
     export type PagingState = {
         totalPage: number;

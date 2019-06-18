@@ -24,28 +24,40 @@ export declare class EpubService {
     private static waitImagesLoaded;
     private static prepareFonts;
     private static startPaging;
+    private static getPageFromSpineIndexAndPosition;
+    /**
+     * Restore page from spineIndex and position
+     * @param currentSpineIndex
+     * @param currentPosition
+     * @param spines
+     * @param pageUnit
+     * @param isScroll
+     */
     private static restoreCurrent;
     static goToPage: ({ page, pageUnit, isScroll, }: {
         page: number;
         pageUnit: number;
         isScroll: boolean;
     }) => Promise<void>;
-    static invalidate: ({ currentPage, isScroll, columnWidth, columnGap, }: {
-        currentPage: number;
+    static invalidate: ({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap, }: {
+        currentSpineIndex: number;
+        currentPosition: number;
         isScroll: boolean;
         columnWidth: number;
         columnGap: number;
     }) => Promise<void>;
-    static load: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
+    static load: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
+        currentSpineIndex: number;
+        currentPosition: number;
         metadata: EpubParsedData;
-        currentPage: number;
         isScroll: boolean;
         columnWidth: number;
         columnGap: number;
     }) => Promise<void>;
-    static loadWithParsedData: ({ metadata, currentPage, isScroll, columnWidth, columnGap, }: {
+    static loadWithParsedData: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
+        currentSpineIndex: number;
+        currentPosition: number;
         metadata: EpubParsedData;
-        currentPage: number;
         isScroll: boolean;
         columnWidth: number;
         columnGap: number;

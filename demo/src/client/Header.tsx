@@ -39,13 +39,13 @@ const Header: React.FunctionComponent = () => {
       .then((metadata: EpubParsedData) => {
         EpubService.load({
           metadata,
-          currentPage: pagingState.currentPage,
+          currentSpineIndex: pagingState.currentSpineIndex,
+          currentPosition: pagingState.currentPosition,
           isScroll: SettingUtil.isScroll(settingState),
           columnWidth: SettingUtil.columnWidth(settingState),
           columnGap: SettingUtil.columnGap(settingState),
-          columnsInPage: SettingUtil.columnsInPage(settingState),
-        }).catch((error) => console.error(error));
-      }).catch((error) => console.error(error));
+        }).catch((error: any) => console.error(error));
+      }).catch((error: any) => console.error(error));
     }
   };
 

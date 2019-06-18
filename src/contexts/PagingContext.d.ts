@@ -10,6 +10,8 @@ export declare type SpinePagingState = {
     spineIndex: number;
     offset: number;
     total: number;
+    pageOffset: number;
+    totalPage: number;
 };
 export declare type PagingState = {
     totalPage: number;

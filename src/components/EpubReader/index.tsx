@@ -45,12 +45,13 @@ const EpubReader = () => {
   };
 
   const invalidate = () => EpubService.invalidate({
-    currentPage: pagingState.currentPage,
+    currentSpineIndex: pagingState.currentSpineIndex,
+    currentPosition: pagingState.currentPosition,
     isScroll: SettingUtil.isScroll(settingState),
     columnWidth: SettingUtil.columnWidth(settingState),
     columnGap: SettingUtil.columnGap(settingState),
   })
-  .then(updateCurrent)
+  // .then(updateCurrent)
   .catch(error => console.error(error));
 
   React.useEffect(() => {

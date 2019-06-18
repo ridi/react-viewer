@@ -9,8 +9,10 @@ export type PagingAction = { type: PagingActionType.UPDATE_PAGING, paging: Parti
 
 export type SpinePagingState = {
   spineIndex: number, // 1-based
-  offset: number,
-  total: number,
+  offset: number,     // start offset in px
+  total: number,      // total width or height in px
+  pageOffset: number, // start page
+  totalPage: number,  // total page number
 };
 
 export type PagingState = {
@@ -19,9 +21,9 @@ export type PagingState = {
   fullWidth: number,
   pageUnit: number,
   currentPage: number,
-  currentSpineIndex: number, // 1-based
-  currentPosition: number,   // 0 ~ 1
-  spines: Array<SpinePagingState>,  // offset and fullSize per spine
+  currentSpineIndex: number,  // 1-based
+  currentPosition: number,    // 0 ~ 1
+  spines: Array<SpinePagingState>,  // per spine paging information
 };
 
 export const initialPagingState: PagingState = {
@@ -31,7 +33,7 @@ export const initialPagingState: PagingState = {
   pageUnit: 0,
   currentPage: 1,
   currentSpineIndex: 1, // 1-based
-  currentPosition: 0,   // 0 ~ 1
+  currentPosition: 0,   // 0 ~ 1 (float)
   spines: [],
 };
 
