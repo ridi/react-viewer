@@ -11,6 +11,7 @@ declare module '@ridi/react-reader' {
     export * from '@ridi/react-reader/EpubService';
     export * from '@ridi/react-reader/contexts';
     export * from '@ridi/react-reader/ReaderJsHelper';
+    export * from '@ridi/react-reader/constants';
 }
 
 declare module '@ridi/react-reader/components/EpubReader' {
@@ -124,14 +125,18 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
     export { Context };
 }
 
-declare module '@ridi/react-reader/contexts/SettingContext' {
-    import { Reducer } from "react";
+declare module '@ridi/react-reader/constants' {
     export enum ViewType {
         SCROLL = "scroll",
         PAGE1 = "page1",
         PAGE12 = "page12",
         PAGE23 = "page23"
     }
+}
+
+declare module '@ridi/react-reader/contexts/SettingContext' {
+    import { Reducer } from "react";
+    import { ViewType } from '@ridi/react-reader/constants';
     export enum SettingActionType {
         UPDATE_SETTING = "update_setting"
     }

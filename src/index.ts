@@ -10,3 +10,4 @@ export {
 export * from './EpubService';
 export * from './contexts';
 export * from './ReaderJsHelper';
+export * from './constants';

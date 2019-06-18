@@ -2,11 +2,11 @@ module.exports = {
   mode: 'development',
   entry: {
     index: './src/index.ts',
+    constants: './src/constants/index.ts',
   },
   output: {
     path: `${__dirname}/dist`,
     filename: '[name].js',
-    library: 'reader',
     libraryTarget: 'umd',
   },
   module: {

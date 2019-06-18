@@ -1,5 +1,6 @@
 import { getClientHeight, getClientWidth } from './util';
-import { SettingState, ViewType } from './contexts';
+import { SettingState } from './contexts';
+import { ViewType } from './constants/index';
 
 export const isScroll = ({ viewType }: SettingState): boolean => viewType === ViewType.SCROLL;
 export const isDoublePage = ({ viewType }: SettingState): boolean => viewType === ViewType.PAGE12 || viewType === ViewType.PAGE23;

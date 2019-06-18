@@ -1,12 +1,6 @@
 import {Reducer} from "react";
 import { generateContext } from "./ContextProvider";
-
-export enum ViewType {
-  SCROLL = 'scroll',
-  PAGE1 = 'page1',
-  PAGE12 = 'page12',
-  PAGE23 = 'page23',
-}
+import { ViewType } from '../constants';
 
 export enum SettingActionType {
   UPDATE_SETTING = 'update_setting',

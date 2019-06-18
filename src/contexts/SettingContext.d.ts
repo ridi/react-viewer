@@ -1,10 +1,5 @@
 import { Reducer } from "react";
-export declare enum ViewType {
-    SCROLL = "scroll",
-    PAGE1 = "page1",
-    PAGE12 = "page12",
-    PAGE23 = "page23"
-}
+import { ViewType } from '../constants';
 export declare enum SettingActionType {
     UPDATE_SETTING = "update_setting"
 }
