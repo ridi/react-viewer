@@ -2,12 +2,12 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else {
-		var a = factory();
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
-})(window, function() {
+		define("reader", [], factory);
+	else if(typeof exports === 'object')
+		exports["reader"] = factory();
+	else
+		root["reader"] = factory();
+})(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -104,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\n//# sourceURL=webpack:///./src/constants/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\n//# sourceURL=webpack://reader/./src/constants/index.ts?");
 
 /***/ })
 

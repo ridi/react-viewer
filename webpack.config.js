@@ -7,7 +7,10 @@ module.exports = {
   output: {
     path: `${__dirname}/dist`,
     filename: '[name].js',
+    library: 'reader',
     libraryTarget: 'umd',
+    umdNamedDefine: true,
+    globalObject: 'this',
   },
   module: {
     rules: [
