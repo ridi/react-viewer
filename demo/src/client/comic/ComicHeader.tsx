@@ -5,7 +5,7 @@ import * as styles from './styles';
 import { ComicViewTypeButton } from '../ViewTypeButton';
 import {
   ComicSettingContext,
-  ComicPagingContext,
+  ComicCalculationContext,
   ViewType,
   ComicService,
   ComicParsedData,
@@ -17,7 +17,7 @@ const ComicHeader: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
 
   const settingState = React.useContext(ComicSettingContext);
-  const pagingState = React.useContext(ComicPagingContext);
+  const pagingState = React.useContext(ComicCalculationContext);
 
   const loadFile = async (file: File): Promise<ComicParsedData> => {
     return new Promise((resolve, reject) => {

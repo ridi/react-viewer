@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import * as React from 'react';
-import { EpubPagingContext, EpubSettingContext, EpubStatusContext } from '../../contexts';
+import { EpubCalculationContext, EpubSettingContext, EpubStatusContext } from '../../contexts';
 import * as SettingUtil from '../../utils/EpubSettingUtil';
 import { EpubService } from '../../EpubService';
 import { isScroll } from '../../utils/EpubSettingUtil';
@@ -12,12 +12,12 @@ import Events, { SET_CONTENT } from '../../Events';
 
 const ComicReader: React.FunctionComponent = () => {
   const [content, setContent] = React.useState('');
-  const pagingState = React.useContext(EpubPagingContext);
+  const pagingState = React.useContext(EpubCalculationContext);
   const settingState = React.useContext(EpubSettingContext);
   const statusState = React.useContext(EpubStatusContext);
 
   const setImageContent = (images: Array<ImageData>) => setContent(
-    images.map(({ index, path, width, height, fileSize }) => `${index + 1}: ${path} (w: ${width}, h: ${height}, size: ${fileSize})`).join('\n')
+    images.map(({ index, path, width, height, fileSize }) => `${index}: ${path} (w: ${width}, h: ${height}, size: ${fileSize})`).join('\n')
   );
 
   const updateCurrent = () => {

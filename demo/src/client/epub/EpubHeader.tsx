@@ -5,7 +5,7 @@ import * as styles from './styles';
 import { EpubViewTypeButton } from '../ViewTypeButton';
 import {
   EpubSettingContext,
-  EpubPagingContext,
+  EpubCalculationContext,
   ViewType,
   EpubService,
   EpubSettingUtil,
@@ -17,7 +17,7 @@ const EpubHeader: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
 
   const settingState = React.useContext(EpubSettingContext);
-  const pagingState = React.useContext(EpubPagingContext);
+  const pagingState = React.useContext(EpubCalculationContext);
 
   const loadFile = async (file: File): Promise<EpubParsedData> => {
     return new Promise((resolve, reject) => {

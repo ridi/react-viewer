@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { jsx } from '@emotion/core';
 import * as styles from './styles';
-import { EpubPagingContext, EpubService, EpubSettingContext, EpubSettingUtil,
+import { EpubCalculationContext, EpubService, EpubSettingContext, EpubSettingUtil,
 } from '@ridi/react-reader';
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
@@ -10,7 +10,7 @@ const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(targe
 
 const EpubFooter: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(EpubPagingContext);
+  const pagingState = React.useContext(EpubCalculationContext);
   const settingState = React.useContext(EpubSettingContext);
 
   // 로컬에서만 유지되는 값

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  EpubPagingProperties,
+  EpubCalculationProperties,
   EpubProvider,
   EpubReader,
   EpubSettingProperties,
@@ -23,8 +23,8 @@ const initialSettingState = {
 };
 
 const initialPagingState = {
-  [EpubPagingProperties.CURRENT_SPINE_INDEX]: 1,
-  [EpubPagingProperties.CURRENT_POSITION]: 0,
+  [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0,
+  [EpubCalculationProperties.CURRENT_POSITION]: 0,
 };
 
 const App: React.FunctionComponent = () => {

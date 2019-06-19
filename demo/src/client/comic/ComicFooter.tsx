@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { jsx } from '@emotion/core';
 import * as styles from './styles';
-import { ComicPagingContext, ComicService, ComicSettingContext } from '@ridi/react-reader';
+import { ComicCalculationContext, ComicService, ComicSettingContext } from '@ridi/react-reader';
 
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
@@ -10,7 +10,7 @@ const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(targe
 
 const ComicFooter: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(ComicPagingContext);
+  const pagingState = React.useContext(ComicCalculationContext);
   const settingState = React.useContext(ComicSettingContext);
 
   // 로컬에서만 유지되는 값

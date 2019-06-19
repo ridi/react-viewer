@@ -1,9 +1,9 @@
 import Events, { SET_CONTENT } from './Events';
 import * as React from 'react';
 import {
-  ComicPagingAction,
-  ComicPagingActionType,
-  ComicPagingState,
+  ComicCalculationAction,
+  ComicCalculationActionType,
+  ComicCalculationState,
   ComicSettingAction, ComicSettingActionType,
   ComicSettingState,
   ComicStatusAction,
@@ -29,7 +29,7 @@ export interface ComicParsedData {
 export class ComicService {
   static dispatchSetting?: React.Dispatch<ComicSettingAction>;
   static dispatchStatus?: React.Dispatch<ComicStatusAction>;
-  static dispatchPaging?: React.Dispatch<ComicPagingAction>;
+  static dispatchPaging?: React.Dispatch<ComicCalculationAction>;
 
   private static setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
@@ -46,7 +46,7 @@ export class ComicService {
     pagingState,
     settingState,
   }: {
-    pagingState: ComicPagingState,
+    pagingState: ComicCalculationState,
     settingState: ComicSettingState,
   }) => {
     await ComicService.goToPage({
@@ -60,9 +60,9 @@ export class ComicService {
     pagingState,
     settingState,
   }: {
-    pagingState: ComicPagingState,
+    pagingState: ComicCalculationState,
     settingState: ComicSettingState,
-  }): Promise<ComicPagingState> => {
+  }): Promise<ComicCalculationState> => {
     if (!ComicService.dispatchPaging) return pagingState;
     if (isScroll(settingState)) {
       // update images[].offset, height
@@ -74,12 +74,12 @@ export class ComicService {
         offsetTop += height;
         return result;
       });
-      ComicService.dispatchPaging({ type: ComicPagingActionType.UPDATE_PAGING, paging: { images }});
+      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { images }});
       return { ...pagingState, images };
     } else {
       // update pageUnit
       const pageUnit = getClientWidth();
-      ComicService.dispatchPaging({ type: ComicPagingActionType.UPDATE_PAGING, paging: { pageUnit }});
+      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { pageUnit }});
       return { ...pagingState, pageUnit };
     }
   };
@@ -87,7 +87,7 @@ export class ComicService {
   static init = ({ dispatchSetting, dispatchPaging, dispatchStatus }: {
     dispatchSetting: React.Dispatch<ComicSettingAction>,
     dispatchStatus: React.Dispatch<ComicStatusAction>,
-    dispatchPaging: React.Dispatch<ComicPagingAction>,
+    dispatchPaging: React.Dispatch<ComicCalculationAction>,
   }) => {
     ComicService.dispatchStatus = dispatchStatus;
     ComicService.dispatchSetting = dispatchSetting;
@@ -98,7 +98,7 @@ export class ComicService {
     pagingState,
     settingState,
   }: {
-    pagingState: ComicPagingState,
+    pagingState: ComicCalculationState,
     settingState: ComicSettingState,
   }) => {
     await ComicService.setReadyToRead(false);
@@ -113,7 +113,7 @@ export class ComicService {
     settingState,
   }: {
     metadata: ComicParsedData,
-    pagingState: ComicPagingState,
+    pagingState: ComicCalculationState,
     settingState: ComicSettingState,
   }) => {
     if (!ComicService.dispatchPaging) return;
@@ -124,14 +124,14 @@ export class ComicService {
       totalPage: metadata.images ? metadata.images.length : 0,
       images: metadata.images.map((image) => {
         return {
-          imageIndex: image.index + 1,
+          imageIndex: image.index,
           offsetTop: 0,
           ratio: (image.height && image.width) ? image.height / image.width : 1.4,
           height: 0,
         };
       }),
     };
-    ComicService.dispatchPaging({ type: ComicPagingActionType.UPDATE_PAGING, paging });
+    ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging });
     Events.emit(SET_CONTENT, metadata.images);
     await ComicService.invalidate({ pagingState: paging, settingState });
     await ComicService.setReadyToRead(true);
@@ -144,7 +144,7 @@ export class ComicService {
   }: {
     page: number,
     settingState: ComicSettingState,
-    pagingState: ComicPagingState,
+    pagingState: ComicCalculationState,
   }): Promise<void> => {
     return measure(async () => {
       if (!ComicService.dispatchPaging) return;
@@ -158,7 +158,7 @@ export class ComicService {
         setScrollTop(0);
         console.log(`- scrollLeft => ${(page - 1) * pagingState.pageUnit}`);
       }
-      ComicService.dispatchPaging({ type: ComicPagingActionType.UPDATE_PAGING, paging: { currentPage: page } });
+      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { currentPage: page } });
     }, `Go to page => ${page}`);
   };
 

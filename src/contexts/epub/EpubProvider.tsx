@@ -1,4 +1,4 @@
-import { EpubPagingContextProvider, EpubPagingDispatchContext, EpubPagingState } from './EpubPagingContext';
+import { EpubCalculationContextProvider, EpubCalculationDispatchContext, EpubCalculationState } from './EpubCalculationContext';
 import { EpubStatusContextProvider, EpubStatusDispatchContext, EpubStatusState } from './EpubStatusContext';
 import { EpubSettingContextProvider, EpubSettingDispatchContext, EpubSettingState } from './EpubSettingContext';
 import * as React from 'react';
@@ -7,7 +7,7 @@ import { EpubService } from '../../EpubService';
 const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const dispatchSetting = React.useContext(EpubSettingDispatchContext);
   const dispatchStatus = React.useContext(EpubStatusDispatchContext);
-  const dispatchPaging = React.useContext(EpubPagingDispatchContext);
+  const dispatchPaging = React.useContext(EpubCalculationDispatchContext);
 
   EpubService.init({ dispatchSetting, dispatchStatus, dispatchPaging });
 
@@ -17,20 +17,20 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
 export interface EpubProviderProps {
   children: React.ReactNode,
   settingState?: Partial<EpubSettingState>,
-  pagingState?: Partial<EpubPagingState>,
+  pagingState?: Partial<EpubCalculationState>,
   statusState?: Partial<EpubStatusState>,
 }
 
 export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, pagingState, statusState }: EpubProviderProps) => {
   return (
     <EpubSettingContextProvider customInitialState={settingState}>
-      <EpubPagingContextProvider customInitialState={pagingState}>
+      <EpubCalculationContextProvider customInitialState={pagingState}>
         <EpubStatusContextProvider customInitialState={statusState}>
           <EpubContextInitializer>
             {children}
           </EpubContextInitializer>
         </EpubStatusContextProvider>
-      </EpubPagingContextProvider>
+      </EpubCalculationContextProvider>
     </EpubSettingContextProvider>
   );
 };

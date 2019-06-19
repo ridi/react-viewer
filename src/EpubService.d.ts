@@ -1,4 +1,4 @@
-import { EpubPagingAction, EpubSettingAction, EpubSettingState, SpinePagingState, EpubStatusAction } from './contexts';
+import { EpubCalculationAction, EpubSettingAction, EpubSettingState, SpinePagingState, EpubStatusAction } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -14,11 +14,11 @@ export interface EpubParsedData {
 export declare class EpubService {
     static dispatchSetting?: React.Dispatch<EpubSettingAction>;
     static dispatchStatus?: React.Dispatch<EpubStatusAction>;
-    static dispatchPaging?: React.Dispatch<EpubPagingAction>;
+    static dispatchPaging?: React.Dispatch<EpubCalculationAction>;
     static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
         dispatchSetting: React.Dispatch<EpubSettingAction>;
         dispatchStatus: React.Dispatch<EpubStatusAction>;
-        dispatchPaging: React.Dispatch<EpubPagingAction>;
+        dispatchPaging: React.Dispatch<EpubCalculationAction>;
     }): void;
     private static setReadyToRead;
     private static appendStyles;

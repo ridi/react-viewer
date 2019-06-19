@@ -12,10 +12,10 @@ import {
 import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
 import {
-  EpubPagingAction,
-  EpubPagingActionType,
-  EpubPagingProperties,
-  EpubPagingState,
+  EpubCalculationAction,
+  EpubCalculationActionType,
+  EpubCalculationProperties,
+  EpubCalculationState,
   EpubSettingAction,
   EpubSettingActionType,
   EpubSettingState,
@@ -41,12 +41,12 @@ export interface EpubParsedData {
 export class EpubService {
   static dispatchSetting?: React.Dispatch<EpubSettingAction>;
   static dispatchStatus?: React.Dispatch<EpubStatusAction>;
-  static dispatchPaging?: React.Dispatch<EpubPagingAction>;
+  static dispatchPaging?: React.Dispatch<EpubCalculationAction>;
 
   static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
     dispatchSetting: React.Dispatch<EpubSettingAction>,
     dispatchStatus: React.Dispatch<EpubStatusAction>,
-    dispatchPaging: React.Dispatch<EpubPagingAction>,
+    dispatchPaging: React.Dispatch<EpubCalculationAction>,
   }) {
     EpubService.dispatchStatus = dispatchStatus;
     EpubService.dispatchSetting = dispatchSetting;
@@ -118,10 +118,10 @@ export class EpubService {
     isScroll: boolean,
     columnGap: number,
     columnWidth: number,
-  }): Promise<Pick<EpubPagingState, EpubPagingProperties.TOTAL_PAGE | EpubPagingProperties.PAGE_UNIT | EpubPagingProperties.FULL_HEIGHT | EpubPagingProperties.FULL_WIDTH | EpubPagingProperties.SPINES>> => {
+  }): Promise<Pick<EpubCalculationState, EpubCalculationProperties.TOTAL_PAGE | EpubCalculationProperties.PAGE_UNIT | EpubCalculationProperties.FULL_HEIGHT | EpubCalculationProperties.FULL_WIDTH | EpubCalculationProperties.SPINES>> => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
-      const paging: Pick<EpubPagingState, EpubPagingProperties.TOTAL_PAGE | EpubPagingProperties.PAGE_UNIT | EpubPagingProperties.FULL_HEIGHT | EpubPagingProperties.FULL_WIDTH | EpubPagingProperties.SPINES> = {
+      const paging: Pick<EpubCalculationState, EpubCalculationProperties.TOTAL_PAGE | EpubCalculationProperties.PAGE_UNIT | EpubCalculationProperties.FULL_HEIGHT | EpubCalculationProperties.FULL_WIDTH | EpubCalculationProperties.SPINES> = {
         totalPage: 0,
         pageUnit: 0,
         fullHeight: 0,
@@ -138,7 +138,7 @@ export class EpubService {
         spines.reduce(({ offset, pageOffset }, { scrollHeight }, index) => {
           const totalPage = Math.floor(scrollHeight / paging.pageUnit); // todo 이것도 Math.floor(...)로 구하는게 맞나?
           paging.spines.push({
-            spineIndex: index + 1,
+            spineIndex: index,
             offset,
             total: scrollHeight,
             pageOffset,
@@ -159,7 +159,7 @@ export class EpubService {
           if (index > 0) {
             totalPage = Math.ceil((offsetLeft - offset) / paging.pageUnit);
             paging.spines.push({
-              spineIndex: index,
+              spineIndex: index - 1,
               offset: offset - defaultOffset,
               total: offsetLeft - offset,
               pageOffset,
@@ -178,7 +178,7 @@ export class EpubService {
         });
       }
 
-      EpubService.dispatchPaging({ type: EpubPagingActionType.UPDATE_PAGING, paging });
+      EpubService.dispatchPaging({ type: EpubCalculationActionType.UPDATE_PAGING, paging });
       console.log('paging result =>', paging);
       return paging;
     }, 'Paging done');
@@ -189,8 +189,8 @@ export class EpubService {
   }: {
     spineIndex: number, position: number, spines: Array<SpinePagingState>, isScroll: boolean, pageUnit: number,
   }) => {
-    if (spines.length < spineIndex) return 1;
-    const { offset, total, pageOffset, totalPage } = spines[spineIndex - 1];
+    if (spines.length - 1 < spineIndex) return 1;
+    const { offset, total, pageOffset, totalPage } = spines[spineIndex];
     if (isScroll) {
       // using offset and total
       return Math.floor((offset + total * position) / pageUnit) + 1;
@@ -258,7 +258,7 @@ export class EpubService {
         setScrollTop(0);
         console.log(`scrollLeft => ${(page - 1) * pageUnit}`);
       }
-      EpubService.dispatchPaging({ type: EpubPagingActionType.UPDATE_PAGING, paging: { currentPage: page } });
+      EpubService.dispatchPaging({ type: EpubCalculationActionType.UPDATE_PAGING, paging: { currentPage: page } });
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
@@ -319,7 +319,7 @@ export class EpubService {
   }) => {
     return measure(() => {
       if (!EpubService.dispatchPaging) return;
-      let currentPage, currentSpineIndex = 1, currentPosition = 0;
+      let currentPage, currentSpineIndex = 0, currentPosition = 0;
       if (isScroll) {
         const scrollTop = getScrollTop();
         currentPage = Math.floor(scrollTop / pageUnit) + 1;
@@ -338,7 +338,7 @@ export class EpubService {
         }
       }
       EpubService.dispatchPaging({
-        type: EpubPagingActionType.UPDATE_PAGING,
+        type: EpubCalculationActionType.UPDATE_PAGING,
         paging: { currentPage, currentSpineIndex, currentPosition },
       });
     }, 'update current page').catch(error => console.error(error));
