@@ -22,7 +22,7 @@ export type SpinePagingState = {
   spineIndex: number, // 0-based
   offset: number,     // start offset in px
   total: number,      // total width or height in px
-  pageOffset: number, // start page
+  startPage: number,  // 1-based start page
   totalPage: number,  // total page number
 };
 
@@ -33,7 +33,7 @@ export type EpubCalculationState = {
   [EpubCalculationProperties.PAGE_UNIT]: number,
   [EpubCalculationProperties.CURRENT_PAGE]: number,
   [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number,  // 0-based
-  [EpubCalculationProperties.CURRENT_POSITION]: number,    // 0 ~ 1
+  [EpubCalculationProperties.CURRENT_POSITION]: number,     // 0 ~ 1
   [EpubCalculationProperties.SPINES]: Array<SpinePagingState>,  // per spine paging information
 };
 
@@ -44,7 +44,7 @@ export const initialEpubCalculationState: EpubCalculationState = {
   [EpubCalculationProperties.PAGE_UNIT]: 0,
   [EpubCalculationProperties.CURRENT_PAGE]: 1,
   [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0, // 0-based
-  [EpubCalculationProperties.CURRENT_POSITION]: 0,   // 0 ~ 1 (float)
+  [EpubCalculationProperties.CURRENT_POSITION]: 0,    // 0 ~ 1 (float)
   [EpubCalculationProperties.SPINES]: [],
 };
 

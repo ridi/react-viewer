@@ -22,7 +22,7 @@ export type SpinePagingState = {
   spineIndex: number, // 1-based
   offset: number,     // start offset in px
   total: number,      // total width or height in px
-  pageOffset: number, // start page
+  startPage: number,  // 1-based start page
   totalPage: number,  // total page number
 };
 

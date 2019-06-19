@@ -243,7 +243,7 @@ declare module '@ridi/react-reader/contexts/epub/EpubCalculationContext' {
         spineIndex: number;
         offset: number;
         total: number;
-        pageOffset: number;
+        startPage: number;
         totalPage: number;
     };
     export type EpubCalculationState = {

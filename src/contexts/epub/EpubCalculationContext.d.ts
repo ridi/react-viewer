@@ -20,7 +20,7 @@ export declare type SpinePagingState = {
     spineIndex: number;
     offset: number;
     total: number;
-    pageOffset: number;
+    startPage: number;
     totalPage: number;
 };
 export declare type EpubCalculationState = {
