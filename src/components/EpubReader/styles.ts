@@ -143,8 +143,9 @@ const contentsStyle = (setting: EpubSettingState) => {
 };
 
 const scrollContentWrapper = (setting: EpubSettingState) => css`
-  article: {
-    padding-bottom: 50px; 
+  article {
+    padding-top: 25px;
+    padding-bottom: 25px; 
   }
   ${contentsStyle(setting)}
 `;
