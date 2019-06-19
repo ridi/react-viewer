@@ -296,7 +296,7 @@ export class EpubService {
     return measure(() => {
       const { pageUnit, spines } = this.calculationState;
       let currentPage, currentSpineIndex = 0, currentPosition = 0;
-      if (isScroll) {
+      if (isScroll(this.settingState)) {
         const scrollTop = getScrollTop();
         currentPage = Math.floor(scrollTop / pageUnit) + 1;
         const result = spines.find(({ offset, total }) => scrollTop >= offset && scrollTop < offset + total);
@@ -313,6 +313,7 @@ export class EpubService {
           currentPosition = (scrollLeft - result.offset) / result.total;
         }
       }
+      console.log("update currentstate => ", { currentPage, currentSpineIndex, currentPosition });
       this.dispatchCurrent({
         type: EpubCurrentActionType.UPDATE_CURRENT,
         current: { currentPage, currentSpineIndex, currentPosition },
