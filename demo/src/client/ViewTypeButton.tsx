@@ -19,7 +19,7 @@ export const EpubViewTypeButton: React.FunctionComponent<ViewTypeButtonProperty>
   return (
     <button
       type="button"
-      onClick={() => EpubService.updateSetting({ viewType })}
+      onClick={() => EpubService.get().updateSetting({ viewType })}
       className={settingState.viewType === viewType ? 'active' : ''}
     >
       {getLabel(viewType)}
@@ -41,7 +41,7 @@ export const ComicViewTypeButton: React.FunctionComponent<ViewTypeButtonProperty
   return (
     <button
       type="button"
-      onClick={() => ComicService.updateSetting({ viewType })}
+      onClick={() => ComicService.get().updateSetting({ viewType })}
       className={settingState.viewType === viewType ? 'active' : ''}
     >
       {getLabel(viewType)}

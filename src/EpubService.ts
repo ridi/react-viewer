@@ -14,16 +14,19 @@ import ReaderJsHelper from './ReaderJsHelper';
 import {
   EpubCalculationAction,
   EpubCalculationActionType,
-  EpubCalculationProperties,
   EpubCalculationState,
+  EpubCurrentAction,
+  EpubCurrentActionType,
+  EpubCurrentState,
   EpubSettingAction,
   EpubSettingActionType,
   EpubSettingState,
-  SpinePagingState,
   EpubStatusAction,
   EpubStatusActionType,
+  EpubStatusState,
 } from './contexts';
 import * as React from 'react';
+import { columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
 
 export interface FontData {
   href: string,
@@ -38,25 +41,80 @@ export interface EpubParsedData {
   unzipPath: string,
 }
 
-export class EpubService {
-  static dispatchSetting?: React.Dispatch<EpubSettingAction>;
-  static dispatchStatus?: React.Dispatch<EpubStatusAction>;
-  static dispatchPaging?: React.Dispatch<EpubCalculationAction>;
+interface EpubServiceProperties {
+  dispatchSetting: React.Dispatch<EpubSettingAction>,
+  dispatchStatus: React.Dispatch<EpubStatusAction>,
+  dispatchCalculation: React.Dispatch<EpubCalculationAction>,
+  dispatchCurrent: React.Dispatch<EpubCurrentAction>,
+  settingState: EpubSettingState,
+  statusState: EpubStatusState,
+  currentState: EpubCurrentState,
+  calculationState: EpubCalculationState,
+}
 
-  static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-    dispatchSetting: React.Dispatch<EpubSettingAction>,
-    dispatchStatus: React.Dispatch<EpubStatusAction>,
-    dispatchPaging: React.Dispatch<EpubCalculationAction>,
-  }) {
-    EpubService.dispatchStatus = dispatchStatus;
-    EpubService.dispatchSetting = dispatchSetting;
-    EpubService.dispatchPaging = dispatchPaging;
+export class EpubService {
+  private static instance: EpubService;
+
+  private dispatchSetting: React.Dispatch<EpubSettingAction>;
+  private dispatchStatus: React.Dispatch<EpubStatusAction>;
+  private dispatchCalculation: React.Dispatch<EpubCalculationAction>;
+  private dispatchCurrent: React.Dispatch<EpubCurrentAction>;
+
+  private settingState: EpubSettingState;
+  private statusState: EpubStatusState;
+  private currentState: EpubCurrentState;
+  private calculationState: EpubCalculationState;
+
+  static init(props: EpubServiceProperties) {
+    this.instance = new EpubService(props);
   }
 
-  private static setReadyToRead = async (readyToRead: boolean) => {
+  static get() {
+    return this.instance;
+  }
+
+  static updateState({
+    settingState,
+    currentState,
+    statusState,
+    calculationState
+  }: {
+    settingState: EpubSettingState,
+    statusState: EpubStatusState,
+    currentState: EpubCurrentState,
+    calculationState: EpubCalculationState,
+  }) {
+    this.instance.settingState = settingState;
+    this.instance.currentState = currentState;
+    this.instance.statusState = statusState;
+    this.instance.calculationState = calculationState;
+  }
+
+  private constructor({
+    dispatchSetting,
+    dispatchCalculation,
+    dispatchStatus,
+    dispatchCurrent,
+    settingState,
+    currentState,
+    statusState,
+    calculationState,
+  }: EpubServiceProperties) {
+    this.dispatchSetting = dispatchSetting;
+    this.dispatchCalculation = dispatchCalculation;
+    this.dispatchStatus = dispatchStatus;
+    this.dispatchCurrent = dispatchCurrent;
+    this.settingState = settingState;
+    this.currentState = currentState;
+    this.statusState = statusState;
+    this.calculationState = calculationState;
+  }
+
+  private setReadyToRead = async (readyToRead: boolean) => {
+    if (this.statusState.readyToRead === readyToRead) return Promise.resolve();
     return new Promise((resolve) => {
-      if (!EpubService.dispatchStatus) return resolve();
-      EpubService.dispatchStatus({ type: EpubStatusActionType.SET_READY_TO_READ, readyToRead });
+      if (!this.dispatchStatus) return resolve();
+      this.dispatchStatus({ type: EpubStatusActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
@@ -64,7 +122,7 @@ export class EpubService {
     });
   };
 
-  private static appendStyles = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
+  private appendStyles = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     return measure(() => {
       if (!metadata.styles) return;
       const element = document.createElement('style');
@@ -73,7 +131,7 @@ export class EpubService {
     }, 'Added Styles');
   };
 
-  private static waitImagesLoaded = async (): Promise<void> => {
+  private waitImagesLoaded = async (): Promise<void> => {
     const imageCount = document.images.length;
     return measure(() => new Promise((onImagesLoaded) => {
       let count = 0;
@@ -94,7 +152,7 @@ export class EpubService {
     }), `${imageCount} images loaded`);
   };
 
-  private static prepareFonts = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
+  private prepareFonts = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     if (!metadata.fonts) return Promise.resolve();
     const fontFaces = metadata.fonts.map(({ href, uri }) => {
       const name = href.split('/').slice(-1)[0].replace(/\./g, '_');
@@ -110,18 +168,10 @@ export class EpubService {
         )), `${metadata.fonts.length} fonts loaded`);
   };
 
-  private static startPaging = async ({
-    isScroll,
-    columnGap,
-    columnWidth,
-  }: {
-    isScroll: boolean,
-    columnGap: number,
-    columnWidth: number,
-  }): Promise<Pick<EpubCalculationState, EpubCalculationProperties.TOTAL_PAGE | EpubCalculationProperties.PAGE_UNIT | EpubCalculationProperties.FULL_HEIGHT | EpubCalculationProperties.FULL_WIDTH | EpubCalculationProperties.SPINES>> => {
+  private calculate = async (): Promise<EpubCalculationState> => {
     return measure(() => {
-      if (!EpubService.dispatchPaging) return;
-      const paging: Pick<EpubCalculationState, EpubCalculationProperties.TOTAL_PAGE | EpubCalculationProperties.PAGE_UNIT | EpubCalculationProperties.FULL_HEIGHT | EpubCalculationProperties.FULL_WIDTH | EpubCalculationProperties.SPINES> = {
+      if (!this.dispatchCalculation) return;
+      const calculation: EpubCalculationState = {
         totalPage: 0,
         pageUnit: 0,
         fullHeight: 0,
@@ -130,14 +180,14 @@ export class EpubService {
       };
       const contentRoot = getContentRootElement();
       const spines = contentRoot ? Array.from(contentRoot.getElementsByTagName('article')) : [];
-      if (isScroll) {
-        paging.pageUnit = getClientHeight();
-        paging.fullHeight = getScrollHeight();
+      if (isScroll(this.settingState)) {
+        calculation.pageUnit = getClientHeight();
+        calculation.fullHeight = getScrollHeight();
         // 스크롤 보기에서 나누어 딱 떨어지지 않는 이상 마지막 페이지에 도달하는 것은 거의 불가능하므로, 전체 페이지 수는 Math.floor(...)로 계산
-        paging.totalPage = Math.floor(paging.fullHeight / paging.pageUnit);
+        calculation.totalPage = Math.floor(calculation.fullHeight / calculation.pageUnit);
         spines.reduce(({ offset, startPage }, { scrollHeight }, index) => {
-          const totalPage = Math.floor(scrollHeight / paging.pageUnit); // todo 이것도 Math.floor(...)로 구하는게 맞나?
-          paging.spines.push({
+          const totalPage = Math.floor(scrollHeight / calculation.pageUnit); // todo 이것도 Math.floor(...)로 구하는게 맞나?
+          calculation.spines.push({
             spineIndex: index,
             offset,
             total: scrollHeight,
@@ -147,9 +197,9 @@ export class EpubService {
           return { offset: offset + scrollHeight, startPage: startPage + totalPage };
         }, { offset: 0, startPage: 1 });
       } else {
-        paging.pageUnit = columnWidth + columnGap;
-        paging.fullWidth = getScrollWidth();
-        paging.totalPage = Math.ceil(paging.fullWidth / paging.pageUnit);
+        calculation.pageUnit = columnWidth(this.settingState) + columnGap(this.settingState);
+        calculation.fullWidth = getScrollWidth();
+        calculation.totalPage = Math.ceil(calculation.fullWidth / calculation.pageUnit);
 
         const defaultOffset = contentRoot ? contentRoot.offsetLeft : 0;
 
@@ -157,8 +207,8 @@ export class EpubService {
         const { offset, startPage } = spines.reduce(({ offset, startPage }, { offsetLeft }, index) => {
           let totalPage = 0;
           if (index > 0) {
-            totalPage = Math.ceil((offsetLeft - offset) / paging.pageUnit);
-            paging.spines.push({
+            totalPage = Math.ceil((offsetLeft - offset) / calculation.pageUnit);
+            calculation.spines.push({
               spineIndex: index - 1,
               offset: offset - defaultOffset,
               total: offsetLeft - offset,
@@ -169,87 +219,45 @@ export class EpubService {
           return { offset: offsetLeft, startPage: startPage + totalPage };
         }, { offset: 0, startPage: 1 });
         // 마지막 스파인
-        paging.spines.push({
+        calculation.spines.push({
           spineIndex: spines.length,
           offset: offset - defaultOffset,
-          total: paging.fullWidth - offset,
+          total: calculation.fullWidth - offset,
           startPage,
-          totalPage: Math.ceil((paging.fullWidth - offset) / paging.pageUnit),
+          totalPage: Math.ceil((calculation.fullWidth - offset) / calculation.pageUnit),
         });
       }
 
-      EpubService.dispatchPaging({ type: EpubCalculationActionType.UPDATE_PAGING, paging });
-      console.log('paging result =>', paging);
-      return paging;
-    }, 'Paging done');
+      this.dispatchCalculation({ type: EpubCalculationActionType.UPDATE_CALCULATION, calculation });
+      console.log('paging result =>', calculation);
+      return { ...this.calculationState, ...calculation };
+    }, 'Calculation done');
   };
 
-  private static getPageFromSpineIndexAndPosition = async ({
-    spineIndex, position, spines, isScroll, pageUnit,
-  }: {
-    spineIndex: number, position: number, spines: Array<SpinePagingState>, isScroll: boolean, pageUnit: number,
-  }) => {
-    if (spines.length - 1 < spineIndex) return 1;
-    const { offset, total, startPage, totalPage } = spines[spineIndex];
-    if (isScroll) {
+  private getPageFromSpineIndexAndPosition = async (): Promise<number> => {
+    if (this.calculationState.spines.length - 1 < this.currentState.currentSpineIndex) return 1;
+    const { offset, total, startPage, totalPage } = this.calculationState.spines[this.currentState.currentSpineIndex];
+    if (isScroll(this.settingState)) {
       // using offset and total
-      return Math.floor((offset + total * position) / pageUnit);
+      return Math.floor((offset + total * this.currentState.currentPosition) / this.calculationState.pageUnit);
     } else {
       // using startPage and totalPage
-      return startPage + Math.floor(totalPage * position);
+      return startPage + Math.floor(totalPage * this.currentState.currentPosition);
     }
   };
 
-  /**
-   * Restore page from spineIndex and position
-   * @param currentSpineIndex
-   * @param currentPosition
-   * @param spines
-   * @param pageUnit
-   * @param isScroll
-   */
-  private static restoreCurrent = async ({
-    currentSpineIndex,
-    currentPosition,
-    spines,
-    pageUnit,
-    isScroll,
-  }: {
-    currentSpineIndex: number,
-    currentPosition: number,
-    spines: Array<SpinePagingState>,
-    pageUnit: number,
-    isScroll: boolean,
-  }): Promise<void> => {
+  private restoreCurrent = async (): Promise<void> => {
     return measure(async () => {
-      const page = await EpubService.getPageFromSpineIndexAndPosition({
-        spineIndex: currentSpineIndex,
-        position: currentPosition,
-        spines,
-        isScroll,
-        pageUnit,
-      });
+      const page = await this.getPageFromSpineIndexAndPosition();
       console.log('restoring to: ', page);
-      return EpubService.goToPage({
-        page,
-        pageUnit,
-        isScroll,
-      });
-    }, `Restore current page => spineIndex: ${currentSpineIndex}, position: ${currentPosition}`);
+      return this.goToPage(page);
+    }, `Restore current page => spineIndex: ${this.currentState.currentSpineIndex}, position: ${this.currentState.currentPosition}`);
   };
 
-  static goToPage = async ({
-    page,
-    pageUnit,
-    isScroll,
-  }: {
-    page: number,
-    pageUnit: number,
-    isScroll: boolean,
-  }): Promise<void> => {
+  public goToPage = async (page: number): Promise<void> => {
+    const { pageUnit } = this.calculationState;
     return measure(async () => {
-      if (!EpubService.dispatchPaging) return;
-      if (isScroll) {
+      if (isScroll(this.settingState)) {
         setScrollLeft(0);
         setScrollTop((page - 1) * pageUnit);
       } else {
@@ -258,67 +266,35 @@ export class EpubService {
         setScrollTop(0);
         console.log(`scrollLeft => ${(page - 1) * pageUnit}`);
       }
-      EpubService.dispatchPaging({ type: EpubCalculationActionType.UPDATE_PAGING, paging: { currentPage: page } });
+      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current: { currentPage: page } });
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
-  static invalidate = async ({
-    currentSpineIndex,
-    currentPosition,
-    isScroll,
-    columnWidth,
-    columnGap,
-  }: {
-    currentSpineIndex: number,
-    currentPosition: number,
-    isScroll: boolean,
-    columnWidth: number,
-    columnGap: number,
-  }): Promise<void> => {
+  public invalidate = async (): Promise<void> => {
     try {
-      await EpubService.setReadyToRead(false);
-      await EpubService.waitImagesLoaded();
+      await this.setReadyToRead(false);
+      await this.waitImagesLoaded();
       await ReaderJsHelper.reviseImages();
-      const { spines, pageUnit } = await EpubService.startPaging({ isScroll, columnWidth, columnGap });
-      await EpubService.restoreCurrent({ currentSpineIndex, currentPosition, spines, pageUnit, isScroll });
+      this.calculationState = await this.calculate(); // todo 이렇게 강제 업데이트를 해야 하는데, 좀 더 나은 방법?
+      await this.restoreCurrent();
     } catch (e) {
       console.error(e);
     }
-    await EpubService.setReadyToRead(true);
+    await this.setReadyToRead(true);
   };
 
-  static load = async ({
-    currentSpineIndex,
-    currentPosition,
-    metadata,
-    isScroll,
-    columnWidth,
-    columnGap,
-  }: {
-    currentSpineIndex: number,
-    currentPosition: number,
-    metadata: EpubParsedData,
-    isScroll: boolean,
-    columnWidth: number,
-    columnGap: number,
-  }): Promise<void> => {
-    await EpubService.setReadyToRead(false);
-    await EpubService.appendStyles({ metadata });
-    await EpubService.prepareFonts({ metadata });
+  public load = async (metadata: EpubParsedData): Promise<void> => {
+    await this.setReadyToRead(false);
+    await this.appendStyles({ metadata });
+    await this.prepareFonts({ metadata });
     Events.emit(SET_CONTENT, metadata.spines);
-    await EpubService.invalidate({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap });
-    await EpubService.setReadyToRead(true);
+    await this.invalidate();
+    await this.setReadyToRead(true);
   };
 
-  static loadWithParsedData = EpubService.load;
-
-  static updateCurrent = async ({
-    pageUnit, isScroll, spines,
-  }: {
-    pageUnit: number, isScroll: boolean, spines: Array<SpinePagingState>,
-  }) => {
+  public updateCurrent = async () => {
     return measure(() => {
-      if (!EpubService.dispatchPaging) return;
+      const { pageUnit, spines } = this.calculationState;
       let currentPage, currentSpineIndex = 0, currentPosition = 0;
       if (isScroll) {
         const scrollTop = getScrollTop();
@@ -337,16 +313,16 @@ export class EpubService {
           currentPosition = (scrollLeft - result.offset) / result.total;
         }
       }
-      EpubService.dispatchPaging({
-        type: EpubCalculationActionType.UPDATE_PAGING,
-        paging: { currentPage, currentSpineIndex, currentPosition },
+      this.dispatchCurrent({
+        type: EpubCurrentActionType.UPDATE_CURRENT,
+        current: { currentPage, currentSpineIndex, currentPosition },
       });
     }, 'update current page').catch(error => console.error(error));
   };
 
-  static updateSetting = async (setting: Partial<EpubSettingState>) => {
-    if (!EpubService.dispatchSetting) return;
-    await EpubService.setReadyToRead(false);
-    EpubService.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
+  public updateSetting = async (setting: Partial<EpubSettingState>) => {
+    if (!this.dispatchSetting) return;
+    await this.setReadyToRead(false);
+    this.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
   };
 }

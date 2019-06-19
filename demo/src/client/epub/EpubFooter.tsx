@@ -2,36 +2,31 @@
 import * as React from 'react';
 import { jsx } from '@emotion/core';
 import * as styles from './styles';
-import { EpubCalculationContext, EpubService, EpubSettingContext, EpubSettingUtil,
-} from '@ridi/react-reader';
+import { EpubCalculationContext, EpubCurrentContext, EpubService } from '@ridi/react-reader';
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
 const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(target as HTMLInputElement).value;
 
 const EpubFooter: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(EpubCalculationContext);
-  const settingState = React.useContext(EpubSettingContext);
+  const currentState = React.useContext(EpubCurrentContext);
+  const calculationState = React.useContext(EpubCalculationContext);
 
   // 로컬에서만 유지되는 값
-  const [currentPage, setCurrentPage] = React.useState(pagingState.currentPage);
+  const [currentPage, setCurrentPage] = React.useState(currentState.currentPage);
 
 
   const onInputCurrentPage = (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
-      EpubService.goToPage({
-        page: currentPage,
-        pageUnit: pagingState.pageUnit,
-        isScroll: EpubSettingUtil.isScroll(settingState),
-      });
+      EpubService.get().goToPage(currentPage);
     } else if (isHtmlInputElement(e.target)) {
       setCurrentPage(parseInt(e.target.value || '1', 10));
     }
   };
 
   React.useEffect(() => {
-    setCurrentPage(pagingState.currentPage);
-  }, [pagingState]);
+    setCurrentPage(currentState.currentPage);
+  }, [currentState]);
 
   return (
     <div css={styles.footer}>
@@ -42,7 +37,7 @@ const EpubFooter: React.FunctionComponent = () => {
           onKeyUp={onInputCurrentPage}
           onChange={onInputCurrentPage}
         />
-        / {pagingState.totalPage}
+        / {calculationState.totalPage}
       </div>
     </div>
   );

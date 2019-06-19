@@ -2,7 +2,7 @@ import * as React from 'react';
 import { generateContext } from '../ContextProvider';
 
 export enum EpubCalculationActionType {
-  UPDATE_PAGING = 'update_paging',
+  UPDATE_CALCULATION = 'update_calculation',
 }
 
 export enum EpubCalculationProperties {
@@ -16,9 +16,9 @@ export enum EpubCalculationProperties {
   SPINES = 'spines',
 }
 
-export type EpubCalculationAction = { type: EpubCalculationActionType.UPDATE_PAGING, paging: Partial<EpubCalculationState> };
+export type EpubCalculationAction = { type: EpubCalculationActionType.UPDATE_CALCULATION, calculation: Partial<EpubCalculationState> };
 
-export type SpinePagingState = {
+export type SpineCalculationState = {
   spineIndex: number, // 0-based
   offset: number,     // start offset in px
   total: number,      // total width or height in px
@@ -31,10 +31,10 @@ export type EpubCalculationState = {
   [EpubCalculationProperties.FULL_HEIGHT]: number,
   [EpubCalculationProperties.FULL_WIDTH]: number,
   [EpubCalculationProperties.PAGE_UNIT]: number,
-  [EpubCalculationProperties.CURRENT_PAGE]: number,
-  [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number,  // 0-based
-  [EpubCalculationProperties.CURRENT_POSITION]: number,     // 0 ~ 1
-  [EpubCalculationProperties.SPINES]: Array<SpinePagingState>,  // per spine paging information
+  // [EpubCalculationProperties.CURRENT_PAGE]: number,
+  // [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number,  // 0-based
+  // [EpubCalculationProperties.CURRENT_POSITION]: number,     // 0 ~ 1
+  [EpubCalculationProperties.SPINES]: Array<SpineCalculationState>,  // per spine paging information
 };
 
 export const initialEpubCalculationState: EpubCalculationState = {
@@ -42,16 +42,16 @@ export const initialEpubCalculationState: EpubCalculationState = {
   [EpubCalculationProperties.FULL_HEIGHT]: 0,
   [EpubCalculationProperties.FULL_WIDTH]: 0,
   [EpubCalculationProperties.PAGE_UNIT]: 0,
-  [EpubCalculationProperties.CURRENT_PAGE]: 1,
-  [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0, // 0-based
-  [EpubCalculationProperties.CURRENT_POSITION]: 0,    // 0 ~ 1 (float)
+  // [EpubCalculationProperties.CURRENT_PAGE]: 1,
+  // [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0, // 0-based
+  // [EpubCalculationProperties.CURRENT_POSITION]: 0,    // 0 ~ 1 (float)
   [EpubCalculationProperties.SPINES]: [],
 };
 
 export const EpubCalculationReducer: React.Reducer<EpubCalculationState, EpubCalculationAction> = (state, action) => {
   switch (action.type) {
-    case EpubCalculationActionType.UPDATE_PAGING:
-      return { ...state, ...action.paging };
+    case EpubCalculationActionType.UPDATE_CALCULATION:
+      return { ...state, ...action.calculation };
     default:
       return state;
   }

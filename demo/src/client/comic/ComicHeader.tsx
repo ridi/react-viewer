@@ -4,8 +4,6 @@ import { jsx } from '@emotion/core';
 import * as styles from './styles';
 import { ComicViewTypeButton } from '../ViewTypeButton';
 import {
-  ComicSettingContext,
-  ComicCalculationContext,
   ViewType,
   ComicService,
   ComicParsedData,
@@ -15,9 +13,6 @@ import axios from 'axios';
 
 const ComicHeader: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
-
-  const settingState = React.useContext(ComicSettingContext);
-  const pagingState = React.useContext(ComicCalculationContext);
 
   const loadFile = async (file: File): Promise<ComicParsedData> => {
     return new Promise((resolve, reject) => {
@@ -39,7 +34,7 @@ const ComicHeader: React.FunctionComponent = () => {
     if (fileInput && fileInput.files) {
       try {
         const metadata: ComicParsedData = await loadFile(fileInput.files[0]);
-        await ComicService.load({ metadata, pagingState, settingState });
+        await ComicService.get().load(metadata);
       } catch (e) {
         console.error(e);
       }

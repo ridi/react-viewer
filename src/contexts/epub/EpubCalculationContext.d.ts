@@ -1,6 +1,6 @@
 import * as React from 'react';
 export declare enum EpubCalculationActionType {
-    UPDATE_PAGING = "update_paging"
+    UPDATE_CALCULATION = "update_calculation"
 }
 export declare enum EpubCalculationProperties {
     TOTAL_PAGE = "totalPage",
@@ -13,10 +13,10 @@ export declare enum EpubCalculationProperties {
     SPINES = "spines"
 }
 export declare type EpubCalculationAction = {
-    type: EpubCalculationActionType.UPDATE_PAGING;
-    paging: Partial<EpubCalculationState>;
+    type: EpubCalculationActionType.UPDATE_CALCULATION;
+    calculation: Partial<EpubCalculationState>;
 };
-export declare type SpinePagingState = {
+export declare type SpineCalculationState = {
     spineIndex: number;
     offset: number;
     total: number;
@@ -28,10 +28,7 @@ export declare type EpubCalculationState = {
     [EpubCalculationProperties.FULL_HEIGHT]: number;
     [EpubCalculationProperties.FULL_WIDTH]: number;
     [EpubCalculationProperties.PAGE_UNIT]: number;
-    [EpubCalculationProperties.CURRENT_PAGE]: number;
-    [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number;
-    [EpubCalculationProperties.CURRENT_POSITION]: number;
-    [EpubCalculationProperties.SPINES]: Array<SpinePagingState>;
+    [EpubCalculationProperties.SPINES]: Array<SpineCalculationState>;
 };
 export declare const initialEpubCalculationState: EpubCalculationState;
 export declare const EpubCalculationReducer: React.Reducer<EpubCalculationState, EpubCalculationAction>;

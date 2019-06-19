@@ -1,41 +1,24 @@
 import * as React from 'react';
-export declare enum EpubCalculationActionType {
-    UPDATE_PAGING = "update_paging"
+export declare enum EpubCurrentActionType {
+    UPDATE_CURRENT = "update_current"
 }
-export declare enum EpubCalculationProperties {
-    TOTAL_PAGE = "totalPage",
-    FULL_HEIGHT = "fullHeight",
-    FULL_WIDTH = "fullWidth",
-    PAGE_UNIT = "pageUnit",
+export declare enum EpubCurrentProperties {
     CURRENT_PAGE = "currentPage",
     CURRENT_SPINE_INDEX = "currentSpineIndex",
-    CURRENT_POSITION = "currentPosition",
-    SPINES = "spines"
+    CURRENT_POSITION = "currentPosition"
 }
-export declare type EpubCalculationAction = {
-    type: EpubCalculationActionType.UPDATE_PAGING;
-    paging: Partial<EpubCalculationState>;
+export declare type EpubCurrentAction = {
+    type: EpubCurrentActionType.UPDATE_CURRENT;
+    current: Partial<EpubCurrentState>;
 };
-export declare type SpinePagingState = {
-    spineIndex: number;
-    offset: number;
-    total: number;
-    startPage: number;
-    totalPage: number;
+export declare type EpubCurrentState = {
+    [EpubCurrentProperties.CURRENT_PAGE]: number;
+    [EpubCurrentProperties.CURRENT_SPINE_INDEX]: number;
+    [EpubCurrentProperties.CURRENT_POSITION]: number;
 };
-export declare type EpubCalculationState = {
-    [EpubCalculationProperties.TOTAL_PAGE]: number;
-    [EpubCalculationProperties.FULL_HEIGHT]: number;
-    [EpubCalculationProperties.FULL_WIDTH]: number;
-    [EpubCalculationProperties.PAGE_UNIT]: number;
-    [EpubCalculationProperties.CURRENT_PAGE]: number;
-    [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number;
-    [EpubCalculationProperties.CURRENT_POSITION]: number;
-    [EpubCalculationProperties.SPINES]: Array<SpinePagingState>;
-};
-export declare const initialEpubCalculationState: EpubCalculationState;
-export declare const EpubCalculationReducer: React.Reducer<EpubCalculationState, EpubCalculationAction>;
-export declare const EpubCalculationDispatchContext: React.Context<React.Dispatch<EpubCalculationAction>>, EpubCalculationContext: React.Context<EpubCalculationState>, EpubCalculationContextProvider: React.FunctionComponent<{
+export declare const initialEpubCurrentState: EpubCurrentState;
+export declare const EpubCurrentReducer: React.Reducer<EpubCurrentState, EpubCurrentAction>;
+export declare const EpubCurrentDispatchContext: React.Context<React.Dispatch<EpubCurrentAction>>, EpubCurrentContext: React.Context<EpubCurrentState>, EpubCurrentContextProvider: React.FunctionComponent<{
     children: React.ReactNode;
-    customInitialState?: Partial<EpubCalculationState> | undefined;
+    customInitialState?: Partial<EpubCurrentState> | undefined;
 }>;

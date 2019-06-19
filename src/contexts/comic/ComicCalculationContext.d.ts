@@ -1,18 +1,17 @@
 import * as React from 'react';
 export declare enum ComicCalculationActionType {
-    UPDATE_PAGING = "update_paging"
+    UPDATE_CALCULATION = "update_calculation"
 }
 export declare enum ComicCalculationProperties {
     TOTAL_PAGE = "totalPage",
     PAGE_UNIT = "pageUnit",
-    CURRENT_PAGE = "currentPage",
     IMAGES = "images"
 }
 export declare type ComicCalculationAction = {
-    type: ComicCalculationActionType.UPDATE_PAGING;
-    paging: Partial<ComicCalculationState>;
+    type: ComicCalculationActionType.UPDATE_CALCULATION;
+    calculation: Partial<ComicCalculationState>;
 };
-export declare type ImagePagingState = {
+export declare type ImageCalculationState = {
     imageIndex: number;
     /**
      *  start offset in px on scroll view mode
@@ -29,8 +28,7 @@ export declare type ImagePagingState = {
 export declare type ComicCalculationState = {
     [ComicCalculationProperties.TOTAL_PAGE]: number;
     [ComicCalculationProperties.PAGE_UNIT]: number;
-    [ComicCalculationProperties.CURRENT_PAGE]: number;
-    [ComicCalculationProperties.IMAGES]: Array<ImagePagingState>;
+    [ComicCalculationProperties.IMAGES]: Array<ImageCalculationState>;
 };
 export declare const initialComicCalculationState: ComicCalculationState;
 export declare const ComicCalculationReducer: React.Reducer<ComicCalculationState, ComicCalculationAction>;

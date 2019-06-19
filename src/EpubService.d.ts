@@ -1,4 +1,4 @@
-import { EpubCalculationAction, EpubSettingAction, EpubSettingState, SpinePagingState, EpubStatusAction } from './contexts';
+import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction, EpubStatusState } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -11,62 +11,46 @@ export interface EpubParsedData {
     spines?: Array<String>;
     unzipPath: string;
 }
-export declare class EpubService {
-    static dispatchSetting?: React.Dispatch<EpubSettingAction>;
-    static dispatchStatus?: React.Dispatch<EpubStatusAction>;
-    static dispatchPaging?: React.Dispatch<EpubCalculationAction>;
-    static init({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-        dispatchSetting: React.Dispatch<EpubSettingAction>;
-        dispatchStatus: React.Dispatch<EpubStatusAction>;
-        dispatchPaging: React.Dispatch<EpubCalculationAction>;
-    }): void;
-    private static setReadyToRead;
-    private static appendStyles;
-    private static waitImagesLoaded;
-    private static prepareFonts;
-    private static startPaging;
-    private static getPageFromSpineIndexAndPosition;
-    /**
-     * Restore page from spineIndex and position
-     * @param currentSpineIndex
-     * @param currentPosition
-     * @param spines
-     * @param pageUnit
-     * @param isScroll
-     */
-    private static restoreCurrent;
-    static goToPage: ({ page, pageUnit, isScroll, }: {
-        page: number;
-        pageUnit: number;
-        isScroll: boolean;
-    }) => Promise<void>;
-    static invalidate: ({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap, }: {
-        currentSpineIndex: number;
-        currentPosition: number;
-        isScroll: boolean;
-        columnWidth: number;
-        columnGap: number;
-    }) => Promise<void>;
-    static load: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
-        currentSpineIndex: number;
-        currentPosition: number;
-        metadata: EpubParsedData;
-        isScroll: boolean;
-        columnWidth: number;
-        columnGap: number;
-    }) => Promise<void>;
-    static loadWithParsedData: ({ currentSpineIndex, currentPosition, metadata, isScroll, columnWidth, columnGap, }: {
-        currentSpineIndex: number;
-        currentPosition: number;
-        metadata: EpubParsedData;
-        isScroll: boolean;
-        columnWidth: number;
-        columnGap: number;
-    }) => Promise<void>;
-    static updateCurrent: ({ pageUnit, isScroll, spines, }: {
-        pageUnit: number;
-        isScroll: boolean;
-        spines: SpinePagingState[];
-    }) => Promise<any>;
-    static updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
+interface EpubServiceProperties {
+    dispatchSetting: React.Dispatch<EpubSettingAction>;
+    dispatchStatus: React.Dispatch<EpubStatusAction>;
+    dispatchCalculation: React.Dispatch<EpubCalculationAction>;
+    dispatchCurrent: React.Dispatch<EpubCurrentAction>;
+    settingState: EpubSettingState;
+    statusState: EpubStatusState;
+    currentState: EpubCurrentState;
+    calculationState: EpubCalculationState;
 }
+export declare class EpubService {
+    private static instance;
+    private dispatchSetting;
+    private dispatchStatus;
+    private dispatchCalculation;
+    private dispatchCurrent;
+    private settingState;
+    private statusState;
+    private currentState;
+    private calculationState;
+    static init(props: EpubServiceProperties): void;
+    static get(): EpubService;
+    static updateState({ settingState, currentState, statusState, calculationState }: {
+        settingState: EpubSettingState;
+        statusState: EpubStatusState;
+        currentState: EpubCurrentState;
+        calculationState: EpubCalculationState;
+    }): void;
+    private constructor();
+    private setReadyToRead;
+    private appendStyles;
+    private waitImagesLoaded;
+    private prepareFonts;
+    private calculate;
+    private getPageFromSpineIndexAndPosition;
+    private restoreCurrent;
+    goToPage: (page: number) => Promise<void>;
+    invalidate: () => Promise<void>;
+    load: (metadata: EpubParsedData) => Promise<void>;
+    updateCurrent: () => Promise<any>;
+    updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
+}
+export {};

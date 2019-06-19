@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { jsx } from '@emotion/core';
 import * as styles from './styles';
-import { ComicCalculationContext, ComicService, ComicSettingContext } from '@ridi/react-reader';
+import { ComicCalculationContext, ComicCurrentContext, ComicService } from '@ridi/react-reader';
 
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
@@ -10,27 +10,23 @@ const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(targe
 
 const ComicFooter: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(ComicCalculationContext);
-  const settingState = React.useContext(ComicSettingContext);
+  const currentState = React.useContext(ComicCurrentContext);
+  const calculationState = React.useContext(ComicCalculationContext);
 
   // 로컬에서만 유지되는 값
-  const [currentPage, setCurrentPage] = React.useState(pagingState.currentPage);
+  const [currentPage, setCurrentPage] = React.useState(currentState.currentPage);
 
   const onInputCurrentPage = (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
-      ComicService.goToPage({
-        page: currentPage,
-        settingState,
-        pagingState,
-      });
+      ComicService.get().goToPage(currentPage);
     } else if (isHtmlInputElement(e.target)) {
       setCurrentPage(parseInt(e.target.value || '1', 10));
     }
   };
 
   React.useEffect(() => {
-    setCurrentPage(pagingState.currentPage);
-  }, [pagingState]);
+    setCurrentPage(currentState.currentPage);
+  }, [currentState]);
 
   return (
     <div css={styles.footer}>
@@ -41,7 +37,7 @@ const ComicFooter: React.FunctionComponent = () => {
           onKeyUp={onInputCurrentPage}
           onChange={onInputCurrentPage}
         />
-        / {pagingState.totalPage}
+        / {calculationState.totalPage}
       </div>
     </div>
   );

@@ -4,10 +4,15 @@ import {
   ComicCalculationAction,
   ComicCalculationActionType,
   ComicCalculationState,
-  ComicSettingAction, ComicSettingActionType,
+  ComicCurrentAction,
+  ComicCurrentActionType,
+  ComicCurrentState,
+  ComicSettingAction,
+  ComicSettingActionType,
   ComicSettingState,
   ComicStatusAction,
   ComicStatusActionType,
+  ComicStatusState,
 } from './contexts';
 import { getClientWidth, measure, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll } from './utils/ComicSettingUtil';
@@ -26,15 +31,78 @@ export interface ComicParsedData {
   unzipPath: string,
 }
 
-export class ComicService {
-  static dispatchSetting?: React.Dispatch<ComicSettingAction>;
-  static dispatchStatus?: React.Dispatch<ComicStatusAction>;
-  static dispatchPaging?: React.Dispatch<ComicCalculationAction>;
+interface ComicServiceProperties {
+  dispatchSetting: React.Dispatch<ComicSettingAction>,
+  dispatchStatus: React.Dispatch<ComicStatusAction>,
+  dispatchCalculation: React.Dispatch<ComicCalculationAction>,
+  dispatchCurrent: React.Dispatch<ComicCurrentAction>,
+  settingState: ComicSettingState,
+  statusState: ComicStatusState,
+  currentState: ComicCurrentState,
+  calculationState: ComicCalculationState,
+}
 
-  private static setReadyToRead = async (readyToRead: boolean) => {
+export class ComicService {
+  private static instance: ComicService;
+
+  dispatchSetting: React.Dispatch<ComicSettingAction>;
+  dispatchStatus: React.Dispatch<ComicStatusAction>;
+  dispatchCalculation: React.Dispatch<ComicCalculationAction>;
+  dispatchCurrent: React.Dispatch<ComicCurrentAction>;
+
+  settingState: ComicSettingState;
+  currentState: ComicCurrentState;
+  statusState: ComicStatusState;
+  calculationState: ComicCalculationState;
+
+  static init(props: ComicServiceProperties) {
+    this.instance = new ComicService(props);
+  }
+
+  static get() {
+    return this.instance;
+  }
+
+  static updateState({
+    settingState,
+    currentState,
+    statusState,
+    calculationState,
+  }: {
+    settingState: ComicSettingState,
+    statusState: ComicStatusState,
+    currentState: ComicCurrentState,
+    calculationState: ComicCalculationState,
+  }) {
+    this.instance.settingState = settingState;
+    this.instance.currentState = currentState;
+    this.instance.statusState = statusState;
+    this.instance.calculationState = calculationState;
+  }
+
+  private constructor({
+    dispatchSetting,
+    dispatchCalculation,
+    dispatchStatus,
+    dispatchCurrent,
+    settingState,
+    currentState,
+    statusState,
+    calculationState,
+  }: ComicServiceProperties) {
+    this.dispatchSetting = dispatchSetting;
+    this.dispatchCalculation = dispatchCalculation;
+    this.dispatchStatus = dispatchStatus;
+    this.dispatchCurrent = dispatchCurrent;
+    this.settingState = settingState;
+    this.currentState = currentState;
+    this.statusState = statusState;
+    this.calculationState = calculationState;
+  }
+
+  private setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
-      if (!ComicService.dispatchStatus) return resolve();
-      ComicService.dispatchStatus({ type: ComicStatusActionType.SET_READY_TO_READ, readyToRead });
+      this.dispatchStatus({ type: ComicStatusActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
@@ -42,85 +110,45 @@ export class ComicService {
     });
   };
 
-  private static restoreCurrent = async ({
-    pagingState,
-    settingState,
-  }: {
-    pagingState: ComicCalculationState,
-    settingState: ComicSettingState,
-  }) => {
-    await ComicService.goToPage({
-      page: pagingState.currentPage,
-      settingState,
-      pagingState
-    });
+  private restoreCurrent = async () => {
+    await this.goToPage(this.currentState.currentPage);
   };
 
-  private static startPaging = async ({
-    pagingState,
-    settingState,
-  }: {
-    pagingState: ComicCalculationState,
-    settingState: ComicSettingState,
-  }): Promise<ComicCalculationState> => {
-    if (!ComicService.dispatchPaging) return pagingState;
-    if (isScroll(settingState)) {
+  private calculate = async (): Promise<ComicCalculationState> => {
+    if (!this.dispatchCalculation) return this.calculationState;
+    if (isScroll(this.settingState)) {
       // update images[].offset, height
-      const width = contentWidth(settingState);
+      const width = contentWidth(this.settingState);
       let offsetTop = 0;
-      const images = pagingState.images.map((image) => {
+      const images = this.calculationState.images.map((image) => {
         const height = width * image.ratio;
         const result = { ...image, height, offsetTop };
         offsetTop += height;
         return result;
       });
-      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { images }});
-      return { ...pagingState, images };
+      this.dispatchCalculation({ type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: { images } });
+      return { ...this.calculationState, images };
     } else {
       // update pageUnit
       const pageUnit = getClientWidth();
-      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { pageUnit }});
-      return { ...pagingState, pageUnit };
+      this.dispatchCalculation({ type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: { pageUnit } });
+      return { ...this.calculationState, pageUnit };
     }
   };
 
-  static init = ({ dispatchSetting, dispatchPaging, dispatchStatus }: {
-    dispatchSetting: React.Dispatch<ComicSettingAction>,
-    dispatchStatus: React.Dispatch<ComicStatusAction>,
-    dispatchPaging: React.Dispatch<ComicCalculationAction>,
-  }) => {
-    ComicService.dispatchStatus = dispatchStatus;
-    ComicService.dispatchSetting = dispatchSetting;
-    ComicService.dispatchPaging = dispatchPaging;
+  public invalidate = async () => {
+    await this.setReadyToRead(false);
+    this.calculationState = await this.calculate();
+    await this.restoreCurrent();
+    await this.setReadyToRead(true);
   };
 
-  static invalidate = async ({
-    pagingState,
-    settingState,
-  }: {
-    pagingState: ComicCalculationState,
-    settingState: ComicSettingState,
-  }) => {
-    await ComicService.setReadyToRead(false);
-    const newPagingState = await ComicService.startPaging({ pagingState, settingState });
-    await ComicService.restoreCurrent({ pagingState: newPagingState, settingState });
-    await ComicService.setReadyToRead(true);
-  };
-
-  static load = async ({
-    metadata,
-    pagingState,
-    settingState,
-  }: {
-    metadata: ComicParsedData,
-    pagingState: ComicCalculationState,
-    settingState: ComicSettingState,
-  }) => {
-    if (!ComicService.dispatchPaging) return;
+  public load = async (metadata: ComicParsedData) => {
+    if (!this.dispatchCalculation) return;
     if (!metadata.images) return;
-    await ComicService.setReadyToRead(false);
-    const paging = {
-      ...pagingState,
+    await this.setReadyToRead(false);
+    const initialCalculation = {
+      ...this.calculationState,
       totalPage: metadata.images ? metadata.images.length : 0,
       images: metadata.images.map((image) => {
         return {
@@ -131,40 +159,39 @@ export class ComicService {
         };
       }),
     };
-    ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging });
+    this.dispatchCalculation({
+      type: ComicCalculationActionType.UPDATE_CALCULATION,
+      calculation: initialCalculation,
+    });
     Events.emit(SET_CONTENT, metadata.images);
-    await ComicService.invalidate({ pagingState: paging, settingState });
-    await ComicService.setReadyToRead(true);
+    await this.invalidate();
+    await this.setReadyToRead(true);
   };
 
-  static goToPage = async ({
-    page,
-    settingState,
-    pagingState,
-  }: {
-    page: number,
-    settingState: ComicSettingState,
-    pagingState: ComicCalculationState,
-  }): Promise<void> => {
+  public goToPage = async (page: number): Promise<void> => {
     return measure(async () => {
-      if (!ComicService.dispatchPaging) return;
-      if (isScroll(settingState)) {
+      if (!this.dispatchCurrent) return;
+      if (isScroll(this.settingState)) {
         setScrollLeft(0);
-        setScrollTop(pagingState.images[page - 1].offsetTop);
-        console.log(`- scrollTop => ${pagingState.images[page - 1].offsetTop}`);
+        setScrollTop(this.calculationState.images[page - 1].offsetTop);
+        console.log(`- scrollTop => ${this.calculationState.images[page - 1].offsetTop}`);
       } else {
         // todo 2페이지 보기인 경우 짝수 페이지에 도달할 수 없도록 처리 필요
-        setScrollLeft((page - 1) * pagingState.pageUnit);
+        setScrollLeft((page - 1) * this.calculationState.pageUnit);
         setScrollTop(0);
-        console.log(`- scrollLeft => ${(page - 1) * pagingState.pageUnit}`);
+        console.log(`- scrollLeft => ${(page - 1) * this.calculationState.pageUnit}`);
       }
-      ComicService.dispatchPaging({ type: ComicCalculationActionType.UPDATE_PAGING, paging: { currentPage: page } });
+      this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: { currentPage: page } });
     }, `Go to page => ${page}`);
   };
 
-  static updateSetting = async (setting: Partial<ComicSettingState>) => {
-    if (!ComicService.dispatchSetting) return;
-    await ComicService.setReadyToRead(false);
-    ComicService.dispatchSetting({ type: ComicSettingActionType.UPDATE_SETTING, setting });
+  public updateSetting = async (setting: Partial<ComicSettingState>) => {
+    if (!this.dispatchSetting) return;
+    await this.setReadyToRead(false);
+    this.dispatchSetting({ type: ComicSettingActionType.UPDATE_SETTING, setting });
+  };
+
+  public updateCurrent = async () => {
+    // todo implement
   };
 }
