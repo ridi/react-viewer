@@ -2,8 +2,10 @@ import { EpubPagingAction, EpubSettingAction, EpubSettingState, SpinePagingState
 import * as React from 'react';
 export interface FontData {
     href: string;
+    uri?: string;
 }
 export interface EpubParsedData {
+    type: 'epub';
     fonts?: Array<FontData>;
     styles?: Array<String>;
     spines?: Array<String>;
@@ -19,7 +21,6 @@ export declare class EpubService {
         dispatchPaging: React.Dispatch<EpubPagingAction>;
     }): void;
     private static setReadyToRead;
-    private static inLoadingState;
     private static appendStyles;
     private static waitImagesLoaded;
     private static prepareFonts;

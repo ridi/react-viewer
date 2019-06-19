@@ -1,14 +1,20 @@
 import * as React from 'react';
-import Footer from './Footer';
-import Header from './Header';
 import {
-  EpubReader,
-  EpubProvider,
-  ViewType,
-  EpubSettingProperties,
   EpubPagingProperties,
+  EpubProvider,
+  EpubReader,
+  EpubSettingProperties,
+  ViewType,
+  ComicReader,
+  ComicProvider,
 } from '@ridi/react-reader';
-import Loading from './Loading';
+import { TYPE } from './constants';
+import TypeSwitch from './TypeSwitch';
+import ComicHeader from './comic/ComicHeader';
+import EpubHeader from './epub/EpubHeader';
+import EpubFooter from './epub/EpubFooter';
+import ComicFooter from './comic/ComicFooter';
+import { ComicLoading, EpubLoading } from './Loading/index';
 
 const initialSettingState = {
   [EpubSettingProperties.VIEW_TYPE]: ViewType.PAGE1,
@@ -21,13 +27,30 @@ const initialPagingState = {
   [EpubPagingProperties.CURRENT_POSITION]: 0,
 };
 
-const App: React.FunctionComponent = () => (
-  <EpubProvider settingState={initialSettingState} pagingState={initialPagingState}>
-    <Header/>
-    <EpubReader/>
-    <Footer/>
-    <Loading/>
-  </EpubProvider>
-);
+const App: React.FunctionComponent = () => {
+  const [type, setType] = React.useState(TYPE.EPUB);
+
+  return (
+    <>
+      <TypeSwitch type={type} onTypeChanged={setType}/>
+      {type === TYPE.EPUB &&
+        <EpubProvider settingState={initialSettingState} pagingState={initialPagingState}>
+          <EpubHeader/>
+          <EpubReader/>
+          <EpubFooter/>
+          <EpubLoading/>
+        </EpubProvider>
+      }
+      {type === TYPE.COMIC &&
+        <ComicProvider>
+          <ComicHeader/>
+          <ComicReader/>
+          <ComicFooter/>
+          <ComicLoading/>
+        </ComicProvider>
+      }
+    </>
+  );
+};
 
 export default App;

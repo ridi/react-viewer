@@ -1,24 +1,27 @@
+/** @jsx jsx */
 import * as React from 'react';
-import { EpubSettingContext, EpubPagingContext, SettingUtil, EpubService } from '@ridi/react-reader';
+import { jsx } from '@emotion/core';
+import * as styles from './styles';
+import { ComicPagingContext, ComicService, ComicSettingContext } from '@ridi/react-reader';
+
 
 const isKeyboardEvent = (e: React.KeyboardEvent | React.ChangeEvent): e is React.KeyboardEvent => !!(e as React.KeyboardEvent).key;
 const isHtmlInputElement = (target: any): target is HTMLInputElement => !!(target as HTMLInputElement).value;
 
-const Footer: React.FunctionComponent = () => {
+const ComicFooter: React.FunctionComponent = () => {
   // 전역 context
-  const pagingState = React.useContext(EpubPagingContext);
-  const settingState = React.useContext(EpubSettingContext);
+  const pagingState = React.useContext(ComicPagingContext);
+  const settingState = React.useContext(ComicSettingContext);
 
   // 로컬에서만 유지되는 값
   const [currentPage, setCurrentPage] = React.useState(pagingState.currentPage);
 
-
   const onInputCurrentPage = (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
-      EpubService.goToPage({
+      ComicService.goToPage({
         page: currentPage,
-        pageUnit: pagingState.pageUnit,
-        isScroll: SettingUtil.isScroll(settingState),
+        settingState,
+        pagingState,
       });
     } else if (isHtmlInputElement(e.target)) {
       setCurrentPage(parseInt(e.target.value || '1', 10));
@@ -30,8 +33,8 @@ const Footer: React.FunctionComponent = () => {
   }, [pagingState]);
 
   return (
-    <div id="footer" className="footer_area">
-      <div className="footer_paging_status">
+    <div css={styles.footer}>
+      <div>
         <input
           type="number"
           value={currentPage}
@@ -44,4 +47,4 @@ const Footer: React.FunctionComponent = () => {
   );
 };
 
-export default Footer;
+export default ComicFooter;

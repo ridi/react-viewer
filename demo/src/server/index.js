@@ -1,4 +1,4 @@
-import { EpubParser } from '@ridi/epub-parser';
+import { EpubParser, ComicParser } from '@ridi/content-parser';
 import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
@@ -9,56 +9,56 @@ const dataPath = './data';
 const app = express();
 const port = 8080;
 
-// const getFonts = (styles) => {
-//   const regex = /@font-face\{font-family:["]?([\w\s]+)["]?;src:url\(["]?([\w\s\/\.\-_]+)["]?\)\}/g;
-//   const fonts = [];
-//   styles.forEach(style => {
-//     let result;
-//     while((result = regex.exec(style)) !== null) {
-//       const [mached, name, href] = result;
-//       fonts.push({ name, href: `${href}` });
-//     }
-//   });
-//   return fonts;
-// };
+const parseEpub = async ({ filePath, unzipPath }) => {
+  const parser = new EpubParser(filePath);
+  const book = await parser.parse({ unzipPath });
 
-const fetchBook = (fileName) => {
-  return new Promise((resolve, reject) => {
-    const filePath = path.join(dataPath, fileName);
-    if (fs.existsSync(filePath)) {
+  const options = {
+    extractBody: (innerHTML, attrs) => `<article ${attrs.map((attr) => ` ${attr.key}="${attr.value}"`).join(' ')}>${innerHTML}</article>`,
+    basePath: unzipPath,
+  };
+  const results = await parser.readItems(book.spines.concat(book.styles), options);
+  const position = book.spines.length;
+  const styles = results.slice(position);
+  return {
+    unzipPath,
+    book,
+    spines: results.slice(0, position),
+    styles,
+    fonts: book.fonts.map((font) => ({ ...font, uri: `${unzipPath}/${font.href}` })),
+    type: 'epub',
+  };
+};
+
+const parseComic = async ({ filePath, unzipPath }) => {
+  const parser = new ComicParser(filePath);
+  const book = await parser.parse({ unzipPath, parseImageSize: 512 });
+
+  return {
+    unzipPath,
+    book,
+    images: book.items,
+    type: 'comic',
+  };
+};
+
+const parseBook = (fileName) => {
+  const filePath = path.join(dataPath, fileName);
+  if (fs.existsSync(filePath)) {
+    return Promise.resolve().then(async () => {
+      const isEpub = path.extname(fileName).toLowerCase() === '.epub';
       const unzipPath = path.join(dataPath, path.basename(filePath, path.extname(filePath)));
-      const parser = new EpubParser(filePath);
-      parser.parse({ unzipPath }).then((book) => {
-        const basePath = unzipPath;
-        const extractBody = (innerHTML, attrs) => {
-          const string = attrs.map((attr) => {
-            return ` ${attr.key}="${attr.value}"`;
-          }).join(' ');
-          return `<article ${string}>${innerHTML}</article>`;
-        };
-        parser.readItems(book.spines.concat(book.styles), { basePath, extractBody }).then((results) => {
-          const position = book.spines.length;
-          const styles = results.slice(position);
-          resolve({
-            unzipPath,
-            book,
-            spines: results.slice(0, position),
-            styles,
-            fonts: book.fonts, // getFonts(styles),
-          });
-        });
-      });
-    } else {
-      reject();
-    }
-  });
+      return isEpub ? parseEpub({ filePath, unzipPath }) : parseComic({ filePath, unzipPath });
+    });
+  }
+  return Promise.reject(`No file exist: ${filePath}`);
 };
 
 app.use('/', express.static(path.join(cwd, 'public')));
 
 app.get('/api/book', (request, response) => {
   const fileName = decodeURI(request.query.filename);
-  fetchBook(fileName).then(book => response.send(book)).catch(() => response.status(404).send());
+  parseBook(fileName).then(book => response.send(book)).catch(() => response.status(404).send());
 });
 
 app.post('/api/book/upload', (request, response) => {
@@ -78,7 +78,7 @@ app.post('/api/book/upload', (request, response) => {
       response.status(500).send(err);
     } else {
       const fileName = request.file.uploadedFile.name;
-      fetchBook(fileName).then(book => response.send(book)).catch(() => response.status(404).send());
+      parseBook(fileName).then(book => response.send(book)).catch(() => response.status(404).send());
     }
   });
 });

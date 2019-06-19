@@ -4,3 +4,8 @@ export enum ViewType {
   PAGE12 = 'page12',
   PAGE23 = 'page23',
 }
+
+export enum BindingType {
+  LEFT = 'left',
+  RIGHT = 'right',  // manga
+}

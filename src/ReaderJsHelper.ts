@@ -1,5 +1,5 @@
 import { Context, Reader } from '@ridi/reader.js/web';
-import { measure } from './util';
+import { measure } from './utils/Util';
 
 const DETECTION_TYPE = 'top'; // bottom or top
 const EMPTY_READ_LOCATION = '-1#-1';

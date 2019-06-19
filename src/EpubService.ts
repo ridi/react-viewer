@@ -8,7 +8,7 @@ import {
   measure,
   setScrollLeft,
   setScrollTop,
-} from './util';
+} from './utils/Util';
 import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
 import {
@@ -27,9 +27,11 @@ import * as React from 'react';
 
 export interface FontData {
   href: string,
+  uri?: string,
 }
 
 export interface EpubParsedData {
+  type: 'epub',
   fonts?: Array<FontData>,
   styles?: Array<String>,
   spines?: Array<String>,
@@ -60,13 +62,6 @@ export class EpubService {
         resolve();
       }, 0);
     });
-  };
-
-  private static inLoadingState = async (run: () => any) => {
-    await EpubService.setReadyToRead(false);
-    const result = await run();
-    await EpubService.setReadyToRead(true);
-    return result;
   };
 
   private static appendStyles = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
@@ -101,9 +96,10 @@ export class EpubService {
 
   private static prepareFonts = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     if (!metadata.fonts) return Promise.resolve();
-    const fontFaces = metadata.fonts.map(font => font.href).map((href) => {
+    const fontFaces = metadata.fonts.map(({ href, uri }) => {
       const name = href.split('/').slice(-1)[0].replace(/\./g, '_');
-      return new FontFace(name, `url("${metadata.unzipPath}/${href}")`);
+      let url = uri ? uri : `${metadata.unzipPath}/${href}`;
+      return new FontFace(name, `url("${url}")`);
     });
 
     return measure(
@@ -279,17 +275,16 @@ export class EpubService {
     columnWidth: number,
     columnGap: number,
   }): Promise<void> => {
-    const _invalidate = async () => {
-      try {
-        await EpubService.waitImagesLoaded();
-        await ReaderJsHelper.reviseImages();
-        const { spines, pageUnit } = await EpubService.startPaging({ isScroll, columnWidth, columnGap });
-        await EpubService.restoreCurrent({ currentSpineIndex, currentPosition, spines, pageUnit, isScroll });
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    return EpubService.inLoadingState(_invalidate);
+    try {
+      await EpubService.setReadyToRead(false);
+      await EpubService.waitImagesLoaded();
+      await ReaderJsHelper.reviseImages();
+      const { spines, pageUnit } = await EpubService.startPaging({ isScroll, columnWidth, columnGap });
+      await EpubService.restoreCurrent({ currentSpineIndex, currentPosition, spines, pageUnit, isScroll });
+    } catch (e) {
+      console.error(e);
+    }
+    await EpubService.setReadyToRead(true);
   };
 
   static load = async ({
@@ -307,12 +302,12 @@ export class EpubService {
     columnWidth: number,
     columnGap: number,
   }): Promise<void> => {
-    return EpubService.inLoadingState(async () => {
-      await EpubService.appendStyles({ metadata });
-      await EpubService.prepareFonts({ metadata });
-      Events.emit(SET_CONTENT, metadata.spines);
-      await EpubService.invalidate({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap });
-    });
+    await EpubService.setReadyToRead(false);
+    await EpubService.appendStyles({ metadata });
+    await EpubService.prepareFonts({ metadata });
+    Events.emit(SET_CONTENT, metadata.spines);
+    await EpubService.invalidate({ currentSpineIndex, currentPosition, isScroll, columnWidth, columnGap });
+    await EpubService.setReadyToRead(true);
   };
 
   static loadWithParsedData = EpubService.load;

@@ -3,37 +3,22 @@ import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { EpubPagingContext, EpubSettingContext, EpubStatusContext } from '../../contexts';
 import * as SettingUtil from '../../utils/EpubSettingUtil';
-import Events, { SET_CONTENT } from '../../Events';
-import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
 import { EpubService } from '../../EpubService';
-import * as styles from './styles';
 import { isScroll } from '../../utils/EpubSettingUtil';
 import { getContentRootElement } from '../../utils/Util';
+import * as styles from './styles';
+import { ImageData } from '../../ComicService';
+import Events, { SET_CONTENT } from '../../Events';
 
-const EpubReader = () => {
-  const contentRef: React.RefObject<HTMLDivElement> = React.useRef(null);
+const ComicReader: React.FunctionComponent = () => {
   const [content, setContent] = React.useState('');
   const pagingState = React.useContext(EpubPagingContext);
   const settingState = React.useContext(EpubSettingContext);
   const statusState = React.useContext(EpubStatusContext);
 
-  const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
-
-  const createContext = (maxSelectionLength: number = 1000): Context => {
-    return new Context(
-      SettingUtil.containerWidth(settingState),
-      SettingUtil.containerHeight(settingState),
-      SettingUtil.columnGap(settingState),
-      SettingUtil.isDoublePage(settingState),
-      SettingUtil.isScroll(settingState),
-      maxSelectionLength);
-  };
-
-  const mountReaderJs = () => {
-    if (contentRef.current) {
-      ReaderJsHelper.mount(contentRef.current, createContext());
-    }
-  };
+  const setImageContent = (images: Array<ImageData>) => setContent(
+    images.map(({ index, path, width, height, fileSize }) => `${index + 1}: ${path} (w: ${width}, h: ${height}, size: ${fileSize})`).join('\n')
+  );
 
   const updateCurrent = () => {
     if (!statusState.readyToRead) return;
@@ -51,14 +36,12 @@ const EpubReader = () => {
     columnWidth: SettingUtil.columnWidth(settingState),
     columnGap: SettingUtil.columnGap(settingState),
   })
-  // .then(updateCurrent)
   .catch(error => console.error(error));
 
   React.useEffect(() => {
-    mountReaderJs();
-    Events.on(SET_CONTENT, setSpineContent);
+    Events.on(SET_CONTENT, setImageContent);
     return () => {
-      Events.off(SET_CONTENT, setSpineContent);
+      Events.off(SET_CONTENT, setImageContent);
     };
   }, []);
 
@@ -74,19 +57,15 @@ const EpubReader = () => {
   }, [settingState, pagingState, statusState]);
 
   React.useEffect(() => {
-    mountReaderJs();
     invalidate();
   }, [settingState]);
 
   return (
-    <div id="content_root" css={styles.wrapper(settingState)}>
-      <div
-        css={styles.contentWrapper(settingState)}
-        ref={contentRef}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+    <div id="content_root" css={styles.wrapper()}>
+      ... // todo images
+      {content}
     </div>
   );
 };
 
-export default EpubReader;
+export default ComicReader;

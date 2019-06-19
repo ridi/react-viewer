@@ -4,6 +4,9 @@
   "license": "MIT",
   "description": "React based viewer for EPUB and comics",
   "main": "dist/index.js",
+  "files": [
+    "dist/constants.js"
+  ],
   "typings": "dist/typings/index.d.ts",
   "scripts": {
     "build": "concurrently \"npm run build:webpack\" \"npm run build:dec\" && npm run build:type",

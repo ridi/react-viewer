@@ -11,15 +11,15 @@ export enum EpubStatusProperties {
 
 export type EpubStatusAction = { type: EpubStatusActionType.SET_READY_TO_READ, readyToRead: boolean };
 
-export type StatusState = {
+export type EpubStatusState = {
   [EpubStatusProperties.READY_TO_READ]: boolean,
 };
 
-export const initialEpubStatusState: StatusState = {
+export const initialEpubStatusState: EpubStatusState = {
   [EpubStatusProperties.READY_TO_READ]: false,
 };
 
-export const EpubStatusReducer: React.Reducer<StatusState, EpubStatusAction> = (state, action) => {
+export const EpubStatusReducer: React.Reducer<EpubStatusState, EpubStatusAction> = (state, action) => {
   switch (action.type) {
     case EpubStatusActionType.SET_READY_TO_READ:
       return { ...state, readyToRead: action.readyToRead };

@@ -1,8 +1,13 @@
 import EpubReader from './components/EpubReader';
-import * as SettingUtil from './SettingUtil';
+import ComicReader from './components/ComicReader';
 
-export { EpubReader, SettingUtil };
+export {
+  EpubReader,
+  ComicReader,
+};
 export * from './EpubService';
+export * from './ComicService';
 export * from './contexts';
 export * from './ReaderJsHelper';
 export * from './constants';
+export * from './utils';

@@ -5,9 +5,9 @@ var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cook
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@emotion/core");
-var util_1 = require("../../util");
+var util_1 = require("../../utils/Util");
 var index_1 = require("../../contexts/index");
-var SettingUtil = require("../../SettingUtil");
+var SettingUtil = require("../../utils/EpubSettingUtil");
 exports.wrapper = function (setting) {
     if (setting.viewType === index_1.ViewType.SCROLL) {
         return core_1.css(templateObject_1 || (templateObject_1 = __makeTemplateObject([""], [""])));

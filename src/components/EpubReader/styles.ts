@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 import { EpubSettingProperties, EpubSettingState } from '../../contexts';
-import * as SettingUtil from '../../SettingUtil';
+import * as SettingUtil from '../../utils/EpubSettingUtil';
 
 const fontFamilyStyle = (setting: EpubSettingState) => {
   if (setting[EpubSettingProperties.FONT] === 'default') {

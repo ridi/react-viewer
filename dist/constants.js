@@ -100,11 +100,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!********************************!*\
   !*** ./src/constants/index.ts ***!
   \********************************/
-/*! exports provided: ViewType */
+/*! exports provided: ViewType, BindingType */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\n//# sourceURL=webpack://reader/./src/constants/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BindingType\", function() { return BindingType; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\nvar BindingType;\n\n(function (BindingType) {\n  BindingType[\"LEFT\"] = \"left\";\n  BindingType[\"RIGHT\"] = \"right\";\n})(BindingType || (BindingType = {}));\n\n//# sourceURL=webpack://reader/./src/constants/index.ts?");
 
 /***/ })
 

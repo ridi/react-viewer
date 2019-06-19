@@ -1,6 +1,6 @@
-import { getClientHeight, getClientWidth } from './util';
-import { EpubSettingState } from './contexts';
-import { ViewType } from './constants/index';
+import { getClientHeight, getClientWidth } from './Util';
+import { EpubSettingState } from '../contexts/index';
+import { ViewType } from '../constants/index';
 
 export const isScroll = ({ viewType }: EpubSettingState): boolean => viewType === ViewType.SCROLL;
 export const isDoublePage = ({ viewType }: EpubSettingState): boolean => viewType === ViewType.PAGE12 || viewType === ViewType.PAGE23;

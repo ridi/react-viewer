@@ -1,5 +1,5 @@
 import { EpubPagingContextProvider, EpubPagingDispatchContext, EpubPagingState } from './EpubPagingContext';
-import { EpubStatusContextProvider, EpubStatusDispatchContext, StatusState } from './EpubStatusContext';
+import { EpubStatusContextProvider, EpubStatusDispatchContext, EpubStatusState } from './EpubStatusContext';
 import { EpubSettingContextProvider, EpubSettingDispatchContext, EpubSettingState } from './EpubSettingContext';
 import * as React from 'react';
 import { EpubService } from '../EpubService';
@@ -18,7 +18,7 @@ export interface EpubProviderProps {
   children: React.ReactNode,
   settingState ?: Partial<EpubSettingState>,
   pagingState?: Partial<EpubPagingState>,
-  statusState?: Partial<StatusState>,
+  statusState?: Partial<EpubStatusState>,
 }
 
 export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, pagingState, statusState }: EpubProviderProps) => {

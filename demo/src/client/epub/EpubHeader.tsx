@@ -1,16 +1,19 @@
+/** @jsx jsx */
 import * as React from 'react';
-import ViewTypeButton from './ViewTypeButton';
+import { jsx } from '@emotion/core';
+import * as styles from './styles';
+import { EpubViewTypeButton } from '../ViewTypeButton';
 import {
   EpubSettingContext,
   EpubPagingContext,
   ViewType,
   EpubService,
-  SettingUtil,
+  EpubSettingUtil,
   EpubParsedData,
 } from '@ridi/react-reader';
 import axios from 'axios';
 
-const Header: React.FunctionComponent = () => {
+const EpubHeader: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
   const fileOpenButtonRef: React.RefObject<HTMLButtonElement> = React.useRef(null);
 
@@ -41,41 +44,25 @@ const Header: React.FunctionComponent = () => {
           metadata,
           currentSpineIndex: pagingState.currentSpineIndex,
           currentPosition: pagingState.currentPosition,
-          isScroll: SettingUtil.isScroll(settingState),
-          columnWidth: SettingUtil.columnWidth(settingState),
-          columnGap: SettingUtil.columnGap(settingState),
+          isScroll: EpubSettingUtil.isScroll(settingState),
+          columnWidth: EpubSettingUtil.columnWidth(settingState),
+          columnGap: EpubSettingUtil.columnGap(settingState),
         }).catch((error: any) => console.error(error));
       }).catch((error: any) => console.error(error));
     }
   };
 
-  const onFileOpen = () => {
-    const { current: fileInput } = fileInputRef;
-    const { current: fileOpenButton } = fileOpenButtonRef;
-    if (fileOpenButton) fileOpenButton.blur();
-    if (fileInput) fileInput.click();
-  };
-
   return (
-    <div id="title_bar" className="navbar">
+    <div css={styles.header}>
       <span id="title" className="navbar_title" aria-label="Title">Pilot Project</span>
       <div className="title_bar_right_container">
-        <ViewTypeButton viewType={ViewType.SCROLL}/>
-        <ViewTypeButton viewType={ViewType.PAGE1}/>
-        <ViewTypeButton viewType={ViewType.PAGE12}/>
-        <button
-          ref={fileOpenButtonRef}
-          type="button"
-          className="button title_bar_button"
-          aria-label="Select File"
-          onClick={onFileOpen}
-        >
-          Select file...
-        </button>
+        <EpubViewTypeButton viewType={ViewType.SCROLL}/>
+        <EpubViewTypeButton viewType={ViewType.PAGE1}/>
+        <EpubViewTypeButton viewType={ViewType.PAGE12}/>
         <input ref={fileInputRef} type="file" accept=".epub" onChange={onFileChanged}/>
       </div>
     </div>
   );
 };
 
-export default Header;
+export default EpubHeader;

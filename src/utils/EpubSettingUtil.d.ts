@@ -1,4 +1,4 @@
-import { EpubSettingState } from './contexts';
+import { EpubSettingState } from '../contexts/index';
 export declare const isScroll: ({ viewType }: EpubSettingState) => boolean;
 export declare const isDoublePage: ({ viewType }: EpubSettingState) => boolean;
 export declare const columnsInPage: ({ viewType }: EpubSettingState) => number;
