@@ -1,4 +1,4 @@
-import { generateContext } from './ContextProvider';
+import { generateContext } from '../ContextProvider';
 import * as React from 'react';
 
 export enum EpubStatusActionType {

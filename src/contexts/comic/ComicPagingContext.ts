@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { generateContext } from './ContextProvider';
+import { generateContext } from '../ContextProvider';
 
 export enum ComicPagingActionType {
   UPDATE_PAGING = 'update_paging',

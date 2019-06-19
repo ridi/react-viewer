@@ -1,6 +1,6 @@
-import {Reducer} from "react";
-import { generateContext } from "./ContextProvider";
-import { ViewType } from '../constants';
+import { Reducer } from 'react';
+import { generateContext } from '../ContextProvider';
+import { ViewType } from '../../constants/index';
 
 export enum EpubSettingActionType {
   UPDATE_SETTING = 'update_setting',
@@ -43,7 +43,7 @@ export const initialEpubSettingState: EpubSettingState = {
 };
 
 export const EpubSettingReducer: Reducer<EpubSettingState, EpubSettingAction> = (state, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case EpubSettingActionType.UPDATE_SETTING:
       return { ...state, ...action.setting };
     default:

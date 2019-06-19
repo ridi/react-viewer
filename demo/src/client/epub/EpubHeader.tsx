@@ -15,7 +15,6 @@ import axios from 'axios';
 
 const EpubHeader: React.FunctionComponent = () => {
   const fileInputRef: React.RefObject<HTMLInputElement> = React.useRef(null);
-  const fileOpenButtonRef: React.RefObject<HTMLButtonElement> = React.useRef(null);
 
   const settingState = React.useContext(EpubSettingContext);
   const pagingState = React.useContext(EpubPagingContext);

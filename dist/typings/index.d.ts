@@ -129,14 +129,14 @@ declare module '@ridi/react-reader/ComicService' {
 }
 
 declare module '@ridi/react-reader/contexts' {
-    export * from '@ridi/react-reader/contexts/EpubSettingContext';
-    export * from '@ridi/react-reader/contexts/EpubPagingContext';
-    export * from '@ridi/react-reader/contexts/EpubStatusContext';
-    export * from '@ridi/react-reader/contexts/EpubProvider';
-    export * from '@ridi/react-reader/contexts/ComicSettingContext';
-    export * from '@ridi/react-reader/contexts/ComicPagingContext';
-    export * from '@ridi/react-reader/contexts/ComicStatusContext';
-    export * from '@ridi/react-reader/contexts/ComicProvider';
+    export * from '@ridi/react-reader/contexts/epub/EpubSettingContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubPagingContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubStatusContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubProvider';
+    export * from '@ridi/react-reader/contexts/comic/ComicSettingContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicPagingContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicStatusContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicProvider';
 }
 
 declare module '@ridi/react-reader/ReaderJsHelper' {
@@ -178,12 +178,13 @@ declare module '@ridi/react-reader/utils' {
     import * as EpubSettingUtil from '@ridi/react-reader/utils/EpubSettingUtil';
     import * as ComicSettingUtil from '@ridi/react-reader/utils/ComicSettingUtil';
     import * as Util from '@ridi/react-reader/utils/Util';
+    export const SettingUtil: typeof EpubSettingUtil;
     export { EpubSettingUtil, ComicSettingUtil, Util, };
 }
 
-declare module '@ridi/react-reader/contexts/EpubSettingContext' {
-    import { Reducer } from "react";
-    import { ViewType } from '@ridi/react-reader/constants';
+declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
+    import { Reducer } from 'react';
+    import { ViewType } from '@ridi/react-reader/constants/index';
     export enum EpubSettingActionType {
         UPDATE_SETTING = "update_setting"
     }
@@ -219,7 +220,7 @@ declare module '@ridi/react-reader/contexts/EpubSettingContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/EpubPagingContext' {
+declare module '@ridi/react-reader/contexts/epub/EpubPagingContext' {
     import * as React from 'react';
     export enum EpubPagingActionType {
         UPDATE_PAGING = "update_paging"
@@ -263,7 +264,7 @@ declare module '@ridi/react-reader/contexts/EpubPagingContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/EpubStatusContext' {
+declare module '@ridi/react-reader/contexts/epub/EpubStatusContext' {
     import * as React from 'react';
     export enum EpubStatusActionType {
         SET_READY_TO_READ = "set_ready_to_read"
@@ -286,10 +287,10 @@ declare module '@ridi/react-reader/contexts/EpubStatusContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/EpubProvider' {
-    import { EpubPagingState } from '@ridi/react-reader/contexts/EpubPagingContext';
-    import { EpubStatusState } from '@ridi/react-reader/contexts/EpubStatusContext';
-    import { EpubSettingState } from '@ridi/react-reader/contexts/EpubSettingContext';
+declare module '@ridi/react-reader/contexts/epub/EpubProvider' {
+    import { EpubPagingState } from '@ridi/react-reader/contexts/epub/EpubPagingContext';
+    import { EpubStatusState } from '@ridi/react-reader/contexts/epub/EpubStatusContext';
+    import { EpubSettingState } from '@ridi/react-reader/contexts/epub/EpubSettingContext';
     import * as React from 'react';
     export interface EpubProviderProps {
         children: React.ReactNode;
@@ -300,7 +301,7 @@ declare module '@ridi/react-reader/contexts/EpubProvider' {
     export const EpubProvider: React.FunctionComponent<EpubProviderProps>;
 }
 
-declare module '@ridi/react-reader/contexts/ComicSettingContext' {
+declare module '@ridi/react-reader/contexts/comic/ComicSettingContext' {
     import { Reducer } from "react";
     import { ViewType, BindingType } from '@ridi/react-reader/constants';
     export enum ComicSettingActionType {
@@ -328,7 +329,7 @@ declare module '@ridi/react-reader/contexts/ComicSettingContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/ComicPagingContext' {
+declare module '@ridi/react-reader/contexts/comic/ComicPagingContext' {
     import * as React from 'react';
     export enum ComicPagingActionType {
             UPDATE_PAGING = "update_paging"
@@ -371,7 +372,7 @@ declare module '@ridi/react-reader/contexts/ComicPagingContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/ComicStatusContext' {
+declare module '@ridi/react-reader/contexts/comic/ComicStatusContext' {
     import * as React from 'react';
     export enum ComicStatusActionType {
         SET_READY_TO_READ = "set_ready_to_read"
@@ -394,10 +395,10 @@ declare module '@ridi/react-reader/contexts/ComicStatusContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/ComicProvider' {
-    import { ComicPagingState } from '@ridi/react-reader/contexts/ComicPagingContext';
-    import { ComicStatusState } from '@ridi/react-reader/contexts/ComicStatusContext';
-    import { ComicSettingState } from '@ridi/react-reader/contexts/ComicSettingContext';
+declare module '@ridi/react-reader/contexts/comic/ComicProvider' {
+    import { ComicPagingState } from '@ridi/react-reader/contexts/comic/ComicPagingContext';
+    import { ComicStatusState } from '@ridi/react-reader/contexts/comic/ComicStatusContext';
+    import { ComicSettingState } from '@ridi/react-reader/contexts/comic/ComicSettingContext';
     import * as React from 'react';
     export interface ComicProviderProps {
         children: React.ReactNode;
@@ -442,14 +443,27 @@ declare module '@ridi/react-reader/utils/Util' {
     export const getClientHeight: () => number;
 }
 
+declare module '@ridi/react-reader/constants/index' {
+    export enum ViewType {
+        SCROLL = "scroll",
+        PAGE1 = "page1",
+        PAGE12 = "page12",
+        PAGE23 = "page23"
+    }
+    export enum BindingType {
+        LEFT = "left",
+        RIGHT = "right"
+    }
+}
+
 declare module '@ridi/react-reader/contexts/index' {
-    export * from '@ridi/react-reader/contexts/EpubSettingContext';
-    export * from '@ridi/react-reader/contexts/EpubPagingContext';
-    export * from '@ridi/react-reader/contexts/EpubStatusContext';
-    export * from '@ridi/react-reader/contexts/EpubProvider';
-    export * from '@ridi/react-reader/contexts/ComicSettingContext';
-    export * from '@ridi/react-reader/contexts/ComicPagingContext';
-    export * from '@ridi/react-reader/contexts/ComicStatusContext';
-    export * from '@ridi/react-reader/contexts/ComicProvider';
+    export * from '@ridi/react-reader/contexts/epub/EpubSettingContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubPagingContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubStatusContext';
+    export * from '@ridi/react-reader/contexts/epub/EpubProvider';
+    export * from '@ridi/react-reader/contexts/comic/ComicSettingContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicPagingContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicStatusContext';
+    export * from '@ridi/react-reader/contexts/comic/ComicProvider';
 }
 

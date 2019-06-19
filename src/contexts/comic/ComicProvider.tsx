@@ -2,7 +2,7 @@ import { ComicPagingContextProvider, ComicPagingDispatchContext, ComicPagingStat
 import { ComicStatusContextProvider, ComicStatusDispatchContext, ComicStatusState } from './ComicStatusContext';
 import { ComicSettingContextProvider, ComicSettingDispatchContext, ComicSettingState } from './ComicSettingContext';
 import * as React from 'react';
-import { ComicService } from '../ComicService';
+import { ComicService } from '../../ComicService';
 
 const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const dispatchSetting = React.useContext(ComicSettingDispatchContext);
@@ -16,7 +16,7 @@ const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNo
 
 export interface ComicProviderProps {
   children: React.ReactNode,
-  settingState ?: Partial<ComicSettingState>,
+  settingState?: Partial<ComicSettingState>,
   pagingState?: Partial<ComicPagingState>,
   statusState?: Partial<ComicStatusState>,
 }
@@ -27,7 +27,7 @@ export const ComicProvider: React.FunctionComponent<ComicProviderProps> = ({ chi
       <ComicPagingContextProvider customInitialState={pagingState}>
         <ComicStatusContextProvider customInitialState={statusState}>
           <ComicContextInitializer>
-            { children }
+            {children}
           </ComicContextInitializer>
         </ComicStatusContextProvider>
       </ComicPagingContextProvider>

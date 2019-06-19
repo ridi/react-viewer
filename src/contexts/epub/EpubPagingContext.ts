@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { generateContext } from './ContextProvider';
+import { generateContext } from '../ContextProvider';
 
 export enum EpubPagingActionType {
   UPDATE_PAGING = 'update_paging',
@@ -49,7 +49,7 @@ export const initialEpubPagingState: EpubPagingState = {
 };
 
 export const EpubPagingReducer: React.Reducer<EpubPagingState, EpubPagingAction> = (state, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case EpubPagingActionType.UPDATE_PAGING:
       return { ...state, ...action.paging };
     default:

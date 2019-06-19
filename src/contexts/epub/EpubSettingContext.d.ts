@@ -1,5 +1,5 @@
-import { Reducer } from "react";
-import { ViewType } from '../constants';
+import { Reducer } from 'react';
+import { ViewType } from '../../constants/index';
 export declare enum EpubSettingActionType {
     UPDATE_SETTING = "update_setting"
 }

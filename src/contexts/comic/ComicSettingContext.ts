@@ -1,6 +1,6 @@
 import {Reducer} from "react";
-import { generateContext } from "./ContextProvider";
-import { ViewType, BindingType } from '../constants';
+import { generateContext } from "../ContextProvider";
+import { ViewType, BindingType } from '../../constants';
 
 export enum ComicSettingActionType {
   UPDATE_SETTING = 'update_setting',
