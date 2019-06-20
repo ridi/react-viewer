@@ -73,9 +73,9 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div css={styles.imageContainer(settingState, calculationState)}>
-      {imageSequence.map((imageIndex) => {
+      {imageSequence.map((imageIndex, index) => {
         if (imageIndex === BLANK_IMAGE) {
-          return <BlankImage settingState={settingState} />;
+          return <BlankImage key={`comic-blank-${index}`} settingState={settingState} />;
         }
         const image = images[imageIndex];
         return <Image key={`comic-image-${image.index}`} image={image} renderers={renderers} />;

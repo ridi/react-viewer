@@ -34,14 +34,10 @@ export const wrapper = (setting: ComicSettingState, ratio: number, status: Image
 export const loading = css`
   width: 100%;
   height: 100%;
-  padding-top: 50%;
-  padding-left: 50px;
 `;
 export const error = css`
   width: 100%;
   height: 100%;
-  padding-top: 50%;
-  padding-left: 50px;
 `;
 export const blank = (setting: ComicSettingState) => css`
   width: ${contentWidth(setting)}px;
