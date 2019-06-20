@@ -9,6 +9,7 @@ export declare enum BindingType {
     RIGHT = "right"
 }
 export declare enum ImageStatus {
+    NONE = "none",
     LOADING = "loading",
     ERROR = "error",
     LOADED = "loaded"

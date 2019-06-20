@@ -14,17 +14,17 @@ export enum ComicCalculationProperties {
 export type ComicCalculationAction = { type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: Partial<ComicCalculationState> };
 
 export type ImageCalculationState = {
-  imageIndex: number, // 1-based
-  /**
-   *  start offset in px on scroll view mode
-   *  modified when resizing or changing setting.contentWidth
-   */
-  offsetTop: number,
+  imageIndex: number, // 0-based
   /**
    * height / width
    * immutable value
    */
   ratio: number,      // height / width
+  /**
+   *  start offset in px on scroll view mode
+   *  modified when resizing or changing setting.contentWidth
+   */
+  offsetTop: number,
   height: number,
 };
 

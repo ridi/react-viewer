@@ -14,8 +14,8 @@ import {
   ComicStatusActionType,
   ComicStatusState,
 } from './contexts';
-import { measure, setScrollLeft, setScrollTop } from './utils/Util';
-import { contentWidth, isScroll, ratio } from './utils/ComicSettingUtil';
+import { getScrollLeft, getScrollTop, measure, setScrollLeft, setScrollTop } from './utils/Util';
+import { contentWidth, isScroll, ratio, startWithBlankPage } from './utils/ComicSettingUtil';
 
 export interface ImageData {
   fileSize: number,
@@ -144,27 +144,39 @@ export class ComicService {
     await this.setReadyToRead(true);
   };
 
-  public load = async (metadata: ComicParsedData) => {
-    if (!this.dispatchCalculation) return;
+  private initialCalculate = async (metadata: ComicParsedData) => {
     if (!metadata.images) return;
-    await this.setReadyToRead(false);
+
+    // init calculation
     const initialCalculation = {
       ...this.calculationState,
       totalPage: metadata.images ? metadata.images.length : 0,
       images: metadata.images.map((image) => {
         return {
           imageIndex: image.index,
-          offsetTop: 0,
           ratio: ratio(image.width, image.height),
+          offsetTop: 0,
           height: 0,
         };
       }),
     };
-    this.dispatchCalculation({
-      type: ComicCalculationActionType.UPDATE_CALCULATION,
-      calculation: initialCalculation,
-    });
+    this.dispatchCalculation({ type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: initialCalculation });
     this.calculationState = initialCalculation;
+
+    // init currentPage
+    const initialCurrent = {
+      ...this.currentState,
+      currentPage: startWithBlankPage(this.settingState) ? 0 : 1,
+    };
+    this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: initialCurrent });
+    this.currentState = initialCurrent;
+  };
+
+  public load = async (metadata: ComicParsedData) => {
+    if (!this.dispatchCalculation) return;
+    if (!metadata.images) return;
+    await this.setReadyToRead(false);
+    await this.initialCalculate(metadata);
     Events.emit(SET_CONTENT, metadata.images);
     await this.invalidate();
     await this.setReadyToRead(true);
@@ -175,13 +187,14 @@ export class ComicService {
       if (!this.dispatchCurrent) return;
       if (isScroll(this.settingState)) {
         setScrollLeft(0);
-        setScrollTop(this.calculationState.images[page - 1].offsetTop);
+        setScrollTop(this.calculationState.images[page - 1].offsetTop); // fixme +1을 해줘야 할 것 같다.
         console.log(`- scrollTop => ${this.calculationState.images[page - 1].offsetTop}`);
       } else {
-        // todo 2페이지 보기인 경우 짝수 페이지에 도달할 수 없도록 처리 필요
-        setScrollLeft((page - 1) * this.calculationState.pageUnit);
+        // todo 2페이지 보기인 경우 짝수 페이지에 도달할 수 없도록 처리 필요(startWithBlankPage == true인 경우 홀수 페이지에 도달할 수 없어야 함)
+        const multiplier = page - (startWithBlankPage(this.settingState) ? 0 : 1);
+        setScrollLeft(multiplier * this.calculationState.pageUnit);
         setScrollTop(0);
-        console.log(`- scrollLeft => ${(page - 1) * this.calculationState.pageUnit}`);
+        console.log(`- scrollLeft => ${multiplier * this.calculationState.pageUnit}`);
       }
       this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: { currentPage: page } });
     }, `Go to page => ${page}`);
@@ -194,7 +207,19 @@ export class ComicService {
   };
 
   public updateCurrent = async () => {
-    // todo implement
-
+    return measure(() => {
+      const { pageUnit, images } = this.calculationState;
+      let currentPage;
+      if (isScroll(this.settingState)) {
+        const scrollTop = getScrollTop();
+        const result = images.find(({ offsetTop, height }) => scrollTop >= offsetTop && scrollTop < offsetTop + height);
+        currentPage = result ? result.imageIndex + 1 : 1;
+      } else {
+        const scrollLeft = getScrollLeft();
+        currentPage = Math.floor(scrollLeft / pageUnit) + (startWithBlankPage(this.settingState) ? 0 : 1);
+      }
+      console.log("update currentState => ", { currentPage });
+      this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: { currentPage } });
+    }, 'update current page').catch(error => console.error(error));
   };
 }

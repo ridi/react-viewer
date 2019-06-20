@@ -3,13 +3,13 @@ import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { ComicCalculationContext, ComicSettingContext, ComicStatusContext } from '../../contexts';
 import { ComicService }  from '../../ComicService';
-import { isDoublePage, isScroll } from '../../utils/ComicSettingUtil';
+import { isDoublePage, isScroll, startWithBlankPage } from '../../utils/ComicSettingUtil';
 import { getContentRootElement } from '../../utils/Util';
 import * as styles from './styles';
 import { ImageData } from '../../ComicService';
 import Events, { SET_CONTENT } from '../../Events';
 import { BlankImage, Image, ImageRenderers } from '../Image/index';
-import { BindingType, ViewType } from '../../constants/index';
+import { BindingType } from '../../constants/index';
 
 interface ComicReaderProps {
   renderers?: ImageRenderers
@@ -57,7 +57,7 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
 
   const imageSequence = React.useMemo(() => {
     let sequence = images.map(({ index }) => index);
-    if (settingState.viewType === ViewType.PAGE23) {
+    if (startWithBlankPage(settingState)) {
       sequence = [BLANK_IMAGE, ...sequence];
     }
     if (isDoublePage(settingState) && settingState.bindingType === BindingType.RIGHT) {

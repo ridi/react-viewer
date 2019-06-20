@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { ImageData } from '../../ComicService';
-import { ComicSettingContext, ComicSettingState } from '../../contexts';
+import { ComicSettingContext, ComicSettingState, ComicCurrentContext } from '../../contexts';
 import * as styles from './styles';
 import { ImageStatus } from '../../constants';
 import { ratio } from '../../utils/ComicSettingUtil';
@@ -22,20 +22,28 @@ export interface ImageProps {
 
 export const Image: React.FunctionComponent<ImageProps> = ({ image, renderers = {} }) => {
   const settingState = React.useContext(ComicSettingContext);
-  // const currentState = React.useContext(ComicCurrentContext);
+  const currentState = React.useContext(ComicCurrentContext);
   const ImageError = renderers.ErrorRenderer || DefaultImageError;
   const ImageLoading = renderers.LoadingRenderer || DefaultImageLoading;
 
-  const [status, setStatus] = React.useState(ImageStatus.LOADING);
+  const [status, setStatus] = React.useState(ImageStatus.NONE);
 
-  // const checkImageInScreen = () => {
-  //
-  // };
+  const startLoading = () => {
+    if (status === ImageStatus.LOADED) return;
+    if (settingState.lazyLoad) {
+      const preloadPagesOnBothSides = settingState.lazyLoad as number;
+      if (image.index + 1 >= currentState.currentPage - preloadPagesOnBothSides
+        && image.index + 1 < currentState.currentPage + preloadPagesOnBothSides) {
+        setStatus(ImageStatus.LOADING);
+      }
+    } else {
+      setStatus(ImageStatus.LOADING);
+    }
+  };
 
   React.useEffect(() => {
-    // lazyload 세팅
-    // loading 상태 관리
-  }, []);
+    startLoading();
+  }, [currentState]);
 
   const retry = () => setStatus(ImageStatus.LOADING);
   const onLoad = () => setStatus(ImageStatus.LOADED);
@@ -43,7 +51,7 @@ export const Image: React.FunctionComponent<ImageProps> = ({ image, renderers = 
 
   return (
     <div css={styles.wrapper(settingState, ratio(image.width, image.height), status, image.index)}>
-      <img src={image.uri} onLoad={onLoad} onError={onError} />
+      {ImageStatus.NONE !== status && <img src={image.uri} onLoad={onLoad} onError={onError} />}
       {ImageStatus.LOADING === status && <ImageLoading />}
       {ImageStatus.ERROR === status && <ImageError retry={retry} />}
     </div>

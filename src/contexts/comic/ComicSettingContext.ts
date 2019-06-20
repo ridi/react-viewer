@@ -26,7 +26,7 @@ export const initialComicSettingState: ComicSettingState = {
   [ComicSettingProperties.VIEW_TYPE]: ViewType.SCROLL,
   [ComicSettingProperties.CONTENT_WIDTH_IN_PERCENT]: 100,  // % (50% ~ 100%)
   [ComicSettingProperties.BINDING_TYPE]: BindingType.LEFT,
-  [ComicSettingProperties.LAZY_LOAD]: 5,    // maximum loading images in one time
+  [ComicSettingProperties.LAZY_LOAD]: 4,    // maximum loading images in one time
 };
 
 export const ComicSettingReducer: Reducer<ComicSettingState, ComicSettingAction> = (state, action) => {

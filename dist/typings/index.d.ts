@@ -119,7 +119,7 @@ declare module '@ridi/react-reader/ComicService' {
         load: (metadata: ComicParsedData) => Promise<void>;
         goToPage: (page: number) => Promise<void>;
         updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
-        updateCurrent: () => Promise<void>;
+        updateCurrent: () => Promise<any>;
     }
     export {};
 }
@@ -171,6 +171,7 @@ declare module '@ridi/react-reader/constants' {
         RIGHT = "right"
     }
     export enum ImageStatus {
+        NONE = "none",
         LOADING = "loading",
         ERROR = "error",
         LOADED = "loaded"
@@ -398,15 +399,15 @@ declare module '@ridi/react-reader/contexts/comic/ComicCalculationContext' {
     export type ImageCalculationState = {
             imageIndex: number;
             /**
-                *  start offset in px on scroll view mode
-                *  modified when resizing or changing setting.contentWidth
-                */
-            offsetTop: number;
-            /**
                 * height / width
                 * immutable value
                 */
             ratio: number;
+            /**
+                *  start offset in px on scroll view mode
+                *  modified when resizing or changing setting.contentWidth
+                */
+            offsetTop: number;
             height: number;
     };
     export type ComicCalculationState = {
@@ -505,6 +506,7 @@ declare module '@ridi/react-reader/utils/ComicSettingUtil' {
     export const ratio: (width?: number | undefined, height?: number | undefined) => number;
     export const containerWidth: (setting: ComicSettingState, calculation: ComicCalculationState) => number;
     export const objectPosition: (setting: ComicSettingState, imageIndex: number) => "50% 50%" | "right 50%" | "left 50%";
+    export const startWithBlankPage: ({ viewType }: ComicSettingState) => boolean;
 }
 
 declare module '@ridi/react-reader/utils/Util' {
@@ -533,6 +535,7 @@ declare module '@ridi/react-reader/constants/index' {
         RIGHT = "right"
     }
     export enum ImageStatus {
+        NONE = "none",
         LOADING = "loading",
         ERROR = "error",
         LOADED = "loaded"

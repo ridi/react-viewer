@@ -14,15 +14,15 @@ export declare type ComicCalculationAction = {
 export declare type ImageCalculationState = {
     imageIndex: number;
     /**
-     *  start offset in px on scroll view mode
-     *  modified when resizing or changing setting.contentWidth
-     */
-    offsetTop: number;
-    /**
      * height / width
      * immutable value
      */
     ratio: number;
+    /**
+     *  start offset in px on scroll view mode
+     *  modified when resizing or changing setting.contentWidth
+     */
+    offsetTop: number;
     height: number;
 };
 export declare type ComicCalculationState = {

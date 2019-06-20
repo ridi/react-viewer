@@ -11,6 +11,7 @@ export enum BindingType {
 }
 
 export enum ImageStatus {
+  NONE = 'none',
   LOADING = 'loading',
   ERROR = 'error',
   LOADED = 'loaded',
