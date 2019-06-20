@@ -30,4 +30,8 @@ module.exports = {
     'react-dom': 'react-dom',
     'react-redux': 'react-redux',
   },
+  node: {
+    fs: 'empty'
+  },
+  target: 'web',
 };

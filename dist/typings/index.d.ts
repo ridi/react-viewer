@@ -44,6 +44,8 @@ declare module '@ridi/react-reader/EpubService' {
         spines?: Array<String>;
         unzipPath: string;
     }
+    export const FontDataValidator: import("ow/dist/source").ObjectPredicate;
+    export const EpubParsedDataValidator: import("ow/dist/source").ObjectPredicate;
     interface EpubServiceProperties {
         dispatchSetting: React.Dispatch<EpubSettingAction>;
         dispatchStatus: React.Dispatch<EpubStatusAction>;
@@ -86,6 +88,8 @@ declare module '@ridi/react-reader/ComicService' {
         images?: Array<ImageData>;
         unzipPath: string;
     }
+    export const ImageDataValidator: import("ow/dist/source").ObjectPredicate;
+    export const ComicParsedDataValidator: import("ow/dist/source").ObjectPredicate;
     interface ComicServiceProperties {
         dispatchSetting: React.Dispatch<ComicSettingAction>;
         dispatchStatus: React.Dispatch<ComicStatusAction>;
@@ -164,6 +168,10 @@ declare module '@ridi/react-reader/constants' {
         ERROR = "error",
         LOADED = "loaded"
     }
+    export const ViewTypeValidator: import("ow/dist/source").StringPredicate;
+    export const ViewTypeOptionalValidator: import("ow/dist/source").StringPredicate;
+    export const BindingTypeValidator: import("ow/dist/source").StringPredicate;
+    export const BindingTypeOptionalValidator: import("ow/dist/source").StringPredicate;
 }
 
 declare module '@ridi/react-reader/utils' {
@@ -200,7 +208,7 @@ declare module '@ridi/react-reader/components/Image/index' {
 
 declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
     import { Reducer } from 'react';
-    import { ViewType } from '@ridi/react-reader/constants/index';
+    import { ViewType } from '@ridi/react-reader/constants';
     export enum EpubSettingActionType {
         UPDATE_SETTING = "update_setting"
     }
@@ -234,6 +242,7 @@ declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
         children: import("react").ReactNode;
         customInitialState?: Partial<EpubSettingState> | undefined;
     }>;
+    export const EpubSettingStateOptionalValidator: import("ow/dist/source").ObjectPredicate;
 }
 
 declare module '@ridi/react-reader/contexts/epub/EpubCalculationContext' {
@@ -368,6 +377,7 @@ declare module '@ridi/react-reader/contexts/comic/ComicSettingContext' {
         children: import("react").ReactNode;
         customInitialState?: Partial<ComicSettingState> | undefined;
     }>;
+    export const ComicSettingStateOptionalValidator: import("ow/dist/source").ObjectPredicate;
 }
 
 declare module '@ridi/react-reader/contexts/comic/ComicCalculationContext' {
@@ -511,24 +521,5 @@ declare module '@ridi/react-reader/utils/Util' {
     export const setScrollTop: (scrollTop: number) => void;
     export const getClientWidth: () => number;
     export const getClientHeight: () => number;
-}
-
-declare module '@ridi/react-reader/constants/index' {
-    export enum ViewType {
-        SCROLL = "scroll",
-        PAGE1 = "page1",
-        PAGE12 = "page12",
-        PAGE23 = "page23"
-    }
-    export enum BindingType {
-        LEFT = "left",
-        RIGHT = "right"
-    }
-    export enum ImageStatus {
-        NONE = "none",
-        LOADING = "loading",
-        ERROR = "error",
-        LOADED = "loaded"
-    }
 }
 

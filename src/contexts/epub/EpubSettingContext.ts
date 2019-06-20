@@ -1,6 +1,8 @@
 import { Reducer } from 'react';
 import { generateContext } from '../ContextProvider';
-import { ViewType } from '../../constants/index';
+import { ViewType } from '../../constants';
+import ow from 'ow';
+import { ViewTypeOptionalValidator } from '../../constants';
 
 export enum EpubSettingActionType {
   UPDATE_SETTING = 'update_setting',
@@ -56,3 +58,14 @@ export const {
   StateContext: EpubSettingContext,
   ContextProvider: EpubSettingContextProvider,
 } = generateContext(EpubSettingReducer, initialEpubSettingState, 'EpubSetting');
+
+export const EpubSettingStateOptionalValidator = ow.object.exactShape({
+  [EpubSettingProperties.VIEW_TYPE]: ViewTypeOptionalValidator,
+  [EpubSettingProperties.FONT]: ow.optional.string,
+  [EpubSettingProperties.FONT_SIZE_IN_EM]: ow.optional.number.not.negative,
+  [EpubSettingProperties.LINE_HEIGHT_IN_EM]: ow.optional.number.not.negative,
+  [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: ow.optional.number.not.negative,
+  [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: ow.optional.number.not.negative,
+  [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: ow.optional.number.not.negative,
+  [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: ow.optional.number.not.negative,
+});

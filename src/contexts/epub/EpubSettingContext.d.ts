@@ -1,5 +1,5 @@
 import { Reducer } from 'react';
-import { ViewType } from '../../constants/index';
+import { ViewType } from '../../constants';
 export declare enum EpubSettingActionType {
     UPDATE_SETTING = "update_setting"
 }
@@ -33,3 +33,4 @@ export declare const EpubSettingDispatchContext: import("react").Context<import(
     children: import("react").ReactNode;
     customInitialState?: Partial<EpubSettingState> | undefined;
 }>;
+export declare const EpubSettingStateOptionalValidator: import("ow/dist/source").ObjectPredicate;

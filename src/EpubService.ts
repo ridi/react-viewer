@@ -20,12 +20,13 @@ import {
   EpubCurrentState,
   EpubSettingAction,
   EpubSettingActionType,
-  EpubSettingState,
+  EpubSettingState, EpubSettingStateOptionalValidator,
   EpubStatusAction,
   EpubStatusActionType,
 } from './contexts';
 import * as React from 'react';
 import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
+import ow from 'ow';
 
 export interface FontData {
   href: string,
@@ -39,6 +40,23 @@ export interface EpubParsedData {
   spines?: Array<String>,
   unzipPath: string,
 }
+
+export const FontDataValidator = ow.object.exactShape({
+  href: ow.string,
+  uri: ow.optional.string,
+  id: ow.optional.string,
+  mediaType: ow.optional.string,
+  size: ow.optional.number.not.negative,
+});
+
+export const EpubParsedDataValidator = ow.object.exactShape({
+  type: ow.string.equals('epub'),
+  fonts: ow.optional.array.ofType(FontDataValidator),
+  styles: ow.optional.array.ofType(ow.string),
+  spines: ow.optional.array.ofType(ow.string),
+  unzipPath: ow.string,
+  book: ow.optional.object,
+});
 
 interface EpubServiceProperties {
   dispatchSetting: React.Dispatch<EpubSettingAction>,
@@ -247,6 +265,7 @@ export class EpubService {
   };
 
   public goToPage = async (requestPage: number): Promise<void> => {
+    ow(requestPage, 'page', ow.number);
     const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     const { pageUnit } = this.calculationState;
     return measure(async () => {
@@ -277,6 +296,8 @@ export class EpubService {
   };
 
   public load = async (metadata: EpubParsedData): Promise<void> => {
+    ow(metadata, 'metadata', EpubParsedDataValidator);
+
     await this.setReadyToRead(false);
     await this.appendStyles({ metadata });
     await this.prepareFonts({ metadata });
@@ -315,6 +336,8 @@ export class EpubService {
   };
 
   public updateSetting = async (setting: Partial<EpubSettingState>) => {
+    ow(setting, 'setting', EpubSettingStateOptionalValidator);
+
     if (!this.dispatchSetting) return;
     await this.setReadyToRead(false);
     this.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });

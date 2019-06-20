@@ -14,3 +14,7 @@ export declare enum ImageStatus {
     ERROR = "error",
     LOADED = "loaded"
 }
+export declare const ViewTypeValidator: import("ow/dist/source").StringPredicate;
+export declare const ViewTypeOptionalValidator: import("ow/dist/source").StringPredicate;
+export declare const BindingTypeValidator: import("ow/dist/source").StringPredicate;
+export declare const BindingTypeOptionalValidator: import("ow/dist/source").StringPredicate;
