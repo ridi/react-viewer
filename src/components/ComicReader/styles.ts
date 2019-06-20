@@ -1,7 +1,7 @@
 import { css } from '@emotion/core';
 import { ComicCalculationState, ComicSettingState } from '../../contexts';
 import { containerWidth, isScroll } from '../../utils/ComicSettingUtil';
-import { getClientHeight } from '../../utils/Util';
+import { getClientHeight, getClientWidth } from '../../utils/Util';
 
 
 export const wrapper = (settingState: ComicSettingState) => {
@@ -9,7 +9,7 @@ export const wrapper = (settingState: ComicSettingState) => {
     return css``;
   }
   return css`
-    width: 100%;
+    width: ${getClientWidth()}px;
     height: ${getClientHeight()}px;
     overflow: hidden;
   `;
