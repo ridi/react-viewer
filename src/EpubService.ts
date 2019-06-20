@@ -220,7 +220,7 @@ export class EpubService {
         }, { offset: 0, startPage: 1 });
         // 마지막 스파인
         calculation.spines.push({
-          spineIndex: spines.length,
+          spineIndex: spines.length - 1,
           offset: offset - defaultOffset,
           total: calculation.fullWidth - offset,
           startPage,
@@ -235,11 +235,12 @@ export class EpubService {
   };
 
   private getPageFromSpineIndexAndPosition = async (): Promise<number> => {
-    if (this.calculationState.spines.length - 1 < this.currentState.currentSpineIndex) return 1;
+    if (this.currentState.currentSpineIndex > this.calculationState.spines.length - 1) return 1;
     const { offset, total, startPage, totalPage } = this.calculationState.spines[this.currentState.currentSpineIndex];
     if (isScroll(this.settingState)) {
       // using offset and total
-      return Math.floor((offset + total * this.currentState.currentPosition) / this.calculationState.pageUnit);
+      console.log('getPageFromSpineIndexAndPosition', `Math.floor((${offset} + ${total} * ${this.currentState.currentPosition}) / ${this.calculationState.pageUnit}) + 1`);
+      return Math.floor((offset + total * this.currentState.currentPosition) / this.calculationState.pageUnit) + 1;
     } else {
       // using startPage and totalPage
       return startPage + Math.floor(totalPage * this.currentState.currentPosition);
