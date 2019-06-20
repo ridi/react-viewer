@@ -68,8 +68,6 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
     return sequence;
   }, [images, settingState.viewType, settingState.bindingType]);
 
-  console.log('imageSequence', imageSequence);
-
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div css={styles.imageContainer(settingState, calculationState)}>

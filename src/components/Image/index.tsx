@@ -17,15 +17,20 @@ export interface ImageRenderers {
 
 export interface ImageProps {
   image: ImageData,
-  renderers?: ImageRenderers
+  renderers?: ImageRenderers,
 }
 
 export const Image: React.FunctionComponent<ImageProps> = ({ image, renderers = {} }) => {
   const settingState = React.useContext(ComicSettingContext);
+  // const currentState = React.useContext(ComicCurrentContext);
   const ImageError = renderers.ErrorRenderer || DefaultImageError;
   const ImageLoading = renderers.LoadingRenderer || DefaultImageLoading;
 
   const [status, setStatus] = React.useState(ImageStatus.LOADING);
+
+  // const checkImageInScreen = () => {
+  //
+  // };
 
   React.useEffect(() => {
     // lazyload 세팅
