@@ -45,7 +45,7 @@ export declare class ComicService {
     invalidate: () => Promise<void>;
     private initialCalculate;
     load: (metadata: ComicParsedData) => Promise<void>;
-    goToPage: (page: number) => Promise<void>;
+    goToPage: (requestPage: number) => Promise<void>;
     updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
     updateCurrent: () => Promise<any>;
 }

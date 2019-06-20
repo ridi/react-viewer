@@ -61,7 +61,7 @@ declare module '@ridi/react-reader/EpubService' {
             currentState: EpubCurrentState;
             calculationState: EpubCalculationState;
         }): void;
-        goToPage: (page: number) => Promise<void>;
+        goToPage: (requestPage: number) => Promise<void>;
         invalidate: () => Promise<void>;
         load: (metadata: EpubParsedData) => Promise<void>;
         updateCurrent: () => Promise<any>;
@@ -105,7 +105,7 @@ declare module '@ridi/react-reader/ComicService' {
         }): void;
         invalidate: () => Promise<void>;
         load: (metadata: ComicParsedData) => Promise<void>;
-        goToPage: (page: number) => Promise<void>;
+        goToPage: (requestPage: number) => Promise<void>;
         updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
         updateCurrent: () => Promise<any>;
     }
@@ -474,7 +474,7 @@ declare module '@ridi/react-reader/contexts/comic/ComicProvider' {
 }
 
 declare module '@ridi/react-reader/utils/EpubSettingUtil' {
-    import { EpubSettingState } from '@ridi/react-reader/contexts/index';
+    import { EpubCalculationState, EpubSettingState } from '@ridi/react-reader/contexts';
     export const isScroll: ({ viewType }: EpubSettingState) => boolean;
     export const isDoublePage: ({ viewType }: EpubSettingState) => boolean;
     export const columnsInPage: ({ viewType }: EpubSettingState) => number;
@@ -483,6 +483,7 @@ declare module '@ridi/react-reader/utils/EpubSettingUtil' {
     export const contentPadding: ({ contentPaddingInPercent }: EpubSettingState) => number;
     export const containerWidth: (setting: EpubSettingState) => number;
     export const containerHeight: ({ containerVerticalMargin }: EpubSettingState) => number;
+    export const allowedPageNumber: (setting: EpubSettingState, calculation: EpubCalculationState, page: number) => number;
 }
 
 declare module '@ridi/react-reader/utils/ComicSettingUtil' {
@@ -493,6 +494,7 @@ declare module '@ridi/react-reader/utils/ComicSettingUtil' {
     export const contentWidth: (setting: ComicSettingState) => number;
     export const ratio: (width?: number | undefined, height?: number | undefined) => number;
     export const containerWidth: (setting: ComicSettingState, calculation: ComicCalculationState) => number;
+    export const allowedPageNumber: (setting: ComicSettingState, calculation: ComicCalculationState, page: number) => number;
     export const objectPosition: (setting: ComicSettingState, imageIndex: number) => "50% 50%" | "right 50%" | "left 50%";
     export const startWithBlankPage: ({ viewType }: ComicSettingState) => boolean;
 }
@@ -528,18 +530,5 @@ declare module '@ridi/react-reader/constants/index' {
         ERROR = "error",
         LOADED = "loaded"
     }
-}
-
-declare module '@ridi/react-reader/contexts/index' {
-    export * from '@ridi/react-reader/contexts/epub/EpubSettingContext';
-    export * from '@ridi/react-reader/contexts/epub/EpubCalculationContext';
-    export * from '@ridi/react-reader/contexts/epub/EpubStatusContext';
-    export * from '@ridi/react-reader/contexts/epub/EpubCurrentContext';
-    export * from '@ridi/react-reader/contexts/epub/EpubProvider';
-    export * from '@ridi/react-reader/contexts/comic/ComicSettingContext';
-    export * from '@ridi/react-reader/contexts/comic/ComicCalculationContext';
-    export * from '@ridi/react-reader/contexts/comic/ComicStatusContext';
-    export * from '@ridi/react-reader/contexts/comic/ComicCurrentContext';
-    export * from '@ridi/react-reader/contexts/comic/ComicProvider';
 }
 

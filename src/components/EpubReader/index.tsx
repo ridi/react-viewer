@@ -66,9 +66,6 @@ const EpubReader = () => {
     invalidate();
   }, [settingState]);
 
-
-  console.log('!!!calculation.totalPage', calculationState.totalPage);
-
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div

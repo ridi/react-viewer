@@ -21,12 +21,33 @@ export const containerWidth = (setting: ComicSettingState, calculation: ComicCal
   if (isDoublePage(setting) && totalPage % 2 === 1) totalPage += 1;
   return widthPerContent * totalPage;
 };
+
+// BindingType.LEFT && ViewType.PAGE12 => [1(page# on screen), 2] [3, 4] ...
+// BindingType.RIGHT && ViewTYpe.PAGE12 => [2, 1(page# on screen)] [4, 3] ...
+// BindingType.RIGHT && ViewTYpe.PAGE23 => [1, 0(page# on screen)] [3, 2] ...
+// BindingType.LEFT && ViewType.PAGE23 => [0(page# on screen), 1] [2, 3] ...
+export const allowedPageNumber = (setting: ComicSettingState, calculation: ComicCalculationState, page: number) => {
+  let allowedPage = page;
+
+  const isAllowedZeroPage = setting.viewType === ViewType.PAGE23;
+  const allowedPageRange = [isAllowedZeroPage ? 0 : 1, calculation.totalPage];
+  if (isDoublePage(setting)) {
+    const isOnlyAllowedEvenPage = setting.viewType === ViewType.PAGE23;
+    const isOnlyAllowedOddPage = setting.viewType === ViewType.PAGE12;
+
+    const isEven = allowedPage % 2 === 0;
+    if (isEven && !isOnlyAllowedEvenPage) allowedPage -= 1;
+    if (!isEven && !isOnlyAllowedOddPage) allowedPage -= 1;
+  }
+  return Math.max(Math.min(allowedPage, allowedPageRange[1]), allowedPageRange[0]);
+};
+
 export const objectPosition = (setting: ComicSettingState, imageIndex: number) => {
   if (isScroll(setting) || !isDoublePage(setting)) {
     return '50% 50%';
   }
   // BindingType.LEFT && ViewType.PAGE12 => [imageIndex: 0, 1] [2, 3] even => right, odd => left
-  // BindingType.RIGHT && ViewTYpe.PAGE23 => [0, -1] [1, 2] even => right, odd => left
+  // BindingType.RIGHT && ViewTYpe.PAGE23 => [0, -1] [2, 1] even => right, odd => left
   // BindingType.LEFT && ViewType.PAGE23 => [-1, 0] [1, 2] even => left, odd => right
   // BindingType.RIGHT && ViewTYpe.PAGE12 => [1, 0] [3, 2] even => left, odd => right
   if ((setting.bindingType === BindingType.LEFT && setting.viewType === ViewType.PAGE12)

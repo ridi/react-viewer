@@ -14,7 +14,7 @@ import {
   ComicStatusActionType,
 } from './contexts';
 import { getScrollLeft, getScrollTop, measure, setScrollLeft, setScrollTop } from './utils/Util';
-import { contentWidth, isScroll, ratio, startWithBlankPage } from './utils/ComicSettingUtil';
+import { contentWidth, isScroll, ratio, startWithBlankPage, allowedPageNumber } from './utils/ComicSettingUtil';
 
 export interface ImageData {
   fileSize: number,
@@ -174,7 +174,8 @@ export class ComicService {
     await this.setReadyToRead(true);
   };
 
-  public goToPage = async (page: number): Promise<void> => {
+  public goToPage = async (requestPage: number): Promise<void> => {
+    const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     return measure(async () => {
       if (!this.dispatchCurrent) return;
       if (isScroll(this.settingState)) {

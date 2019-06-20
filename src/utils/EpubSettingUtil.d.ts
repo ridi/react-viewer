@@ -1,4 +1,4 @@
-import { EpubSettingState } from '../contexts/index';
+import { EpubCalculationState, EpubSettingState } from '../contexts';
 export declare const isScroll: ({ viewType }: EpubSettingState) => boolean;
 export declare const isDoublePage: ({ viewType }: EpubSettingState) => boolean;
 export declare const columnsInPage: ({ viewType }: EpubSettingState) => number;
@@ -7,3 +7,4 @@ export declare const columnGap: ({ columnGapInPercent }: EpubSettingState) => nu
 export declare const contentPadding: ({ contentPaddingInPercent }: EpubSettingState) => number;
 export declare const containerWidth: (setting: EpubSettingState) => number;
 export declare const containerHeight: ({ containerVerticalMargin }: EpubSettingState) => number;
+export declare const allowedPageNumber: (setting: EpubSettingState, calculation: EpubCalculationState, page: number) => number;

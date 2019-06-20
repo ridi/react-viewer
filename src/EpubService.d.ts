@@ -44,7 +44,7 @@ export declare class EpubService {
     private calculate;
     private getPageFromSpineIndexAndPosition;
     private restoreCurrent;
-    goToPage: (page: number) => Promise<void>;
+    goToPage: (requestPage: number) => Promise<void>;
     invalidate: () => Promise<void>;
     load: (metadata: EpubParsedData) => Promise<void>;
     updateCurrent: () => Promise<any>;

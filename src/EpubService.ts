@@ -25,7 +25,7 @@ import {
   EpubStatusActionType,
 } from './contexts';
 import * as React from 'react';
-import { columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
+import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
 
 export interface FontData {
   href: string,
@@ -246,7 +246,8 @@ export class EpubService {
     }, `Restore current page => spineIndex: ${this.currentState.currentSpineIndex}, position: ${this.currentState.currentPosition}`);
   };
 
-  public goToPage = async (page: number): Promise<void> => {
+  public goToPage = async (requestPage: number): Promise<void> => {
+    const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     const { pageUnit } = this.calculationState;
     return measure(async () => {
       if (isScroll(this.settingState)) {
