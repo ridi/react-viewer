@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction, ComicStatusState } from './contexts';
+import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction } from './contexts';
 export interface ImageData {
     fileSize: number;
     index: number;
@@ -19,25 +19,22 @@ interface ComicServiceProperties {
     dispatchCalculation: React.Dispatch<ComicCalculationAction>;
     dispatchCurrent: React.Dispatch<ComicCurrentAction>;
     settingState: ComicSettingState;
-    statusState: ComicStatusState;
     currentState: ComicCurrentState;
     calculationState: ComicCalculationState;
 }
 export declare class ComicService {
     private static instance;
-    dispatchSetting: React.Dispatch<ComicSettingAction>;
-    dispatchStatus: React.Dispatch<ComicStatusAction>;
-    dispatchCalculation: React.Dispatch<ComicCalculationAction>;
-    dispatchCurrent: React.Dispatch<ComicCurrentAction>;
-    settingState: ComicSettingState;
-    currentState: ComicCurrentState;
-    statusState: ComicStatusState;
-    calculationState: ComicCalculationState;
+    private readonly dispatchSetting;
+    private readonly dispatchStatus;
+    private readonly dispatchCalculation;
+    private readonly dispatchCurrent;
+    private settingState;
+    private currentState;
+    private calculationState;
     static init(props: ComicServiceProperties): void;
     static get(): ComicService;
-    static updateState({ settingState, currentState, statusState, calculationState, }: {
+    static updateState({ settingState, currentState, calculationState, }: {
         settingState: ComicSettingState;
-        statusState: ComicStatusState;
         currentState: ComicCurrentState;
         calculationState: ComicCalculationState;
     }): void;

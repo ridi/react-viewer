@@ -23,7 +23,6 @@ import {
   EpubSettingState,
   EpubStatusAction,
   EpubStatusActionType,
-  EpubStatusState,
 } from './contexts';
 import * as React from 'react';
 import { columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
@@ -47,7 +46,6 @@ interface EpubServiceProperties {
   dispatchCalculation: React.Dispatch<EpubCalculationAction>,
   dispatchCurrent: React.Dispatch<EpubCurrentAction>,
   settingState: EpubSettingState,
-  statusState: EpubStatusState,
   currentState: EpubCurrentState,
   calculationState: EpubCalculationState,
 }
@@ -55,13 +53,12 @@ interface EpubServiceProperties {
 export class EpubService {
   private static instance: EpubService;
 
-  private dispatchSetting: React.Dispatch<EpubSettingAction>;
-  private dispatchStatus: React.Dispatch<EpubStatusAction>;
-  private dispatchCalculation: React.Dispatch<EpubCalculationAction>;
-  private dispatchCurrent: React.Dispatch<EpubCurrentAction>;
+  private readonly dispatchSetting: React.Dispatch<EpubSettingAction>;
+  private readonly dispatchStatus: React.Dispatch<EpubStatusAction>;
+  private readonly dispatchCalculation: React.Dispatch<EpubCalculationAction>;
+  private readonly dispatchCurrent: React.Dispatch<EpubCurrentAction>;
 
   private settingState: EpubSettingState;
-  private statusState: EpubStatusState;
   private currentState: EpubCurrentState;
   private calculationState: EpubCalculationState;
 
@@ -76,17 +73,14 @@ export class EpubService {
   static updateState({
     settingState,
     currentState,
-    statusState,
     calculationState
   }: {
     settingState: EpubSettingState,
-    statusState: EpubStatusState,
     currentState: EpubCurrentState,
     calculationState: EpubCalculationState,
   }) {
     this.instance.settingState = settingState;
     this.instance.currentState = currentState;
-    this.instance.statusState = statusState;
     this.instance.calculationState = calculationState;
   }
 
@@ -97,7 +91,6 @@ export class EpubService {
     dispatchCurrent,
     settingState,
     currentState,
-    statusState,
     calculationState,
   }: EpubServiceProperties) {
     this.dispatchSetting = dispatchSetting;
@@ -106,12 +99,10 @@ export class EpubService {
     this.dispatchCurrent = dispatchCurrent;
     this.settingState = settingState;
     this.currentState = currentState;
-    this.statusState = statusState;
     this.calculationState = calculationState;
   }
 
   private setReadyToRead = async (readyToRead: boolean) => {
-    if (this.statusState.readyToRead === readyToRead) return Promise.resolve();
     return new Promise((resolve) => {
       if (!this.dispatchStatus) return resolve();
       this.dispatchStatus({ type: EpubStatusActionType.SET_READY_TO_READ, readyToRead });
@@ -199,7 +190,7 @@ export class EpubService {
       } else {
         calculation.pageUnit = columnWidth(this.settingState) + columnGap(this.settingState);
         calculation.fullWidth = getScrollWidth();
-        calculation.totalPage = Math.ceil(calculation.fullWidth / calculation.pageUnit);
+        calculation.totalPage = Math.ceil((calculation.fullWidth + columnGap(this.settingState)) / calculation.pageUnit);
 
         const defaultOffset = contentRoot ? contentRoot.offsetLeft : 0;
 

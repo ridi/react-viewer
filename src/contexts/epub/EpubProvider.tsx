@@ -37,7 +37,7 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   const calculationState = React.useContext(EpubCalculationContext);
 
   React.useEffect(() => {
-    EpubService.updateState({ settingState, currentState, statusState, calculationState });
+    EpubService.updateState({ settingState, currentState, calculationState });
   }, [settingState, currentState, statusState, calculationState]);
 
   EpubService.init({
@@ -47,7 +47,6 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
     dispatchCurrent,
     settingState,
     currentState,
-    statusState,
     calculationState,
   });
 

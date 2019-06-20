@@ -1,5 +1,5 @@
 import { css } from '@emotion/core';
-import { EpubSettingProperties, EpubSettingState } from '../../contexts';
+import { EpubSettingProperties, EpubSettingState, EpubCalculationState } from '../../contexts';
 import * as SettingUtil from '../../utils/EpubSettingUtil';
 
 const fontFamilyStyle = (setting: EpubSettingState) => {
@@ -150,7 +150,7 @@ const scrollContentWrapper = (setting: EpubSettingState) => css`
   ${contentsStyle(setting)}
 `;
 
-const pageContentWrapper = (setting: EpubSettingState) => css`
+const pageContentWrapper = (setting: EpubSettingState, calculation: EpubCalculationState) => css`
   column-width: ${SettingUtil.columnWidth(setting)}px;
   column-gap: ${SettingUtil.columnGap(setting)}px;
   column-fill: auto;
@@ -162,14 +162,17 @@ const pageContentWrapper = (setting: EpubSettingState) => css`
     -webkit-column-break-inside: auto;
     break-before: column;
   }
+  article:last-child {
+    padding-bottom: ${calculation.totalPage % 2 === 0 ? 0 : '50%'};
+  }
   ${contentsStyle(setting)}
 `;
 
-export const contentWrapper = (setting: EpubSettingState) => {
+export const contentWrapper = (setting: EpubSettingState, calculation: EpubCalculationState) => {
   if (SettingUtil.isScroll(setting)) {
     return scrollContentWrapper(setting);
   }
-  return pageContentWrapper(setting);
+  return pageContentWrapper(setting, calculation);
 };
 
 export const wrapper = (setting: EpubSettingState) => {

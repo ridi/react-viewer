@@ -37,7 +37,7 @@ const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNo
   const calculationState = React.useContext(ComicCalculationContext);
 
   React.useEffect(() => {
-    ComicService.updateState({ settingState, currentState, statusState, calculationState });
+    ComicService.updateState({ settingState, currentState, calculationState });
   }, [settingState, currentState, statusState, calculationState]);
 
   ComicService.init({
@@ -47,7 +47,6 @@ const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNo
     dispatchCurrent,
     settingState,
     currentState,
-    statusState,
     calculationState,
   });
 

@@ -13,7 +13,7 @@ import { getContentRootElement } from '../../utils/Util';
 const EpubReader = () => {
   const contentRef: React.RefObject<HTMLDivElement> = React.useRef(null);
   const [content, setContent] = React.useState('');
-  const pagingState = React.useContext(EpubCalculationContext);
+  const calculationState = React.useContext(EpubCalculationContext);
   const settingState = React.useContext(EpubSettingContext);
   const statusState = React.useContext(EpubStatusContext);
 
@@ -59,17 +59,20 @@ const EpubReader = () => {
       const rootElement = isScroll(settingState) ? window : getContentRootElement();
       if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
-  }, [settingState, pagingState, statusState]);
+  }, [settingState, calculationState, statusState]);
 
   React.useEffect(() => {
     mountReaderJs();
     invalidate();
   }, [settingState]);
 
+
+  console.log('!!!calculation.totalPage', calculationState.totalPage);
+
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div
-        css={styles.contentWrapper(settingState)}
+        css={styles.contentWrapper(settingState, calculationState)}
         ref={contentRef}
         dangerouslySetInnerHTML={{ __html: content }}
       />

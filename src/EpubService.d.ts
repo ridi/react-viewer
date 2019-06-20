@@ -1,4 +1,4 @@
-import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction, EpubStatusState } from './contexts';
+import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -17,25 +17,22 @@ interface EpubServiceProperties {
     dispatchCalculation: React.Dispatch<EpubCalculationAction>;
     dispatchCurrent: React.Dispatch<EpubCurrentAction>;
     settingState: EpubSettingState;
-    statusState: EpubStatusState;
     currentState: EpubCurrentState;
     calculationState: EpubCalculationState;
 }
 export declare class EpubService {
     private static instance;
-    private dispatchSetting;
-    private dispatchStatus;
-    private dispatchCalculation;
-    private dispatchCurrent;
+    private readonly dispatchSetting;
+    private readonly dispatchStatus;
+    private readonly dispatchCalculation;
+    private readonly dispatchCurrent;
     private settingState;
-    private statusState;
     private currentState;
     private calculationState;
     static init(props: EpubServiceProperties): void;
     static get(): EpubService;
-    static updateState({ settingState, currentState, statusState, calculationState }: {
+    static updateState({ settingState, currentState, calculationState }: {
         settingState: EpubSettingState;
-        statusState: EpubStatusState;
         currentState: EpubCurrentState;
         calculationState: EpubCalculationState;
     }): void;

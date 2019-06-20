@@ -31,7 +31,7 @@ declare module '@ridi/react-reader/components/ComicReader' {
 }
 
 declare module '@ridi/react-reader/EpubService' {
-    import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction, EpubStatusState } from '@ridi/react-reader/contexts';
+    import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction } from '@ridi/react-reader/contexts';
     import * as React from 'react';
     export interface FontData {
         href: string;
@@ -50,16 +50,14 @@ declare module '@ridi/react-reader/EpubService' {
         dispatchCalculation: React.Dispatch<EpubCalculationAction>;
         dispatchCurrent: React.Dispatch<EpubCurrentAction>;
         settingState: EpubSettingState;
-        statusState: EpubStatusState;
         currentState: EpubCurrentState;
         calculationState: EpubCalculationState;
     }
     export class EpubService {
         static init(props: EpubServiceProperties): void;
         static get(): EpubService;
-        static updateState({ settingState, currentState, statusState, calculationState }: {
+        static updateState({ settingState, currentState, calculationState }: {
             settingState: EpubSettingState;
-            statusState: EpubStatusState;
             currentState: EpubCurrentState;
             calculationState: EpubCalculationState;
         }): void;
@@ -74,7 +72,7 @@ declare module '@ridi/react-reader/EpubService' {
 
 declare module '@ridi/react-reader/ComicService' {
     import * as React from 'react';
-    import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction, ComicStatusState } from '@ridi/react-reader/contexts';
+    import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction } from '@ridi/react-reader/contexts';
     export interface ImageData {
         fileSize: number;
         index: number;
@@ -94,24 +92,14 @@ declare module '@ridi/react-reader/ComicService' {
         dispatchCalculation: React.Dispatch<ComicCalculationAction>;
         dispatchCurrent: React.Dispatch<ComicCurrentAction>;
         settingState: ComicSettingState;
-        statusState: ComicStatusState;
         currentState: ComicCurrentState;
         calculationState: ComicCalculationState;
     }
     export class ComicService {
-        dispatchSetting: React.Dispatch<ComicSettingAction>;
-        dispatchStatus: React.Dispatch<ComicStatusAction>;
-        dispatchCalculation: React.Dispatch<ComicCalculationAction>;
-        dispatchCurrent: React.Dispatch<ComicCurrentAction>;
-        settingState: ComicSettingState;
-        currentState: ComicCurrentState;
-        statusState: ComicStatusState;
-        calculationState: ComicCalculationState;
         static init(props: ComicServiceProperties): void;
         static get(): ComicService;
-        static updateState({ settingState, currentState, statusState, calculationState, }: {
+        static updateState({ settingState, currentState, calculationState, }: {
             settingState: ComicSettingState;
-            statusState: ComicStatusState;
             currentState: ComicCurrentState;
             calculationState: ComicCalculationState;
         }): void;

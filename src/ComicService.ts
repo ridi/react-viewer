@@ -12,7 +12,6 @@ import {
   ComicSettingState,
   ComicStatusAction,
   ComicStatusActionType,
-  ComicStatusState,
 } from './contexts';
 import { getScrollLeft, getScrollTop, measure, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll, ratio, startWithBlankPage } from './utils/ComicSettingUtil';
@@ -38,7 +37,6 @@ interface ComicServiceProperties {
   dispatchCalculation: React.Dispatch<ComicCalculationAction>,
   dispatchCurrent: React.Dispatch<ComicCurrentAction>,
   settingState: ComicSettingState,
-  statusState: ComicStatusState,
   currentState: ComicCurrentState,
   calculationState: ComicCalculationState,
 }
@@ -46,15 +44,14 @@ interface ComicServiceProperties {
 export class ComicService {
   private static instance: ComicService;
 
-  dispatchSetting: React.Dispatch<ComicSettingAction>;
-  dispatchStatus: React.Dispatch<ComicStatusAction>;
-  dispatchCalculation: React.Dispatch<ComicCalculationAction>;
-  dispatchCurrent: React.Dispatch<ComicCurrentAction>;
+  private readonly dispatchSetting: React.Dispatch<ComicSettingAction>;
+  private readonly dispatchStatus: React.Dispatch<ComicStatusAction>;
+  private readonly dispatchCalculation: React.Dispatch<ComicCalculationAction>;
+  private readonly dispatchCurrent: React.Dispatch<ComicCurrentAction>;
 
-  settingState: ComicSettingState;
-  currentState: ComicCurrentState;
-  statusState: ComicStatusState;
-  calculationState: ComicCalculationState;
+  private settingState: ComicSettingState;
+  private currentState: ComicCurrentState;
+  private calculationState: ComicCalculationState;
 
   static init(props: ComicServiceProperties) {
     this.instance = new ComicService(props);
@@ -67,17 +64,14 @@ export class ComicService {
   static updateState({
     settingState,
     currentState,
-    statusState,
     calculationState,
   }: {
     settingState: ComicSettingState,
-    statusState: ComicStatusState,
     currentState: ComicCurrentState,
     calculationState: ComicCalculationState,
   }) {
     this.instance.settingState = settingState;
     this.instance.currentState = currentState;
-    this.instance.statusState = statusState;
     this.instance.calculationState = calculationState;
   }
 
@@ -88,7 +82,6 @@ export class ComicService {
     dispatchCurrent,
     settingState,
     currentState,
-    statusState,
     calculationState,
   }: ComicServiceProperties) {
     this.dispatchSetting = dispatchSetting;
@@ -97,7 +90,6 @@ export class ComicService {
     this.dispatchCurrent = dispatchCurrent;
     this.settingState = settingState;
     this.currentState = currentState;
-    this.statusState = statusState;
     this.calculationState = calculationState;
   }
 
