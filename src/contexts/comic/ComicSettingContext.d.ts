@@ -6,7 +6,8 @@ export declare enum ComicSettingActionType {
 export declare enum ComicSettingProperties {
     VIEW_TYPE = "viewType",
     CONTENT_WIDTH_IN_PERCENT = "contentWidthInPercent",
-    BINDING_TYPE = "bindingType"
+    BINDING_TYPE = "bindingType",
+    LAZY_LOAD = "lazyLoad"
 }
 export declare type ComicSettingAction = {
     type: ComicSettingActionType.UPDATE_SETTING;
@@ -16,6 +17,7 @@ export declare type ComicSettingState = {
     [ComicSettingProperties.VIEW_TYPE]: ViewType;
     [ComicSettingProperties.CONTENT_WIDTH_IN_PERCENT]: number;
     [ComicSettingProperties.BINDING_TYPE]: BindingType;
+    [ComicSettingProperties.LAZY_LOAD]: boolean | number;
 };
 export declare const initialComicSettingState: ComicSettingState;
 export declare const ComicSettingReducer: Reducer<ComicSettingState, ComicSettingAction>;

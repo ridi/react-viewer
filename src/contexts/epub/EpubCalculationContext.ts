@@ -10,9 +10,6 @@ export enum EpubCalculationProperties {
   FULL_HEIGHT = 'fullHeight',
   FULL_WIDTH = 'fullWidth',
   PAGE_UNIT = 'pageUnit',
-  CURRENT_PAGE = 'currentPage',
-  CURRENT_SPINE_INDEX = 'currentSpineIndex',
-  CURRENT_POSITION = 'currentPosition',
   SPINES = 'spines',
 }
 
@@ -31,9 +28,6 @@ export type EpubCalculationState = {
   [EpubCalculationProperties.FULL_HEIGHT]: number,
   [EpubCalculationProperties.FULL_WIDTH]: number,
   [EpubCalculationProperties.PAGE_UNIT]: number,
-  // [EpubCalculationProperties.CURRENT_PAGE]: number,
-  // [EpubCalculationProperties.CURRENT_SPINE_INDEX]: number,  // 0-based
-  // [EpubCalculationProperties.CURRENT_POSITION]: number,     // 0 ~ 1
   [EpubCalculationProperties.SPINES]: Array<SpineCalculationState>,  // per spine paging information
 };
 
@@ -42,9 +36,6 @@ export const initialEpubCalculationState: EpubCalculationState = {
   [EpubCalculationProperties.FULL_HEIGHT]: 0,
   [EpubCalculationProperties.FULL_WIDTH]: 0,
   [EpubCalculationProperties.PAGE_UNIT]: 0,
-  // [EpubCalculationProperties.CURRENT_PAGE]: 1,
-  // [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0, // 0-based
-  // [EpubCalculationProperties.CURRENT_POSITION]: 0,    // 0 ~ 1 (float)
   [EpubCalculationProperties.SPINES]: [],
 };
 

@@ -100,11 +100,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!********************************!*\
   !*** ./src/constants/index.ts ***!
   \********************************/
-/*! exports provided: ViewType, BindingType */
+/*! exports provided: ViewType, BindingType, ImageStatus */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BindingType\", function() { return BindingType; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\nvar BindingType;\n\n(function (BindingType) {\n  BindingType[\"LEFT\"] = \"left\";\n  BindingType[\"RIGHT\"] = \"right\";\n})(BindingType || (BindingType = {}));\n\n//# sourceURL=webpack://reader/./src/constants/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewType\", function() { return ViewType; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BindingType\", function() { return BindingType; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ImageStatus\", function() { return ImageStatus; });\nvar ViewType;\n\n(function (ViewType) {\n  ViewType[\"SCROLL\"] = \"scroll\";\n  ViewType[\"PAGE1\"] = \"page1\";\n  ViewType[\"PAGE12\"] = \"page12\";\n  ViewType[\"PAGE23\"] = \"page23\";\n})(ViewType || (ViewType = {}));\n\nvar BindingType;\n\n(function (BindingType) {\n  BindingType[\"LEFT\"] = \"left\";\n  BindingType[\"RIGHT\"] = \"right\";\n})(BindingType || (BindingType = {}));\n\nvar ImageStatus;\n\n(function (ImageStatus) {\n  ImageStatus[\"LOADING\"] = \"loading\";\n  ImageStatus[\"ERROR\"] = \"error\";\n  ImageStatus[\"LOADED\"] = \"loaded\";\n})(ImageStatus || (ImageStatus = {}));\n\n//# sourceURL=webpack://reader/./src/constants/index.ts?");
 
 /***/ })
 

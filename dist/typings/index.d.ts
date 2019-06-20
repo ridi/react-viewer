@@ -22,7 +22,11 @@ declare module '@ridi/react-reader/components/EpubReader' {
 
 declare module '@ridi/react-reader/components/ComicReader' {
     import * as React from 'react';
-    const ComicReader: React.FunctionComponent;
+    import { ImageRenderers } from '@ridi/react-reader/components/Image/index';
+    interface ComicReaderProps {
+        renderers?: ImageRenderers;
+    }
+    const ComicReader: React.FunctionComponent<ComicReaderProps>;
     export default ComicReader;
 }
 
@@ -75,6 +79,7 @@ declare module '@ridi/react-reader/ComicService' {
         fileSize: number;
         index: number;
         path: string;
+        uri: string;
         width?: number;
         height?: number;
     }
@@ -165,6 +170,11 @@ declare module '@ridi/react-reader/constants' {
         LEFT = "left",
         RIGHT = "right"
     }
+    export enum ImageStatus {
+        LOADING = "loading",
+        ERROR = "error",
+        LOADED = "loaded"
+    }
 }
 
 declare module '@ridi/react-reader/utils' {
@@ -173,6 +183,30 @@ declare module '@ridi/react-reader/utils' {
     import * as Util from '@ridi/react-reader/utils/Util';
     export const SettingUtil: typeof EpubSettingUtil;
     export { EpubSettingUtil, ComicSettingUtil, Util, };
+}
+
+declare module '@ridi/react-reader/components/Image/index' {
+    import * as React from 'react';
+    import { ImageData } from '@ridi/react-reader/ComicService';
+    import { ComicSettingState } from '@ridi/react-reader/contexts';
+    export type ErrorRendererType = React.FunctionComponent<{
+        retry: () => void;
+    }>;
+    export type LoadingRendererType = React.FunctionComponent;
+    export interface ImageRenderers {
+        ErrorRenderer?: ErrorRendererType;
+        LoadingRenderer?: LoadingRendererType;
+    }
+    export interface ImageProps {
+        image: ImageData;
+        renderers?: ImageRenderers;
+    }
+    export const Image: React.FunctionComponent<ImageProps>;
+    export const DefaultImageLoading: LoadingRendererType;
+    export const DefaultImageError: ErrorRendererType;
+    export const BlankImage: React.FunctionComponent<{
+        settingState: ComicSettingState;
+    }>;
 }
 
 declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
@@ -223,9 +257,6 @@ declare module '@ridi/react-reader/contexts/epub/EpubCalculationContext' {
         FULL_HEIGHT = "fullHeight",
         FULL_WIDTH = "fullWidth",
         PAGE_UNIT = "pageUnit",
-        CURRENT_PAGE = "currentPage",
-        CURRENT_SPINE_INDEX = "currentSpineIndex",
-        CURRENT_POSITION = "currentPosition",
         SPINES = "spines"
     }
     export type EpubCalculationAction = {
@@ -329,7 +360,8 @@ declare module '@ridi/react-reader/contexts/comic/ComicSettingContext' {
     export enum ComicSettingProperties {
         VIEW_TYPE = "viewType",
         CONTENT_WIDTH_IN_PERCENT = "contentWidthInPercent",
-        BINDING_TYPE = "bindingType"
+        BINDING_TYPE = "bindingType",
+        LAZY_LOAD = "lazyLoad"
     }
     export type ComicSettingAction = {
         type: ComicSettingActionType.UPDATE_SETTING;
@@ -339,6 +371,7 @@ declare module '@ridi/react-reader/contexts/comic/ComicSettingContext' {
         [ComicSettingProperties.VIEW_TYPE]: ViewType;
         [ComicSettingProperties.CONTENT_WIDTH_IN_PERCENT]: number;
         [ComicSettingProperties.BINDING_TYPE]: BindingType;
+        [ComicSettingProperties.LAZY_LOAD]: boolean | number;
     };
     export const initialComicSettingState: ComicSettingState;
     export const ComicSettingReducer: Reducer<ComicSettingState, ComicSettingAction>;
@@ -464,11 +497,14 @@ declare module '@ridi/react-reader/utils/EpubSettingUtil' {
 }
 
 declare module '@ridi/react-reader/utils/ComicSettingUtil' {
-    import { ComicSettingState } from '@ridi/react-reader/contexts/index';
+    import { ComicCalculationState, ComicSettingState } from '@ridi/react-reader/contexts';
     export const isScroll: ({ viewType }: ComicSettingState) => boolean;
     export const isDoublePage: ({ viewType }: ComicSettingState) => boolean;
     export const columnsInPage: ({ viewType }: ComicSettingState) => number;
-    export const contentWidth: ({ contentWidthInPercent }: ComicSettingState) => number;
+    export const contentWidth: (setting: ComicSettingState) => number;
+    export const ratio: (width?: number | undefined, height?: number | undefined) => number;
+    export const containerWidth: (setting: ComicSettingState, calculation: ComicCalculationState) => number;
+    export const objectPosition: (setting: ComicSettingState, imageIndex: number) => "50% 50%" | "right 50%" | "left 50%";
 }
 
 declare module '@ridi/react-reader/utils/Util' {
@@ -495,6 +531,11 @@ declare module '@ridi/react-reader/constants/index' {
     export enum BindingType {
         LEFT = "left",
         RIGHT = "right"
+    }
+    export enum ImageStatus {
+        LOADING = "loading",
+        ERROR = "error",
+        LOADED = "loaded"
     }
 }
 

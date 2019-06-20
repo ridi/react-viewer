@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  EpubCalculationProperties,
+  EpubCurrentProperties,
   EpubProvider,
   EpubReader,
   EpubSettingProperties,
@@ -19,12 +19,12 @@ import { ComicLoading, EpubLoading } from './Loading/index';
 const initialSettingState = {
   [EpubSettingProperties.VIEW_TYPE]: ViewType.PAGE1,
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: 50,
-  [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: 60,
+  [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: 80,
 };
 
-const initialPagingState = {
-  [EpubCalculationProperties.CURRENT_SPINE_INDEX]: 0,
-  [EpubCalculationProperties.CURRENT_POSITION]: 0,
+const initialCurrentState = {
+  [EpubCurrentProperties.CURRENT_SPINE_INDEX]: 0,
+  [EpubCurrentProperties.CURRENT_POSITION]: 0,
 };
 
 const App: React.FunctionComponent = () => {
@@ -34,7 +34,7 @@ const App: React.FunctionComponent = () => {
     <>
       <TypeSwitch type={type} onTypeChanged={setType}/>
       {type === TYPE.EPUB &&
-        <EpubProvider settingState={initialSettingState} pagingState={initialPagingState}>
+        <EpubProvider settingState={initialSettingState} currentState={initialCurrentState}>
           <EpubHeader/>
           <EpubReader/>
           <EpubFooter/>

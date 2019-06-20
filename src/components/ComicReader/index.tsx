@@ -8,16 +8,18 @@ import { getContentRootElement } from '../../utils/Util';
 import * as styles from './styles';
 import { ImageData } from '../../ComicService';
 import Events, { SET_CONTENT } from '../../Events';
+import { BlankImage, Image, ImageRenderers } from '../Image/index';
+import { ViewType } from '../../constants/index';
 
-const ComicReader: React.FunctionComponent = () => {
-  const [content, setContent] = React.useState('');
-  const pagingState = React.useContext(ComicCalculationContext);
+interface ComicReaderProps {
+  renderers?: ImageRenderers
+}
+
+const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {} }) => {
+  const [images, setImages] = React.useState<Array<ImageData>>([]);
+  const calculationState = React.useContext(ComicCalculationContext);
   const settingState = React.useContext(ComicSettingContext);
   const statusState = React.useContext(ComicStatusContext);
-
-  const setImageContent = (images: Array<ImageData>) => setContent(
-    images.map(({ index, path, width, height, fileSize }) => `${index}: ${path} (w: ${width}, h: ${height}, size: ${fileSize})`).join('\n')
-  );
 
   const updateCurrent = () => {
     if (!statusState.readyToRead) return;
@@ -27,9 +29,9 @@ const ComicReader: React.FunctionComponent = () => {
   const invalidate = () => ComicService.get().invalidate().catch(error => console.error(error));
 
   React.useEffect(() => {
-    Events.on(SET_CONTENT, setImageContent);
+    Events.on(SET_CONTENT, setImages);
     return () => {
-      Events.off(SET_CONTENT, setImageContent);
+      Events.off(SET_CONTENT, setImages);
     };
   }, []);
 
@@ -42,16 +44,22 @@ const ComicReader: React.FunctionComponent = () => {
       const rootElement = isScroll(settingState) ? window : getContentRootElement();
       if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
-  }, [settingState, pagingState, statusState]);
+  }, [settingState, calculationState, statusState]);
 
   React.useEffect(() => {
-    invalidate();
+    if (images.length > 0) {
+      invalidate();
+    }
   }, [settingState]);
 
   return (
-    <div id="content_root" css={styles.wrapper()}>
-      ... // todo images
-      {content}
+    <div id="content_root" css={styles.wrapper(settingState)}>
+      <div css={styles.imageContainer(settingState, calculationState)}>
+      {settingState.viewType === ViewType.PAGE23 && <BlankImage settingState={settingState} />}
+      {images.map((image) => (
+        <Image key={`comic-image-${image.index}`} image={image} renderers={renderers} />
+      ))}
+      </div>
     </div>
   );
 };

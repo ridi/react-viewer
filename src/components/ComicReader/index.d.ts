@@ -1,3 +1,7 @@
 import * as React from 'react';
-declare const ComicReader: React.FunctionComponent;
+import { ImageRenderers } from '../Image/index';
+interface ComicReaderProps {
+    renderers?: ImageRenderers;
+}
+declare const ComicReader: React.FunctionComponent<ComicReaderProps>;
 export default ComicReader;

@@ -8,7 +8,6 @@ export enum ComicCalculationActionType {
 export enum ComicCalculationProperties {
   TOTAL_PAGE = 'totalPage',
   PAGE_UNIT = 'pageUnit',
-  // CURRENT_PAGE = 'currentPage',
   IMAGES = 'images',
 }
 
@@ -32,14 +31,12 @@ export type ImageCalculationState = {
 export type ComicCalculationState = {
   [ComicCalculationProperties.TOTAL_PAGE]: number,   // fixed value
   [ComicCalculationProperties.PAGE_UNIT]: number,    // only page view - modified on resizing
-  // [ComicCalculationProperties.CURRENT_PAGE]: number,
   [ComicCalculationProperties.IMAGES]: Array<ImageCalculationState>,
 };
 
 export const initialComicCalculationState: ComicCalculationState = {
   [ComicCalculationProperties.TOTAL_PAGE]: 0,
   [ComicCalculationProperties.PAGE_UNIT]: 0,
-  // [ComicCalculationProperties.CURRENT_PAGE]: 1,
   [ComicCalculationProperties.IMAGES]: [],
 };
 

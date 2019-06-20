@@ -7,9 +7,6 @@ export declare enum EpubCalculationProperties {
     FULL_HEIGHT = "fullHeight",
     FULL_WIDTH = "fullWidth",
     PAGE_UNIT = "pageUnit",
-    CURRENT_PAGE = "currentPage",
-    CURRENT_SPINE_INDEX = "currentSpineIndex",
-    CURRENT_POSITION = "currentPosition",
     SPINES = "spines"
 }
 export declare type EpubCalculationAction = {

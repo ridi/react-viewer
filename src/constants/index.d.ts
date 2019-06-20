@@ -8,3 +8,8 @@ export declare enum BindingType {
     LEFT = "left",
     RIGHT = "right"
 }
+export declare enum ImageStatus {
+    LOADING = "loading",
+    ERROR = "error",
+    LOADED = "loaded"
+}

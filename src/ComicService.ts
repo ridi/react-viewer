@@ -15,12 +15,13 @@ import {
   ComicStatusState,
 } from './contexts';
 import { getClientWidth, measure, setScrollLeft, setScrollTop } from './utils/Util';
-import { contentWidth, isScroll } from './utils/ComicSettingUtil';
+import { contentWidth, isScroll, ratio } from './utils/ComicSettingUtil';
 
 export interface ImageData {
   fileSize: number,
   index: number, // 0-based
   path: string,
+  uri: string,
   width?: number,
   height?: number,
 }
@@ -154,7 +155,7 @@ export class ComicService {
         return {
           imageIndex: image.index,
           offsetTop: 0,
-          ratio: (image.height && image.width) ? image.height / image.width : 1.4,
+          ratio: ratio(image.width, image.height),
           height: 0,
         };
       }),
@@ -163,6 +164,7 @@ export class ComicService {
       type: ComicCalculationActionType.UPDATE_CALCULATION,
       calculation: initialCalculation,
     });
+    this.calculationState = initialCalculation;
     Events.emit(SET_CONTENT, metadata.images);
     await this.invalidate();
     await this.setReadyToRead(true);

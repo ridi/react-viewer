@@ -37,7 +37,7 @@ const parseComic = async ({ filePath, unzipPath }) => {
   return {
     unzipPath,
     book,
-    images: book.items,
+    images: book.items.map((image) => ({ ...image, uri: `${unzipPath}/${image.path}` })),
     type: 'comic',
   };
 };
