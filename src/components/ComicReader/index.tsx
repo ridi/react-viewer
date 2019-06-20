@@ -3,17 +3,19 @@ import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { ComicCalculationContext, ComicSettingContext, ComicStatusContext } from '../../contexts';
 import { ComicService }  from '../../ComicService';
-import { isScroll } from '../../utils/ComicSettingUtil';
+import { isDoublePage, isScroll } from '../../utils/ComicSettingUtil';
 import { getContentRootElement } from '../../utils/Util';
 import * as styles from './styles';
 import { ImageData } from '../../ComicService';
 import Events, { SET_CONTENT } from '../../Events';
 import { BlankImage, Image, ImageRenderers } from '../Image/index';
-import { ViewType } from '../../constants/index';
+import { BindingType, ViewType } from '../../constants/index';
 
 interface ComicReaderProps {
   renderers?: ImageRenderers
 }
+
+const BLANK_IMAGE = -1;
 
 const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {} }) => {
   const [images, setImages] = React.useState<Array<ImageData>>([]);
@@ -52,13 +54,32 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
     }
   }, [settingState]);
 
+
+  const imageSequence = React.useMemo(() => {
+    let sequence = images.map(({ index }) => index);
+    if (settingState.viewType === ViewType.PAGE23) {
+      sequence = [BLANK_IMAGE, ...sequence];
+    }
+    if (isDoublePage(settingState) && settingState.bindingType === BindingType.RIGHT) {
+      for (let i = 0; i < sequence.length; i += 2) {
+        sequence.splice(i, 2, (i + 1 >= sequence.length ? BLANK_IMAGE : sequence[i+1]), sequence[i]);
+      }
+    }
+    return sequence;
+  }, [images, settingState.viewType, settingState.bindingType]);
+
+  console.log('imageSequence', imageSequence);
+
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div css={styles.imageContainer(settingState, calculationState)}>
-      {settingState.viewType === ViewType.PAGE23 && <BlankImage settingState={settingState} />}
-      {images.map((image) => (
-        <Image key={`comic-image-${image.index}`} image={image} renderers={renderers} />
-      ))}
+      {imageSequence.map((imageIndex) => {
+        if (imageIndex === BLANK_IMAGE) {
+          return <BlankImage settingState={settingState} />;
+        }
+        const image = images[imageIndex];
+        return <Image key={`comic-image-${image.index}`} image={image} renderers={renderers} />;
+      })}
       </div>
     </div>
   );

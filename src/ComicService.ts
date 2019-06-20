@@ -14,7 +14,7 @@ import {
   ComicStatusActionType,
   ComicStatusState,
 } from './contexts';
-import { getClientWidth, measure, setScrollLeft, setScrollTop } from './utils/Util';
+import { measure, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll, ratio } from './utils/ComicSettingUtil';
 
 export interface ImageData {
@@ -131,7 +131,7 @@ export class ComicService {
       return { ...this.calculationState, images };
     } else {
       // update pageUnit
-      const pageUnit = getClientWidth();
+      const pageUnit = contentWidth(this.settingState);
       this.dispatchCalculation({ type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: { pageUnit } });
       return { ...this.calculationState, pageUnit };
     }
@@ -195,5 +195,6 @@ export class ComicService {
 
   public updateCurrent = async () => {
     // todo implement
+
   };
 }

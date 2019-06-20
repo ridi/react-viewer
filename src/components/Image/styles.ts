@@ -31,8 +31,6 @@ export const wrapper = (setting: ComicSettingState, ratio: number, status: Image
   `;
 };
 
-
-
 export const loading = css`
   width: 100%;
   height: 100%;
