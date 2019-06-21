@@ -509,5 +509,24 @@ declare module '@ridi/react-reader/utils/Util' {
     export const setScrollTop: (scrollTop: number) => void;
     export const getClientWidth: () => number;
     export const getClientHeight: () => number;
+    /**
+        * Create a debounced(grouping multiple event listener in one) function
+        * And the latest invoking of this deboucnced function will only be taken after `wait` miliseconds periods.
+        *
+        * @param {function} fn
+        * @param {number} [wait=100]
+        * @param {boolean} [immediate=false]
+        * @return {function} debounced function
+        */
+    export const debounce: (fn: () => any, wait?: number, immediate?: boolean) => () => void;
+    /**
+        * Create a throttled(invoking only once in specified limited time) function
+        *
+        * @param {function} fn
+        * @param {number} [limit=100] up to 1 invoke per ${limit} milliseconds
+        * @param {boolean} [delayed=false] invoke ${fn} after ${limit} milliseconds delayed
+        * @returns {function} throttled function
+        */
+    export const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
 }
 

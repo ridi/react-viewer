@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ComicCalculationContext, ComicSettingContext, ComicStatusContext } from '../../contexts';
 import { ComicService }  from '../../ComicService';
 import { isDoublePage, isScroll, startWithBlankPage } from '../../utils/ComicSettingUtil';
-import { getContentRootElement } from '../../utils/Util';
+import { debounce, getContentRootElement } from '../../utils/Util';
 import * as styles from './styles';
 import { ImageData } from '../../ComicService';
 import Events, { SET_CONTENT } from '../../Events';
@@ -23,12 +23,12 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
   const settingState = React.useContext(ComicSettingContext);
   const statusState = React.useContext(ComicStatusContext);
 
-  const updateCurrent = () => {
+  const updateCurrent = debounce(() => {
     if (!statusState.readyToRead) return;
     ComicService.get().updateCurrent().catch(error => console.error(error));
-  };
+  });
 
-  const invalidate = () => ComicService.get().invalidate().catch(error => console.error(error));
+  const invalidate = debounce(() => ComicService.get().invalidate().catch(error => console.error(error)));
 
   React.useEffect(() => {
     Events.on(SET_CONTENT, setImages);

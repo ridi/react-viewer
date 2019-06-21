@@ -1,3 +1,4 @@
+
 export async function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any> {
   const startTime = new Date().getTime();
   const result = await run();
@@ -48,3 +49,54 @@ export const setScrollTop = (scrollTop: number): void => {
 export const getClientWidth = (): number => document.documentElement.clientWidth;
 
 export const getClientHeight = (): number => document.documentElement.clientHeight;
+
+
+/**
+ * Create a debounced(grouping multiple event listener in one) function
+ * And the latest invoking of this deboucnced function will only be taken after `wait` miliseconds periods.
+ *
+ * @param {function} fn
+ * @param {number} [wait=100]
+ * @param {boolean} [immediate=false]
+ * @return {function} debounced function
+ */
+export const debounce = (fn: () => any, wait: number = 100, immediate: boolean = false) => {
+  let timeout: any | null;
+  return (...args: []) => {
+    if (immediate && !timeout) {
+      // immediately run at the first time
+      fn.apply(null, args);
+    }
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+    timeout = setTimeout(() => {
+      timeout = null;
+      fn.apply(null, args);
+    }, wait);
+  };
+};
+
+/**
+ * Create a throttled(invoking only once in specified limited time) function
+ *
+ * @param {function} fn
+ * @param {number} [limit=100] up to 1 invoke per ${limit} milliseconds
+ * @param {boolean} [delayed=false] invoke ${fn} after ${limit} milliseconds delayed
+ * @returns {function} throttled function
+ */
+export const throttle = (fn: () => any, limit: number = 100, delayed: boolean = false) => {
+  let inThrottle = false;
+  return (...args: []) => {
+    if (!inThrottle) {
+      if (delayed) {
+        setTimeout(() => fn.apply(null, args), limit);
+      } else {
+        fn.apply(null, args);
+      }
+      inThrottle = true;
+      setTimeout(() => { inThrottle = false; }, limit);
+    }
+  };
+};
