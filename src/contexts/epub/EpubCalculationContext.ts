@@ -6,9 +6,8 @@ export enum EpubCalculationActionType {
 }
 
 export enum EpubCalculationProperties {
-  TOTAL_PAGE = 'totalPage',
-  FULL_HEIGHT = 'fullHeight',
-  FULL_WIDTH = 'fullWidth',
+  TOTAL_PAGE = 'totalPage',   // TOTAL_PAGE = TOTAL / PAGE_CALCULATION_UNIT
+  TOTAL = 'total',
   PAGE_UNIT = 'pageUnit',
   SPINES = 'spines',
 }
@@ -25,16 +24,14 @@ export type SpineCalculationState = {
 
 export type EpubCalculationState = {
   [EpubCalculationProperties.TOTAL_PAGE]: number,
-  [EpubCalculationProperties.FULL_HEIGHT]: number,
-  [EpubCalculationProperties.FULL_WIDTH]: number,
+  [EpubCalculationProperties.TOTAL]: number,
   [EpubCalculationProperties.PAGE_UNIT]: number,
   [EpubCalculationProperties.SPINES]: Array<SpineCalculationState>,  // per spine paging information
 };
 
 export const initialEpubCalculationState: EpubCalculationState = {
   [EpubCalculationProperties.TOTAL_PAGE]: 0,
-  [EpubCalculationProperties.FULL_HEIGHT]: 0,
-  [EpubCalculationProperties.FULL_WIDTH]: 0,
+  [EpubCalculationProperties.TOTAL]: 0,
   [EpubCalculationProperties.PAGE_UNIT]: 0,
   [EpubCalculationProperties.SPINES]: [],
 };

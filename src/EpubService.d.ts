@@ -31,7 +31,7 @@ export declare class EpubService {
     private calculationState;
     static init(props: EpubServiceProperties): void;
     static get(): EpubService;
-    static updateState({ settingState, currentState, calculationState }: {
+    static updateState({ settingState, currentState, calculationState, }: {
         settingState: EpubSettingState;
         currentState: EpubCurrentState;
         calculationState: EpubCalculationState;

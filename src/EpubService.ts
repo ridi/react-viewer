@@ -1,10 +1,8 @@
 import {
   getClientHeight,
   getContentRootElement,
-  getScrollHeight,
   getScrollLeft,
   getScrollTop,
-  getScrollWidth,
   measure,
   setScrollLeft,
   setScrollTop,
@@ -22,7 +20,7 @@ import {
   EpubSettingActionType,
   EpubSettingState,
   EpubStatusAction,
-  EpubStatusActionType,
+  EpubStatusActionType, SpineCalculationState,
 } from './contexts';
 import * as React from 'react';
 import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
@@ -75,7 +73,7 @@ export class EpubService {
   static updateState({
     settingState,
     currentState,
-    calculationState
+    calculationState,
   }: {
     settingState: EpubSettingState,
     currentState: EpubCurrentState,
@@ -166,60 +164,53 @@ export class EpubService {
       if (!this.dispatchCalculation) return;
       const calculation: EpubCalculationState = {
         totalPage: 0,
+        total: 0,
         pageUnit: 0,
-        fullHeight: 0,
-        fullWidth: 0,
         spines: [],
       };
+
       const contentRoot = getContentRootElement();
       const spines = contentRoot ? Array.from(contentRoot.getElementsByTagName('article')) : [];
+
+      let getSpineTotalAndTotalPage: (spine: Element) => { total: number, totalPage: number };
+      let getTotalAndTotalPage: (lastSpineCalculation: SpineCalculationState) => { total: number, totalPage: number };
+
       if (isScroll(this.settingState)) {
+        // 스크롤 보기에서 나누어 딱 떨어지지 않는 이상 마지막 페이지에 도달하는 것은 거의 불가능하므로, 페이지 수는 `Math.floor()`로 계산
         calculation.pageUnit = getClientHeight();
-        calculation.fullHeight = getScrollHeight();
-        // 스크롤 보기에서 나누어 딱 떨어지지 않는 이상 마지막 페이지에 도달하는 것은 거의 불가능하므로, 전체 페이지 수는 Math.floor(...)로 계산
-        calculation.totalPage = Math.floor(calculation.fullHeight / calculation.pageUnit);
-        spines.reduce(({ offset, startPage }, { scrollHeight }, index) => {
-          const totalPage = Math.floor(scrollHeight / calculation.pageUnit); // todo 이것도 Math.floor(...)로 구하는게 맞나?
-          calculation.spines.push({
-            spineIndex: index,
-            offset,
-            total: scrollHeight,
-            startPage,
-            totalPage,
-          });
-          return { offset: offset + scrollHeight, startPage: startPage + totalPage };
-        }, { offset: 0, startPage: 1 });
+        getSpineTotalAndTotalPage = spine => {
+          const total = spine.scrollHeight;
+          const totalPage = Math.floor(total / calculation.pageUnit);
+          return { total, totalPage };
+        };
+        getTotalAndTotalPage = ({ offset, total }) => ({
+          total: offset + total,
+          totalPage: Math.floor((offset + total) / calculation.pageUnit),
+        });
       } else {
-        calculation.pageUnit = columnWidth(this.settingState) + columnGap(this.settingState);
-        calculation.fullWidth = getScrollWidth();
-        calculation.totalPage = Math.ceil((calculation.fullWidth + columnGap(this.settingState)) / calculation.pageUnit);
-
-        const defaultOffset = contentRoot ? contentRoot.offsetLeft : 0;
-
-        // 페이지(columnar)보기일 경우 각 spine의 scrollWidth가 제대로 계산되지 않기 때문에 offsetLeft 값 사용
-        const { offset, startPage } = spines.reduce(({ offset, startPage }, { offsetLeft }, index) => {
-          let totalPage = 0;
-          if (index > 0) {
-            totalPage = Math.ceil((offsetLeft - offset) / calculation.pageUnit);
-            calculation.spines.push({
-              spineIndex: index - 1,
-              offset: offset - defaultOffset,
-              total: offsetLeft - offset,
-              startPage,
-              totalPage,
-            });
-          }
-          return { offset: offsetLeft, startPage: startPage + totalPage };
-        }, { offset: 0, startPage: 1 });
-        // 마지막 스파인
-        calculation.spines.push({
-          spineIndex: spines.length - 1,
-          offset: offset - defaultOffset,
-          total: calculation.fullWidth - offset,
-          startPage,
-          totalPage: Math.ceil((calculation.fullWidth - offset) / calculation.pageUnit),
+        // 페이지 보기에서 각 spine 엘리먼트의 `scrollWidth` 값이 정확하지 않기 때문에 `boundingClientRect.height` 값 사용
+        const _columnGap = columnGap(this.settingState);
+        calculation.pageUnit = columnWidth(this.settingState) + _columnGap;
+        getSpineTotalAndTotalPage = spine => {
+          const total = spine.getBoundingClientRect().width + _columnGap;
+          const totalPage = Math.ceil(total / calculation.pageUnit);
+          return { total, totalPage };
+        };
+        getTotalAndTotalPage = ({ offset, total, startPage, totalPage }) => ({
+          total: offset + total,
+          totalPage: startPage + totalPage - 1,
         });
       }
+
+      spines.reduce(({ offset, startPage }, spine, spineIndex) => {
+        const { total, totalPage } = getSpineTotalAndTotalPage(spine);
+        calculation.spines.push({ spineIndex, offset, total, startPage, totalPage });
+        return { offset: offset + total, startPage: startPage + totalPage };
+      }, { offset: 0, startPage: 1 });
+
+      const { total, totalPage } = getTotalAndTotalPage(calculation.spines.slice(-1)[0]);
+      calculation.total = total;
+      calculation.totalPage = totalPage;
 
       this.dispatchCalculation({ type: EpubCalculationActionType.UPDATE_CALCULATION, calculation });
       console.log('paging result =>', calculation);
@@ -312,7 +303,7 @@ export class EpubService {
           currentPosition = (scrollLeft - result.offset) / result.total;
         }
       }
-      console.log("update currentstate => ", { currentPage, currentSpineIndex, currentPosition });
+      console.log('update currentstate => ', { currentPage, currentSpineIndex, currentPosition });
       this.dispatchCurrent({
         type: EpubCurrentActionType.UPDATE_CURRENT,
         current: { currentPage, currentSpineIndex, currentPosition },

@@ -4,8 +4,7 @@ export declare enum EpubCalculationActionType {
 }
 export declare enum EpubCalculationProperties {
     TOTAL_PAGE = "totalPage",
-    FULL_HEIGHT = "fullHeight",
-    FULL_WIDTH = "fullWidth",
+    TOTAL = "total",
     PAGE_UNIT = "pageUnit",
     SPINES = "spines"
 }
@@ -22,8 +21,7 @@ export declare type SpineCalculationState = {
 };
 export declare type EpubCalculationState = {
     [EpubCalculationProperties.TOTAL_PAGE]: number;
-    [EpubCalculationProperties.FULL_HEIGHT]: number;
-    [EpubCalculationProperties.FULL_WIDTH]: number;
+    [EpubCalculationProperties.TOTAL]: number;
     [EpubCalculationProperties.PAGE_UNIT]: number;
     [EpubCalculationProperties.SPINES]: Array<SpineCalculationState>;
 };

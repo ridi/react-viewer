@@ -18,8 +18,6 @@ export const SpineCalculationState = ow.object.partialShape({
 
 export const CalculationState = ow.object.partialShape({
   [EpubCalculationProperties.TOTAL_PAGE]: notNegativeNumberOptional,
-  [EpubCalculationProperties.FULL_HEIGHT]: notNegativeNumberOptional,
-  [EpubCalculationProperties.FULL_WIDTH]: notNegativeNumberOptional,
   [EpubCalculationProperties.PAGE_UNIT]: notNegativeNumberOptional,
   [EpubCalculationProperties.SPINES]: ow.optional.array.ofType(SpineCalculationState),
 });
