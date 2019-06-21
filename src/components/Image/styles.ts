@@ -9,6 +9,7 @@ export const wrapper = (setting: ComicSettingState, ratio: number, status: Image
     return css`
       width: ${contentWidth(setting)}px;
       height: ${ratio * contentWidth(setting)}px;
+      position: relative;
       img {
         width: 100%;
         height: 100%;
@@ -21,6 +22,7 @@ export const wrapper = (setting: ComicSettingState, ratio: number, status: Image
     width: ${contentWidth(setting)}px;
     height: ${getClientHeight()}px;
     display: inline-block;
+    position: relative;
     img {
       width: 100%;
       height: 100%;
@@ -34,10 +36,16 @@ export const wrapper = (setting: ComicSettingState, ratio: number, status: Image
 export const loading = css`
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
 export const error = css`
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
 export const blank = (setting: ComicSettingState) => css`
   width: ${contentWidth(setting)}px;

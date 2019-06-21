@@ -5,7 +5,6 @@ import {
   EpubCalculationState,
 } from './EpubCalculationContext';
 import {
-  EpubStatusContext,
   EpubStatusContextProvider,
   EpubStatusDispatchContext,
   EpubStatusState,
@@ -33,12 +32,11 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
 
   const settingState = React.useContext(EpubSettingContext);
   const currentState = React.useContext(EpubCurrentContext);
-  const statusState = React.useContext(EpubStatusContext);
   const calculationState = React.useContext(EpubCalculationContext);
 
   React.useEffect(() => {
     EpubService.updateState({ settingState, currentState, calculationState });
-  }, [settingState, currentState, statusState, calculationState]);
+  }, [settingState, currentState, calculationState]);
 
   EpubService.init({
     dispatchSetting,

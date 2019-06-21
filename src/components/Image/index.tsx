@@ -51,7 +51,7 @@ export const Image: React.FunctionComponent<ImageProps> = ({ image, renderers = 
 
   return (
     <div css={styles.wrapper(settingState, ratio(image.width, image.height), status, image.index)}>
-      {ImageStatus.NONE !== status && <img src={image.uri} onLoad={onLoad} onError={onError} />}
+      {ImageStatus.NONE !== status && ImageStatus.ERROR !== status && <img src={image.uri} onLoad={onLoad} onError={onError} />}
       {ImageStatus.LOADING === status && <ImageLoading />}
       {ImageStatus.ERROR === status && <ImageError retry={retry} />}
     </div>

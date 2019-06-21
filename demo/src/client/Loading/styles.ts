@@ -6,5 +6,6 @@ export const wrapper = css`
   background: #fff;
   position: fixed;
   top: 80px;
-  padding-top: 50%;
+  padding-top: 200px;
+  text-align: center;
 `;

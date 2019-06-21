@@ -5,7 +5,6 @@ import {
   ComicCalculationState,
 } from './ComicCalculationContext';
 import {
-  ComicStatusContext,
   ComicStatusContextProvider,
   ComicStatusDispatchContext,
   ComicStatusState,
@@ -33,12 +32,11 @@ const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNo
 
   const settingState = React.useContext(ComicSettingContext);
   const currentState = React.useContext(ComicCurrentContext);
-  const statusState = React.useContext(ComicStatusContext);
   const calculationState = React.useContext(ComicCalculationContext);
 
   React.useEffect(() => {
     ComicService.updateState({ settingState, currentState, calculationState });
-  }, [settingState, currentState, statusState, calculationState]);
+  }, [settingState, currentState, calculationState]);
 
   ComicService.init({
     dispatchSetting,

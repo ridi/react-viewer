@@ -2,6 +2,7 @@ import {css} from '@emotion/core';
 
 export const header = css`
   position: fixed;
+  z-index: 1;
   top: 30px;
   width: 100%;
   display: flex;
@@ -37,6 +38,7 @@ export const header = css`
 
 export const footer = css`
   position: fixed;
+  z-index: 1;
   width: 100%;
   height: 30px;
   bottom: 0;
