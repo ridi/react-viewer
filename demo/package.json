@@ -6,7 +6,7 @@
     "build": "webpack",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon --exec babel-node src/server/index.js",
-    "dev": "concurrently \"npm run server\" \"num run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
