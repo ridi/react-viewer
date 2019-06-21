@@ -8,7 +8,7 @@ import { EpubStatusProperties } from '../contexts/epub/EpubStatusContext';
 const notNegativeNumber = ow.number.not.negative;
 const notNegativeNumberOptional = ow.optional.number.not.negative;
 
-export const SpineCalculationState = ow.object.exactShape({
+export const SpineCalculationState = ow.object.partialShape({
   spineIndex: notNegativeNumber,
   offset: notNegativeNumber,
   total: notNegativeNumber,
@@ -16,7 +16,7 @@ export const SpineCalculationState = ow.object.exactShape({
   totalPage: notNegativeNumber,
 });
 
-export const CalculationState = ow.object.exactShape({
+export const CalculationState = ow.object.partialShape({
   [EpubCalculationProperties.TOTAL_PAGE]: notNegativeNumberOptional,
   [EpubCalculationProperties.FULL_HEIGHT]: notNegativeNumberOptional,
   [EpubCalculationProperties.FULL_WIDTH]: notNegativeNumberOptional,
@@ -24,13 +24,13 @@ export const CalculationState = ow.object.exactShape({
   [EpubCalculationProperties.SPINES]: ow.optional.array.ofType(SpineCalculationState),
 });
 
-export const CurrentState = ow.object.exactShape({
+export const CurrentState = ow.object.partialShape({
   [EpubCurrentProperties.CURRENT_PAGE]: notNegativeNumberOptional,
   [EpubCurrentProperties.CURRENT_SPINE_INDEX]: notNegativeNumberOptional,
   [EpubCurrentProperties.CURRENT_POSITION]: notNegativeNumberOptional,
 });
 
-export const SettingState = ow.object.exactShape({
+export const SettingState = ow.object.partialShape({
   [EpubSettingProperties.VIEW_TYPE]: ViewTypeOptional,
   [EpubSettingProperties.FONT]: ow.optional.string,
   [EpubSettingProperties.FONT_SIZE_IN_EM]: notNegativeNumberOptional,
@@ -41,7 +41,7 @@ export const SettingState = ow.object.exactShape({
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: notNegativeNumberOptional,
 });
 
-export const StatusState = ow.object.exactShape({
+export const StatusState = ow.object.partialShape({
   [EpubStatusProperties.READY_TO_READ]: ow.optional.boolean,
 });
 
