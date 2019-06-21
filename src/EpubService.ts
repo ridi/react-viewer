@@ -1,11 +1,12 @@
 import {
   getClientHeight,
-  getContentRootElement,
+  getContentContainerElement,
   getScrollLeft,
   getScrollTop,
   measure,
   setScrollLeft,
   setScrollTop,
+  sleep,
 } from './utils/Util';
 import Events, { SET_CONTENT } from './Events';
 import ReaderJsHelper from './ReaderJsHelper';
@@ -20,7 +21,7 @@ import {
   EpubSettingActionType,
   EpubSettingState,
   EpubStatusAction,
-  EpubStatusActionType, SpineCalculationState,
+  EpubStatusActionType,
 } from './contexts';
 import * as React from 'react';
 import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
@@ -160,7 +161,7 @@ export class EpubService {
   };
 
   private calculate = async (): Promise<EpubCalculationState> => {
-    return measure(() => {
+    return measure(async () => {
       if (!this.dispatchCalculation) return;
       const calculation: EpubCalculationState = {
         totalPage: 0,
@@ -169,48 +170,70 @@ export class EpubService {
         spines: [],
       };
 
-      const contentRoot = getContentRootElement();
-      const spines = contentRoot ? Array.from(contentRoot.getElementsByTagName('article')) : [];
+      const contentContainer = getContentContainerElement();
+      if (!contentContainer) return this.calculationState;
 
-      let getSpineTotalAndTotalPage: (spine: Element) => { total: number, totalPage: number };
-      let getTotalAndTotalPage: (lastSpineCalculation: SpineCalculationState) => { total: number, totalPage: number };
+      const spines = Array.from(contentContainer.getElementsByTagName('article'));
 
       if (isScroll(this.settingState)) {
         // 스크롤 보기에서 나누어 딱 떨어지지 않는 이상 마지막 페이지에 도달하는 것은 거의 불가능하므로, 페이지 수는 `Math.floor()`로 계산
         calculation.pageUnit = getClientHeight();
-        getSpineTotalAndTotalPage = spine => {
+        spines.reduce(({ offset, startPage }, spine, spineIndex) => {
           const total = spine.scrollHeight;
           const totalPage = Math.floor(total / calculation.pageUnit);
-          return { total, totalPage };
-        };
-        getTotalAndTotalPage = ({ offset, total }) => ({
-          total: offset + total,
-          totalPage: Math.floor((offset + total) / calculation.pageUnit),
-        });
+          calculation.spines.push({ spineIndex, offset, total, startPage, totalPage });
+          return { offset: offset + total, startPage: startPage + totalPage };
+        }, { offset: 0, startPage: 1 });
+
+
+        const { offset, total } = calculation.spines.slice(-1)[0];
+        calculation.total = offset + total;
+        calculation.totalPage = Math.floor((offset + total) / calculation.pageUnit);
       } else {
-        // 페이지 보기에서 각 spine 엘리먼트의 `scrollWidth` 값이 정확하지 않기 때문에 `boundingClientRect.height` 값 사용
-        const _columnGap = columnGap(this.settingState);
-        calculation.pageUnit = columnWidth(this.settingState) + _columnGap;
-        getSpineTotalAndTotalPage = spine => {
-          const total = spine.getBoundingClientRect().width + _columnGap;
-          const totalPage = Math.ceil(total / calculation.pageUnit);
-          return { total, totalPage };
-        };
-        getTotalAndTotalPage = ({ offset, total, startPage, totalPage }) => ({
-          total: offset + total,
-          totalPage: startPage + totalPage - 1,
-        });
+        // 페이지 보기에서 각 spine 엘리먼트의 `scrollWidth` 값이 정확하지 않기 때문에 다른 방식으로 대체
+        // 1. `boundingClientRect.width/height` 값 사용:  (X)
+        //    -> 문제점:
+        //       - 크롬 특정 버전에서 `height` -> `width`로 변경됨
+        //       - 컬럼 갯수가 10000개 이상일떄는 boundingClientRect.width/height 값이 0이 나오는 문제가 있음
+        // 2. `offsetLeft` 사용: (O)
+        //    -> 10000 컬럼 넘어가더라도값이 정확
+        //    -> 문제점:
+        //        - 계산이 복잡해진다는 문제가 있지만 값은 정확히 나옴
+        //        - 마지막 스파인의 total 값을 구하기 위해 `scrollWidth`를 사용하면 boundingClientRect처럼 10000 컬럼 이상의 길이를 구하지 못한다.
+        //        - 마지막에 <article> 하나를 더 추가하는 방식으로 해결, 마지막 article에 대해서는 계산하지 않음
+        //        - 이제 페이지 계산은 잘 되지만 scrollLeft로 10000페이지 이상의 페이지에 도달하지 못하고, 실제로 브라우저에서 10000번째 컬럼부터 렌더링 자체를 하지 않는다.
+        //        - 이제 나는 모르겠다아아아앙아아
+        const fakeSpine = document.createElement('article');
+        fakeSpine.style.marginTop = '99%'; // 이렇게 하지 않으면 마지막 스파인의 내용이 짧을 경우 0페이지로 계산될 수 있다.
+        contentContainer.appendChild(fakeSpine);
+        spines.push(fakeSpine);
+
+        await sleep(0);
+
+        calculation.pageUnit = columnWidth(this.settingState) + columnGap(this.settingState);
+
+        const defaultOffset = contentContainer ? contentContainer.offsetLeft : 0;
+        spines.reduce(({ offset, startPage }, { offsetLeft }, index) => {
+          let totalPage = 0;
+          if (index > 0) {
+            totalPage = Math.ceil((offsetLeft - offset) / calculation.pageUnit);
+            calculation.spines.push({
+              spineIndex: index - 1,
+              offset: offset - defaultOffset,
+              total: offsetLeft - offset,
+              startPage,
+              totalPage,
+            });
+          }
+          return { offset: offsetLeft, startPage: startPage + totalPage };
+        }, { offset: 0, startPage: 1 });
+
+        const { offset, total, startPage, totalPage } = calculation.spines.slice(-1)[0];
+        calculation.total = offset + total;
+        calculation.totalPage = startPage + totalPage - 1;
+
+        contentContainer.removeChild(fakeSpine);
       }
-
-      spines.reduce(({ offset, startPage }, spine, spineIndex) => {
-        const { total, totalPage } = getSpineTotalAndTotalPage(spine);
-        calculation.spines.push({ spineIndex, offset, total, startPage, totalPage });
-        return { offset: offset + total, startPage: startPage + totalPage };
-      }, { offset: 0, startPage: 1 });
-
-      const { total, totalPage } = getTotalAndTotalPage(calculation.spines.slice(-1)[0]);
-      calculation.total = total;
-      calculation.totalPage = totalPage;
 
       this.dispatchCalculation({ type: EpubCalculationActionType.UPDATE_CALCULATION, calculation });
       console.log('paging result =>', calculation);

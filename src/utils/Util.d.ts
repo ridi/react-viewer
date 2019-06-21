@@ -1,6 +1,7 @@
 export declare function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
 export declare const getRootElement: () => Element | null;
 export declare const getContentRootElement: () => HTMLElement | null;
+export declare const getContentContainerElement: () => HTMLElement | null;
 export declare const getScrollWidth: () => number;
 export declare const getScrollHeight: () => number;
 export declare const getScrollLeft: () => number;
@@ -28,3 +29,4 @@ export declare const debounce: (fn: () => any, wait?: number, immediate?: boolea
  * @returns {function} throttled function
  */
 export declare const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
+export declare const sleep: (millisecond?: number) => Promise<void>;

@@ -11,6 +11,7 @@ export const getRootElement = (): Element | null => {
   return document.documentElement || document.body;
 };
 export const getContentRootElement = (): HTMLElement | null => document.getElementById('content_root');
+export const getContentContainerElement = (): HTMLElement | null => document.getElementById('content_container');
 
 export const getScrollWidth = (): number => {
   const rootElement = getContentRootElement();
@@ -99,4 +100,8 @@ export const throttle = (fn: () => any, limit: number = 100, delayed: boolean = 
       setTimeout(() => { inThrottle = false; }, limit);
     }
   };
+};
+
+export const sleep = async (millisecond: number = 0): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, millisecond));
 };
