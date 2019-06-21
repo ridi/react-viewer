@@ -11,8 +11,6 @@ export interface EpubParsedData {
     spines?: Array<String>;
     unzipPath: string;
 }
-export declare const FontDataValidator: import("ow/dist/source").ObjectPredicate;
-export declare const EpubParsedDataValidator: import("ow/dist/source").ObjectPredicate;
 interface EpubServiceProperties {
     dispatchSetting: React.Dispatch<EpubSettingAction>;
     dispatchStatus: React.Dispatch<EpubStatusAction>;

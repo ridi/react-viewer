@@ -23,6 +23,8 @@ import {
 } from './EpubCurrentContext';
 import * as React from 'react';
 import { EpubService } from '../../EpubService';
+import ow from 'ow';
+import Validator from '../../validators';
 
 const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const dispatchSetting = React.useContext(EpubSettingDispatchContext);
@@ -60,6 +62,10 @@ export interface EpubProviderProps {
 }
 
 export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, calculationState, statusState, currentState }: EpubProviderProps) => {
+  ow(settingState, 'EpubProvider.settingState', ow.any(ow.nullOrUndefined, Validator.Epub.SettingState));
+  ow(calculationState, 'EpubProvider.calculationState', ow.any(ow.nullOrUndefined, Validator.Epub.CalculationState));
+  ow(currentState, 'EpubProvider.currentState', ow.any(ow.nullOrUndefined, Validator.Epub.CurrentState));
+  ow(statusState, 'EpubProvider.statusState', ow.any(ow.nullOrUndefined, Validator.Epub.StatusState));
   return (
     <EpubSettingContextProvider customInitialState={settingState}>
       <EpubCalculationContextProvider customInitialState={calculationState}>

@@ -1,9 +1,6 @@
 import {Reducer} from "react";
 import { generateContext } from "../ContextProvider";
 import { ViewType, BindingType } from '../../constants';
-import ow from 'ow';
-import { EpubSettingProperties } from '..';
-import { BindingTypeOptionalValidator, ViewTypeOptionalValidator } from '../../constants/index';
 
 export enum ComicSettingActionType {
   UPDATE_SETTING = 'update_setting',
@@ -46,10 +43,3 @@ export const {
   StateContext: ComicSettingContext,
   ContextProvider: ComicSettingContextProvider,
 } = generateContext(ComicSettingReducer, initialComicSettingState, 'ComicSetting');
-
-export const ComicSettingStateOptionalValidator = ow.object.exactShape({
-  [EpubSettingProperties.VIEW_TYPE]: ViewTypeOptionalValidator,
-  [ComicSettingProperties.CONTENT_WIDTH_IN_PERCENT]: ow.optional.number.not.negative,
-  [ComicSettingProperties.BINDING_TYPE]: BindingTypeOptionalValidator,
-  [ComicSettingProperties.LAZY_LOAD]: ow.optional.any(ow.boolean, ow.number.not.negative),
-});

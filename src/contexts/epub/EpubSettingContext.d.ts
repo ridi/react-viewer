@@ -33,4 +33,3 @@ export declare const EpubSettingDispatchContext: import("react").Context<import(
     children: import("react").ReactNode;
     customInitialState?: Partial<EpubSettingState> | undefined;
 }>;
-export declare const EpubSettingStateOptionalValidator: import("ow/dist/source").ObjectPredicate;

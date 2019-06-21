@@ -25,4 +25,3 @@ export declare const ComicSettingDispatchContext: import("react").Context<import
     children: import("react").ReactNode;
     customInitialState?: Partial<ComicSettingState> | undefined;
 }>;
-export declare const ComicSettingStateOptionalValidator: import("ow/dist/source").ObjectPredicate;

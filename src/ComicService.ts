@@ -9,13 +9,14 @@ import {
   ComicCurrentState,
   ComicSettingAction,
   ComicSettingActionType,
-  ComicSettingState, ComicSettingStateOptionalValidator,
+  ComicSettingState,
   ComicStatusAction,
   ComicStatusActionType,
 } from './contexts';
 import { getScrollLeft, getScrollTop, measure, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll, ratio, startWithBlankPage, allowedPageNumber } from './utils/ComicSettingUtil';
 import ow from 'ow';
+import Validator from './validators';
 
 export interface ImageData {
   fileSize: number,
@@ -31,22 +32,6 @@ export interface ComicParsedData {
   images?: Array<ImageData>,
   unzipPath: string,
 }
-
-export const ImageDataValidator = ow.object.exactShape({
-  fileSize: ow.number.not.negative,
-  index: ow.number.not.negative,
-  path: ow.optional.string,
-  uri: ow.string,
-  width: ow.optional.number.not.negative,
-  height: ow.optional.number.not.negative,
-});
-
-export const ComicParsedDataValidator = ow.object.exactShape({
-  book: ow.optional.object,
-  type: ow.string.equals('comic'),
-  images: ow.optional.array.ofType(ImageDataValidator),
-  unzipPath: ow.string,
-});
 
 interface ComicServiceProperties {
   dispatchSetting: React.Dispatch<ComicSettingAction>,
@@ -182,7 +167,7 @@ export class ComicService {
   };
 
   public load = async (metadata: ComicParsedData) => {
-    ow(metadata, 'metadata', ComicParsedDataValidator);
+    ow(metadata, 'ComicService.load(metadata)', Validator.Comic.ComicParsedData);
 
     if (!this.dispatchCalculation) return;
     if (!metadata.images) return;
@@ -194,7 +179,7 @@ export class ComicService {
   };
 
   public goToPage = async (requestPage: number): Promise<void> => {
-    ow(requestPage, 'page', ow.number);
+    ow(requestPage, 'ComicService.goToPage(page)', Validator.Common.Page);
 
     const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     return measure(async () => {
@@ -215,7 +200,7 @@ export class ComicService {
   };
 
   public updateSetting = async (setting: Partial<ComicSettingState>) => {
-    ow(setting, 'setting', ComicSettingStateOptionalValidator);
+    ow(setting, 'ComicService.updateSetting(setting)', Validator.Comic.SettingState);
 
     if (!this.dispatchSetting) return;
     await this.setReadyToRead(false);

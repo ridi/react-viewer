@@ -13,8 +13,6 @@ export interface ComicParsedData {
     images?: Array<ImageData>;
     unzipPath: string;
 }
-export declare const ImageDataValidator: import("ow/dist/source").ObjectPredicate;
-export declare const ComicParsedDataValidator: import("ow/dist/source").ObjectPredicate;
 interface ComicServiceProperties {
     dispatchSetting: React.Dispatch<ComicSettingAction>;
     dispatchStatus: React.Dispatch<ComicStatusAction>;
