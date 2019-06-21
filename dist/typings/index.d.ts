@@ -31,7 +31,7 @@ declare module '@ridi/react-reader/components/ComicReader' {
 }
 
 declare module '@ridi/react-reader/EpubService' {
-    import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction } from '@ridi/react-reader/contexts';
+    import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState } from '@ridi/react-reader/contexts';
     import * as React from 'react';
     export interface FontData {
         href: string;
@@ -46,7 +46,6 @@ declare module '@ridi/react-reader/EpubService' {
     }
     interface EpubServiceProperties {
         dispatchSetting: React.Dispatch<EpubSettingAction>;
-        dispatchStatus: React.Dispatch<EpubStatusAction>;
         dispatchCalculation: React.Dispatch<EpubCalculationAction>;
         dispatchCurrent: React.Dispatch<EpubCurrentAction>;
         settingState: EpubSettingState;
@@ -72,7 +71,7 @@ declare module '@ridi/react-reader/EpubService' {
 
 declare module '@ridi/react-reader/ComicService' {
     import * as React from 'react';
-    import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction } from '@ridi/react-reader/contexts';
+    import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState } from '@ridi/react-reader/contexts';
     export interface ImageData {
         fileSize: number;
         index: number;
@@ -88,7 +87,6 @@ declare module '@ridi/react-reader/ComicService' {
     }
     interface ComicServiceProperties {
         dispatchSetting: React.Dispatch<ComicSettingAction>;
-        dispatchStatus: React.Dispatch<ComicStatusAction>;
         dispatchCalculation: React.Dispatch<ComicCalculationAction>;
         dispatchCurrent: React.Dispatch<ComicCurrentAction>;
         settingState: ComicSettingState;
@@ -115,12 +113,10 @@ declare module '@ridi/react-reader/ComicService' {
 declare module '@ridi/react-reader/contexts' {
     export * from '@ridi/react-reader/contexts/epub/EpubSettingContext';
     export * from '@ridi/react-reader/contexts/epub/EpubCalculationContext';
-    export * from '@ridi/react-reader/contexts/epub/EpubStatusContext';
     export * from '@ridi/react-reader/contexts/epub/EpubCurrentContext';
     export * from '@ridi/react-reader/contexts/epub/EpubProvider';
     export * from '@ridi/react-reader/contexts/comic/ComicSettingContext';
     export * from '@ridi/react-reader/contexts/comic/ComicCalculationContext';
-    export * from '@ridi/react-reader/contexts/comic/ComicStatusContext';
     export * from '@ridi/react-reader/contexts/comic/ComicCurrentContext';
     export * from '@ridi/react-reader/contexts/comic/ComicProvider';
 }
@@ -272,47 +268,30 @@ declare module '@ridi/react-reader/contexts/epub/EpubCalculationContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/epub/EpubStatusContext' {
-    import * as React from 'react';
-    export enum EpubStatusActionType {
-        SET_READY_TO_READ = "set_ready_to_read"
-    }
-    export enum EpubStatusProperties {
-        READY_TO_READ = "readyToRead"
-    }
-    export type EpubStatusAction = {
-        type: EpubStatusActionType.SET_READY_TO_READ;
-        readyToRead: boolean;
-    };
-    export type EpubStatusState = {
-        [EpubStatusProperties.READY_TO_READ]: boolean;
-    };
-    export const initialEpubStatusState: EpubStatusState;
-    export const EpubStatusReducer: React.Reducer<EpubStatusState, EpubStatusAction>;
-    export const EpubStatusDispatchContext: React.Context<React.Dispatch<EpubStatusAction>>, EpubStatusContext: React.Context<EpubStatusState>, EpubStatusContextProvider: React.FunctionComponent<{
-        children: React.ReactNode;
-        customInitialState?: Partial<EpubStatusState> | undefined;
-    }>;
-}
-
 declare module '@ridi/react-reader/contexts/epub/EpubCurrentContext' {
     import * as React from 'react';
     export enum EpubCurrentActionType {
-        UPDATE_CURRENT = "update_current"
+        UPDATE_CURRENT = "update_current",
+        SET_READY_TO_READ = "set_ready_to_read"
     }
     export enum EpubCurrentProperties {
         CURRENT_PAGE = "currentPage",
         CURRENT_SPINE_INDEX = "currentSpineIndex",
-        CURRENT_POSITION = "currentPosition"
+        CURRENT_POSITION = "currentPosition",
+        READY_TO_READ = "readyToRead"
     }
     export type EpubCurrentAction = {
         type: EpubCurrentActionType.UPDATE_CURRENT;
         current: Partial<EpubCurrentState>;
+    } | {
+        type: EpubCurrentActionType.SET_READY_TO_READ;
+        readyToRead: boolean;
     };
     export type EpubCurrentState = {
         [EpubCurrentProperties.CURRENT_PAGE]: number;
         [EpubCurrentProperties.CURRENT_SPINE_INDEX]: number;
         [EpubCurrentProperties.CURRENT_POSITION]: number;
+        [EpubCurrentProperties.READY_TO_READ]: boolean;
     };
     export const initialEpubCurrentState: EpubCurrentState;
     export const EpubCurrentReducer: React.Reducer<EpubCurrentState, EpubCurrentAction>;
@@ -324,7 +303,6 @@ declare module '@ridi/react-reader/contexts/epub/EpubCurrentContext' {
 
 declare module '@ridi/react-reader/contexts/epub/EpubProvider' {
     import { EpubCalculationState } from '@ridi/react-reader/contexts/epub/EpubCalculationContext';
-    import { EpubStatusState } from '@ridi/react-reader/contexts/epub/EpubStatusContext';
     import { EpubSettingState } from '@ridi/react-reader/contexts/epub/EpubSettingContext';
     import { EpubCurrentState } from '@ridi/react-reader/contexts/epub/EpubCurrentContext';
     import * as React from 'react';
@@ -332,7 +310,6 @@ declare module '@ridi/react-reader/contexts/epub/EpubProvider' {
         children: React.ReactNode;
         settingState?: Partial<EpubSettingState>;
         calculationState?: Partial<EpubCalculationState>;
-        statusState?: Partial<EpubStatusState>;
         currentState?: Partial<EpubCurrentState>;
     }
     export const EpubProvider: React.FunctionComponent<EpubProviderProps>;
@@ -409,43 +386,26 @@ declare module '@ridi/react-reader/contexts/comic/ComicCalculationContext' {
     }>;
 }
 
-declare module '@ridi/react-reader/contexts/comic/ComicStatusContext' {
-    import * as React from 'react';
-    export enum ComicStatusActionType {
-        SET_READY_TO_READ = "set_ready_to_read"
-    }
-    export enum ComicStatusProperties {
-        READY_TO_READ = "readyToRead"
-    }
-    export type ComicStatusAction = {
-        type: ComicStatusActionType.SET_READY_TO_READ;
-        readyToRead: boolean;
-    };
-    export type ComicStatusState = {
-        [ComicStatusProperties.READY_TO_READ]: boolean;
-    };
-    export const initialComicStatusState: ComicStatusState;
-    export const ComicStatusReducer: React.Reducer<ComicStatusState, ComicStatusAction>;
-    export const ComicStatusDispatchContext: React.Context<React.Dispatch<ComicStatusAction>>, ComicStatusContext: React.Context<ComicStatusState>, ComicStatusContextProvider: React.FunctionComponent<{
-        children: React.ReactNode;
-        customInitialState?: Partial<ComicStatusState> | undefined;
-    }>;
-}
-
 declare module '@ridi/react-reader/contexts/comic/ComicCurrentContext' {
     import * as React from 'react';
     export enum ComicCurrentActionType {
-        UPDATE_CURRENT = "update_current"
+        UPDATE_CURRENT = "update_current",
+        SET_READY_TO_READ = "set_ready_to_read"
     }
     export enum ComicCurrentProperties {
-        CURRENT_PAGE = "currentPage"
+        CURRENT_PAGE = "currentPage",
+        READY_TO_READ = "readyToRead"
     }
     export type ComicCurrentAction = {
         type: ComicCurrentActionType.UPDATE_CURRENT;
         current: Partial<ComicCurrentState>;
+    } | {
+        type: ComicCurrentActionType.SET_READY_TO_READ;
+        readyToRead: boolean;
     };
     export type ComicCurrentState = {
         [ComicCurrentProperties.CURRENT_PAGE]: number;
+        [ComicCurrentProperties.READY_TO_READ]: boolean;
     };
     export const initialComicCurrentState: ComicCurrentState;
     export const ComicCurrentReducer: React.Reducer<ComicCurrentState, ComicCurrentAction>;
@@ -457,7 +417,6 @@ declare module '@ridi/react-reader/contexts/comic/ComicCurrentContext' {
 
 declare module '@ridi/react-reader/contexts/comic/ComicProvider' {
     import { ComicCalculationState } from '@ridi/react-reader/contexts/comic/ComicCalculationContext';
-    import { ComicStatusState } from '@ridi/react-reader/contexts/comic/ComicStatusContext';
     import { ComicSettingState } from '@ridi/react-reader/contexts/comic/ComicSettingContext';
     import { ComicCurrentState } from '@ridi/react-reader/contexts/comic/ComicCurrentContext';
     import * as React from 'react';
@@ -465,7 +424,6 @@ declare module '@ridi/react-reader/contexts/comic/ComicProvider' {
         children: React.ReactNode;
         settingState?: Partial<ComicSettingState>;
         calculationState?: Partial<ComicCalculationState>;
-        statusState?: Partial<ComicStatusState>;
         currentState?: Partial<ComicCurrentState>;
     }
     export const ComicProvider: React.FunctionComponent<ComicProviderProps>;
@@ -501,6 +459,7 @@ declare module '@ridi/react-reader/utils/Util' {
     export function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
     export const getRootElement: () => Element | null;
     export const getContentRootElement: () => HTMLElement | null;
+    export const getContentContainerElement: () => HTMLElement | null;
     export const getScrollWidth: () => number;
     export const getScrollHeight: () => number;
     export const getScrollLeft: () => number;
@@ -528,5 +487,6 @@ declare module '@ridi/react-reader/utils/Util' {
         * @returns {function} throttled function
         */
     export const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
+    export const sleep: (millisecond?: number) => Promise<void>;
 }
 

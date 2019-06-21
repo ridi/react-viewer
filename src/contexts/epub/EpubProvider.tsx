@@ -5,11 +5,6 @@ import {
   EpubCalculationState,
 } from './EpubCalculationContext';
 import {
-  EpubStatusContextProvider,
-  EpubStatusDispatchContext,
-  EpubStatusState,
-} from './EpubStatusContext';
-import {
   EpubSettingContext,
   EpubSettingContextProvider,
   EpubSettingDispatchContext,
@@ -28,7 +23,6 @@ import Validator from '../../validators';
 
 const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const dispatchSetting = React.useContext(EpubSettingDispatchContext);
-  const dispatchStatus = React.useContext(EpubStatusDispatchContext);
   const dispatchCalculation = React.useContext(EpubCalculationDispatchContext);
   const dispatchCurrent = React.useContext(EpubCurrentDispatchContext);
 
@@ -42,7 +36,6 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
 
   EpubService.init({
     dispatchSetting,
-    dispatchStatus,
     dispatchCalculation,
     dispatchCurrent,
     settingState,
@@ -57,24 +50,20 @@ export interface EpubProviderProps {
   children: React.ReactNode,
   settingState?: Partial<EpubSettingState>,
   calculationState?: Partial<EpubCalculationState>,
-  statusState?: Partial<EpubStatusState>,
   currentState?: Partial<EpubCurrentState>,
 }
 
-export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, calculationState, statusState, currentState }: EpubProviderProps) => {
+export const EpubProvider: React.FunctionComponent<EpubProviderProps> = ({ children, settingState, calculationState, currentState }: EpubProviderProps) => {
   ow(settingState, 'EpubProvider.settingState', ow.any(ow.nullOrUndefined, Validator.Epub.SettingState));
   ow(calculationState, 'EpubProvider.calculationState', ow.any(ow.nullOrUndefined, Validator.Epub.CalculationState));
   ow(currentState, 'EpubProvider.currentState', ow.any(ow.nullOrUndefined, Validator.Epub.CurrentState));
-  ow(statusState, 'EpubProvider.statusState', ow.any(ow.nullOrUndefined, Validator.Epub.StatusState));
   return (
     <EpubSettingContextProvider customInitialState={settingState}>
       <EpubCalculationContextProvider customInitialState={calculationState}>
         <EpubCurrentContextProvider customInitialState={currentState}>
-          <EpubStatusContextProvider customInitialState={statusState}>
-            <EpubContextInitializer>
-              {children}
-            </EpubContextInitializer>
-          </EpubStatusContextProvider>
+          <EpubContextInitializer>
+            {children}
+          </EpubContextInitializer>
         </EpubCurrentContextProvider>
       </EpubCalculationContextProvider>
     </EpubSettingContextProvider>

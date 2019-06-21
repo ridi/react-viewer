@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import * as React from 'react';
-import { EpubCalculationContext, EpubSettingContext, EpubStatusContext } from '../../contexts';
+import { EpubCalculationContext, EpubSettingContext, EpubCurrentContext } from '../../contexts';
 import * as SettingUtil from '../../utils/EpubSettingUtil';
 import Events, { SET_CONTENT } from '../../Events';
 import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
@@ -15,7 +15,7 @@ const EpubReader = () => {
   const [content, setContent] = React.useState('');
   const calculationState = React.useContext(EpubCalculationContext);
   const settingState = React.useContext(EpubSettingContext);
-  const statusState = React.useContext(EpubStatusContext);
+  const currentState = React.useContext(EpubCurrentContext);
 
   const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
 
@@ -36,7 +36,7 @@ const EpubReader = () => {
   };
 
   const updateCurrent = () => {
-    if (!statusState.readyToRead) return;
+    if (!currentState.readyToRead) return;
     EpubService.get().updateCurrent().catch(error => console.error(error));
   };
 
@@ -59,7 +59,7 @@ const EpubReader = () => {
       const rootElement = isScroll(settingState) ? window : getContentRootElement();
       if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
-  }, [settingState, calculationState, statusState]);
+  }, [settingState, calculationState, currentState]);
 
   React.useEffect(() => {
     mountReaderJs();

@@ -20,8 +20,6 @@ import {
   EpubSettingAction,
   EpubSettingActionType,
   EpubSettingState,
-  EpubStatusAction,
-  EpubStatusActionType,
 } from './contexts';
 import * as React from 'react';
 import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
@@ -43,7 +41,6 @@ export interface EpubParsedData {
 
 interface EpubServiceProperties {
   dispatchSetting: React.Dispatch<EpubSettingAction>,
-  dispatchStatus: React.Dispatch<EpubStatusAction>,
   dispatchCalculation: React.Dispatch<EpubCalculationAction>,
   dispatchCurrent: React.Dispatch<EpubCurrentAction>,
   settingState: EpubSettingState,
@@ -55,7 +52,6 @@ export class EpubService {
   private static instance: EpubService;
 
   private readonly dispatchSetting: React.Dispatch<EpubSettingAction>;
-  private readonly dispatchStatus: React.Dispatch<EpubStatusAction>;
   private readonly dispatchCalculation: React.Dispatch<EpubCalculationAction>;
   private readonly dispatchCurrent: React.Dispatch<EpubCurrentAction>;
 
@@ -88,7 +84,6 @@ export class EpubService {
   private constructor({
     dispatchSetting,
     dispatchCalculation,
-    dispatchStatus,
     dispatchCurrent,
     settingState,
     currentState,
@@ -96,7 +91,6 @@ export class EpubService {
   }: EpubServiceProperties) {
     this.dispatchSetting = dispatchSetting;
     this.dispatchCalculation = dispatchCalculation;
-    this.dispatchStatus = dispatchStatus;
     this.dispatchCurrent = dispatchCurrent;
     this.settingState = settingState;
     this.currentState = currentState;
@@ -105,8 +99,7 @@ export class EpubService {
 
   private setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
-      if (!this.dispatchStatus) return resolve();
-      this.dispatchStatus({ type: EpubStatusActionType.SET_READY_TO_READ, readyToRead });
+      this.dispatchCurrent({ type: EpubCurrentActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
@@ -162,7 +155,6 @@ export class EpubService {
 
   private calculate = async (): Promise<EpubCalculationState> => {
     return measure(async () => {
-      if (!this.dispatchCalculation) return;
       const calculation: EpubCalculationState = {
         totalPage: 0,
         total: 0,
@@ -336,8 +328,6 @@ export class EpubService {
 
   public updateSetting = async (setting: Partial<EpubSettingState>) => {
     ow(setting, 'EpubService.updateSetting(setting)', Validator.Epub.SettingState);
-
-    if (!this.dispatchSetting) return;
     await this.setReadyToRead(false);
     this.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
   };

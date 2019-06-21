@@ -3,7 +3,6 @@ import { BindingTypeOptional, ViewTypeOptional } from './CommonValidator';
 import { ComicCalculationProperties } from '../contexts/comic/ComicCalculationContext';
 import { ComicCurrentProperties } from '../contexts/comic/ComicCurrentContext';
 import { ComicSettingProperties } from '../contexts/comic/ComicSettingContext';
-import { ComicStatusProperties } from '../contexts/comic/ComicStatusContext';
 
 const notNegativeNumber = ow.number.not.negative;
 const notNegativeNumberOptional = ow.optional.number.not.negative;
@@ -21,6 +20,7 @@ export const CalculationState = ow.object.partialShape({
 
 export const CurrentState = ow.object.partialShape({
   [ComicCurrentProperties.CURRENT_PAGE]: notNegativeNumberOptional,
+  [ComicCurrentProperties.READY_TO_READ]: ow.optional.boolean,
 });
 
 export const SettingState = ow.object.partialShape({
@@ -28,10 +28,6 @@ export const SettingState = ow.object.partialShape({
   [ComicSettingProperties.CONTENT_WIDTH_IN_PERCENT]: notNegativeNumberOptional,
   [ComicSettingProperties.BINDING_TYPE]: BindingTypeOptional,
   [ComicSettingProperties.LAZY_LOAD]: ow.optional.any(ow.boolean, ow.number.not.negative),
-});
-
-export const StatusState = ow.object.partialShape({
-  [ComicStatusProperties.READY_TO_READ]: ow.optional.boolean,
 });
 
 export const ImageData = ow.object.partialShape({

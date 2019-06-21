@@ -1,4 +1,4 @@
-import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState, EpubStatusAction } from './contexts';
+import { EpubCalculationAction, EpubCalculationState, EpubCurrentAction, EpubCurrentState, EpubSettingAction, EpubSettingState } from './contexts';
 import * as React from 'react';
 export interface FontData {
     href: string;
@@ -13,7 +13,6 @@ export interface EpubParsedData {
 }
 interface EpubServiceProperties {
     dispatchSetting: React.Dispatch<EpubSettingAction>;
-    dispatchStatus: React.Dispatch<EpubStatusAction>;
     dispatchCalculation: React.Dispatch<EpubCalculationAction>;
     dispatchCurrent: React.Dispatch<EpubCurrentAction>;
     settingState: EpubSettingState;
@@ -23,7 +22,6 @@ interface EpubServiceProperties {
 export declare class EpubService {
     private static instance;
     private readonly dispatchSetting;
-    private readonly dispatchStatus;
     private readonly dispatchCalculation;
     private readonly dispatchCurrent;
     private settingState;

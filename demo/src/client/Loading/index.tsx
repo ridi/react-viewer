@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import * as React from 'react';
 import { jsx } from '@emotion/core';
-import { EpubStatusContext, ComicStatusContext } from '@ridi/react-reader';
+import { EpubCurrentContext, ComicCurrentContext } from '@ridi/react-reader';
 import * as styles from './styles';
 
 export const EpubLoading: React.FunctionComponent = () => {
-  const statusContext = React.useContext(EpubStatusContext);
+  const currentState = React.useContext(EpubCurrentContext);
 
-  if (statusContext.readyToRead) return null;
+  if (currentState.readyToRead) return null;
   return (
     <div css={styles.wrapper}>
       Loading...
@@ -16,9 +16,9 @@ export const EpubLoading: React.FunctionComponent = () => {
 };
 
 export const ComicLoading: React.FunctionComponent = () => {
-  const statusContext = React.useContext(ComicStatusContext);
+  const currentState = React.useContext(ComicCurrentContext);
 
-  if (statusContext.readyToRead) return null;
+  if (currentState.readyToRead) return null;
   return (
     <div css={styles.wrapper}>
       Loading...

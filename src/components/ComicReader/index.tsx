@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import * as React from 'react';
-import { ComicCalculationContext, ComicSettingContext, ComicStatusContext } from '../../contexts';
+import { ComicCalculationContext, ComicSettingContext, ComicCurrentContext } from '../../contexts';
 import { ComicService }  from '../../ComicService';
 import { isDoublePage, isScroll, startWithBlankPage } from '../../utils/ComicSettingUtil';
 import { debounce, getContentRootElement } from '../../utils/Util';
@@ -21,10 +21,10 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
   const [images, setImages] = React.useState<Array<ImageData>>([]);
   const calculationState = React.useContext(ComicCalculationContext);
   const settingState = React.useContext(ComicSettingContext);
-  const statusState = React.useContext(ComicStatusContext);
+  const currentState = React.useContext(ComicCurrentContext);
 
   const updateCurrent = debounce(() => {
-    if (!statusState.readyToRead) return;
+    if (!currentState.readyToRead) return;
     ComicService.get().updateCurrent().catch(error => console.error(error));
   });
 
@@ -46,7 +46,7 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
       const rootElement = isScroll(settingState) ? window : getContentRootElement();
       if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
-  }, [settingState, calculationState, statusState]);
+  }, [settingState, calculationState, currentState]);
 
   React.useEffect(() => {
     if (images.length > 0) {

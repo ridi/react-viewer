@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState, ComicStatusAction } from './contexts';
+import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState } from './contexts';
 export interface ImageData {
     fileSize: number;
     index: number;
@@ -15,7 +15,6 @@ export interface ComicParsedData {
 }
 interface ComicServiceProperties {
     dispatchSetting: React.Dispatch<ComicSettingAction>;
-    dispatchStatus: React.Dispatch<ComicStatusAction>;
     dispatchCalculation: React.Dispatch<ComicCalculationAction>;
     dispatchCurrent: React.Dispatch<ComicCurrentAction>;
     settingState: ComicSettingState;
@@ -25,7 +24,6 @@ interface ComicServiceProperties {
 export declare class ComicService {
     private static instance;
     private readonly dispatchSetting;
-    private readonly dispatchStatus;
     private readonly dispatchCalculation;
     private readonly dispatchCurrent;
     private settingState;

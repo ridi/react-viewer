@@ -10,8 +10,6 @@ import {
   ComicSettingAction,
   ComicSettingActionType,
   ComicSettingState,
-  ComicStatusAction,
-  ComicStatusActionType,
 } from './contexts';
 import { getScrollLeft, getScrollTop, measure, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll, ratio, startWithBlankPage, allowedPageNumber } from './utils/ComicSettingUtil';
@@ -35,7 +33,6 @@ export interface ComicParsedData {
 
 interface ComicServiceProperties {
   dispatchSetting: React.Dispatch<ComicSettingAction>,
-  dispatchStatus: React.Dispatch<ComicStatusAction>,
   dispatchCalculation: React.Dispatch<ComicCalculationAction>,
   dispatchCurrent: React.Dispatch<ComicCurrentAction>,
   settingState: ComicSettingState,
@@ -47,7 +44,6 @@ export class ComicService {
   private static instance: ComicService;
 
   private readonly dispatchSetting: React.Dispatch<ComicSettingAction>;
-  private readonly dispatchStatus: React.Dispatch<ComicStatusAction>;
   private readonly dispatchCalculation: React.Dispatch<ComicCalculationAction>;
   private readonly dispatchCurrent: React.Dispatch<ComicCurrentAction>;
 
@@ -80,7 +76,6 @@ export class ComicService {
   private constructor({
     dispatchSetting,
     dispatchCalculation,
-    dispatchStatus,
     dispatchCurrent,
     settingState,
     currentState,
@@ -88,7 +83,6 @@ export class ComicService {
   }: ComicServiceProperties) {
     this.dispatchSetting = dispatchSetting;
     this.dispatchCalculation = dispatchCalculation;
-    this.dispatchStatus = dispatchStatus;
     this.dispatchCurrent = dispatchCurrent;
     this.settingState = settingState;
     this.currentState = currentState;
@@ -97,7 +91,7 @@ export class ComicService {
 
   private setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
-      this.dispatchStatus({ type: ComicStatusActionType.SET_READY_TO_READ, readyToRead });
+      this.dispatchCurrent({ type: ComicCurrentActionType.SET_READY_TO_READ, readyToRead });
       setTimeout(() => {
         console.log(`readyToRead => ${readyToRead}`);
         resolve();
@@ -110,7 +104,6 @@ export class ComicService {
   };
 
   private calculate = async (): Promise<ComicCalculationState> => {
-    if (!this.dispatchCalculation) return this.calculationState;
     if (isScroll(this.settingState)) {
       // update images[].offset, height
       const width = contentWidth(this.settingState);
@@ -169,7 +162,6 @@ export class ComicService {
   public load = async (metadata: ComicParsedData) => {
     ow(metadata, 'ComicService.load(metadata)', Validator.Comic.ComicParsedData);
 
-    if (!this.dispatchCalculation) return;
     if (!metadata.images) return;
     await this.setReadyToRead(false);
     await this.initialCalculate(metadata);
@@ -183,7 +175,6 @@ export class ComicService {
 
     const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     return measure(async () => {
-      if (!this.dispatchCurrent) return;
       if (isScroll(this.settingState)) {
         setScrollLeft(0);
         setScrollTop(this.calculationState.images[page - 1].offsetTop); // fixme +1을 해줘야 할 것 같다.
@@ -201,8 +192,6 @@ export class ComicService {
 
   public updateSetting = async (setting: Partial<ComicSettingState>) => {
     ow(setting, 'ComicService.updateSetting(setting)', Validator.Comic.SettingState);
-
-    if (!this.dispatchSetting) return;
     await this.setReadyToRead(false);
     this.dispatchSetting({ type: ComicSettingActionType.UPDATE_SETTING, setting });
   };
