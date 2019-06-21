@@ -52,7 +52,6 @@ export const FontData = ow.object.partialShape({
 });
 
 export const EpubParsedData = ow.object.partialShape({
-  type: ow.string.equals('epub'),
   fonts: ow.optional.array.ofType(FontData),
   styles: ow.optional.array.ofType(ow.string),
   spines: ow.optional.array.ofType(ow.string),

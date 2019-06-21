@@ -44,7 +44,6 @@ export const ImageData = ow.object.partialShape({
 });
 
 export const ComicParsedData = ow.object.partialShape({
-  type: ow.string.equals('comic'),
   images: ow.optional.array.ofType(ImageData),
   unzipPath: ow.string,
 });
