@@ -1,21 +1,113 @@
 declare module '@ridi/reader.js/web' {
-  export class Reader {
-    constructor(wrapper: HTMLElement, context: Context);
-    debugNodeLocation: boolean;
-    sel: any;
-    content: any;
-    context: any;
-    unmount(): void;
-    getOffsetFromNodeLocation(location: any, detectionType: any): number;
-    getNodeLocationOfCurrentPage(detectionType: any): string;
-    getRectsFromSerializedRange(serializedRange: string): Array<any>;
-    getOffsetFromSerializedRange(serializedRange: string): number;
-    getOffsetFromAnchor(anchor: string): number;
+  export class Rect {
+    isZero: boolean;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+    x: number;
+    minX: number;
+    midX: number;
+    maxX: number;
+    y: number;
+    minY: number;
+    midY: number;
+    maxY: number;
+    constructor(rect: DOMRect | ClientRect | Rect | object);
+    equals(rect: DOMRect | ClientRect | Rect | object): boolean;
+    contains(x: number, y: number): boolean;
+    toObject(): object;
+  }
+  export class RectList {
+    contains(xOrRect: number | DOMRect | ClientRect | Rect | object, y?: number): boolean;
+    trim(): RectList;
   }
   export class Context {
-    constructor(width: number, height: number, columnGap: number, doublePageMode: boolean, scrollMode: boolean, systemMajorVersion?: number, maxSelectionLength?: number);
+    width: number;
+    hieght: number;
+    gap: number;
+    pageGap: number;
+    pageUnit: number;
+    pageWidthUnit: number;
+    pageHeightUnit: number;
+    isDoublePageMode: boolean;
+    isScrollMode: boolean;
+    maxSelectionLength: number;
+    systemMajorVersion?: number;
+    isSameDomAsUi: boolean;
+    shouldViewportInitialize: boolean;
+    shouldTwoPageAsOneWhenDoublePageMode: boolean;
+    onMessage: (message: string) => void;
+    toObject(): object;
+    static build(builder: (context: Context) => void): Context;
   }
-  export namespace Util {
-    export function getStylePropertyIntValue(node: HTMLElement, propertyName: string): number;
+  interface Link {
+    node: Node;
+    href: string;
+    type?: string;
+  }
+  export class Sel {
+    isExpandContinuableIntoNextPage: boolean;
+    constructor(content: Content);
+    start(x: number, y: number, unit?: string): boolean;
+    expandIntoUpper(x: number, y: number, unit?: string): boolean;
+    expandIntoLower(x: number, y: number, unit?: string): boolean;
+    expandIntoNextPage(): boolean;
+    getRange(): Range;
+    getSerializedRange(): string;
+    getRectList(): RectList;
+    getText(): string;
+  }
+  export class NodeLocation {
+    nodeIndex: number;
+    wordIndex: number;
+    type: string;
+    constructor(nodeIndex?: number, wordIndex?: number, type?: string);
+    toString(): string;
+    static fromString(string: string, type?: string): NodeLocation;
+  }
+  export class Content {
+    ref: HTMLElement;
+    sel: Sel;
+    speechHelper?: SpeechHelper;
+    nodes: Array<Node>;
+    images: Array<HTMLImageElement>;
+    constructor(element: HTMLElement, reader: Reader);
+    reviseImages(callback: () => void): void;
+    elementFromPoint(x: number, y: number, tag?: string): HTMLElement | null;
+    imagePathFromPoint(x: number, y: number): string | null;
+    svgHtmlFromPoint(x: number, y: number): string | null;
+    linkFromPoint(x: number, y: number): Link | null;
+    getPageFromRect(rect: Rect, element: HTMLElement): number;
+    getOffsetFromAnchor(anchor: string): number | null;
+    getOffsetFromSerializedRange(serializedRange: string): number | null;
+    getRectListFromSerializedRange(serializedRange: string): RectList;
+    getOffsetFromNodeLocation(location: string, type?: string): number | null;
+    getNodeLocationOfCurrentPage(): NodeLocation;
+    showNodeLocationIfDebug(): void;
+  }
+  export class Reader {
+    contents: Array<Context>;
+    context: Context;
+    totalWidth: number;
+    totalHeight: number;
+    totalSize: number;
+    pageXOffset: number;
+    pageYOffset: number;
+    pageOffset: number;
+    curPage: number;
+    debugNodeLocation: boolean;
+    lastNodeLocationRect?: Rect;
+    constructor(context: Context);
+    setContent(ref: HTMLElement, wrapper?: HTMLElement);
+    setContents(refs: Array<HTMLElement>, wrapper?: HTMLElement);
+    getContent(key: number | HTMLElement): Content | null;
+    rectToAbsolute(rect: Rect | DOMRect | ClientRect): Rect;
+    rectsToAbsolute(rectList: Rect | DOMRect | ClientRect): RectList;
+    scrollTo(offset: number): void;
+    searchText(keyword: string): string | null;
+    textAroundSearchResult(pre: number, post: number): string;
+    getRectListOfSearchResult(): RectList;
+    getPageOfSearchResult(): number;
   }
 }
