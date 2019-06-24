@@ -84,11 +84,11 @@ declare module '@ridi/reader.js/web' {
     nodes: Array<Node>;
     images: Array<HTMLImageElement>;
     constructor(element: HTMLElement, reader: Reader);
-    setHidden(hidden, elementOrId: HTMLElement | string): void;
+    setHidden(hidden: boolean, elementOrId: HTMLElement | string): void;
     reviseImages(callback: () => void): void;
     elementFromPoint(x: number, y: number, tag?: string): HTMLElement | null;
-    imagePathFromPoint(x: number, y: number): Image | null;
-    svgHtmlFromPoint(x: number, y: number): Svg | null;
+    imageFromPoint(x: number, y: number): Image | null;
+    svgFromPoint(x: number, y: number): Svg | null;
     linkFromPoint(x: number, y: number): Link | null;
     getPageFromRect(rect: Rect, element?: HTMLElement): number;
     getOffsetFromAnchor(anchor: string): number | null;
