@@ -8,7 +8,10 @@ const EpubTouchable: React.FunctionComponent = () => {
   const touch = (e: React.MouseEvent) => {
     const readerjs = ReaderJsHelper.get();
     if (!readerjs) return;
-    console.log(readerjs.elementFromPoint(e.clientX, e.clientY));
+    console.log('elementFromPoint', readerjs.elementFromPoint(e.clientX, e.clientY));
+    console.log('imageFromPoint', readerjs.imageFromPoint(e.clientX, e.clientY));
+    console.log('svgFromPoint', readerjs.svgFromPoint(e.clientX, e.clientY));
+    console.log('linkFromPoint', readerjs.linkFromPoint(e.clientX, e.clientY));
   };
 
   return (
