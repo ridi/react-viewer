@@ -46,6 +46,18 @@ declare module '@ridi/reader.js/web' {
     href: string;
     type?: string;
   }
+  interface Image {
+    id: string;
+    element: HTMLImageElement;
+    src: string;
+    rect: Rect;
+  }
+  interface Svg {
+    id: string;
+    element: SVGElement;
+    html: string;
+    rect: Rect;
+  }
   export class Sel {
     isExpandContinuableIntoNextPage: boolean;
     constructor(content: Content);
@@ -69,22 +81,21 @@ declare module '@ridi/reader.js/web' {
   export class Content {
     ref: HTMLElement;
     sel: Sel;
-    speechHelper?: SpeechHelper;
     nodes: Array<Node>;
     images: Array<HTMLImageElement>;
     constructor(element: HTMLElement, reader: Reader);
+    setHidden(hidden, elementOrId: HTMLElement | string): void;
     reviseImages(callback: () => void): void;
     elementFromPoint(x: number, y: number, tag?: string): HTMLElement | null;
-    imagePathFromPoint(x: number, y: number): string | null;
-    svgHtmlFromPoint(x: number, y: number): string | null;
+    imagePathFromPoint(x: number, y: number): Image | null;
+    svgHtmlFromPoint(x: number, y: number): Svg | null;
     linkFromPoint(x: number, y: number): Link | null;
-    getPageFromRect(rect: Rect, element: HTMLElement): number;
+    getPageFromRect(rect: Rect, element?: HTMLElement): number;
     getOffsetFromAnchor(anchor: string): number | null;
     getOffsetFromSerializedRange(serializedRange: string): number | null;
     getRectListFromSerializedRange(serializedRange: string): RectList;
     getOffsetFromNodeLocation(location: string, type?: string): number | null;
-    getNodeLocationOfCurrentPage(): NodeLocation;
-    showNodeLocationIfDebug(): void;
+    getCurrentNodeLocation(): NodeLocation;
   }
   export class Reader {
     contents: Array<Context>;
@@ -103,7 +114,7 @@ declare module '@ridi/reader.js/web' {
     setContents(refs: Array<HTMLElement>, wrapper?: HTMLElement);
     getContent(key: number | HTMLElement): Content | null;
     rectToAbsolute(rect: Rect | DOMRect | ClientRect): Rect;
-    rectsToAbsolute(rectList: Rect | DOMRect | ClientRect): RectList;
+    rectListToAbsolute(rectList: Rect | DOMRect | ClientRect): RectList;
     scrollTo(offset: number): void;
     searchText(keyword: string): string | null;
     textAroundSearchResult(pre: number, post: number): string;
