@@ -24,7 +24,7 @@ declare module '@ridi/reader.js/web' {
   }
   export class Context {
     width: number;
-    hieght: number;
+    height: number;
     gap: number;
     pageGap: number;
     pageUnit: number;

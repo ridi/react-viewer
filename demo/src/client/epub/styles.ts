@@ -2,7 +2,7 @@ import {css} from '@emotion/core';
 
 export const header = css`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 30px;
   width: 100%;
   display: flex;
@@ -38,7 +38,7 @@ export const header = css`
 
 export const footer = css`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   width: 100%;
   height: 30px;
   bottom: 0;
@@ -50,4 +50,13 @@ export const footer = css`
   color: #fff;
   background: #343a40;
   border-bottom: 1px solid #808991;
+`;
+
+export const touchable = css `
+  z-index: 1;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
 `;

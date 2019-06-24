@@ -1,20 +1,21 @@
-import { Context, Reader } from '@ridi/reader.js/web';
+import { Content, Context } from '@ridi/reader.js/web';
+import { EpubCurrentState } from './contexts';
 declare class ReaderJsHelper {
-    private _readerJs;
-    readonly readerJs: Reader | null;
-    readonly sel: any;
-    readonly content: any;
-    readonly context: any;
-    _setDebugMode(debugMode?: boolean): void;
-    mount(contentRoot: HTMLElement, context: Context): void;
-    unmount(): void;
-    reviseImages(): Promise<any>;
-    getOffsetFromNodeLocation(location: any): number | null;
-    getNodeLocationOfCurrentPage(): string | null;
-    getRectsFromSerializedRange(serializedRange: string): Array<any> | null;
-    getOffsetFromSerializedRange(serializedRange: string): number | null;
-    getOffsetFromAnchor(anchor: string): number | null;
+    private static instance;
+    private readerJs;
+    private currentState;
+    private contentsNum;
+    private constructor();
+    static init(context: Context, { currentState }: {
+        currentState: EpubCurrentState;
+    }): void;
+    static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement): void;
+    static updateContext(context: Context): void;
+    static updateState({ currentState }: {
+        currentState: EpubCurrentState;
+    }): void;
+    static get(key?: number | HTMLElement): Content | null;
+    static reviseImages(): Promise<unknown[]> | undefined;
 }
-declare const _default: ReaderJsHelper;
-export default _default;
+export default ReaderJsHelper;
 export { Context };

@@ -17,6 +17,7 @@ import EpubHeader from './epub/EpubHeader';
 import EpubFooter from './epub/EpubFooter';
 import ComicFooter from './comic/ComicFooter';
 import { ComicLoading, EpubLoading } from './Loading/index';
+import EpubTouchable from './epub/EpubTouchable';
 
 const initialEpubSettingState = {
   [EpubSettingProperties.VIEW_TYPE]: ViewType.PAGE1,
@@ -46,6 +47,7 @@ const App: React.FunctionComponent = () => {
           <EpubReader/>
           <EpubFooter/>
           <EpubLoading/>
+          <EpubTouchable />
         </EpubProvider>
       }
       {type === TYPE.COMIC &&

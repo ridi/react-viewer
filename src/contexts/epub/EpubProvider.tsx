@@ -20,6 +20,21 @@ import * as React from 'react';
 import { EpubService } from '../../EpubService';
 import ow from 'ow';
 import Validator from '../../validators';
+import ReaderJsHelper from '../../ReaderJsHelper';
+import { Context } from '@ridi/reader.js/web';
+import * as SettingUtil from '../../utils/EpubSettingUtil';
+
+const createReaderJsContext = (settingState: EpubSettingState, maxSelectionLength: number = 1000): Context => {
+  return Context.build((context) => {
+    context.width = SettingUtil.containerWidth(settingState);
+    context.height = SettingUtil.containerHeight(settingState);
+    context.gap = SettingUtil.columnGap(settingState);
+    context.isSameDomAsUi = true;
+    context.isDoublePageMode = SettingUtil.isDoublePage(settingState);
+    context.isScrollMode = SettingUtil.isScroll(settingState);
+    context.maxSelectionLength = maxSelectionLength;
+  });
+};
 
 const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNode }> = ({ children }) => {
   const dispatchSetting = React.useContext(EpubSettingDispatchContext);
@@ -33,6 +48,16 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   React.useEffect(() => {
     EpubService.updateState({ settingState, currentState, calculationState });
   }, [settingState, currentState, calculationState]);
+
+  React.useEffect(() => {
+    ReaderJsHelper.updateState({ currentState });
+  }, [currentState]);
+
+  React.useEffect(() => {
+    ReaderJsHelper.updateContext(createReaderJsContext(settingState));
+  }, [settingState]);
+
+  ReaderJsHelper.init(createReaderJsContext(settingState), { currentState });
 
   EpubService.init({
     dispatchSetting,

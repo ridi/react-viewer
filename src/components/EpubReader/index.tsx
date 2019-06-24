@@ -2,13 +2,12 @@
 import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { EpubCalculationContext, EpubSettingContext, EpubCurrentContext } from '../../contexts';
-import * as SettingUtil from '../../utils/EpubSettingUtil';
 import Events, { SET_CONTENT } from '../../Events';
-import ReaderJsHelper, { Context } from '../../ReaderJsHelper';
 import { EpubService } from '../../EpubService';
 import * as styles from './styles';
 import { isScroll } from '../../utils/EpubSettingUtil';
 import { getContentRootElement } from '../../utils/Util';
+import ReaderJsHelper from '../../ReaderJsHelper';
 
 const EpubReader = () => {
   const contentRef: React.RefObject<HTMLDivElement> = React.useRef(null);
@@ -19,22 +18,6 @@ const EpubReader = () => {
 
   const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
 
-  const createContext = (maxSelectionLength: number = 1000): Context => {
-    return new Context(
-      SettingUtil.containerWidth(settingState),
-      SettingUtil.containerHeight(settingState),
-      SettingUtil.columnGap(settingState),
-      SettingUtil.isDoublePage(settingState),
-      SettingUtil.isScroll(settingState),
-      maxSelectionLength);
-  };
-
-  const mountReaderJs = () => {
-    if (contentRef.current) {
-      ReaderJsHelper.mount(contentRef.current, createContext());
-    }
-  };
-
   const updateCurrent = () => {
     if (!currentState.readyToRead) return;
     EpubService.get().updateCurrent().catch(error => console.error(error));
@@ -43,12 +26,16 @@ const EpubReader = () => {
   const invalidate = () => EpubService.get().invalidate().catch(error => console.error(error));
 
   React.useEffect(() => {
-    mountReaderJs();
     Events.on(SET_CONTENT, setSpineContent);
     return () => {
       Events.off(SET_CONTENT, setSpineContent);
     };
   }, []);
+
+  React.useLayoutEffect(() => {
+    if (!contentRef.current) return;
+    ReaderJsHelper.updateContents(Array.from(contentRef.current.getElementsByTagName('article')), contentRef.current);
+  }, [content]);
 
   React.useEffect(() => {
     window.addEventListener('resize', invalidate);
@@ -62,7 +49,6 @@ const EpubReader = () => {
   }, [settingState, calculationState, currentState]);
 
   React.useEffect(() => {
-    mountReaderJs();
     invalidate();
   }, [settingState]);
 

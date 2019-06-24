@@ -6,7 +6,8 @@
 declare module '@ridi/react-reader' {
     import EpubReader from '@ridi/react-reader/components/EpubReader';
     import ComicReader from '@ridi/react-reader/components/ComicReader';
-    export { EpubReader, ComicReader, };
+    import ReaderJsHelper from '@ridi/react-reader/ReaderJsHelper';
+    export { EpubReader, ComicReader, ReaderJsHelper, };
     export * from '@ridi/react-reader/EpubService';
     export * from '@ridi/react-reader/ComicService';
     export * from '@ridi/react-reader/contexts';
@@ -28,6 +29,25 @@ declare module '@ridi/react-reader/components/ComicReader' {
     }
     const ComicReader: React.FunctionComponent<ComicReaderProps>;
     export default ComicReader;
+}
+
+declare module '@ridi/react-reader/ReaderJsHelper' {
+    import { Content, Context } from '@ridi/reader.js/web';
+    import { EpubCurrentState } from '@ridi/react-reader/contexts';
+    class ReaderJsHelper {
+        static init(context: Context, { currentState }: {
+            currentState: EpubCurrentState;
+        }): void;
+        static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement): void;
+        static updateContext(context: Context): void;
+        static updateState({ currentState }: {
+            currentState: EpubCurrentState;
+        }): void;
+        static get(key?: number | HTMLElement): Content | null;
+        static reviseImages(): Promise<unknown[]> | undefined;
+    }
+    export default ReaderJsHelper;
+    export { Context };
 }
 
 declare module '@ridi/react-reader/EpubService' {
@@ -119,28 +139,6 @@ declare module '@ridi/react-reader/contexts' {
     export * from '@ridi/react-reader/contexts/comic/ComicCalculationContext';
     export * from '@ridi/react-reader/contexts/comic/ComicCurrentContext';
     export * from '@ridi/react-reader/contexts/comic/ComicProvider';
-}
-
-declare module '@ridi/react-reader/ReaderJsHelper' {
-    import { Context, Reader } from '@ridi/reader.js/web';
-    class ReaderJsHelper {
-        readonly readerJs: Reader | null;
-        readonly sel: any;
-        readonly content: any;
-        readonly context: any;
-        _setDebugMode(debugMode?: boolean): void;
-        mount(contentRoot: HTMLElement, context: Context): void;
-        unmount(): void;
-        reviseImages(): Promise<any>;
-        getOffsetFromNodeLocation(location: any): number | null;
-        getNodeLocationOfCurrentPage(): string | null;
-        getRectsFromSerializedRange(serializedRange: string): Array<any> | null;
-        getOffsetFromSerializedRange(serializedRange: string): number | null;
-        getOffsetFromAnchor(anchor: string): number | null;
-    }
-    const _default: ReaderJsHelper;
-    export default _default;
-    export { Context };
 }
 
 declare module '@ridi/react-reader/constants' {

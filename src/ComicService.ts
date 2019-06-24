@@ -52,6 +52,7 @@ export class ComicService {
   private calculationState: ComicCalculationState;
 
   static init(props: ComicServiceProperties) {
+    if (this.instance) return;
     this.instance = new ComicService(props);
   }
 

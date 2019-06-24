@@ -60,6 +60,7 @@ export class EpubService {
   private calculationState: EpubCalculationState;
 
   static init(props: EpubServiceProperties) {
+    if (this.instance) return;
     this.instance = new EpubService(props);
   }
 

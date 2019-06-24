@@ -1,92 +1,69 @@
-import { Context, Reader } from '@ridi/reader.js/web';
-import { measure } from './utils/Util';
-
-const DETECTION_TYPE = 'top'; // bottom or top
-const EMPTY_READ_LOCATION = '-1#-1';
+import { Content, Context, Reader } from '@ridi/reader.js/web';
+import { EpubCurrentState } from './contexts';
 
 class ReaderJsHelper {
-  private _readerJs: Reader | null = null;
+  private static instance: ReaderJsHelper;
 
-  get readerJs() {
-    return this._readerJs;
+  private readerJs: Reader;
+  private currentState: EpubCurrentState;
+  private contentsNum: number = 0;
+
+  private constructor(context: Context, { currentState }: { currentState: EpubCurrentState }) {
+    this.readerJs = new Reader(context);
+    this.currentState = currentState;
   }
 
-  get sel() {
-    return this._readerJs ? this._readerJs.sel : null;
+  static init(context: Context, { currentState }: { currentState: EpubCurrentState }) {
+    if (this.instance) return;
+    console.log('ReaderJsHelper.init()', context);
+    this.instance = new ReaderJsHelper(context, { currentState });
   }
 
-  get content() {
-    return this._readerJs ? this._readerJs.content : null;
+  static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement) {
+    if (!this.instance) return;
+    console.log('ReaderJsHelper.updateContents()', contentsRef, contentWrapperRef);
+    this.instance.contentsNum = contentsRef.length;
+    this.instance.readerJs.setContents(contentsRef, contentWrapperRef);
   }
 
-  get context() {
-    return this._readerJs ? this._readerJs.context : null;
+  static updateContext(context: Context) {
+    if (!this.instance) return;
+    console.log('ReaderJsHelper.updateContext()', context);
+    this.instance.readerJs.context = context;
   }
 
-  _setDebugMode(debugMode = false) {
-    if (this._readerJs) {
-      this._readerJs.debugNodeLocation = debugMode;
+  static updateState({ currentState }: { currentState: EpubCurrentState }) {
+    if (!this.instance) return;
+    this.instance.currentState = currentState;
+  }
+
+  static get(key?: number | HTMLElement ): Content | null {
+    if (!this.instance) return null;
+    let contentKey = (typeof key === 'undefined') ? this.instance.currentState.currentSpineIndex : key;
+    return this.instance.readerJs.getContent(contentKey);
+  }
+
+  static reviseImages() {
+    if (!this.instance) return;
+    const revisePromises = [];
+    for (let i = 0; i < this.instance.contentsNum; i++) {
+      revisePromises.push(new Promise((resolve) => {
+        try {
+          const content = this.get(i);
+          if (!content) {
+            console.warn(`empty content(${i}) from ReaderJs`);
+            return resolve();
+          }
+          content.reviseImages(resolve);
+        } catch (e) {
+          console.warn(e); // ignore error
+          resolve();
+        }
+      }));
     }
-  }
-
-  mount(contentRoot: HTMLElement, context: Context) {
-    if (this._readerJs) {
-      this.unmount();
-    }
-    this._readerJs = new Reader(contentRoot, context);
-    this._setDebugMode(process.env.NODE_ENV === 'development');
-  }
-
-  unmount() {
-    try {
-      if (this._readerJs) {
-        this._readerJs.unmount();
-      }
-    } catch (e) {
-      /* ignore */
-    }
-    this._readerJs = null;
-  }
-
-  reviseImages() {
-    return measure(() => new Promise((resolve) => {
-      try {
-        this.content.reviseImages(resolve);
-      } catch (e) { /* ignore */
-        console.warn(e);
-        resolve();
-      }
-    }), 'revise images');
-  }
-
-  getOffsetFromNodeLocation(location: any): number | null {
-    if (!this.readerJs) return null;
-    if (location !== EMPTY_READ_LOCATION) {
-      return this.readerJs.getOffsetFromNodeLocation(location, DETECTION_TYPE);
-    }
-    return null;
-  }
-
-  getNodeLocationOfCurrentPage(): string | null {
-    if (!this.readerJs) return null;
-    return this.readerJs.getNodeLocationOfCurrentPage(DETECTION_TYPE);
-  }
-
-  getRectsFromSerializedRange(serializedRange: string): Array<any> | null {
-    if (!this.readerJs) return null;
-    return this.readerJs.getRectsFromSerializedRange(serializedRange);
-  }
-
-  getOffsetFromSerializedRange(serializedRange: string): number | null {
-    if (!this.readerJs) return null;
-    return this.readerJs.getOffsetFromSerializedRange(serializedRange);
-  }
-
-  getOffsetFromAnchor(anchor: string): number | null {
-    if (!this.readerJs) return null;
-    return this.readerJs.getOffsetFromAnchor(anchor);
+    return Promise.all(revisePromises);
   }
 }
 
-export default new ReaderJsHelper();
+export default ReaderJsHelper;
 export { Context };
