@@ -92,9 +92,12 @@ declare module '@ridi/reader.js/web' {
     linkFromPoint(x: number, y: number): Link | null;
     getPageFromRect(rect: Rect, element?: HTMLElement): number;
     getOffsetFromAnchor(anchor: string): number | null;
+    getPageFromAnchor(anchor: string): number | null;
     getOffsetFromSerializedRange(serializedRange: string): number | null;
+    getPageFromSerializedRange(serializedRange: string): number | null;
     getRectListFromSerializedRange(serializedRange: string): RectList;
     getOffsetFromNodeLocation(location: string, type?: string): number | null;
+    getPageFromNodeLocation(location: string, type?: string): number | null;
     getCurrentNodeLocation(): NodeLocation;
   }
   export class Reader {
