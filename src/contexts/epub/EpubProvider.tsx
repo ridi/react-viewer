@@ -26,7 +26,7 @@ import * as SettingUtil from '../../utils/EpubSettingUtil';
 
 const createReaderJsContext = (settingState: EpubSettingState, maxSelectionLength: number = 1000): Context => {
   return Context.build((context) => {
-    context.width = SettingUtil.containerWidth(settingState);
+    context.width = SettingUtil.columnWidth(settingState);
     context.height = SettingUtil.containerHeight(settingState);
     context.gap = SettingUtil.columnGap(settingState);
     context.isSameDomAsUi = true;
