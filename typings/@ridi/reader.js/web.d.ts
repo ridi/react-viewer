@@ -121,7 +121,7 @@ declare module '@ridi/reader.js/web' {
     scrollTo(offset: number): void;
     searchText(keyword: string): string | null;
     textAroundSearchResult(pre: number, post: number): string;
-    getRectListOfSearchResult(): RectList;
-    getPageOfSearchResult(): number;
+    getRectListFromSearchResult(): RectList;
+    getPageFromSearchResult(): number;
   }
 }
