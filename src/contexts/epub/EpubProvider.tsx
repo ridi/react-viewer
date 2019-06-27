@@ -23,12 +23,14 @@ import Validator from '../../validators';
 import ReaderJsHelper from '../../ReaderJsHelper';
 import { Context } from '@ridi/reader.js/web';
 import * as SettingUtil from '../../utils/EpubSettingUtil';
+import { getClientHeight, getClientWidth } from '../../utils/Util';
 
 const createReaderJsContext = (settingState: EpubSettingState, maxSelectionLength: number = 1000): Context => {
   return Context.build((context) => {
-    context.width = SettingUtil.columnWidth(settingState);
-    context.height = SettingUtil.containerHeight(settingState);
-    context.gap = SettingUtil.columnGap(settingState);
+    const isScroll = SettingUtil.isScroll(settingState);
+    context.width = isScroll ? getClientWidth() : SettingUtil.columnWidth(settingState);
+    context.height = isScroll ? getClientHeight() : SettingUtil.containerHeight(settingState);
+    context.gap = isScroll ? 0 : SettingUtil.columnGap(settingState);
     context.isSameDomAsUi = true;
     context.isDoublePageMode = SettingUtil.isDoublePage(settingState);
     context.isScrollMode = SettingUtil.isScroll(settingState);
