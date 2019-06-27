@@ -50,8 +50,8 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   }, [settingState, currentState, calculationState]);
 
   React.useEffect(() => {
-    ReaderJsHelper.updateState({ currentState });
-  }, [currentState]);
+    ReaderJsHelper.updateState({ currentState, settingState, calculationState });
+  }, [currentState, settingState, calculationState]);
 
   React.useEffect(() => {
     ReaderJsHelper.updateContext(createReaderJsContext(settingState));

@@ -42,10 +42,17 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
         }): void;
         static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement): void;
         static updateContext(context: Context): void;
-        static updateState({ currentState }: {
+        static updateState({ currentState, calculationState, settingState }: {
             currentState: EpubCurrentState;
+            calculationState: EpubCalculationState;
+            settingState: EpubSettingState;
         }): void;
         static get(key?: number | HTMLElement): Content | null;
+        /**
+          * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
+          * @param x pageX
+          * @param y pageY
+          */
         static getByPoint(x: number, y: number): Content | null;
         static reviseImages(): Promise<unknown[]> | undefined;
     }
