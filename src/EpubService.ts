@@ -171,13 +171,14 @@ export class EpubService {
       if (isScroll(this.settingState)) {
         // 스크롤 보기에서 나누어 딱 떨어지지 않는 이상 마지막 페이지에 도달하는 것은 거의 불가능하므로, 페이지 수는 `Math.floor()`로 계산
         calculation.pageUnit = getClientHeight();
-        spines.reduce(({ offset, startPage }, spine, spineIndex) => {
-          const total = spine.scrollHeight;
-          const totalPage = Math.floor(total / calculation.pageUnit);
-          calculation.spines.push({ spineIndex, offset, total, startPage, totalPage });
-          return { offset: offset + total, startPage: startPage + totalPage };
-        }, { offset: 0, startPage: 1 });
 
+        calculation.spines = spines.map((spine, spineIndex) => {
+          const total = spine.scrollHeight;
+          const offset = spine.offsetTop;
+          const startPage = Math.floor(offset / calculation.pageUnit) + 1;
+          const totalPage = Math.floor(total / calculation.pageUnit);
+          return { spineIndex, offset, total, startPage, totalPage };
+        });
 
         const { offset, total } = calculation.spines.slice(-1)[0];
         calculation.total = offset + total;
