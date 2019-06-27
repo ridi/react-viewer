@@ -33,10 +33,12 @@ declare module '@ridi/react-reader/components/ComicReader' {
 
 declare module '@ridi/react-reader/ReaderJsHelper' {
     import { Content, Context } from '@ridi/reader.js/web';
-    import { EpubCurrentState } from '@ridi/react-reader/contexts';
+    import { EpubCalculationState, EpubCurrentState, EpubSettingState } from '@ridi/react-reader/contexts';
     class ReaderJsHelper {
-        static init(context: Context, { currentState }: {
+        static init(context: Context, { currentState, calculationState, settingState }: {
             currentState: EpubCurrentState;
+            calculationState: EpubCalculationState;
+            settingState: EpubSettingState;
         }): void;
         static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement): void;
         static updateContext(context: Context): void;
@@ -44,6 +46,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
             currentState: EpubCurrentState;
         }): void;
         static get(key?: number | HTMLElement): Content | null;
+        static getByPoint(x: number, y: number): Content | null;
         static reviseImages(): Promise<unknown[]> | undefined;
     }
     export default ReaderJsHelper;
@@ -276,7 +279,8 @@ declare module '@ridi/react-reader/contexts/epub/EpubCurrentContext' {
         CURRENT_PAGE = "currentPage",
         CURRENT_SPINE_INDEX = "currentSpineIndex",
         CURRENT_POSITION = "currentPosition",
-        READY_TO_READ = "readyToRead"
+        READY_TO_READ = "readyToRead",
+        VISIBLE_SPINE_INDEXES = "visibleSpineIndexes"
     }
     export type EpubCurrentAction = {
         type: EpubCurrentActionType.UPDATE_CURRENT;
@@ -290,6 +294,7 @@ declare module '@ridi/react-reader/contexts/epub/EpubCurrentContext' {
         [EpubCurrentProperties.CURRENT_SPINE_INDEX]: number;
         [EpubCurrentProperties.CURRENT_POSITION]: number;
         [EpubCurrentProperties.READY_TO_READ]: boolean;
+        [EpubCurrentProperties.VISIBLE_SPINE_INDEXES]: number[];
     };
     export const initialEpubCurrentState: EpubCurrentState;
     export const EpubCurrentReducer: React.Reducer<EpubCurrentState, EpubCurrentAction>;
@@ -486,5 +491,6 @@ declare module '@ridi/react-reader/utils/Util' {
         */
     export const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
     export const sleep: (millisecond?: number) => Promise<void>;
+    export const hasIntersect: (r1: number[], r2: number[]) => boolean;
 }
 

@@ -22,7 +22,7 @@ import {
   EpubSettingState,
 } from './contexts';
 import * as React from 'react';
-import { allowedPageNumber, columnGap, columnWidth, isScroll } from './utils/EpubSettingUtil';
+import { allowedPageNumber, columnGap, columnsInPage, columnWidth, isScroll } from './utils/EpubSettingUtil';
 import ow from 'ow';
 import Validator from './validators';
 
@@ -321,7 +321,7 @@ export class EpubService {
         const scrollLeft = getScrollLeft();
         currentPage = Math.floor(scrollLeft / pageUnit) + 1;
         const results = spines.filter(({ offset, total }) => {
-          const viewRange = [scrollLeft, scrollLeft + pageUnit];
+          const viewRange = [scrollLeft, scrollLeft + (pageUnit * columnsInPage(this.settingState))];
           const spineRange = [offset, offset + total];
           return hasIntersect(viewRange, spineRange);
         });
@@ -331,7 +331,7 @@ export class EpubService {
           visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
         }
       }
-      console.log('update currentstate => ', { currentPage, currentSpineIndex, currentPosition });
+      console.log('update currentstate => ', { currentPage, currentSpineIndex, currentPosition, visibleSpineIndexes });
       this.dispatchCurrent({
         type: EpubCurrentActionType.UPDATE_CURRENT,
         current: { currentPage, currentSpineIndex, currentPosition, visibleSpineIndexes },

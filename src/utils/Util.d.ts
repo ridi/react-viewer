@@ -30,3 +30,4 @@ export declare const debounce: (fn: () => any, wait?: number, immediate?: boolea
  */
 export declare const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
 export declare const sleep: (millisecond?: number) => Promise<void>;
+export declare const hasIntersect: (r1: number[], r2: number[]) => boolean;

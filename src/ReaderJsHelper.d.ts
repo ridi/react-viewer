@@ -8,10 +8,10 @@ declare class ReaderJsHelper {
     private settingState;
     private contentsNum;
     private constructor();
-    static init(context: Context, { current, calculation, setting }: {
-        current: EpubCurrentState;
-        calculation: EpubCalculationState;
-        setting: EpubSettingState;
+    static init(context: Context, { currentState, calculationState, settingState }: {
+        currentState: EpubCurrentState;
+        calculationState: EpubCalculationState;
+        settingState: EpubSettingState;
     }): void;
     static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement): void;
     static updateContext(context: Context): void;
