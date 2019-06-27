@@ -105,3 +105,5 @@ export const throttle = (fn: () => any, limit: number = 100, delayed: boolean = 
 export const sleep = async (millisecond: number = 0): Promise<void> => {
   return new Promise((resolve) => setTimeout(resolve, millisecond));
 };
+
+export const hasIntersect = (r1: number[], r2: number[]): boolean => (r1[0] < r2[0] ? r1[1] > r2[0] : r2[1] > r1[0]);

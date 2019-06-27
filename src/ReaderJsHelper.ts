@@ -11,17 +11,17 @@ class ReaderJsHelper {
   private settingState: EpubSettingState;
   private contentsNum: number = 0;
 
-  private constructor(context: Context, { current, calculation, setting }: { current: EpubCurrentState, calculation: EpubCalculationState, setting: EpubSettingState }) {
+  private constructor(context: Context, { currentState, calculationState, settingState }: { currentState: EpubCurrentState, calculationState: EpubCalculationState, settingState: EpubSettingState }) {
     this.readerJs = new Reader(context);
-    this.currentState = current;
-    this.calculationState = calculation;
-    this.settingState = setting;
+    this.currentState = currentState;
+    this.calculationState = calculationState;
+    this.settingState = settingState;
   }
 
-  static init(context: Context, { current, calculation, setting }: { current: EpubCurrentState, calculation: EpubCalculationState, setting: EpubSettingState }) {
+  static init(context: Context, { currentState, calculationState, settingState }: { currentState: EpubCurrentState, calculationState: EpubCalculationState, settingState: EpubSettingState }) {
     if (this.instance) return;
     console.log('ReaderJsHelper.init()', context);
-    this.instance = new ReaderJsHelper(context, { current, calculation, setting });
+    this.instance = new ReaderJsHelper(context, { currentState, calculationState, settingState });
   }
 
   static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement) {

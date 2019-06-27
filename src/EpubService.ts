@@ -2,7 +2,7 @@ import {
   getClientHeight,
   getContentContainerElement,
   getScrollLeft,
-  getScrollTop,
+  getScrollTop, hasIntersect,
   measure,
   setScrollLeft,
   setScrollTop,
@@ -302,28 +302,39 @@ export class EpubService {
   public updateCurrent = async () => {
     return measure(() => {
       const { pageUnit, spines } = this.calculationState;
-      let currentPage, currentSpineIndex = 0, currentPosition = 0;
+      let currentPage, currentSpineIndex = 0, currentPosition = 0, visibleSpineIndexes: number[] = [];
+
       if (isScroll(this.settingState)) {
         const scrollTop = getScrollTop();
         currentPage = Math.floor(scrollTop / pageUnit) + 1;
-        const result = spines.find(({ offset, total }) => scrollTop >= offset && scrollTop < offset + total);
-        if (result) {
-          currentSpineIndex = result.spineIndex;
-          currentPosition = (scrollTop - result.offset) / result.total;
+        const results = spines.filter(({ offset, total }) => {
+          const viewRange = [scrollTop, scrollTop + pageUnit];
+          const spineRange = [offset, offset + total];
+          return hasIntersect(viewRange, spineRange);
+        });
+        if (results && results.length > 0) {
+          currentSpineIndex = results[0].spineIndex;
+          currentPosition = (scrollTop - results[0].offset) / results[0].total;
+          visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
         }
       } else {
         const scrollLeft = getScrollLeft();
         currentPage = Math.floor(scrollLeft / pageUnit) + 1;
-        const result = spines.find(({ offset, total }) => scrollLeft >= offset && scrollLeft < offset + total);
-        if (result) {
-          currentSpineIndex = result.spineIndex;
-          currentPosition = (scrollLeft - result.offset) / result.total;
+        const results = spines.filter(({ offset, total }) => {
+          const viewRange = [scrollLeft, scrollLeft + pageUnit];
+          const spineRange = [offset, offset + total];
+          return hasIntersect(viewRange, spineRange);
+        });
+        if (results && results.length > 0) {
+          currentSpineIndex = results[0].spineIndex;
+          currentPosition = (scrollLeft - results[0].offset) / results[0].total;
+          visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
         }
       }
       console.log('update currentstate => ', { currentPage, currentSpineIndex, currentPosition });
       this.dispatchCurrent({
         type: EpubCurrentActionType.UPDATE_CURRENT,
-        current: { currentPage, currentSpineIndex, currentPosition },
+        current: { currentPage, currentSpineIndex, currentPosition, visibleSpineIndexes },
       });
     }, 'update current page').catch(error => console.error(error));
   };
