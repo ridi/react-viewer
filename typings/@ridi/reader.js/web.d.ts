@@ -16,10 +16,12 @@ declare module '@ridi/reader.js/web' {
     constructor(rect: DOMRect | ClientRect | Rect | object);
     equals(rect: DOMRect | ClientRect | Rect | object): boolean;
     contains(x: number, y: number): boolean;
+    toAbsolute(): Rect;
     toObject(): object;
   }
   export class RectList {
     contains(xOrRect: number | DOMRect | ClientRect | Rect | object, y?: number): boolean;
+    toAbsolute(): RectList;
     trim(): RectList;
   }
   export class Context {
@@ -116,8 +118,6 @@ declare module '@ridi/reader.js/web' {
     setContent(ref: HTMLElement, wrapper?: HTMLElement);
     setContents(refs: Array<HTMLElement>, wrapper?: HTMLElement);
     getContent(key: number | HTMLElement): Content | null;
-    rectToAbsolute(rect: Rect | DOMRect | ClientRect): Rect;
-    rectListToAbsolute(rectList: Rect | DOMRect | ClientRect): RectList;
     scrollTo(offset: number): void;
     searchText(keyword: string): string | null;
     textAroundSearchResult(pre: number, post: number): string;
