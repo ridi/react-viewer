@@ -26,6 +26,7 @@ export const CurrentState = ow.object.partialShape({
   [EpubCurrentProperties.CURRENT_SPINE_INDEX]: notNegativeNumberOptional,
   [EpubCurrentProperties.CURRENT_POSITION]: notNegativeNumberOptional,
   [EpubCurrentProperties.READY_TO_READ]: ow.optional.boolean,
+  [EpubCurrentProperties.VISIBLE_SPINE_INDEXES]: ow.optional.array.ofType(ow.number),
 });
 
 export const SettingState = ow.object.partialShape({

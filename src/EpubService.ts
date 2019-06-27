@@ -261,17 +261,21 @@ export class EpubService {
 
     const page = allowedPageNumber(this.settingState, this.calculationState, requestPage);
     const { pageUnit } = this.calculationState;
+
+    const scrollTo = (page - 1) * pageUnit;
+
     return measure(async () => {
       if (isScroll(this.settingState)) {
         setScrollLeft(0);
-        setScrollTop((page - 1) * pageUnit);
+        setScrollTop(scrollTo);
       } else {
         // todo 2페이지 보기인 경우 짝수 페이지에 도달할 수 없도록 처리 필요
-        setScrollLeft((page - 1) * pageUnit);
+        setScrollLeft(scrollTo);
         setScrollTop(0);
         console.log(`scrollLeft => ${(page - 1) * pageUnit}`);
       }
-      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current: { currentPage: page } });
+
+      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current: { currentPage: page }});
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
@@ -286,6 +290,7 @@ export class EpubService {
       console.error(e);
     }
     await this.setReadyToRead(true);
+    await this.updateCurrent();
   };
 
   public load = async (metadata: EpubParsedData): Promise<void> => {
@@ -296,46 +301,53 @@ export class EpubService {
     await this.prepareFonts({ metadata });
     Events.emit(SET_CONTENT, metadata.spines);
     await this.invalidate();
-    await this.setReadyToRead(true);
+  };
+
+  private getCurrentFromScrollPosition = (scrollTopOrLeft: number): Partial<EpubCurrentState> => {
+    const { pageUnit, spines } = this.calculationState;
+    const result: Partial<EpubCurrentState> = {
+      currentPage: Math.floor(scrollTopOrLeft / pageUnit) + 1,
+      currentSpineIndex: 0,
+      currentPosition: 0,
+      visibleSpineIndexes: [],
+    };
+
+    if (isScroll(this.settingState)) {
+      const scrollTop = scrollTopOrLeft;
+      const results = spines.filter(({ offset, total }) => {
+        const viewRange = [scrollTop, scrollTop + pageUnit];
+        const spineRange = [offset, offset + total];
+        return hasIntersect(viewRange, spineRange);
+      });
+      if (results && results.length > 0) {
+        result.currentSpineIndex = results[0].spineIndex;
+        // 첫 스파인 상단에 존재하는 margin 영역 때문에 마이너스 값이 나올 수 있으므로 보정
+        result.currentPosition = Math.max((scrollTop - results[0].offset) / results[0].total, 0);
+        result.visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
+      }
+    } else {
+      const scrollLeft = scrollTopOrLeft;
+      const results = spines.filter(({ offset, total }) => {
+        const viewRange = [scrollLeft, scrollLeft + (pageUnit * columnsInPage(this.settingState))];
+        const spineRange = [offset, offset + total];
+        return hasIntersect(viewRange, spineRange);
+      });
+      if (results && results.length > 0) {
+        result.currentSpineIndex = results[0].spineIndex;
+        result.currentPosition = (scrollLeft - results[0].offset) / results[0].total;
+        result.visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
+      }
+    }
+
+    return result;
   };
 
   public updateCurrent = async () => {
     return measure(() => {
-      const { pageUnit, spines } = this.calculationState;
-      let currentPage, currentSpineIndex = 0, currentPosition = 0, visibleSpineIndexes: number[] = [];
+      const current = this.getCurrentFromScrollPosition(isScroll(this.settingState) ? getScrollTop() : getScrollLeft());
 
-      if (isScroll(this.settingState)) {
-        const scrollTop = getScrollTop();
-        currentPage = Math.floor(scrollTop / pageUnit) + 1;
-        const results = spines.filter(({ offset, total }) => {
-          const viewRange = [scrollTop, scrollTop + pageUnit];
-          const spineRange = [offset, offset + total];
-          return hasIntersect(viewRange, spineRange);
-        });
-        if (results && results.length > 0) {
-          currentSpineIndex = results[0].spineIndex;
-          currentPosition = (scrollTop - results[0].offset) / results[0].total;
-          visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
-        }
-      } else {
-        const scrollLeft = getScrollLeft();
-        currentPage = Math.floor(scrollLeft / pageUnit) + 1;
-        const results = spines.filter(({ offset, total }) => {
-          const viewRange = [scrollLeft, scrollLeft + (pageUnit * columnsInPage(this.settingState))];
-          const spineRange = [offset, offset + total];
-          return hasIntersect(viewRange, spineRange);
-        });
-        if (results && results.length > 0) {
-          currentSpineIndex = results[0].spineIndex;
-          currentPosition = (scrollLeft - results[0].offset) / results[0].total;
-          visibleSpineIndexes = results.map(({ spineIndex }) => spineIndex);
-        }
-      }
-      console.log('update currentstate => ', { currentPage, currentSpineIndex, currentPosition, visibleSpineIndexes });
-      this.dispatchCurrent({
-        type: EpubCurrentActionType.UPDATE_CURRENT,
-        current: { currentPage, currentSpineIndex, currentPosition, visibleSpineIndexes },
-      });
+      console.log('update currentstate => ', current);
+      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current });
     }, 'update current page').catch(error => console.error(error));
   };
 

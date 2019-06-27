@@ -39,6 +39,9 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
 
   React.useEffect(() => {
     window.addEventListener('resize', invalidate);
+    if (isScroll(settingState)) {
+
+    }
     const rootElement = isScroll(settingState) ? window : getContentRootElement();
     if (rootElement) rootElement.addEventListener('scroll', updateCurrent);
     return () => {

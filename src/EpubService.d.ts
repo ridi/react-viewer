@@ -45,6 +45,7 @@ export declare class EpubService {
     goToPage: (requestPage: number) => Promise<void>;
     invalidate: () => Promise<void>;
     load: (metadata: EpubParsedData) => Promise<void>;
+    private getCurrentFromScrollPosition;
     updateCurrent: () => Promise<any>;
     updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
 }
