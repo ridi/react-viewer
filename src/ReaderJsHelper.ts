@@ -1,22 +1,27 @@
 import { Content, Context, Reader } from '@ridi/reader.js/web';
-import { EpubCurrentState } from './contexts';
+import { EpubCalculationState, EpubCurrentState, EpubSettingState } from './contexts';
+import { isScroll } from './utils/EpubSettingUtil';
 
 class ReaderJsHelper {
   private static instance: ReaderJsHelper;
 
   private readerJs: Reader;
   private currentState: EpubCurrentState;
+  private calculationState: EpubCalculationState;
+  private settingState: EpubSettingState;
   private contentsNum: number = 0;
 
-  private constructor(context: Context, { currentState }: { currentState: EpubCurrentState }) {
+  private constructor(context: Context, { current, calculation, setting }: { current: EpubCurrentState, calculation: EpubCalculationState, setting: EpubSettingState }) {
     this.readerJs = new Reader(context);
-    this.currentState = currentState;
+    this.currentState = current;
+    this.calculationState = calculation;
+    this.settingState = setting;
   }
 
-  static init(context: Context, { currentState }: { currentState: EpubCurrentState }) {
+  static init(context: Context, { current, calculation, setting }: { current: EpubCurrentState, calculation: EpubCalculationState, setting: EpubSettingState }) {
     if (this.instance) return;
     console.log('ReaderJsHelper.init()', context);
-    this.instance = new ReaderJsHelper(context, { currentState });
+    this.instance = new ReaderJsHelper(context, { current, calculation, setting });
   }
 
   static updateContents(contentsRef: Array<HTMLElement>, contentWrapperRef: HTMLElement) {
@@ -41,6 +46,16 @@ class ReaderJsHelper {
     if (!this.instance) return null;
     let contentKey = (typeof key === 'undefined') ? this.instance.currentState.currentSpineIndex : key;
     return this.instance.readerJs.getContent(contentKey);
+  }
+
+  static getByPoint(x: number, y: number): Content | null {
+    if (!this.instance) return null;
+    const { spines } = this.instance.calculationState;
+    const point = isScroll(this.instance.settingState) ? y : x;
+
+    const spine = spines.find(({ offset, total }) => point >= offset && point < offset + total);
+    if (!spine) return null;
+    return this.instance.readerJs.getContent(spine.spineIndex);
   }
 
   static reviseImages() {

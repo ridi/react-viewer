@@ -11,6 +11,7 @@ export enum EpubCurrentProperties {
   CURRENT_SPINE_INDEX = 'currentSpineIndex',
   CURRENT_POSITION = 'currentPosition',
   READY_TO_READ = 'readyToRead',
+  VISIBLE_SPINE_INDEXES = 'visibleSpineIndexes',
 }
 
 export type EpubCurrentAction =
@@ -22,6 +23,7 @@ export type EpubCurrentState = {
   [EpubCurrentProperties.CURRENT_SPINE_INDEX]: number,  // 0-based
   [EpubCurrentProperties.CURRENT_POSITION]: number,    // 0 ~ 1
   [EpubCurrentProperties.READY_TO_READ]: boolean,
+  [EpubCurrentProperties.VISIBLE_SPINE_INDEXES]: number[],
 };
 
 export const initialEpubCurrentState: EpubCurrentState = {
@@ -29,6 +31,7 @@ export const initialEpubCurrentState: EpubCurrentState = {
   [EpubCurrentProperties.CURRENT_SPINE_INDEX]: 0, // 0-based
   [EpubCurrentProperties.CURRENT_POSITION]: 0,   // 0 ~ 1 (float)
   [EpubCurrentProperties.READY_TO_READ]: false,
+  [EpubCurrentProperties.VISIBLE_SPINE_INDEXES]: [],
 };
 
 export const EpubCurrentReducer: React.Reducer<EpubCurrentState, EpubCurrentAction> = (state, action) => {
