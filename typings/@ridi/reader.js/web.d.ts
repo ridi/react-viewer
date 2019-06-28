@@ -72,13 +72,14 @@ declare module '@ridi/reader.js/web' {
     getRectList(): RectList;
     getText(): string;
   }
+  enum Type { TOP = 'top', BOTTOM = 'bottom' }
   export class NodeLocation {
     nodeIndex: number;
     wordIndex: number;
-    type: string;
-    constructor(nodeIndex?: number, wordIndex?: number, type?: string);
+    type: Type;
+    constructor(nodeIndex?: number, wordIndex?: number, type?: Type);
     toString(): string;
-    static fromString(string: string, type?: string): NodeLocation;
+    static fromString(string: string, type?: Type): NodeLocation;
   }
   export class Content {
     ref: HTMLElement;
@@ -98,9 +99,15 @@ declare module '@ridi/reader.js/web' {
     getOffsetFromSerializedRange(serializedRange: string): number | null;
     getPageFromSerializedRange(serializedRange: string): number | null;
     getRectListFromSerializedRange(serializedRange: string): RectList;
-    getOffsetFromNodeLocation(location: string, type?: string): number | null;
-    getPageFromNodeLocation(location: string, type?: string): number | null;
+    getOffsetFromNodeLocation(location: string, type?: Type): number | null;
+    getPageFromNodeLocation(location: string, type?: Type): number | null;
     getCurrentNodeLocation(): NodeLocation;
+  }
+  interface SearchResult {
+    serializedString: string;
+    rectList: RectList;
+    text: string;
+    page: number;
   }
   export class Reader {
     contents: Array<Context>;
@@ -118,10 +125,6 @@ declare module '@ridi/reader.js/web' {
     setContent(ref: HTMLElement, wrapper?: HTMLElement);
     setContents(refs: Array<HTMLElement>, wrapper?: HTMLElement);
     getContent(key: number | HTMLElement): Content | null;
-    scrollTo(offset: number): void;
-    searchText(keyword: string): string | null;
-    textAroundSearchResult(pre: number, post: number): string;
-    getRectListFromSearchResult(): RectList;
-    getPageFromSearchResult(): number;
+    searchText(keyword: string): SearchResult | null;
   }
 }
