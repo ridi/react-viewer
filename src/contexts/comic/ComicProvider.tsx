@@ -31,17 +31,23 @@ const ComicContextInitializer: React.FunctionComponent<{ children: React.ReactNo
   const calculationState = React.useContext(ComicCalculationContext);
 
   React.useEffect(() => {
+    ComicService.init({
+      dispatchSetting,
+      dispatchCalculation,
+      dispatchCurrent,
+      settingState,
+      currentState,
+      calculationState,
+    });
+
+    return () => {
+      ComicService.destroy();
+    };
+  }, []);
+
+  React.useEffect(() => {
     ComicService.updateState({ settingState, currentState, calculationState });
   }, [settingState, currentState, calculationState]);
-
-  ComicService.init({
-    dispatchSetting,
-    dispatchCalculation,
-    dispatchCurrent,
-    settingState,
-    currentState,
-    calculationState,
-  });
 
   return <>{children}</>;
 };

@@ -84,6 +84,8 @@ declare module '@ridi/react-reader/EpubService' {
     }
     export class EpubService {
         static init(props: EpubServiceProperties): void;
+        static destroy(): void;
+        static isInitialized(): boolean;
         static get(): EpubService;
         static updateState({ settingState, currentState, calculationState, }: {
             settingState: EpubSettingState;
@@ -125,6 +127,8 @@ declare module '@ridi/react-reader/ComicService' {
     }
     export class ComicService {
         static init(props: ComicServiceProperties): void;
+        static destroy(): void;
+        static isInitialized(): boolean;
         static get(): ComicService;
         static updateState({ settingState, currentState, calculationState, }: {
             settingState: ComicSettingState;

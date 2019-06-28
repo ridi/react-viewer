@@ -20,10 +20,14 @@ const EpubReader = () => {
 
   const updateCurrent = () => {
     if (!currentState.readyToRead) return;
+    if (!EpubService.isInitialized()) return;
     EpubService.get().updateCurrent().catch(error => console.error(error));
   };
 
-  const invalidate = () => EpubService.get().invalidate().catch(error => console.error(error));
+  const invalidate = () => {
+    if (!EpubService.isInitialized()) return;
+    EpubService.get().invalidate().catch(error => console.error(error));
+  };
 
   React.useEffect(() => {
     Events.on(SET_CONTENT, setSpineContent);

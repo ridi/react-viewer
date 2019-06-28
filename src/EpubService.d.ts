@@ -20,7 +20,7 @@ interface EpubServiceProperties {
     calculationState: EpubCalculationState;
 }
 export declare class EpubService {
-    private static instance;
+    private static instance?;
     private readonly dispatchSetting;
     private readonly dispatchCalculation;
     private readonly dispatchCurrent;
@@ -28,6 +28,8 @@ export declare class EpubService {
     private currentState;
     private calculationState;
     static init(props: EpubServiceProperties): void;
+    static destroy(): void;
+    static isInitialized(): boolean;
     static get(): EpubService;
     static updateState({ settingState, currentState, calculationState, }: {
         settingState: EpubSettingState;

@@ -25,10 +25,14 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
 
   const updateCurrent = debounce(() => {
     if (!currentState.readyToRead) return;
+    if (!ComicService.isInitialized()) return;
     ComicService.get().updateCurrent().catch(error => console.error(error));
   });
 
-  const invalidate = debounce(() => ComicService.get().invalidate().catch(error => console.error(error)));
+  const invalidate = () => {
+    if (!ComicService.isInitialized()) return;
+    ComicService.get().invalidate().catch(error => console.error(error));
+  };
 
   React.useEffect(() => {
     Events.on(SET_CONTENT, setImages);

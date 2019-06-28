@@ -49,7 +49,7 @@ interface EpubServiceProperties {
 }
 
 export class EpubService {
-  private static instance: EpubService;
+  private static instance?: EpubService;
 
   private readonly dispatchSetting: React.Dispatch<EpubSettingAction>;
   private readonly dispatchCalculation: React.Dispatch<EpubCalculationAction>;
@@ -62,9 +62,22 @@ export class EpubService {
   static init(props: EpubServiceProperties) {
     if (this.instance) return;
     this.instance = new EpubService(props);
+    console.log('[EpubService] initialized');
+  }
+
+  static destroy() {
+    if (this.instance) {
+      this.instance = undefined;
+    }
+    console.log('[EpubService] destroyed');
+  }
+
+  static isInitialized() {
+    return !!this.instance;
   }
 
   static get() {
+    if (!this.instance) throw new Error("There is no initialized `EpubService` instance");
     return this.instance;
   }
 
@@ -77,9 +90,9 @@ export class EpubService {
     currentState: EpubCurrentState,
     calculationState: EpubCalculationState,
   }) {
-    this.instance.settingState = settingState;
-    this.instance.currentState = currentState;
-    this.instance.calculationState = calculationState;
+    this.get().settingState = settingState;
+    this.get().currentState = currentState;
+    this.get().calculationState = calculationState;
   }
 
   private constructor({

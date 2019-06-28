@@ -1,7 +1,7 @@
 import {css} from '@emotion/core';
 
 export const wrapper = css`
-  z-index: 1;
+  z-index: 2;
   height: 30px;
   background: #000;
   position: fixed;

@@ -48,6 +48,23 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   const calculationState = React.useContext(EpubCalculationContext);
 
   React.useEffect(() => {
+    ReaderJsHelper.init(createReaderJsContext(settingState), { currentState, settingState, calculationState });
+
+    EpubService.init({
+      dispatchSetting,
+      dispatchCalculation,
+      dispatchCurrent,
+      settingState,
+      currentState,
+      calculationState,
+    });
+
+    return () => {
+      EpubService.destroy();
+    };
+  }, []);
+
+  React.useEffect(() => {
     EpubService.updateState({ settingState, currentState, calculationState });
   }, [settingState, currentState, calculationState]);
 
@@ -58,17 +75,6 @@ const EpubContextInitializer: React.FunctionComponent<{ children: React.ReactNod
   React.useEffect(() => {
     ReaderJsHelper.updateContext(createReaderJsContext(settingState));
   }, [calculationState]);
-
-  ReaderJsHelper.init(createReaderJsContext(settingState), { currentState, settingState, calculationState });
-
-  EpubService.init({
-    dispatchSetting,
-    dispatchCalculation,
-    dispatchCurrent,
-    settingState,
-    currentState,
-    calculationState,
-  });
 
   return <>{children}</>;
 };

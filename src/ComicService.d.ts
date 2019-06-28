@@ -22,7 +22,7 @@ interface ComicServiceProperties {
     calculationState: ComicCalculationState;
 }
 export declare class ComicService {
-    private static instance;
+    private static instance?;
     private readonly dispatchSetting;
     private readonly dispatchCalculation;
     private readonly dispatchCurrent;
@@ -30,6 +30,8 @@ export declare class ComicService {
     private currentState;
     private calculationState;
     static init(props: ComicServiceProperties): void;
+    static destroy(): void;
+    static isInitialized(): boolean;
     static get(): ComicService;
     static updateState({ settingState, currentState, calculationState, }: {
         settingState: ComicSettingState;

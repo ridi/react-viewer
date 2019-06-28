@@ -41,7 +41,7 @@ interface ComicServiceProperties {
 }
 
 export class ComicService {
-  private static instance: ComicService;
+  private static instance?: ComicService;
 
   private readonly dispatchSetting: React.Dispatch<ComicSettingAction>;
   private readonly dispatchCalculation: React.Dispatch<ComicCalculationAction>;
@@ -51,12 +51,26 @@ export class ComicService {
   private currentState: ComicCurrentState;
   private calculationState: ComicCalculationState;
 
+
   static init(props: ComicServiceProperties) {
     if (this.instance) return;
     this.instance = new ComicService(props);
+    console.log('[ComicService] initialized');
+  }
+
+  static destroy() {
+    if (this.instance) {
+      this.instance = undefined;
+    }
+    console.log('[ComicService] destroyed');
+  }
+
+  static isInitialized() {
+    return !!this.instance;
   }
 
   static get() {
+    if (!this.instance) throw new Error("There is no initialized `ComicService` instance");
     return this.instance;
   }
 
@@ -69,9 +83,9 @@ export class ComicService {
     currentState: ComicCurrentState,
     calculationState: ComicCalculationState,
   }) {
-    this.instance.settingState = settingState;
-    this.instance.currentState = currentState;
-    this.instance.calculationState = calculationState;
+    this.get().settingState = settingState;
+    this.get().currentState = currentState;
+    this.get().calculationState = calculationState;
   }
 
   private constructor({
