@@ -289,8 +289,8 @@ export class EpubService {
     } catch (e) {
       console.error(e);
     }
-    await this.setReadyToRead(true);
     await this.updateCurrent();
+    await this.setReadyToRead(true);
   };
 
   public load = async (metadata: EpubParsedData): Promise<void> => {
