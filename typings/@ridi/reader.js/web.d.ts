@@ -18,10 +18,12 @@ declare module '@ridi/reader.js/web' {
     contains(x: number, y: number): boolean;
     toAbsolute(): Rect;
     toObject(): object;
+    toJsonString(): string;
   }
   export class RectList {
     contains(xOrRect: number | DOMRect | ClientRect | Rect | object, y?: number): boolean;
     toAbsolute(): RectList;
+    toJsonString(): string;
     trim(): RectList;
   }
   export class Context {
