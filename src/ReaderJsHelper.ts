@@ -17,6 +17,7 @@ class ReaderJsHelper {
     this.currentState = currentState;
     this.calculationState = calculationState;
     this.settingState = settingState;
+    (<any>window).reader = this.readerJs;
   }
 
   static init(context: Context, { currentState, calculationState, settingState }: { currentState: EpubCurrentState, calculationState: EpubCalculationState, settingState: EpubSettingState }) {
