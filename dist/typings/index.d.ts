@@ -47,7 +47,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
             calculationState: EpubCalculationState;
             settingState: EpubSettingState;
         }): void;
-        static get(key?: number | HTMLElement): Content | null;
+        static get(key?: number | string | HTMLElement): Content | null;
         /**
           * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
           * @param x pageX
