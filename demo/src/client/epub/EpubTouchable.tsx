@@ -6,7 +6,7 @@ import { ReaderJsHelper } from '@ridi/react-reader';
 
 const EpubTouchable: React.FunctionComponent = () => {
   const touch = (e: React.MouseEvent) => {
-    const readerjs = ReaderJsHelper.getByPoint(e.pageX, e.pageY);
+    const readerjs = ReaderJsHelper.getByPoint(e.clientX, e.clientY);
     if (!readerjs) return;
     console.log('elementFromPoint', readerjs.elementFromPoint(e.clientX, e.clientY));
     console.log('imageFromPoint', readerjs.imageFromPoint(e.clientX, e.clientY));

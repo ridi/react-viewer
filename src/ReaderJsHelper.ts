@@ -1,7 +1,7 @@
 import { Content, Context, Reader } from '@ridi/reader.js/web';
-import { EpubCalculationState, EpubCurrentState, EpubSettingState } from './contexts';
+import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from './contexts';
 import { isScroll } from './utils/EpubSettingUtil';
-import { getScrollLeft } from './utils/Util';
+import { getScrollLeft, getScrollTop } from './utils/Util';
 
 class ReaderJsHelper {
   private static instance: ReaderJsHelper;
@@ -54,18 +54,28 @@ class ReaderJsHelper {
   }
 
   /**
-   * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
-   * @param x pageX
-   * @param y pageY
+   * 특정 포인트로부터 SpineCalculationState를 반환한다.
+   * @param clientX
+   * @param clientY
    */
-  static getByPoint(x: number, y: number): Content | null {
-    if (!this.instance) return null;
+  static getSpineIndexByPoint(clientX: number, clientY: number): SpineCalculationState | null {
     const { spines } = this.instance.calculationState;
     const scroll = isScroll(this.instance.settingState);
-    const point = scroll ? y : x + getScrollLeft();
+    const point = scroll ? clientY + getScrollTop() : clientX + getScrollLeft();
     const spine = spines.find(({ offset, total }) => point >= offset && point < offset + total);
-    if (!spine) return null;
-    return this.instance.readerJs.getContent(spine.spineIndex);
+    return !!spine ? spine : null;
+  }
+
+  /**
+   * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
+   * @param clientX
+   * @param clientY
+   */
+  static getByPoint(clientX: number, clientY: number): Content | null {
+    if (!this.instance) return null;
+    const spine = this.getSpineIndexByPoint(clientX, clientY);
+    console.log('getByPoint', spine);
+    return !!spine ? this.get(spine.spineIndex) : null;
   }
 
   static reviseImages() {

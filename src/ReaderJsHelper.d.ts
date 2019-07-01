@@ -1,5 +1,5 @@
 import { Content, Context } from '@ridi/reader.js/web';
-import { EpubCalculationState, EpubCurrentState, EpubSettingState } from './contexts';
+import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from './contexts';
 declare class ReaderJsHelper {
     private static instance;
     private readerJs;
@@ -22,11 +22,17 @@ declare class ReaderJsHelper {
     }): void;
     static get(key?: number | string | HTMLElement): Content | null;
     /**
-     * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
-     * @param x pageX
-     * @param y pageY
+     * 특정 포인트로부터 SpineCalculationState를 반환한다.
+     * @param clientX
+     * @param clientY
      */
-    static getByPoint(x: number, y: number): Content | null;
+    static getSpineIndexByPoint(clientX: number, clientY: number): SpineCalculationState | null;
+    /**
+     * 특정 포인트로부터 Reader.js content 인스턴스를 반환한다.
+     * @param clientX
+     * @param clientY
+     */
+    static getByPoint(clientX: number, clientY: number): Content | null;
     static reviseImages(): Promise<unknown[]> | undefined;
 }
 export default ReaderJsHelper;
