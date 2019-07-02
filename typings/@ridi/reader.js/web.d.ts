@@ -16,6 +16,7 @@ declare module '@ridi/reader.js/web' {
     constructor(rect: DOMRect | ClientRect | Rect | object);
     equals(rect: DOMRect | ClientRect | Rect | object): boolean;
     contains(x: number, y: number): boolean;
+    inset(widthOrLeftOrAll: number, heightOrTop?: number, right?: number, bottom?: number): Rect;
     toAbsolute(): Rect;
     toObject(): object;
     toJsonString(): string;
@@ -25,6 +26,7 @@ declare module '@ridi/reader.js/web' {
     toAbsolute(): RectList;
     toJsonString(): string;
     trim(): RectList;
+    toArray(): Array<object>;
   }
   export class Context {
     width: number;
