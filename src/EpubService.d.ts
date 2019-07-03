@@ -37,6 +37,9 @@ export declare class EpubService {
         calculationState: EpubCalculationState;
     }): void;
     private constructor();
+    private setCalculation;
+    private setSetting;
+    private setCurrent;
     private setReadyToRead;
     private appendStyles;
     private waitImagesLoaded;

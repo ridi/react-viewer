@@ -23,7 +23,14 @@ import {
   EpubSettingState,
 } from './contexts';
 import * as React from 'react';
-import { allowedPageNumber, columnGap, columnsInPage, columnWidth, isScroll } from './utils/EpubSettingUtil';
+import {
+  allowedPageNumber,
+  columnGap,
+  columnsInPage,
+  columnWidth,
+  hasLayoutSetting,
+  isScroll,
+} from './utils/EpubSettingUtil';
 import ow from 'ow';
 import Validator from './validators';
 
@@ -78,7 +85,7 @@ export class EpubService {
   }
 
   static get() {
-    if (!this.instance) throw new Error("There is no initialized `EpubService` instance");
+    if (!this.instance) throw new Error('There is no initialized `EpubService` instance');
     return this.instance;
   }
 
@@ -111,6 +118,21 @@ export class EpubService {
     this.currentState = currentState;
     this.calculationState = calculationState;
   }
+
+  private setCalculation = (calculation: Partial<EpubCalculationState>) => {
+    this.dispatchCalculation({ type: EpubCalculationActionType.UPDATE_CALCULATION, calculation });
+    this.calculationState = { ...this.calculationState, ...calculation };
+  };
+
+  private setSetting = (setting: Partial<EpubSettingState>) => {
+    this.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
+    this.settingState = { ...this.settingState, ...setting };
+  };
+
+  private setCurrent = (current: Partial<EpubCurrentState>) => {
+    this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current });
+    this.currentState = { ...this.currentState, ...current };
+  };
 
   private setReadyToRead = async (readyToRead: boolean) => {
     return new Promise((resolve) => {
@@ -168,7 +190,7 @@ export class EpubService {
         )), `${metadata.fonts.length} fonts loaded`);
   };
 
-  private calculate = async (): Promise<EpubCalculationState> => {
+  private calculate = async (): Promise<void> => {
     return measure(async () => {
       const calculation: EpubCalculationState = {
         totalPage: 0,
@@ -243,9 +265,8 @@ export class EpubService {
         contentContainer.removeChild(fakeSpine);
       }
 
-      this.dispatchCalculation({ type: EpubCalculationActionType.UPDATE_CALCULATION, calculation });
+      this.setCalculation(calculation);
       console.log('paging result =>', calculation);
-      return { ...this.calculationState, ...calculation };
     }, 'Calculation done');
   };
 
@@ -289,7 +310,7 @@ export class EpubService {
         console.log(`scrollLeft => ${(page - 1) * pageUnit}`);
       }
 
-      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current: { currentPage: page }});
+      this.setCurrent({ currentPage: page });
     }, `Go to page => ${page} (${(page - 1) * pageUnit})`);
   };
 
@@ -298,7 +319,7 @@ export class EpubService {
       await this.setReadyToRead(false);
       await this.waitImagesLoaded();
       await ReaderJsHelper.reviseImages();
-      this.calculationState = await this.calculate(); // todo 이렇게 강제 업데이트를 해야 하는데, 좀 더 나은 방법?
+      await this.calculate();
       await this.restoreCurrent();
     } catch (e) {
       console.error(e);
@@ -359,15 +380,16 @@ export class EpubService {
   public updateCurrent = async () => {
     return measure(() => {
       const current = this.getCurrentFromScrollPosition(isScroll(this.settingState) ? getScrollTop() : getScrollLeft());
-
+      this.setCurrent(current);
       console.log('update currentstate => ', current);
-      this.dispatchCurrent({ type: EpubCurrentActionType.UPDATE_CURRENT, current });
     }, 'update current page').catch(error => console.error(error));
   };
 
   public updateSetting = async (setting: Partial<EpubSettingState>) => {
     ow(setting, 'EpubService.updateSetting(setting)', Validator.Epub.SettingState);
-    await this.setReadyToRead(false);
-    this.dispatchSetting({ type: EpubSettingActionType.UPDATE_SETTING, setting });
+    this.setSetting(setting);
+    if (hasLayoutSetting(setting)) {
+      await this.invalidate();
+    }
   };
 }

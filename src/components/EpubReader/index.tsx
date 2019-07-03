@@ -16,6 +16,8 @@ const EpubReader = () => {
   const settingState = React.useContext(EpubSettingContext);
   const currentState = React.useContext(EpubCurrentContext);
 
+  const readyToRead = currentState.readyToRead;
+
   const setSpineContent = (spines: Array<String>) => setContent(spines.join(''));
 
   const updateCurrent = () => {
@@ -31,8 +33,10 @@ const EpubReader = () => {
 
   React.useEffect(() => {
     Events.on(SET_CONTENT, setSpineContent);
+    window.addEventListener('resize', invalidate);
     return () => {
       Events.off(SET_CONTENT, setSpineContent);
+      window.removeEventListener('resize', invalidate);
     };
   }, []);
 
@@ -42,19 +46,13 @@ const EpubReader = () => {
   }, [content]);
 
   React.useEffect(() => {
-    window.addEventListener('resize', invalidate);
     const rootElement = isScroll(settingState) ? window : getContentRootElement();
     if (rootElement) rootElement.addEventListener('scroll', updateCurrent);
     return () => {
-      window.removeEventListener('resize', invalidate);
       const rootElement = isScroll(settingState) ? window : getContentRootElement();
       if (rootElement) rootElement.removeEventListener('scroll', updateCurrent);
     };
-  }, [settingState, calculationState, currentState]);
-
-  React.useEffect(() => {
-    invalidate();
-  }, [settingState]);
+  }, [readyToRead]);
 
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
