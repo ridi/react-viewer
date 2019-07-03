@@ -1,4 +1,4 @@
-import { Content, Context, Reader } from '@ridi/reader.js/web';
+import { Content, Context, Reader, Rect, RectList } from '@ridi/reader.js/web';
 import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from './contexts';
 import { isScroll } from './utils/EpubSettingUtil';
 import { getScrollLeft, getScrollTop } from './utils/Util';
@@ -101,4 +101,4 @@ class ReaderJsHelper {
 }
 
 export default ReaderJsHelper;
-export { Context };
+export { Context, Rect, RectList };

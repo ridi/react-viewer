@@ -1,4 +1,4 @@
-import { Content, Context } from '@ridi/reader.js/web';
+import { Content, Context, Rect, RectList } from '@ridi/reader.js/web';
 import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from './contexts';
 declare class ReaderJsHelper {
     private static instance;
@@ -36,4 +36,4 @@ declare class ReaderJsHelper {
     static reviseImages(): Promise<unknown[]> | undefined;
 }
 export default ReaderJsHelper;
-export { Context };
+export { Context, Rect, RectList };

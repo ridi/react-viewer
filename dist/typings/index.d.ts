@@ -32,7 +32,7 @@ declare module '@ridi/react-reader/components/ComicReader' {
 }
 
 declare module '@ridi/react-reader/ReaderJsHelper' {
-    import { Content, Context } from '@ridi/reader.js/web';
+    import { Content, Context, Rect, RectList } from '@ridi/reader.js/web';
     import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from '@ridi/react-reader/contexts';
     class ReaderJsHelper {
             static init(context: Context, { currentState, calculationState, settingState }: {
@@ -63,7 +63,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
             static reviseImages(): Promise<unknown[]> | undefined;
     }
     export default ReaderJsHelper;
-    export { Context };
+    export { Context, Rect, RectList };
 }
 
 declare module '@ridi/react-reader/EpubService' {
