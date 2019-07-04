@@ -8,32 +8,22 @@ const fontFamilyStyle = (setting: EpubSettingState) => {
   }
   return css `
     font-family: ${setting[EpubSettingProperties.FONT]} !important;
-    p {
-      font-family: inherit !important;
-    }
   `;
 };
 
 const contentsStyle = (setting: EpubSettingState) => {
   return css `
-    article {
-      word-break: break-word;
+    article * {
       -webkit-tap-highlight-color: transparent;
-      
+
       ${fontFamilyStyle(setting)}
       font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
       line-height: ${setting[EpubSettingProperties.LINE_HEIGHT_IN_EM]}em !important;
-
-      html {
-        padding: 0 !important;
-        margin: 0 !important;
-        -webkit-writing-mode: horizontal-tb !important;
-        writing-mode: horizontal-tb !important;
-      }
-
+      word-break: break-word;
+    }
+    article {
       p {
         font-size: 1em;
-        line-height: inherit !important;
       }
 
       img,
@@ -125,9 +115,7 @@ const contentsStyle = (setting: EpubSettingState) => {
       h6 b,
       h6 em,
       h6 i {
-        /* 줄 간격 설정이 원본이 아닐 떼만 */
         line-height: initial !important;
-        vertical-align: baseline !important;
       }
 
       rt,
