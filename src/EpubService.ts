@@ -56,6 +56,8 @@ interface EpubServiceProperties {
   calculationState: EpubCalculationState,
 }
 
+const APPENDED_STYLE_ATTR = 'data-react-reader';
+
 export class EpubService {
   private static instance?: EpubService;
 
@@ -146,8 +148,11 @@ export class EpubService {
 
   private appendStyles = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     return measure(() => {
+      document.querySelectorAll(`[${APPENDED_STYLE_ATTR}]`).forEach(e => e.remove());
+
       if (!metadata.styles) return;
       const element = document.createElement('style');
+      element.setAttribute(APPENDED_STYLE_ATTR, '');
       element.innerText = metadata.styles.join(' ');
       document.head.appendChild(element);
     }, 'Added Styles');
