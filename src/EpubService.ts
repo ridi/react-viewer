@@ -392,6 +392,7 @@ export class EpubService {
 
   public updateSetting = async (setting: Partial<EpubSettingState>) => {
     ow(setting, 'EpubService.updateSetting(setting)', Validator.Epub.SettingState);
+    await sleep(0);
     this.setSetting(setting);
     if (hasLayoutSetting(setting)) {
       await this.invalidate();
