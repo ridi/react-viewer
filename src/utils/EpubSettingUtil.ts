@@ -1,5 +1,5 @@
 import { getClientHeight, getClientWidth } from './Util';
-import { EpubCalculationState, EpubSettingProperties, EpubSettingState } from '../contexts';
+import { EpubCalculationState, EpubSettingState } from '../contexts';
 import { ViewType } from '../constants';
 
 export const isScroll = ({ viewType }: EpubSettingState): boolean => viewType === ViewType.SCROLL;
@@ -37,16 +37,4 @@ export const allowedPageNumber = (setting: EpubSettingState, calculation: EpubCa
   const allowedPageRange = [1, calculation.totalPage];
   if (isDoublePage(setting) && isEven) allowedPage -= 1;
   return Math.max(Math.min(allowedPage, allowedPageRange[1]), allowedPageRange[0]);
-};
-
-const layoutSettings = [
-  EpubSettingProperties.VIEW_TYPE,
-  EpubSettingProperties.CONTENT_PADDING_IN_PERCENT,
-  EpubSettingProperties.COLUMN_GAP_IN_PERCENT,
-  EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN,
-  EpubSettingProperties.CONTAINER_VERTICAL_MARGIN,
-];
-
-export const hasLayoutSetting = (setting: Partial<EpubSettingState>) => {
-  return Object.keys(setting).some(s => layoutSettings.includes(s as EpubSettingProperties));
 };

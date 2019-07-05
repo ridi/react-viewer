@@ -40,8 +40,6 @@ const EpubFooter: React.FunctionComponent = () => {
     setCurrentPage(currentState.currentPage);
   }, [currentState]);
 
-  console.log('RENDER EPUBFOOTER', settingState.fontSizeInEm);
-
   return (
     <div css={styles.footer}>
       <div className="footer_paging_status">

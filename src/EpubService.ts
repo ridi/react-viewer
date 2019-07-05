@@ -28,7 +28,6 @@ import {
   columnGap,
   columnsInPage,
   columnWidth,
-  hasLayoutSetting,
   isScroll,
 } from './utils/EpubSettingUtil';
 import ow from 'ow';
@@ -392,10 +391,8 @@ export class EpubService {
 
   public updateSetting = async (setting: Partial<EpubSettingState>) => {
     ow(setting, 'EpubService.updateSetting(setting)', Validator.Epub.SettingState);
-    await sleep(0);
+    await this.setReadyToRead(false);
     this.setSetting(setting);
-    if (hasLayoutSetting(setting)) {
-      await this.invalidate();
-    }
+    await this.invalidate();
   };
 }

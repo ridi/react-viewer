@@ -460,7 +460,6 @@ declare module '@ridi/react-reader/utils/EpubSettingUtil' {
     export const containerWidth: (setting: EpubSettingState) => number;
     export const containerHeight: ({ containerVerticalMargin }: EpubSettingState) => number;
     export const allowedPageNumber: (setting: EpubSettingState, calculation: EpubCalculationState, page: number) => number;
-    export const hasLayoutSetting: (setting: Partial<EpubSettingState>) => boolean;
 }
 
 declare module '@ridi/react-reader/utils/ComicSettingUtil' {

@@ -8,4 +8,3 @@ export declare const contentPadding: ({ contentPaddingInPercent }: EpubSettingSt
 export declare const containerWidth: (setting: EpubSettingState) => number;
 export declare const containerHeight: ({ containerVerticalMargin }: EpubSettingState) => number;
 export declare const allowedPageNumber: (setting: EpubSettingState, calculation: EpubCalculationState, page: number) => number;
-export declare const hasLayoutSetting: (setting: Partial<EpubSettingState>) => boolean;
