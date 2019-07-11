@@ -105,7 +105,7 @@ declare module '@ridi/reader.js/web' {
     getRectListFromSerializedRange(serializedRange: string): RectList;
     getOffsetFromNodeLocation(location: string, type?: Type): number | null;
     getPageFromNodeLocation(location: string, type?: Type): number | null;
-    getCurrentNodeLocation(): NodeLocation;
+    getCurrentNodeLocation(): string;
   }
   interface SearchResult {
     serializedString: string;
