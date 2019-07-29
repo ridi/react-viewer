@@ -1,4 +1,4 @@
-import { Content, Context, Rect, RectList } from '@ridi/reader.js/web';
+import { Content, Context, Reader, Rect, RectList } from '@ridi/reader.js/web';
 import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from './contexts';
 declare class ReaderJsHelper {
     private static instance;
@@ -21,6 +21,7 @@ declare class ReaderJsHelper {
         settingState: EpubSettingState;
     }): void;
     static get(key?: number | string | HTMLElement): Content | null;
+    static getReaderJs(): Reader | null;
     /**
      * 특정 포인트로부터 SpineCalculationState를 반환한다.
      * @param clientX

@@ -32,7 +32,7 @@ declare module '@ridi/react-reader/components/ComicReader' {
 }
 
 declare module '@ridi/react-reader/ReaderJsHelper' {
-    import { Content, Context, Rect, RectList } from '@ridi/reader.js/web';
+    import { Content, Context, Reader, Rect, RectList } from '@ridi/reader.js/web';
     import { EpubCalculationState, EpubCurrentState, EpubSettingState, SpineCalculationState } from '@ridi/react-reader/contexts';
     class ReaderJsHelper {
             static init(context: Context, { currentState, calculationState, settingState }: {
@@ -48,6 +48,7 @@ declare module '@ridi/react-reader/ReaderJsHelper' {
                     settingState: EpubSettingState;
             }): void;
             static get(key?: number | string | HTMLElement): Content | null;
+            static getReaderJs(): Reader | null;
             /**
                 * 특정 포인트로부터 SpineCalculationState를 반환한다.
                 * @param clientX

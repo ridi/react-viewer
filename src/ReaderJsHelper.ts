@@ -53,6 +53,11 @@ class ReaderJsHelper {
     return this.instance.readerJs.getContent(contentKey);
   }
 
+  static getReaderJs(): Reader | null {
+    if (!this.instance) return null;
+    return this.instance.readerJs;
+  }
+
   /**
    * 특정 포인트로부터 SpineCalculationState를 반환한다.
    * @param clientX
