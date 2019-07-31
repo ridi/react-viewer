@@ -15,6 +15,7 @@ export enum EpubSettingProperties {
   COLUMN_GAP_IN_PERCENT = 'columnGapInPercent',
   CONTAINER_HORIZONTAL_MARGIN = 'containerHorizontalMargin',
   CONTAINER_VERTICAL_MARGIN = 'containerVerticalMargin',
+  AUTO_INVALIDATION = 'autoInvalidation',
 }
 
 export type EpubSettingAction = { type: EpubSettingActionType.UPDATE_SETTING, setting: Partial<EpubSettingState> };
@@ -28,6 +29,7 @@ export type EpubSettingState = {
   [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number,
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number,
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number,
+  [EpubSettingProperties.AUTO_INVALIDATION]: boolean,
 };
 
 export const initialEpubSettingState: EpubSettingState = {
@@ -39,6 +41,7 @@ export const initialEpubSettingState: EpubSettingState = {
   [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: 5,  // % (1% ~ 20%)
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: 30,
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: 35,
+  [EpubSettingProperties.AUTO_INVALIDATION]: true,
 };
 
 export const EpubSettingReducer: Reducer<EpubSettingState, EpubSettingAction> = (state, action) => {

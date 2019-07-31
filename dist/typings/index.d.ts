@@ -227,7 +227,8 @@ declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
         CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
         COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
         CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
-        CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin"
+        CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin",
+        AUTO_INVALIDATION = "autoInvalidation"
     }
     export type EpubSettingAction = {
         type: EpubSettingActionType.UPDATE_SETTING;
@@ -242,6 +243,7 @@ declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
         [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number;
         [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
         [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
+        [EpubSettingProperties.AUTO_INVALIDATION]: boolean;
     };
     export const initialEpubSettingState: EpubSettingState;
     export const EpubSettingReducer: Reducer<EpubSettingState, EpubSettingAction>;

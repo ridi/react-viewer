@@ -28,6 +28,7 @@ const EpubReader = () => {
 
   const invalidate = () => {
     if (!EpubService.isInitialized()) return;
+    if (!settingState.autoInvalidation) return;
     EpubService.get().invalidate().catch(error => console.error(error));
   };
 

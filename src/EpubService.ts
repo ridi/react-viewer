@@ -393,6 +393,8 @@ export class EpubService {
     ow(setting, 'EpubService.updateSetting(setting)', Validator.Epub.SettingState);
     await this.setReadyToRead(false);
     this.setSetting(setting);
-    await this.invalidate();
+    if (this.settingState.autoInvalidation) {
+      await this.invalidate();
+    }
   };
 }

@@ -28,9 +28,7 @@ const EpubFooter: React.FunctionComponent = () => {
 
   const onInputFontSizeInEm = (e: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
-      console.log('!!!UPDATE_SETTING1');
       EpubService.get().updateSetting({ fontSizeInEm });
-      console.log('!!!UPDATE_SETTING2');
     } else if (isHtmlInputElement(e.target)) {
       setFontSizeInEm(parseFloat(e.target.value || '1.0'));
     }
