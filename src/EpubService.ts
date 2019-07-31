@@ -67,6 +67,7 @@ export class EpubService {
   private settingState: EpubSettingState;
   private currentState: EpubCurrentState;
   private calculationState: EpubCalculationState;
+  private isLoaded: boolean = false;
 
   static init(props: EpubServiceProperties) {
     if (this.instance) return;
@@ -175,6 +176,7 @@ export class EpubService {
           image.addEventListener('error', tap);
         }
       });
+      if (count === imageCount) return onImagesLoaded();
     }), `${imageCount} images loaded`);
   };
 
@@ -219,7 +221,7 @@ export class EpubService {
           const totalPage = Math.floor(total / calculation.pageUnit);
           return { spineIndex, offset, total, startPage, totalPage };
         });
-
+        if (spines.length === 0) return this.calculationState;
         const { offset, total } = calculation.spines.slice(-1)[0];
         calculation.total = offset + total;
         calculation.totalPage = Math.floor((offset + total) / calculation.pageUnit);
@@ -319,6 +321,7 @@ export class EpubService {
   };
 
   public invalidate = async (): Promise<void> => {
+    if (!this.isLoaded) return;
     try {
       await this.setReadyToRead(false);
       await this.waitImagesLoaded();
@@ -334,18 +337,17 @@ export class EpubService {
 
   public load = async (metadata: EpubParsedData): Promise<void> => {
     ow(metadata, 'EpubService.load(metadata)', Validator.Epub.EpubParsedData);
-
+    this.isLoaded = true;
     await this.setReadyToRead(false);
     await this.appendStyles({ metadata });
     await this.prepareFonts({ metadata });
     Events.emit(SET_CONTENT, metadata.spines);
-    await this.invalidate();
   };
 
   private getCurrentFromScrollPosition = (scrollTopOrLeft: number): Partial<EpubCurrentState> => {
     const { pageUnit, spines } = this.calculationState;
     const result: Partial<EpubCurrentState> = {
-      currentPage: Math.floor(scrollTopOrLeft / pageUnit) + 1,
+      currentPage: Math.floor(scrollTopOrLeft / pageUnit) + 1 || 1,
       currentSpineIndex: 0,
       currentPosition: 0,
       visibleSpineIndexes: [],

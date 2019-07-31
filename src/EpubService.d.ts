@@ -27,6 +27,7 @@ export declare class EpubService {
     private settingState;
     private currentState;
     private calculationState;
+    private isLoaded;
     static init(props: EpubServiceProperties): void;
     static destroy(): void;
     static isInitialized(): boolean;

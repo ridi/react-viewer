@@ -44,6 +44,7 @@ const EpubReader = () => {
   React.useLayoutEffect(() => {
     if (!contentRef.current) return;
     ReaderJsHelper.updateContents(Array.from(contentRef.current.getElementsByTagName('article')), contentRef.current);
+    invalidate();
   }, [content]);
 
   React.useEffect(() => {
