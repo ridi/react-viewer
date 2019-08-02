@@ -28,16 +28,20 @@ const EpubReader = () => {
 
   const invalidate = () => {
     if (!EpubService.isInitialized()) return;
-    if (!settingState.autoInvalidation) return;
     EpubService.get().invalidate().catch(error => console.error(error));
+  };
+
+  const handleResize = () => {
+    if (!settingState.autoInvalidation) return;
+    invalidate();
   };
 
   React.useEffect(() => {
     Events.on(SET_CONTENT, setSpineContent);
-    window.addEventListener('resize', invalidate);
+    window.addEventListener('resize', handleResize);
     return () => {
       Events.off(SET_CONTENT, setSpineContent);
-      window.removeEventListener('resize', invalidate);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
