@@ -130,5 +130,6 @@ declare module '@ridi/reader.js/web' {
     setContents(refs: Array<HTMLElement>, wrapper?: HTMLElement);
     getContent(key: number | HTMLElement): Content | null;
     searchText(keyword: string): SearchResult | null;
+    resetSearch(): void;
   }
 }
