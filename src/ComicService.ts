@@ -141,8 +141,12 @@ export class ComicService {
 
   public invalidate = async () => {
     await this.setReadyToRead(false);
-    this.calculationState = await this.calculate();
-    await this.restoreCurrent();
+    try {
+      this.calculationState = await this.calculate();
+      await this.restoreCurrent();
+    } catch (e) {
+      console.error(e);
+    }
     await this.setReadyToRead(true);
   };
 
