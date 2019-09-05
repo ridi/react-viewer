@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { EpubCalculationContext, EpubSettingContext, EpubCurrentContext } from '../../contexts';
 import Events, { SET_CONTENT } from '../../Events';
@@ -23,12 +21,12 @@ const EpubReader = () => {
   const updateCurrent = () => {
     if (!currentState.readyToRead) return;
     if (!EpubService.isInitialized()) return;
-    EpubService.get().updateCurrent().catch(error => console.error(error));
+    EpubService.get().updateCurrent();
   };
 
   const invalidate = () => {
     if (!EpubService.isInitialized()) return;
-    EpubService.get().invalidate().catch(error => console.error(error));
+    EpubService.get().invalidate();
   };
 
   const handleResize = () => {

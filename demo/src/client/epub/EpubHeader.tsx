@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import * as React from 'react';
-import { jsx } from '@emotion/core';
 import * as styles from './styles';
 import { EpubViewTypeButton } from '../ViewTypeButton';
 import {

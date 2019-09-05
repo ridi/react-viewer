@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import * as React from 'react';
-import { jsx } from '@emotion/core';
 import { EpubCurrentContext, ComicCurrentContext } from '@ridi/react-reader';
 import * as styles from './styles';
 

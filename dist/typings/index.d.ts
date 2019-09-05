@@ -99,11 +99,11 @@ declare module '@ridi/react-reader/EpubService' {
             currentState: EpubCurrentState;
             calculationState: EpubCalculationState;
         }): void;
-        goToPage: (requestPage: number) => Promise<void>;
-        invalidate: () => Promise<void>;
-        load: (metadata: EpubParsedData) => Promise<void>;
-        updateCurrent: () => Promise<any>;
-        updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
+        goToPage: (requestPage: number) => void;
+        invalidate: () => void;
+        load: (metadata: EpubParsedData) => void;
+        updateCurrent: () => void;
+        updateSetting: (setting: Partial<EpubSettingState>) => void;
     }
     export {};
 }
@@ -144,9 +144,9 @@ declare module '@ridi/react-reader/ComicService' {
         }): void;
         invalidate: () => Promise<void>;
         load: (metadata: ComicParsedData) => Promise<void>;
-        goToPage: (requestPage: number) => Promise<void>;
+        goToPage: (requestPage: number) => void;
         updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
-        updateCurrent: () => Promise<any>;
+        updateCurrent: () => void;
     }
     export {};
 }
@@ -479,7 +479,6 @@ declare module '@ridi/react-reader/utils/ComicSettingUtil' {
 }
 
 declare module '@ridi/react-reader/utils/Util' {
-    export function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
     export const getRootElement: () => Element | null;
     export const getContentRootElement: () => HTMLElement | null;
     export const getContentContainerElement: () => HTMLElement | null;
@@ -512,5 +511,9 @@ declare module '@ridi/react-reader/utils/Util' {
     export const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
     export const sleep: (millisecond?: number) => Promise<void>;
     export const hasIntersect: (r1: number[], r2: number[]) => boolean;
+    export const logger: {
+            (message?: any, ...optionalParams: any[]): void;
+            (message?: any, ...optionalParams: any[]): void;
+    };
 }
 

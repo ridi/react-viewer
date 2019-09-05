@@ -1,11 +1,4 @@
 
-export async function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any> {
-  const startTime = new Date().getTime();
-  const result = await run();
-  console.log(`${message}`, ...optionalParams, `- (${(new Date().getTime() - startTime)}ms)`);
-  return result;
-}
-
 export const getRootElement = (): Element | null => {
   if (document.scrollingElement) return document.scrollingElement;
   return document.documentElement || document.body;
@@ -18,7 +11,7 @@ export const getScrollWidth = (): number => {
   return rootElement ? rootElement.scrollWidth : 0;
 };
 
-export const getScrollHeight = () : number => {
+export const getScrollHeight = (): number => {
   const rootElement = getRootElement();
   return rootElement ? rootElement.scrollHeight : 0;
 };
@@ -28,7 +21,7 @@ export const getScrollLeft = (): number => {
   return rootElement ? rootElement.scrollLeft : 0;
 };
 
-export const getScrollTop = () : number => {
+export const getScrollTop = (): number => {
   const rootElement = getRootElement();
   return rootElement ? rootElement.scrollTop : 0;
 };
@@ -50,7 +43,6 @@ export const setScrollTop = (scrollTop: number): void => {
 export const getClientWidth = (): number => document.documentElement.clientWidth;
 
 export const getClientHeight = (): number => document.documentElement.clientHeight;
-
 
 /**
  * Create a debounced(grouping multiple event listener in one) function
@@ -97,13 +89,17 @@ export const throttle = (fn: () => any, limit: number = 100, delayed: boolean = 
         fn.apply(null, args);
       }
       inThrottle = true;
-      setTimeout(() => { inThrottle = false; }, limit);
+      setTimeout(() => {
+        inThrottle = false;
+      }, limit);
     }
   };
 };
 
 export const sleep = async (millisecond: number = 0): Promise<void> => {
-  return new Promise((resolve) => setTimeout(resolve, millisecond));
+  return new Promise(resolve => setTimeout(resolve, millisecond));
 };
 
 export const hasIntersect = (r1: number[], r2: number[]): boolean => (r1[0] < r2[0] ? r1[1] > r2[0] : r2[1] > r1[0]);
+
+export const logger = console.log

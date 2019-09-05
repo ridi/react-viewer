@@ -48,11 +48,11 @@ export declare class EpubService {
     private calculate;
     private getPageFromSpineIndexAndPosition;
     private restoreCurrent;
-    goToPage: (requestPage: number) => Promise<void>;
-    invalidate: () => Promise<void>;
-    load: (metadata: EpubParsedData) => Promise<void>;
+    goToPage: (requestPage: number) => void;
+    invalidate: () => void;
+    load: (metadata: EpubParsedData) => void;
     private getCurrentFromScrollPosition;
-    updateCurrent: () => Promise<any>;
-    updateSetting: (setting: Partial<EpubSettingState>) => Promise<void>;
+    updateCurrent: () => void;
+    updateSetting: (setting: Partial<EpubSettingState>) => void;
 }
 export {};

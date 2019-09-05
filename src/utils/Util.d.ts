@@ -1,4 +1,3 @@
-export declare function measure(run: () => Promise<any> | any, message: string, ...optionalParams: Array<any>): Promise<any>;
 export declare const getRootElement: () => Element | null;
 export declare const getContentRootElement: () => HTMLElement | null;
 export declare const getContentContainerElement: () => HTMLElement | null;
@@ -31,3 +30,7 @@ export declare const debounce: (fn: () => any, wait?: number, immediate?: boolea
 export declare const throttle: (fn: () => any, limit?: number, delayed?: boolean) => () => void;
 export declare const sleep: (millisecond?: number) => Promise<void>;
 export declare const hasIntersect: (r1: number[], r2: number[]) => boolean;
+export declare const logger: {
+    (message?: any, ...optionalParams: any[]): void;
+    (message?: any, ...optionalParams: any[]): void;
+};

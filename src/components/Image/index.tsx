@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { ImageData } from '../../ComicService';
 import { ComicSettingContext, ComicSettingState, ComicCurrentContext } from '../../contexts';

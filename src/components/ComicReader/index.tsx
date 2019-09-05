@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import * as React from 'react';
 import { ComicCalculationContext, ComicSettingContext, ComicCurrentContext } from '../../contexts';
 import { ComicService }  from '../../ComicService';
@@ -26,12 +24,12 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
   const updateCurrent = debounce(() => {
     if (!currentState.readyToRead) return;
     if (!ComicService.isInitialized()) return;
-    ComicService.get().updateCurrent().catch(error => console.error(error));
+    ComicService.get().updateCurrent();
   });
 
   const invalidate = () => {
     if (!ComicService.isInitialized()) return;
-    ComicService.get().invalidate().catch(error => console.error(error));
+    ComicService.get().invalidate();
   };
 
   React.useEffect(() => {
