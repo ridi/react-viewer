@@ -22,6 +22,7 @@ const contentsStyle = (setting: EpubSettingState) => {
     }
     article {
       font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
+      height: initial !important;
 
       p {
         font-size: 1em;

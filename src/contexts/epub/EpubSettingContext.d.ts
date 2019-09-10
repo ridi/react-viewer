@@ -1,3 +1,4 @@
+/// <reference types="@emotion/core" />
 import { Reducer } from 'react';
 import { ViewType } from '../../constants';
 export declare enum EpubSettingActionType {
