@@ -6,11 +6,13 @@ import { ImageStatus } from '../../constants';
 import { ratio } from '../../utils/ComicSettingUtil';
 
 export type ErrorRendererType = React.FunctionComponent<{ retry: () => void }>;
-export type LoadingRendererType =  React.FunctionComponent;
+export type LoadingRendererType = React.FunctionComponent;
+export type ImageRendererType = React.FunctionComponent;
 
 export interface ImageRenderers {
   ErrorRenderer?: ErrorRendererType,
   LoadingRenderer?: LoadingRendererType,
+  ImageRenderer?: ImageRendererType,
 }
 
 export interface ImageProps {

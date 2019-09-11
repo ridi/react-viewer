@@ -4,7 +4,7 @@ export interface ImageData {
     fileSize: number;
     index: number;
     path: string;
-    uri: string;
+    uri?: string;
     width?: number;
     height?: number;
 }

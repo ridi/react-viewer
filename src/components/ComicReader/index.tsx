@@ -70,6 +70,8 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
     return sequence;
   }, [images, settingState.viewType, settingState.bindingType]);
 
+  const ImageRenderer = renderers.ImageRenderer || Image;
+
   return (
     <div id="content_root" css={styles.wrapper(settingState)}>
       <div css={styles.imageContainer(settingState, calculationState)}>
@@ -78,7 +80,7 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
           return <BlankImage key={`comic-blank-${index}`} settingState={settingState} />;
         }
         const image = images[imageIndex];
-        return <Image key={`comic-image-${image.index}`} image={image} renderers={renderers} />;
+        return <ImageRenderer key={`comic-image-${image.index}`} image={image} renderers={renderers} />;
       })}
       </div>
     </div>

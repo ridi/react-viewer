@@ -5,9 +5,11 @@ export declare type ErrorRendererType = React.FunctionComponent<{
     retry: () => void;
 }>;
 export declare type LoadingRendererType = React.FunctionComponent;
+export declare type ImageRendererType = React.FunctionComponent;
 export interface ImageRenderers {
     ErrorRenderer?: ErrorRendererType;
     LoadingRenderer?: LoadingRendererType;
+    ImageRenderer?: ImageRendererType;
 }
 export interface ImageProps {
     image: ImageData;

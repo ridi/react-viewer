@@ -34,7 +34,7 @@ export const ImageData = ow.object.partialShape({
   fileSize: notNegativeNumber,
   index: notNegativeNumber,
   path: ow.optional.string,
-  uri: ow.string,
+  uri: ow.optional.string,
   width: notNegativeNumberOptional,
   height: notNegativeNumberOptional,
 });

@@ -115,7 +115,7 @@ declare module '@ridi/react-reader/ComicService' {
         fileSize: number;
         index: number;
         path: string;
-        uri: string;
+        uri?: string;
         width?: number;
         height?: number;
     }
@@ -197,9 +197,11 @@ declare module '@ridi/react-reader/components/Image/index' {
         retry: () => void;
     }>;
     export type LoadingRendererType = React.FunctionComponent;
+    export type ImageRendererType = React.FunctionComponent;
     export interface ImageRenderers {
         ErrorRenderer?: ErrorRendererType;
         LoadingRenderer?: LoadingRendererType;
+        ImageRenderer?: ImageRendererType;
     }
     export interface ImageProps {
         image: ImageData;

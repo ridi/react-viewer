@@ -20,7 +20,7 @@ export interface ImageData {
   fileSize: number;
   index: number; // 0-based
   path: string;
-  uri: string;
+  uri?: string;
   width?: number;
   height?: number;
 }
