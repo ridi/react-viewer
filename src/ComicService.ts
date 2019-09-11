@@ -168,10 +168,15 @@ export class ComicService {
     this.dispatchCalculation({ type: ComicCalculationActionType.UPDATE_CALCULATION, calculation: initialCalculation });
     this.calculationState = initialCalculation;
 
+    const startPage = startWithBlankPage(this.settingState) ? 0 : 1;
+    const currentPage = this.currentState.currentPage > 1 ? this.currentState.currentPage : startPage;
+
+    console.log('currentPage', currentPage);
+
     // init currentPage
     const initialCurrent = {
       ...this.currentState,
-      currentPage: startWithBlankPage(this.settingState) ? 0 : 1,
+      currentPage,
     };
     this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: initialCurrent });
     this.currentState = initialCurrent;
