@@ -28,6 +28,7 @@ export declare class EpubService {
     private currentState;
     private calculationState;
     private isLoaded;
+    private isImageLoaded;
     static init(props: EpubServiceProperties): void;
     static destroy(): void;
     static isInitialized(): boolean;
@@ -43,8 +44,10 @@ export declare class EpubService {
     private setCurrent;
     private setReadyToRead;
     private appendStyles;
+    private loadFonts;
+    private prepareLoad;
     private waitImagesLoaded;
-    private prepareFonts;
+    private prepareCalculate;
     private calculate;
     private getPageFromSpineIndexAndPosition;
     private restoreCurrent;

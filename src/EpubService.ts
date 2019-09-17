@@ -4,6 +4,7 @@ import {
   getScrollLeft,
   getScrollTop,
   hasIntersect,
+  measure,
   setScrollLeft,
   setScrollTop,
 } from './utils/Util';
@@ -60,6 +61,7 @@ export class EpubService {
   private currentState: EpubCurrentState;
   private calculationState: EpubCalculationState;
   private isLoaded: boolean = false;
+  private isImageLoaded: boolean = false;
 
   static init(props: EpubServiceProperties) {
     if (this.instance) return;
@@ -132,6 +134,7 @@ export class EpubService {
     this.dispatchCurrent({ type: EpubCurrentActionType.SET_READY_TO_READ, readyToRead });
   };
 
+  // 이펍 내 콘텐츠 스타일을 추가합니다.
   private appendStyles = ({ metadata }: { metadata: EpubParsedData }) => {
     document.querySelectorAll(`[${APPENDED_STYLE_ATTR}]`).forEach(e => e.remove());
 
@@ -140,29 +143,13 @@ export class EpubService {
     element.setAttribute(APPENDED_STYLE_ATTR, '');
     element.innerText = metadata.styles.join(' ');
     document.head.appendChild(element);
+    console.log('epub content styles appended:', metadata.styles.length);
   };
 
-  private waitImagesLoaded = () => {
-    const imageCount = document.images.length;
-    let count = 0;
-    const tap = () => {
-      count += 1;
-      if (count === imageCount) {
-        return;
-      }
-    };
-    Array.from(document.images).forEach(image => {
-      if (image.complete) {
-        tap();
-      } else {
-        image.addEventListener('load', tap);
-        image.addEventListener('error', tap);
-      }
-    });
-    if (count === imageCount) return;
-  };
-
-  private prepareFonts = ({ metadata }: { metadata: EpubParsedData }) => {
+  // 이펍에 내장된 폰트들을 로드합니다.
+  // DOM에 콘텐츠가 추가되기 전에 폰트 로드를 완료시키기 위해 FontFace를 사용합니다.
+  // 콘텐츠가 추가된 후 CSS에 의해 자연스럽게 로드 되는 것을 기다리면 페이지 계산 중에 로드가 완료되는 폰트가 있을 수 있고 그로인해 페이지 오차가 생깁니다.
+  private loadFonts = async ({ metadata }: { metadata: EpubParsedData }): Promise<void> => {
     if (!metadata.fonts) return;
     const fontFaces = metadata.fonts.map(({ href, uri }) => {
       const name = href
@@ -173,15 +160,61 @@ export class EpubService {
       return new FontFace(name, `url("${url}")`);
     });
 
-    Promise.all(
-      fontFaces.map(fontFace =>
+    await Promise.all(
+      fontFaces.map(fontFace => 
         fontFace
           .load()
-          .then(() => (document as any).fonts.add(fontFace))
-          .catch(error => console.warn('font loading error: ', error)),
-      ),
-    );
+          .then(() => {
+            console.log('epub embedded font loaded:', fontFace.family);
+            (document as any).fonts.add(fontFace);
+          })
+          .catch((error) => console.warn('epub embedded font loading error:', error)),
+      )
+    )
   };
+
+  // DOM에 콘텐츠를 추가하기 전에 실행되어야 할 코드들입니다.
+  // 콘텐츠 추가 후 실행되면 페이징 오차가 발생합니다.
+  private prepareLoad = async ({ metadata }: { metadata: EpubParsedData }, completion: Function) => {
+    this.appendStyles({ metadata });
+    await this.loadFonts({ metadata });
+    completion();
+  }
+
+  // 이펍 콘텐츠 내 모든 이미지의 로드가 완료되길 기다립니다.
+  private waitImagesLoaded = async () => {
+    if (this.isImageLoaded) return;
+    const images = Array.from(document.images);
+    let count = 0;
+
+    await new Promise((resolve) => {
+      const onComplete = () => {
+        count += 1;
+        if (count === images.length) {
+          resolve();
+        }
+      }
+      images.forEach((image) => {
+        if (image.complete) {
+          onComplete();
+        } else {
+          image.addEventListener('load', onComplete);
+          image.addEventListener('error', onComplete);
+        }
+      });
+    });
+    console.log('epub content images loaded:', images.length);
+  }
+
+  // 페이징 시작 전에 실행되어야 할 코드들입니다.
+  // 페이징 시작 후 실행되면 페이징 오차가 발생합니다.
+  private prepareCalculate = async (completion: Function) => {
+    await this.waitImagesLoaded();
+    ReaderJsHelper.reviseImages();
+    setTimeout(() => {
+      completion();
+    }, 0); // FIXME: Reader.js의 이미지 보정 리펙토링 전까진 지워선 안됩니다.
+  }
 
   private calculate = () => {
     const calculation: EpubCalculationState = {
@@ -304,26 +337,30 @@ export class EpubService {
 
   public invalidate = () => {
     if (!this.isLoaded) return;
+    const defer = () => {
+      this.updateCurrent();
+      this.setReadyToRead(true);
+    };
     try {
       this.setReadyToRead(false);
-      this.waitImagesLoaded();
-      ReaderJsHelper.reviseImages();
-      this.calculate();
-      this.restoreCurrent();
+      this.prepareCalculate(() => {
+        this.calculate();
+        this.restoreCurrent();
+        defer();
+      });
     } catch (e) {
       console.error(e);
+      defer();
     }
-    this.updateCurrent();
-    this.setReadyToRead(true);
   };
 
   public load = (metadata: EpubParsedData) => {
     ow(metadata, 'EpubService.load(metadata)', Validator.Epub.EpubParsedData);
     this.isLoaded = true;
     this.setReadyToRead(false);
-    this.appendStyles({ metadata });
-    this.prepareFonts({ metadata });
-    Events.emit(SET_CONTENT, metadata.spines);
+    this.prepareLoad({ metadata }, () => {
+      Events.emit(SET_CONTENT, metadata.spines);
+    });
   };
 
   private getCurrentFromScrollPosition = (scrollTopOrLeft: number): Partial<EpubCurrentState> => {
