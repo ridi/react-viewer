@@ -1,3 +1,7 @@
+const TerserPlugin = require('terser-webpack-plugin');
+
+const isDev = process.env.NODE_ENV === 'development';
+
 module.exports = {
   entry: {
     index: './src/index.ts',
@@ -34,4 +38,20 @@ module.exports = {
     fs: 'empty',
   },
   target: 'web',
+  optimization: {
+    minimizer: isDev ? null : [
+      new TerserPlugin({
+        extractComments: false,
+        sourceMap: true, // Must be set to true if using source-maps in production
+        terserOptions: {
+          compress: {
+            drop_console: true,
+          },
+          output: {
+            comments: false,
+          },
+        },
+      }),
+    ],
+  },
 };
