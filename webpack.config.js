@@ -1,8 +1,8 @@
 module.exports = {
-  mode: 'development',
   entry: {
     index: './src/index.ts',
     constants: './src/constants/index.ts',
+    utils: './src/utils/index.ts',
   },
   output: {
     path: `${__dirname}/dist`,
@@ -31,7 +31,7 @@ module.exports = {
     'react-redux': 'react-redux',
   },
   node: {
-    fs: 'empty'
+    fs: 'empty',
   },
   target: 'web',
 };

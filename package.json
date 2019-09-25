@@ -9,9 +9,9 @@
   ],
   "typings": "dist/typings/index.d.ts",
   "scripts": {
-    "build": "concurrently \"npm run build:webpack\" \"npm run build:dec\" && npm run build:type",
-    "build:webpack": "webpack",
-    "build:dec": "tsc --declaration --project .",
+    "build": "concurrently \"npm run build:dev\" \"npm run build:dec\" && npm run build:type",
+    "build:dev": "cross-env NODE_ENV=development webpack --mode development",
+    "build:prod": "cross-env NODE_ENV=production webpack --mode production",
     "build:type": "dts-bundle --name \"@ridi/react-reader\" --main ./src/index.d.ts --out ../dist/typings/index.d.ts",
     "build:watch": "onchange -i \"**/*.ts\" \"**/*.tsx\" -e \"**/*.d.ts\" -e \"demo/**\" -- npm run build"
   },
