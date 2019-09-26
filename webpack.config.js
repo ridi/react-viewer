@@ -39,7 +39,7 @@ module.exports = {
   },
   target: 'web',
   optimization: {
-    minimizer: isDev ? null : [
+    minimizer: isDev ? [] : [
       new TerserPlugin({
         extractComments: false,
         sourceMap: true, // Must be set to true if using source-maps in production

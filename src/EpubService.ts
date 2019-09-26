@@ -4,7 +4,6 @@ import {
   getScrollLeft,
   getScrollTop,
   hasIntersect,
-  measure,
   setScrollLeft,
   setScrollTop,
 } from './utils/Util';
