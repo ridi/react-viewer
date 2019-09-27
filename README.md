@@ -1,8 +1,7 @@
 # @ridi/react-viewer
 
-[![Build Status](https://travis-ci.org/ridi/react-viewer.svg?branch=master)](https://travis-ci.org/ridi/react-viewer)
+[![Build Status](https://travis-ci.com/ridi/react-viewer.svg?branch=master)](https://travis-ci.com/ridi/react-viewer)
 [![npm version](https://img.shields.io/npm/v/@ridi/react-viewer.svg)](https://www.npmjs.com/package/@ridi/react-viewer)
-[![Greenkeeper badge](https://badges.greenkeeper.io/ridi/react-viewer.svg)](https://greenkeeper.io/)
 
 ## Demo
 https://ridi.github.io/react-viewer/demo/
