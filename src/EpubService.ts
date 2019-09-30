@@ -184,24 +184,26 @@ export class EpubService {
   private waitImagesLoaded = async () => {
     if (this.isImageLoaded) return;
     const images = Array.from(document.images);
-    let count = 0;
 
-    await new Promise((resolve) => {
-      const onComplete = () => {
-        count += 1;
-        if (count === images.length) {
-          resolve();
+    if (images.length > 0) {
+      let count = 0;
+      await new Promise((resolve) => {
+        const onComplete = () => {
+          count += 1;
+          if (count === images.length) {
+            resolve();
+          }
         }
-      }
-      images.forEach((image) => {
-        if (image.complete) {
-          onComplete();
-        } else {
-          image.addEventListener('load', onComplete);
-          image.addEventListener('error', onComplete);
-        }
+        images.forEach((image) => {
+          if (image.complete) {
+            onComplete();
+          } else {
+            image.addEventListener('load', onComplete);
+            image.addEventListener('error', onComplete);
+          }
+        });
       });
-    });
+    }
     console.log('epub content images loaded:', images.length);
   }
 
