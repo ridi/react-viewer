@@ -71,6 +71,7 @@ declare module '@ridi/reader.js/web' {
     expandIntoUpper(x: number, y: number, unit?: string): boolean;
     expandIntoLower(x: number, y: number, unit?: string): boolean;
     expandIntoNextPage(): boolean;
+    end(): void;
     getRange(): Range;
     getSerializedRange(): string;
     getRectList(): RectList;
