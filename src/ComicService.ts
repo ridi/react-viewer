@@ -104,14 +104,8 @@ export class ComicService {
     this.calculationState = calculationState;
   }
 
-  private setReadyToRead = async (readyToRead: boolean) => {
-    return new Promise(resolve => {
-      this.dispatchCurrent({ type: ComicCurrentActionType.SET_READY_TO_READ, readyToRead });
-      setTimeout(() => {
-        console.log(`readyToRead => ${readyToRead}`);
-        resolve();
-      }, 0);
-    });
+  private setReadyToRead = (readyToRead: boolean) => {
+    this.dispatchCurrent({ type: ComicCurrentActionType.SET_READY_TO_READ, readyToRead });
   };
 
   private setCurrent = (current: Partial<ComicCurrentState>) => {
@@ -119,11 +113,11 @@ export class ComicService {
     this.currentState = { ...this.currentState, ...current };
   };
 
-  private restoreCurrent = async () => {
-    await this.goToPage(this.currentState.currentPage);
+  private restoreCurrent = () => {
+    this.goToPage(this.currentState.currentPage);
   };
 
-  private calculate = async (): Promise<ComicCalculationState> => {
+  private calculate = (): ComicCalculationState => {
     if (isScroll(this.settingState)) {
       // update images[].offset, height
       const width = contentWidth(this.settingState);
@@ -144,18 +138,19 @@ export class ComicService {
     }
   };
 
-  public invalidate = async () => {
-    await this.setReadyToRead(false);
+  public invalidate = () => {
+    // this.setReadyToRead(false);
     try {
-      this.calculationState = await this.calculate();
-      await this.restoreCurrent();
+      this.calculationState = this.calculate();
+      this.restoreCurrent();
+      this.updateCurrent();
     } catch (e) {
       console.error(e);
     }
-    await this.setReadyToRead(true);
+    // this.setReadyToRead(true);
   };
 
-  private initialCalculate = async (metadata: ComicParsedData) => {
+  private initialCalculate = (metadata: ComicParsedData) => {
     if (!metadata.images) return;
 
     // init calculation
@@ -187,16 +182,15 @@ export class ComicService {
     this.setCurrent(initialCurrent);
   };
 
-  public load = async (metadata: ComicParsedData) => {
+  public load = (metadata: ComicParsedData) => {
     ow(metadata, 'ComicService.load(metadata)', Validator.Comic.ComicParsedData);
 
     this.setCurrent(initialComicCurrentState);
     if (!metadata.images) return;
-    await this.setReadyToRead(false);
-    await this.initialCalculate(metadata);
+    this.setReadyToRead(false);
+    this.initialCalculate(metadata);
     Events.emit(SET_CONTENT, metadata.images);
-    await this.invalidate();
-    await this.setReadyToRead(true);
+    this.setReadyToRead(true);
   };
 
   public goToPage = (requestPage: number) => {
@@ -218,10 +212,13 @@ export class ComicService {
     this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: { currentPage: page } });
   };
 
-  public updateSetting = async (setting: Partial<ComicSettingState>) => {
+  public updateSetting = (setting: Partial<ComicSettingState>) => {
     ow(setting, 'ComicService.updateSetting(setting)', Validator.Comic.SettingState);
-    await this.setReadyToRead(false);
+    // this.setReadyToRead(false);
     this.dispatchSetting({ type: ComicSettingActionType.UPDATE_SETTING, setting });
+    setTimeout(() => {
+      this.invalidate();
+    }, 0);
   };
 
   public updateCurrent = () => {

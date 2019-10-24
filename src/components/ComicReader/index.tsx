@@ -54,7 +54,7 @@ const ComicReader: React.FunctionComponent<ComicReaderProps> = ({ renderers = {}
     if (images.length > 0) {
       invalidate();
     }
-  }, [settingState]);
+  }, [images]);
 
 
   const imageSequence = React.useMemo(() => {
