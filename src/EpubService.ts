@@ -19,6 +19,7 @@ import {
   EpubSettingAction,
   EpubSettingActionType,
   EpubSettingState,
+  initialEpubCurrentState,
 } from './contexts';
 import * as React from 'react';
 import { allowedPageNumber, columnGap, columnsInPage, columnWidth, isScroll } from './utils/EpubSettingUtil';
@@ -357,6 +358,7 @@ export class EpubService {
 
   public load = (metadata: EpubParsedData) => {
     ow(metadata, 'EpubService.load(metadata)', Validator.Epub.EpubParsedData);
+    this.setCurrent(initialEpubCurrentState);
     this.isLoaded = true;
     this.setReadyToRead(false);
     this.prepareLoad({ metadata }, () => {

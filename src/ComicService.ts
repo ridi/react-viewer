@@ -10,6 +10,7 @@ import {
   ComicSettingAction,
   ComicSettingActionType,
   ComicSettingState,
+  initialComicCurrentState,
 } from './contexts';
 import { getScrollLeft, getScrollTop, setScrollLeft, setScrollTop } from './utils/Util';
 import { contentWidth, isScroll, ratio, startWithBlankPage, allowedPageNumber } from './utils/ComicSettingUtil';
@@ -113,6 +114,11 @@ export class ComicService {
     });
   };
 
+  private setCurrent = (current: Partial<ComicCurrentState>) => {
+    this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current });
+    this.currentState = { ...this.currentState, ...current };
+  };
+
   private restoreCurrent = async () => {
     await this.goToPage(this.currentState.currentPage);
   };
@@ -178,13 +184,13 @@ export class ComicService {
       ...this.currentState,
       currentPage,
     };
-    this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: initialCurrent });
-    this.currentState = initialCurrent;
+    this.setCurrent(initialCurrent);
   };
 
   public load = async (metadata: ComicParsedData) => {
     ow(metadata, 'ComicService.load(metadata)', Validator.Comic.ComicParsedData);
 
+    this.setCurrent(initialComicCurrentState);
     if (!metadata.images) return;
     await this.setReadyToRead(false);
     await this.initialCalculate(metadata);
