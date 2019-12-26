@@ -40,13 +40,14 @@ export declare class ComicService {
     }): void;
     private constructor();
     private setReadyToRead;
+    private setCurrent;
     private restoreCurrent;
     private calculate;
-    invalidate: () => Promise<void>;
+    invalidate: () => void;
     private initialCalculate;
-    load: (metadata: ComicParsedData) => Promise<void>;
+    load: (metadata: ComicParsedData) => void;
     goToPage: (requestPage: number) => void;
-    updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
+    updateSetting: (setting: Partial<ComicSettingState>) => void;
     updateCurrent: () => void;
 }
 export {};

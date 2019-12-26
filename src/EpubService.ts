@@ -1,3 +1,4 @@
+import path from 'path';
 import {
   getClientHeight,
   getContentContainerElement,
@@ -156,7 +157,8 @@ export class EpubService {
         .split('/')
         .slice(-1)[0]
         .replace(/\./g, '_');
-      let url = uri ? uri : `${metadata.unzipPath}/${href}`;
+      const basePath = metadata.unzipPath.replace(/\\/g, '/');
+      let url = uri ? uri : path.join(basePath, href);
       return new FontFace(name, `url("${url}")`);
     });
 

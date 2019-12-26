@@ -142,10 +142,10 @@ declare module '@ridi/react-reader/ComicService' {
             currentState: ComicCurrentState;
             calculationState: ComicCalculationState;
         }): void;
-        invalidate: () => Promise<void>;
-        load: (metadata: ComicParsedData) => Promise<void>;
+        invalidate: () => void;
+        load: (metadata: ComicParsedData) => void;
         goToPage: (requestPage: number) => void;
-        updateSetting: (setting: Partial<ComicSettingState>) => Promise<void>;
+        updateSetting: (setting: Partial<ComicSettingState>) => void;
         updateCurrent: () => void;
     }
     export {};
