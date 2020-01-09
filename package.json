@@ -21,7 +21,7 @@
     "url": "git+https://github.com/ridi/react-viewer.git"
   },
   "dependencies": {
-    "@ridi/reader.js": "2.0.0-alpha.31",
+    "@ridi/reader.js": "2.0.0-alpha.32",
     "eventemitter3": "^3.1.2",
     "ow": "^0.13.2"
   },
