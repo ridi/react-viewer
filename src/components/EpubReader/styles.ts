@@ -153,7 +153,7 @@ const pageContentWrapper = (setting: EpubSettingState, calculation: EpubCalculat
     break-before: column;
   }
   article:last-child {
-    padding-bottom: ${calculation.totalPage % 2 === 0 ? 0 : '50%'};
+    padding-bottom: ${calculation.totalPage % 2 === 0 ? 0 : '150%'};
   }
   ${contentsStyle(setting)}
 `;
