@@ -230,7 +230,7 @@ export class ComicService {
       currentPage = result ? result.imageIndex + 1 : 1;
     } else {
       const scrollLeft = getScrollLeft();
-      currentPage = Math.floor(scrollLeft / pageUnit) + (startWithBlankPage(this.settingState) ? 0 : 1);
+      currentPage = Math.round(scrollLeft / pageUnit) + (startWithBlankPage(this.settingState) ? 0 : 1);
     }
     this.dispatchCurrent({ type: ComicCurrentActionType.UPDATE_CURRENT, current: { currentPage } });
   };
