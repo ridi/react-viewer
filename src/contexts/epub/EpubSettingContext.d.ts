@@ -11,6 +11,7 @@ export declare enum EpubSettingProperties {
     LINE_HEIGHT_IN_EM = "lineHeightInEm",
     CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
     COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
+    PARAGRAPH_SPACING_IN_EM = "paragraphSpacingInEm",
     CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
     CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin",
     AUTO_INVALIDATION = "autoInvalidation"
@@ -26,6 +27,7 @@ export declare type EpubSettingState = {
     [EpubSettingProperties.LINE_HEIGHT_IN_EM]: number;
     [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
     [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number;
+    [EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]: number;
     [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
     [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
     [EpubSettingProperties.AUTO_INVALIDATION]: boolean;

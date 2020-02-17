@@ -28,6 +28,21 @@ const contentsStyle = (setting: EpubSettingState) => {
         font-size: 1em;
       }
 
+      p,
+      div,
+      span,
+      sub,
+      sup,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin-top: 0 !important;
+        margin-bottom: ${setting[EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]}em !important;
+      }
+
       img,
       video,
       svg {

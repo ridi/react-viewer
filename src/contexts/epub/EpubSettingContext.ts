@@ -13,6 +13,7 @@ export enum EpubSettingProperties {
   LINE_HEIGHT_IN_EM = 'lineHeightInEm',
   CONTENT_PADDING_IN_PERCENT = 'contentPaddingInPercent',
   COLUMN_GAP_IN_PERCENT = 'columnGapInPercent',
+  PARAGRAPH_SPACING_IN_EM = "paragraphSpacingInEm",
   CONTAINER_HORIZONTAL_MARGIN = 'containerHorizontalMargin',
   CONTAINER_VERTICAL_MARGIN = 'containerVerticalMargin',
   AUTO_INVALIDATION = 'autoInvalidation',
@@ -27,6 +28,7 @@ export type EpubSettingState = {
   [EpubSettingProperties.LINE_HEIGHT_IN_EM]: number,
   [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: number,
   [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number,
+  [EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]: number,
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number,
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number,
   [EpubSettingProperties.AUTO_INVALIDATION]: boolean,
@@ -39,6 +41,7 @@ export const initialEpubSettingState: EpubSettingState = {
   [EpubSettingProperties.LINE_HEIGHT_IN_EM]: 1.67,   // em (1.0 ~ 3.0)
   [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: 12, // % (0 ~ 25%)
   [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: 5,  // % (1% ~ 20%)
+  [EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]: 1.0,   // em (0 ~ 2.0)
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: 30,
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: 35,
   [EpubSettingProperties.AUTO_INVALIDATION]: true,

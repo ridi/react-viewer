@@ -36,6 +36,7 @@ export const SettingState = ow.object.partialShape({
   [EpubSettingProperties.LINE_HEIGHT_IN_EM]: notNegativeNumberOptional,
   [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: notNegativeNumberOptional,
   [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: notNegativeNumberOptional,
+  [EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]: notNegativeNumberOptional,
   [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: notNegativeNumberOptional,
   [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: notNegativeNumberOptional,
 });
