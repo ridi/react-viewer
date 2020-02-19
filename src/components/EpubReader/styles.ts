@@ -47,7 +47,9 @@ const contentsStyle = (setting: EpubSettingState) => {
       video,
       svg {
         max-width: 100%;
-        max-height: 95%;
+        max-height: 80vh;
+        object-fit: contain;
+        line-height: 0 !important;
         margin: 0 auto;
         padding: 0;
       }

@@ -214,10 +214,7 @@ export class EpubService {
   // 페이징 시작 후 실행되면 페이징 오차가 발생합니다.
   private prepareCalculate = async (completion: Function) => {
     await this.waitImagesLoaded();
-    ReaderJsHelper.reviseImages();
-    setTimeout(() => {
-      completion();
-    }, 0); // FIXME: Reader.js의 이미지 보정 리펙토링 전까진 지워선 안됩니다.
+    completion();
   }
 
   private calculate = () => {
