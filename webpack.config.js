@@ -3,6 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
+  devtool: isDev ? 'eval' : 'hidden-source-map',
   entry: {
     index: './src/index.ts',
     constants: './src/constants/index.ts',
