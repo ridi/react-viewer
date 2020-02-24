@@ -19,6 +19,8 @@ const contentsStyle = (setting: EpubSettingState) => {
       ${fontFamilyStyle(setting)}
       line-height: ${setting[EpubSettingProperties.LINE_HEIGHT_IN_EM]}em !important;
       word-break: break-word;
+
+      position: initial !important;
     }
     article {
       font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
