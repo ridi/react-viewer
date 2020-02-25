@@ -241,7 +241,7 @@ export class EpubService {
         const totalPage = Math.floor(total / calculation.pageUnit);
         return { spineIndex, offset, total, startPage, totalPage };
       });
-      if (spines.length === 0) return this.calculationState;
+      if (calculation.spines.length === 0) return this.calculationState;
       const { offset, total } = calculation.spines.slice(-1)[0];
       calculation.total = offset + total;
       calculation.totalPage = Math.floor((offset + total) / calculation.pageUnit);
