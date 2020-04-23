@@ -6,14 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 
-## [v0.4.0-alpha.1]
+## [v0.3.11]
 
-- Update dependencies (includes settings for Greenkeeper)
-    - `styled-components` 2.x.x => 3.x.x
-    - `webpack-manifest-plugin`(dev): 1.x.x => 2.x.x
-    - And some minor version updates...
-- Add peer dependencies: `react`, `redux`, `react-dom`, `react-redux`
-- Reduce library bundle size by excluding peer dependencies from bundled file
+### Changed
 
-[unreleased]: https://github.com/ridi/php-oauth2/compare/v0.4.0-alpha.1...HEAD
-[v0.4.0-alpha]: https://github.com/ridi/php-oauth2/compare/v0.3.8...v0.4.0-alpha.1
+- Limit comic page max-width to screen width.
