@@ -86,6 +86,7 @@ class ViewerHelper extends Connector {
       paddingBottom: 0,
       paddingLeft: 0,
       paddingRight: 0,
+      maxWidth: `${width}px`,
       height,
       WebkitTransform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
       transform: `translate(${(-(currentPage - 1)) * width}px, 0px)`,
