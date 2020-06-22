@@ -47,7 +47,7 @@ class ReaderJsHelper {
   }
 
   static get(key?: number | string | HTMLElement ): Content | null {
-    if (!this.instance) return null;
+    if (!this.instance || !this.instance.readerJs.contents) return null;
     let contentKey = (typeof key === 'undefined') ? this.instance.currentState.currentSpineIndex : key;
     contentKey = (typeof contentKey === 'string') ? parseInt(contentKey, 10) : contentKey;
     return this.instance.readerJs.getContent(contentKey);
