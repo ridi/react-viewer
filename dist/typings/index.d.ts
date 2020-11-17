@@ -229,7 +229,6 @@ declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
         LINE_HEIGHT_IN_EM = "lineHeightInEm",
         CONTENT_PADDING_IN_PERCENT = "contentPaddingInPercent",
         COLUMN_GAP_IN_PERCENT = "columnGapInPercent",
-        PARAGRAPH_SPACING_IN_EM = "paragraphSpacingInEm",
         CONTAINER_HORIZONTAL_MARGIN = "containerHorizontalMargin",
         CONTAINER_VERTICAL_MARGIN = "containerVerticalMargin",
         AUTO_INVALIDATION = "autoInvalidation"
@@ -245,7 +244,6 @@ declare module '@ridi/react-reader/contexts/epub/EpubSettingContext' {
         [EpubSettingProperties.LINE_HEIGHT_IN_EM]: number;
         [EpubSettingProperties.CONTENT_PADDING_IN_PERCENT]: number;
         [EpubSettingProperties.COLUMN_GAP_IN_PERCENT]: number;
-        [EpubSettingProperties.PARAGRAPH_SPACING_IN_EM]: number;
         [EpubSettingProperties.CONTAINER_HORIZONTAL_MARGIN]: number;
         [EpubSettingProperties.CONTAINER_VERTICAL_MARGIN]: number;
         [EpubSettingProperties.AUTO_INVALIDATION]: boolean;
@@ -517,7 +515,7 @@ declare module '@ridi/react-reader/utils/Util' {
     export const sleep: (millisecond?: number) => Promise<void>;
     export const hasIntersect: (r1: number[], r2: number[]) => boolean;
     export const logger: {
-            (...data: any[]): void;
+            (message?: any, ...optionalParams: any[]): void;
             (message?: any, ...optionalParams: any[]): void;
     };
 }
