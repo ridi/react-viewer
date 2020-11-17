@@ -31,7 +31,7 @@ export const SettingState = ow.object.partialShape({
 });
 
 export const ImageData = ow.object.partialShape({
-  fileSize: notNegativeNumber,
+  size: notNegativeNumber,
   index: notNegativeNumber,
   path: ow.optional.string,
   uri: ow.optional.string,

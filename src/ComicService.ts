@@ -18,7 +18,7 @@ import ow from 'ow';
 import Validator from './validators';
 
 export interface ImageData {
-  fileSize: number;
+  size: number;
   index: number; // 0-based
   path: string;
   uri?: string;
