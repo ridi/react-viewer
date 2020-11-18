@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ComicCalculationAction, ComicCalculationState, ComicCurrentAction, ComicCurrentState, ComicSettingAction, ComicSettingState } from './contexts';
 export interface ImageData {
-    fileSize: number;
+    size: number;
     index: number;
     path: string;
     uri?: string;
