@@ -17,13 +17,13 @@ const contentsStyle = (setting: EpubSettingState) => {
       -webkit-tap-highlight-color: transparent;
 
       ${fontFamilyStyle(setting)}
+      font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
       line-height: ${setting[EpubSettingProperties.LINE_HEIGHT_IN_EM]}em !important;
       word-break: break-word;
 
       position: initial !important;
     }
     article {
-      font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
       height: initial !important;
 
       p {
@@ -154,7 +154,7 @@ const contentsStyle = (setting: EpubSettingState) => {
 const scrollContentWrapper = (setting: EpubSettingState) => css`
   article {
     padding-top: 25px;
-    padding-bottom: 25px; 
+    padding-bottom: 25px;
   }
   ${contentsStyle(setting)}
 `;
@@ -164,7 +164,7 @@ const pageContentWrapper = (setting: EpubSettingState, calculation: EpubCalculat
   column-gap: ${SettingUtil.columnGap(setting)}px;
   column-fill: auto;
   height: 100%;
-  
+
   article {
     -webkit-column-break-before: always;
     -webkit-column-break-after: always;
