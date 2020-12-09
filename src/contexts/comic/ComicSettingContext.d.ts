@@ -1,4 +1,3 @@
-/// <reference types="@emotion/core" />
 import { Reducer } from "react";
 import { ViewType, BindingType } from '../../constants';
 export declare enum ComicSettingActionType {

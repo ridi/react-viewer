@@ -31,6 +31,6 @@ export declare const throttle: (fn: () => any, limit?: number, delayed?: boolean
 export declare const sleep: (millisecond?: number) => Promise<void>;
 export declare const hasIntersect: (r1: number[], r2: number[]) => boolean;
 export declare const logger: {
-    (message?: any, ...optionalParams: any[]): void;
+    (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
 };
