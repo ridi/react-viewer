@@ -17,7 +17,6 @@ const contentsStyle = (setting: EpubSettingState) => {
       -webkit-tap-highlight-color: transparent;
 
       ${fontFamilyStyle(setting)}
-      font-size: ${setting[EpubSettingProperties.FONT_SIZE_IN_EM]}em !important;
       line-height: ${setting[EpubSettingProperties.LINE_HEIGHT_IN_EM]}em !important;
       word-break: break-word;
 
