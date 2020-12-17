@@ -6,11 +6,9 @@ before_install:
   - npm install -g greenkeeper-lockfile@1
 install:
   - npm install
-  - npm run install:demo
-  - npm run build
 before_script: greenkeeper-lockfile-update
 script:
-  - npm run lint
+  - npm run build:prod
 after_script: greenkeeper-lockfile-upload
 notifications:
   email: false
