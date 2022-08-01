@@ -95,7 +95,7 @@ const ViewerContents = styled.section`
   .chapter {
     font-size: ${props => ViewerHelper.getFontSize(props.fontSizeLevel)}px;
     line-height: ${props => ViewerHelper.getNovelLineHeight(props.lineHeight)}em;
-    font-family: ${props => props.fontFamily};
+    font-family: ${props => props.fontFamily}, system-ui;
     * {
       font-size: 1em;
       line-height: inherit;
