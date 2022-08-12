@@ -10,7 +10,7 @@
     "lint:src": "eslint --fix --ext .js,.jsx ./src/",
     "lint:demo": "cd demo && npm run lint",
     "watch": "node watch.js",
-    "build": "npm run build:src && npm run build:demo",
+    "build": "npm run build:src",
     "build:src": "webpack --mode production",
     "build:demo": "cd demo && npm run build",
     "release": "release-it",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@ridi/reader.js": "^1.0.20",
     "prop-types": "^15.6.1",
+    "rc-slider": "^6.3.1",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
     "styled-components": "^3.2.5"
