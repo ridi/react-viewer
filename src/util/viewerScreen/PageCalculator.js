@@ -29,7 +29,7 @@ class PageCalculator extends Connector {
     const width = screenWidth();
     const { totalPage: prevTotalPage } = selectPageViewPagination(this.getState());
     const pages = document.querySelector(this._targetSelector);
-    let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width) - 1;
+    let totalPage = Math.ceil((pages ? pages.scrollWidth : 0) / width);
     if (this._options.containExtraPage > 0) {
       totalPage += 1;
     }
