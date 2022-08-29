@@ -178,8 +178,10 @@ const PageContents = ViewerContents.extend`
     display: flex; align-items: center; justify-content: center;
   }
   .pages {
-    & > :last-child {
-      margin-bottom: ${() => screenHeight() - 1}px !important;
+    &::after {
+      content: '';
+      display: block;
+      padding-bottom: ${() => screenHeight() - 1}px;
     }
   }
   .comic_page {
