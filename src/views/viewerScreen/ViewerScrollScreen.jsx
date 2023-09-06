@@ -22,7 +22,7 @@ import {
   onViewerScreenTouched,
 } from '../../redux/viewerScreen/ViewerScreen.action';
 import DOMEventConstants from '../../constants/DOMEventConstants';
-import { throttle } from '../../util/Util';
+import { redux5InteropRequired, throttle } from '../../util/Util';
 import {
   documentAddEventListener,
   documentRemoveEventListener,
@@ -182,5 +182,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   null,
-  { withRef: true },
+  redux5InteropRequired() ? { withRef: true } : { forwardRef: true },
 )(ViewerScrollScreen);

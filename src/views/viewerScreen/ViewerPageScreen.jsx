@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ViewerBasePageScreen, { mapDispatchToProps, mapStateToProps } from './ViewerBasePageScreen';
 import ViewerHelper from '../../util/viewerScreen/ViewerHelper';
+import { redux5InteropRequired } from '../../util/Util';
 
 class ViewerPageScreen extends ViewerBasePageScreen {
   pageViewStyle() {
@@ -22,5 +23,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
   null,
-  { withRef: true },
+  redux5InteropRequired() ? { withRef: true } : { forwardRef: true },
 )(ViewerPageScreen);

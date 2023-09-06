@@ -20,7 +20,7 @@ import {
   PageContents as PageContentsDefault,
   ScrollContents as ScrollContentsDefault,
 } from '../../styled/viewerScreen/ViewerScreen.styled';
-import { isExist } from '../../util/Util';
+import { isExist, redux5InteropRequired } from '../../util/Util';
 
 const createStyledViewerScreen = ({
   TouchableScrollScreen = ScrollScreenDefault,
@@ -134,7 +134,9 @@ const createStyledViewerScreen = ({
       return (
         <SelectedScreen
           ref={(screen) => {
-            this.screen = screen && screen.getWrappedInstance();
+            this.screen = screen && (
+              redux5InteropRequired() ? screen.getWrappedInstance() : screen
+            );
           }}
           onMoveWrongDirection={() => onMoveWrongDirection()}
           footer={footer}
@@ -184,7 +186,7 @@ const createStyledViewerScreen = ({
     mapStateToProps,
     null,
     null,
-    { withRef: true },
+    redux5InteropRequired() ? { withRef: true } : { forwardRef: true },
   )(ViewerScreen);
 };
 
