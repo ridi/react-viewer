@@ -1,3 +1,4 @@
+import { Provider } from 'react-redux';
 
 
 export function isExist(object) {
@@ -160,4 +161,8 @@ export function throttle(fn, limit = 100, delayed = false) {
       setTimeout(() => { inThrottle = false; }, limit);
     }
   };
+}
+
+export function redux5InteropRequired() {
+  return 'propTypes' in Provider && !('context' in Provider.propTypes);
 }
